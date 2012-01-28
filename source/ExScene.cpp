@@ -134,11 +134,14 @@ namespace EasyOgreExporter
 		pScaleElement->SetDoubleAttribute("z", scale.z);
 		pNodeElement->LinkEndChild(pScaleElement);
 
-    //node animations 
+    //node animations
     Interval animRange = GetCOREInterface()->GetAnimRange();
     IGameControl* nodeControl = pGameNode->GetIGameControl();
 
     IGameKeyTab keys;
+    //hack max sdk return 4 keys even is there is no real keys
+    if(nodeControl->GetQuickSampledKeys(keys, IGameControlType(IGAME_TM)))
+    if(keys.Count() > 0)
     if(nodeControl->GetFullSampledKeys(keys, GetFrameRate(), IGameControlType(IGAME_TM), true))
     {
 	    int numKeys = keys.Count();
@@ -151,7 +154,7 @@ namespace EasyOgreExporter
 
         //Add the default animation and the track
         TiXmlElement* pAnimsElement = new TiXmlElement("animations");
-		    pNodeElement->LinkEndChild(pAnimsElement);
+	      pNodeElement->LinkEndChild(pAnimsElement);
 
         TiXmlElement* pAnimElement = new TiXmlElement("animation");
         pAnimElement->SetAttribute("name", "default");
@@ -160,20 +163,20 @@ namespace EasyOgreExporter
         pAnimElement->SetAttribute("interpolationMode", "spline");
         pAnimElement->SetAttribute("rotationInterpolationMode", "spherical");
         pAnimElement->SetDoubleAttribute("length", ogreAnimLength);
-		    pAnimsElement->LinkEndChild(pAnimElement);
-
-	      for(int i = 0; i < numKeys; i++)
-	      {
-		      if (maxnode->GetParentNode())
-			      maxnode->GetParentNode()->EvalWorldState(0);
+	      pAnimsElement->LinkEndChild(pAnimElement);
+        
+        for(int i = 0; i < numKeys; i++)
+        {
+	        if (maxnode->GetParentNode())
+		        maxnode->GetParentNode()->EvalWorldState(0);
           
           // get the relative transform
-		      Matrix3 keyTM = GetRelativeMatrix(maxnode, keys[i].t, mParams.yUpAxis) * Inverse(nodeOrigTM);
+	        Matrix3 keyTM = GetRelativeMatrix(maxnode, keys[i].t, mParams.yUpAxis) * Inverse(nodeOrigTM);
           
           float ogreTime = (static_cast<float>((keys[i].t - keys[0].t)) / static_cast<float>(GetTicksPerFrame())) / GetFrameRate();
 
           AffineParts ap;
-		      decomp_affine(keyTM, &ap);
+	        decomp_affine(keyTM, &ap);
 
           Point3 trans = ap.t * mParams.lum;
           Point3 scale = ap.k;
@@ -183,27 +186,27 @@ namespace EasyOgreExporter
 
           TiXmlElement* pKeyElement = new TiXmlElement("keyframe");
           pKeyElement->SetDoubleAttribute("time", ogreTime);
-		      pAnimElement->LinkEndChild(pKeyElement);
+	        pAnimElement->LinkEndChild(pKeyElement);
 
           TiXmlElement* pKeyTransElement = new TiXmlElement("translation");
           pKeyTransElement->SetDoubleAttribute("x", trans.x);
           pKeyTransElement->SetDoubleAttribute("y", trans.y);
           pKeyTransElement->SetDoubleAttribute("z", trans.z);
-		      pKeyElement->LinkEndChild(pKeyTransElement);
+	        pKeyElement->LinkEndChild(pKeyTransElement);
 
           TiXmlElement* pKeyRotElement = new TiXmlElement("rotation");
           pKeyRotElement->SetDoubleAttribute("qx", rot.x);
           pKeyRotElement->SetDoubleAttribute("qy", rot.y);
           pKeyRotElement->SetDoubleAttribute("qz", rot.z);
           pKeyRotElement->SetDoubleAttribute("qw", rot.w);
-		      pKeyElement->LinkEndChild(pKeyRotElement);
+	        pKeyElement->LinkEndChild(pKeyRotElement);
 
           TiXmlElement* pKeyScaleElement = new TiXmlElement("scale");
           pKeyScaleElement->SetDoubleAttribute("x", scale.x);
           pKeyScaleElement->SetDoubleAttribute("y", scale.y);
           pKeyScaleElement->SetDoubleAttribute("z", scale.z);
-		      pKeyElement->LinkEndChild(pKeyScaleElement);
-	      }
+	        pKeyElement->LinkEndChild(pKeyScaleElement);
+        } 
       }
     }
 
