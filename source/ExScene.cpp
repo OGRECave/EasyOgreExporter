@@ -138,75 +138,80 @@ namespace EasyOgreExporter
     Interval animRange = GetCOREInterface()->GetAnimRange();
     IGameControl* nodeControl = pGameNode->GetIGameControl();
 
-    IGameKeyTab keys;
-    //hack max sdk return 4 keys even is there is no real keys
-    if(nodeControl->GetQuickSampledKeys(keys, IGameControlType(IGAME_TM)))
-    if(keys.Count() > 0)
-    if(nodeControl->GetFullSampledKeys(keys, GetFrameRate(), IGameControlType(IGAME_TM), true))
+    if(nodeControl->IsAnimated(IGAME_POS) || nodeControl->IsAnimated(IGAME_ROT) || nodeControl->IsAnimated(IGAME_SCALE))
     {
-	    int numKeys = keys.Count();
-      if(numKeys > 0)
+      IGameKeyTab keys;
+      if(nodeControl->GetFullSampledKeys(keys, 1, IGameControlType(IGAME_TM), true))
       {
-        INode* maxnode = pGameNode->GetMaxNode();
-        Matrix3 nodeOrigTM = GetRelativeMatrix(maxnode, 0, mParams.yUpAxis);
-        TimeValue length = (keys[numKeys-1].t - keys[0].t);
-        float ogreAnimLength = (static_cast<float>(length) / static_cast<float>(GetTicksPerFrame())) / GetFrameRate();
-
-        //Add the default animation and the track
-        TiXmlElement* pAnimsElement = new TiXmlElement("animations");
-	      pNodeElement->LinkEndChild(pAnimsElement);
-
-        TiXmlElement* pAnimElement = new TiXmlElement("animation");
-        pAnimElement->SetAttribute("name", "default");
-        pAnimElement->SetAttribute("enable", "true");
-        pAnimElement->SetAttribute("loop", "false");
-        pAnimElement->SetAttribute("interpolationMode", "spline");
-        pAnimElement->SetAttribute("rotationInterpolationMode", "spherical");
-        pAnimElement->SetDoubleAttribute("length", ogreAnimLength);
-	      pAnimsElement->LinkEndChild(pAnimElement);
-        
-        for(int i = 0; i < numKeys; i++)
+	      int numKeys = keys.Count();
+        if(numKeys > 0)
         {
-	        if (maxnode->GetParentNode())
-		        maxnode->GetParentNode()->EvalWorldState(0);
+          INode* maxnode = pGameNode->GetMaxNode();
+          TimeValue length = (keys[numKeys-1].t - keys[0].t);
+          float ogreAnimLength = (static_cast<float>(length) / static_cast<float>(GetTicksPerFrame())) / GetFrameRate();
+
+          //Add the default animation and the track
+          TiXmlElement* pAnimsElement = new TiXmlElement("animations");
+          pNodeElement->LinkEndChild(pAnimsElement);
+
+          TiXmlElement* pAnimElement = new TiXmlElement("animation");
+          pAnimElement->SetAttribute("name", "default");
+          pAnimElement->SetAttribute("enable", "true");
+          pAnimElement->SetAttribute("loop", "false");
+          pAnimElement->SetAttribute("interpolationMode", "spline");
+          pAnimElement->SetAttribute("rotationInterpolationMode", "spherical");
+          pAnimElement->SetDoubleAttribute("length", ogreAnimLength);
+          pAnimsElement->LinkEndChild(pAnimElement);
           
-          // get the relative transform
-	        Matrix3 keyTM = GetRelativeMatrix(maxnode, keys[i].t, mParams.yUpAxis) * Inverse(nodeOrigTM);
-          
-          float ogreTime = (static_cast<float>((keys[i].t - keys[0].t)) / static_cast<float>(GetTicksPerFrame())) / GetFrameRate();
+          Matrix3 prevMT;
+          for(int i = 0; i < numKeys; i++)
+          {
+            if (maxnode->GetParentNode())
+	            maxnode->GetParentNode()->EvalWorldState(0);
+            
+            // get the relative transform
+            Matrix3 keyTM = GetRelativeMatrix(maxnode, keys[i].t, mParams.yUpAxis);
 
-          AffineParts ap;
-	        decomp_affine(keyTM, &ap);
+            //skip uncessary keys
+            if(!(keyTM.Equals(prevMT)))
+            {
+              prevMT = keyTM;
+              float ogreTime = (static_cast<float>((keys[i].t - keys[0].t)) / static_cast<float>(GetTicksPerFrame())) / GetFrameRate();
 
-          Point3 trans = ap.t * mParams.lum;
-          Point3 scale = ap.k;
-          Quat rot = ap.q;
-          // Notice that in Max we flip the w-component of the quaternion;
-          rot.w = -rot.w;
+              AffineParts ap;
+              decomp_affine(keyTM, &ap);
 
-          TiXmlElement* pKeyElement = new TiXmlElement("keyframe");
-          pKeyElement->SetDoubleAttribute("time", ogreTime);
-	        pAnimElement->LinkEndChild(pKeyElement);
+              Point3 trans = ap.t * mParams.lum;
+              Point3 scale = ap.k;
+              Quat rot = ap.q;
+              // Notice that in Max we flip the w-component of the quaternion;
+              rot.w = -rot.w;
 
-          TiXmlElement* pKeyTransElement = new TiXmlElement("translation");
-          pKeyTransElement->SetDoubleAttribute("x", trans.x);
-          pKeyTransElement->SetDoubleAttribute("y", trans.y);
-          pKeyTransElement->SetDoubleAttribute("z", trans.z);
-	        pKeyElement->LinkEndChild(pKeyTransElement);
+              TiXmlElement* pKeyElement = new TiXmlElement("keyframe");
+              pKeyElement->SetDoubleAttribute("time", ogreTime);
+              pAnimElement->LinkEndChild(pKeyElement);
 
-          TiXmlElement* pKeyRotElement = new TiXmlElement("rotation");
-          pKeyRotElement->SetDoubleAttribute("qx", rot.x);
-          pKeyRotElement->SetDoubleAttribute("qy", rot.y);
-          pKeyRotElement->SetDoubleAttribute("qz", rot.z);
-          pKeyRotElement->SetDoubleAttribute("qw", rot.w);
-	        pKeyElement->LinkEndChild(pKeyRotElement);
+              TiXmlElement* pKeyTransElement = new TiXmlElement("translation");
+              pKeyTransElement->SetDoubleAttribute("x", trans.x);
+              pKeyTransElement->SetDoubleAttribute("y", trans.y);
+              pKeyTransElement->SetDoubleAttribute("z", trans.z);
+              pKeyElement->LinkEndChild(pKeyTransElement);
 
-          TiXmlElement* pKeyScaleElement = new TiXmlElement("scale");
-          pKeyScaleElement->SetDoubleAttribute("x", scale.x);
-          pKeyScaleElement->SetDoubleAttribute("y", scale.y);
-          pKeyScaleElement->SetDoubleAttribute("z", scale.z);
-	        pKeyElement->LinkEndChild(pKeyScaleElement);
-        } 
+              TiXmlElement* pKeyRotElement = new TiXmlElement("rotation");
+              pKeyRotElement->SetDoubleAttribute("qx", rot.x);
+              pKeyRotElement->SetDoubleAttribute("qy", rot.y);
+              pKeyRotElement->SetDoubleAttribute("qz", rot.z);
+              pKeyRotElement->SetDoubleAttribute("qw", rot.w);
+              pKeyElement->LinkEndChild(pKeyRotElement);
+
+              TiXmlElement* pKeyScaleElement = new TiXmlElement("scale");
+              pKeyScaleElement->SetDoubleAttribute("x", scale.x);
+              pKeyScaleElement->SetDoubleAttribute("y", scale.y);
+              pKeyScaleElement->SetDoubleAttribute("z", scale.z);
+              pKeyElement->LinkEndChild(pKeyScaleElement);
+            }
+          }
+        }
       }
     }
 
