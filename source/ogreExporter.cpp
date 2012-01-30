@@ -29,13 +29,6 @@
 #include <direct.h>
 #endif // defined(WIN32)
 
-#ifdef PRE_MAX_2011
-#include "maxscrpt/maxscrpt.h"
-#else
-#include "maxscript/maxscript.h"
-#endif
-
-
 namespace EasyOgreExporter
 {
 
@@ -162,8 +155,34 @@ int	OgreSceneExporter::DoExport(const TCHAR* name, ExpInterface* pExpInterface, 
   std::string scriptDir = IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_SCRIPTS_DIR);
   std::string scriptPath = scriptDir + "\\EasyOgreGUI.ms";
 
-  ExData::maxInterface.m_params = params;
+  DispInfo unitsInfo;
+  GetUnitDisplayInfo(&unitsInfo);
+  switch(unitsInfo.dispType)
+  {
+    case UNITDISP_METRIC:
+      switch(unitsInfo.metricDisp)
+      {
+        case UNIT_METRIC_DISP_MM:
+          params.lum = CM2MM;
+        break;
 
+        case UNIT_METRIC_DISP_CM:
+          params.lum = CM2CM;
+        break;
+
+        case UNIT_METRIC_DISP_M:
+          params.lum = CM2M;
+        break;
+
+        case UNIT_METRIC_DISP_KM:
+          params.lum = CM2KM;
+        break;
+      }
+    break;
+  }
+
+  ExData::maxInterface.m_params = params;
+  
   /*FileStream scriptFile;
   if(scriptFile.open(scriptPath.c_str(), "rt"))
   {

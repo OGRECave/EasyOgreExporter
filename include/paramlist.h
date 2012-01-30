@@ -28,6 +28,7 @@
 #define CM2MM 10.0
 #define CM2CM 1.0
 #define CM2M  0.01
+#define CM2KM 0.001
 #define CM2IN 0.393701
 #define CM2FT 0.0328084
 #define CM2YD 0.0109361

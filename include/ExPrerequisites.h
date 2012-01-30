@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// mayaExportLayer.h
+// ExPrerequisites.h
 // Author   : Bastien BOURINEAU
 // Start Date : January 21, 2012
 ////////////////////////////////////////////////////////////////////////////////
@@ -30,6 +30,12 @@
 #include <IGame.h>
 #include <IGameModifier.h>
 #include <IPathConfigMgr.h> 
+
+#ifdef PRE_MAX_2011
+#include "maxscrpt/maxscrpt.h"
+#else
+#include "maxscript/maxscript.h"
+#endif
 
 #pragma warning (disable : 4996)
 #pragma warning (disable : 4267)

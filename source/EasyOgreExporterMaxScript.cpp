@@ -20,12 +20,6 @@
 
 
 #include "EasyOgreExporterMaxScript.h"
-#ifdef PRE_MAX_2011
-#include "maxscrpt/maxscrpt.h"
-#else
-#include "maxscript/maxscript.h"
-#endif
-
 
 // =============================
 // Begin Preprocessor nastiness
