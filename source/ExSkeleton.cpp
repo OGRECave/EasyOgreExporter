@@ -407,9 +407,13 @@ namespace EasyOgreExporter
             {
               int start;
               int stop;
+              #ifdef PRE_MAX_2010
+                std::string clipName = formatClipName(std::string(clip->GetFilename()), clipId);
+              #else
               MaxSDK::AssetManagement::AssetUser &clipFile = const_cast<MaxSDK::AssetManagement::AssetUser&>(clip->GetFile());
-              std::string clipName = formatClipName(std::string(clipFile.GetFileName()), clipId);
-              
+                std::string clipName = formatClipName(std::string(clipFile.GetFileName()), clipId);
+              #endif
+
               clip->GetGlobalBounds(&start, &stop);
               EasyOgreExporterLog("Info : mixer clip found %s from %i to %i\n", clipName.c_str(), start, stop);
               
