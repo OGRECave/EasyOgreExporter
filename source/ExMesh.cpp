@@ -347,9 +347,6 @@ namespace EasyOgreExporter
     Point3 min1 = m_Bounding.Min();
     Point3 max1 = m_Bounding.Max();
 
-    min1 = min1 * m_params.lum;
-    max1 = max1 * m_params.lum;
-
     //reverse Z
     Ogre::Vector3 min2(min1.x, min1.y, min1.z);
     Ogre::Vector3 max2(max1.x, max1.y, max1.z);
