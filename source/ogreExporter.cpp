@@ -362,7 +362,7 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
 
                 if (sceneData)
                 {
-                  parent = sceneData->writeNodeData(parent, pGameNode);
+                  parent = sceneData->writeNodeData(parent, pGameNode, IGameObject::IGAME_MESH);
                   sceneData->writeEntityData(parent, pGameMesh);
                 }
               }
@@ -377,7 +377,7 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
               EasyOgreExporterLog("Found light: %s\n", pGameNode->GetName());
               if (sceneData)
               {
-                parent = sceneData->writeNodeData(parent, pGameNode, true);
+                parent = sceneData->writeNodeData(parent, pGameNode, IGameObject::IGAME_LIGHT);
                 sceneData->writeLightData(parent, pGameLight);
               }
             }
@@ -391,7 +391,7 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
               EasyOgreExporterLog("Found camera: %s\n", pGameNode->GetName());
               if (sceneData)
               {
-                parent = sceneData->writeNodeData(parent, pGameNode, true);
+                parent = sceneData->writeNodeData(parent, pGameNode, IGameObject::IGAME_CAMERA);
                 sceneData->writeCameraData(parent, pGameCamera);
               }
             }
@@ -399,7 +399,7 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
           break;
         case IGameObject::IGAME_HELPER:
           {
-            parent = sceneData->writeNodeData(parent, pGameNode);
+            parent = sceneData->writeNodeData(parent, pGameNode, IGameObject::IGAME_HELPER);
           }
           break;
         default:

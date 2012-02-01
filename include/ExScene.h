@@ -77,7 +77,7 @@ namespace EasyOgreExporter
 		  //destructor
 		  ~ExScene();
 
-		  TiXmlElement* writeNodeData(TiXmlElement* parent, IGameNode* pGameNode, bool revertZ = false);
+      TiXmlElement* writeNodeData(TiXmlElement* parent, IGameNode* pGameNode, IGameObject::ObjectTypes type);
       TiXmlElement* writeEntityData(TiXmlElement* parent, IGameMesh* pGameMesh);
       TiXmlElement* writeCameraData(TiXmlElement* parent, IGameCamera* pGameCamera);
       TiXmlElement* writeLightData(TiXmlElement* parent, IGameLight* pGameLight);

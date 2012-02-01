@@ -98,7 +98,7 @@ namespace EasyOgreExporter
 		return("point");
 	}
 
-	TiXmlElement* ExScene::writeNodeData(TiXmlElement* parent, IGameNode* pGameNode, bool revertZ)
+	TiXmlElement* ExScene::writeNodeData(TiXmlElement* parent, IGameNode* pGameNode, IGameObject::ObjectTypes type)
 	{
 		if(!parent)
       parent = nodesElement;
@@ -117,10 +117,18 @@ namespace EasyOgreExporter
     Point3 scale = ap.k;
     Quat rot = ap.q;
 
-    if(revertZ)
+    if((type == IGameObject::IGAME_CAMERA) && mParams.yUpAxis)
     {
-      //TODO revert Z axis
-      //rot = rot * Inverse(Quat(??));
+      // Now rotate around the X Axis PI/2
+      Quat zRev = RotateXMatrix(PI/2);
+      rot = rot / zRev;
+    }
+    
+    if((type == IGameObject::IGAME_LIGHT) && mParams.yUpAxis)
+    {
+      // Now rotate around the X Axis -PI/2
+      Quat zRev = RotateXMatrix(-PI/2);
+      rot = rot / zRev;
     }
 
     // Notice that in Max we flip the w-component of the quaternion;
@@ -202,10 +210,18 @@ namespace EasyOgreExporter
               Point3 scale = apKey.k;
               Quat rot = apKey.q;
 
-              if(revertZ)
+              if((type == IGameObject::IGAME_CAMERA) && mParams.yUpAxis)
               {
-                //TODO revert Z axis
-                //rot = rot * Inverse(Quat(??));
+                // Now rotate around the X Axis PI/2
+                Quat zRev = RotateXMatrix(PI/2);
+                rot = rot / zRev;
+              }
+              
+              if((type == IGameObject::IGAME_LIGHT) && mParams.yUpAxis)
+              {
+                // Now rotate around the X Axis -PI/2
+                Quat zRev = RotateXMatrix(-PI/2);
+                rot = rot / zRev;
               }
 
               // Notice that in Max we flip the w-component of the quaternion;
