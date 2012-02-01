@@ -27,7 +27,7 @@ inline bool IsBone(INode *pNode)
     return false; 
 
   ObjectState os = pNode->EvalWorldState(0); 
-  if (!os.obj) 
+  if (!os.obj)
     return false;
 
   // bone type
@@ -92,17 +92,17 @@ inline Matrix3 RemoveNonUniformScaling(const Matrix3& originalMatrix)
 
 inline Matrix3 UniformMatrix(Matrix3 orig_cur_mat, bool yUp)
 {
-  AffineParts   parts;  
+  AffineParts   parts;
   Matrix3       mat;
 
   Matrix3 YtoZ;
   Matrix3 ZtoY;
 
   GMatrix gmat;
-  gmat.SetRow(0, Point4(1, 0, 0, 0));
-  gmat.SetRow(1, Point4(0, 0, 1, 0));
+  gmat.SetRow(0, Point4(1,  0, 0, 0));
+  gmat.SetRow(1, Point4(0,  0, 1, 0));
   gmat.SetRow(2, Point4(0, -1, 0, 0));
-  gmat.SetRow(3, Point4(0, 0, 0, 1));
+  gmat.SetRow(3, Point4(0,  0, 0, 1));
   YtoZ = gmat.ExtractMatrix3();
   ZtoY = Inverse(YtoZ);
 

@@ -98,15 +98,33 @@ namespace EasyOgreExporter
 		return("point");
 	}
 
-	TiXmlElement* ExScene::writeNodeData(TiXmlElement* parent, IGameNode* pGameNode)
+	TiXmlElement* ExScene::writeNodeData(TiXmlElement* parent, IGameNode* pGameNode, bool revertZ)
 	{
 		if(!parent)
       parent = nodesElement;
 
-    GMatrix objMat = pGameNode->GetLocalTM(0);
-    Point3 trans = objMat.Translation() * mParams.lum;
-    Point3 scale = objMat.Scaling();
-    Quat rot = objMat.Rotation();
+    INode* maxnode = pGameNode->GetMaxNode();
+    if (maxnode->GetParentNode())
+      maxnode->GetParentNode()->EvalWorldState(0);
+    
+    // get the relative transform
+    Matrix3 nodeTM = GetRelativeMatrix(maxnode, 0, mParams.yUpAxis);
+
+    AffineParts ap;
+    decomp_affine(nodeTM, &ap);
+
+    Point3 trans = ap.t * mParams.lum;
+    Point3 scale = ap.k;
+    Quat rot = ap.q;
+
+    if(revertZ)
+    {
+      //TODO revert Z axis
+      //rot = rot * Inverse(Quat(??));
+    }
+
+    // Notice that in Max we flip the w-component of the quaternion;
+    rot.w = -rot.w;
 
 		TiXmlElement* pNodeElement = new TiXmlElement("node");
 		pNodeElement->SetAttribute("name", pGameNode->GetName());
@@ -125,7 +143,7 @@ namespace EasyOgreExporter
 		pRotationElement->SetDoubleAttribute("qy", rot.y);
 		pRotationElement->SetDoubleAttribute("qz", rot.z);
 		// Notice that in Max we flip the w-component of the quaternion;
-		pRotationElement->SetDoubleAttribute("qw", -rot.w);
+		pRotationElement->SetDoubleAttribute("qw", rot.w);
 		pNodeElement->LinkEndChild(pRotationElement);
 
 		TiXmlElement* pScaleElement = new TiXmlElement("scale");
@@ -146,7 +164,6 @@ namespace EasyOgreExporter
 	      int numKeys = keys.Count();
         if(numKeys > 0)
         {
-          INode* maxnode = pGameNode->GetMaxNode();
           TimeValue length = (keys[numKeys-1].t - keys[0].t);
           float ogreAnimLength = (static_cast<float>(length) / static_cast<float>(GetTicksPerFrame())) / GetFrameRate();
 
@@ -178,12 +195,19 @@ namespace EasyOgreExporter
               prevMT = keyTM;
               float ogreTime = (static_cast<float>((keys[i].t - keys[0].t)) / static_cast<float>(GetTicksPerFrame())) / GetFrameRate();
 
-              AffineParts ap;
-              decomp_affine(keyTM, &ap);
+              AffineParts apKey;
+              decomp_affine(keyTM, &apKey);
 
-              Point3 trans = ap.t * mParams.lum;
-              Point3 scale = ap.k;
-              Quat rot = ap.q;
+              Point3 trans = apKey.t * mParams.lum;
+              Point3 scale = apKey.k;
+              Quat rot = apKey.q;
+
+              if(revertZ)
+              {
+                //TODO revert Z axis
+                //rot = rot * Inverse(Quat(??));
+              }
+
               // Notice that in Max we flip the w-component of the quaternion;
               rot.w = -rot.w;
 

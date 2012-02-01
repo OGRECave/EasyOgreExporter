@@ -361,7 +361,7 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
                     EasyOgreExporterLog("Error, mesh skipped\n");
 
                 if (sceneData)
-                {       
+                {
                   parent = sceneData->writeNodeData(parent, pGameNode);
                   sceneData->writeEntityData(parent, pGameMesh);
                 }
@@ -377,7 +377,7 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
               EasyOgreExporterLog("Found light: %s\n", pGameNode->GetName());
               if (sceneData)
               {
-                parent = sceneData->writeNodeData(parent, pGameNode);
+                parent = sceneData->writeNodeData(parent, pGameNode, true);
                 sceneData->writeLightData(parent, pGameLight);
               }
             }
@@ -391,7 +391,7 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
               EasyOgreExporterLog("Found camera: %s\n", pGameNode->GetName());
               if (sceneData)
               {
-                parent = sceneData->writeNodeData(parent, pGameNode);
+                parent = sceneData->writeNodeData(parent, pGameNode, true);
                 sceneData->writeCameraData(parent, pGameCamera);
               }
             }
