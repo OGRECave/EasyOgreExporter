@@ -312,11 +312,11 @@ namespace EasyOgreExporter
     Matrix3 localTM;
 		if(parentIdx >= 0)
 		{
-      localTM = GetRelativeMatrix(boneTM, ParentTM, m_params.yUpAxis);
+      localTM = GetRelativeUniformMatrix(boneTM, ParentTM, m_params.yUpAxis);
 		}
     else // for root bone use the mesh
     {
-      localTM = GetRelativeMatrix(boneTM, ParentTM, m_params.yUpAxis) * Inverse(SkinTM);
+      localTM = GetRelativeUniformMatrix(boneTM, ParentTM, m_params.yUpAxis) * Inverse(SkinTM);
     }
 
     AffineParts ap;
@@ -562,7 +562,7 @@ namespace EasyOgreExporter
     INode* bone = j.pNode;
     
 		// Get the bone local matrix for this key
-    Matrix3 boneTM = GetRelativeMatrix(bone, time, m_params.yUpAxis);
+    Matrix3 boneTM = GetRelativeUniformMatrix(bone, time, m_params.yUpAxis);
 
     GMatrix GSkinTM;
     m_pGameSkin->GetInitSkinTM(GSkinTM);

@@ -21,6 +21,7 @@
 #include "OgreExporter.h"
 #include "ExData.h"
 #include "EasyOgreExporterLog.h"
+#include "ExTools.h"
 
 #if defined(WIN32)
 // For SHGetFolderPath.  Requires Windows XP or greater.
@@ -151,35 +152,15 @@ int	OgreSceneExporter::DoExport(const TCHAR* name, ExpInterface* pExpInterface, 
   params.sceneFilename = sceneFile.c_str();
   
   bool success = false;
-
   std::string scriptDir = IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_SCRIPTS_DIR);
   std::string scriptPath = scriptDir + "\\EasyOgreGUI.ms";
 
+  int unitType = 0;
+  float unitScale = 0;
+  GetMasterUnitInfo(&unitType, &unitScale);
   DispInfo unitsInfo;
   GetUnitDisplayInfo(&unitsInfo);
-  switch(unitsInfo.dispType)
-  {
-    case UNITDISP_METRIC:
-      switch(unitsInfo.metricDisp)
-      {
-        case UNIT_METRIC_DISP_MM:
-          params.lum = CM2MM;
-        break;
-
-        case UNIT_METRIC_DISP_CM:
-          params.lum = CM2CM;
-        break;
-
-        case UNIT_METRIC_DISP_M:
-          params.lum = CM2M;
-        break;
-
-        case UNIT_METRIC_DISP_KM:
-          params.lum = CM2KM;
-        break;
-      }
-    break;
-  }
+  params.lum = ConvertToMeter(unitsInfo.metricDisp, unitType) * unitScale;
 
   ExData::maxInterface.m_params = params;
   

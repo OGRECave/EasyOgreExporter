@@ -15,6 +15,7 @@
 
 #include "ExMesh.h"
 #include "EasyOgreExporterLog.h"
+#include "ExTools.h"
 
 namespace EasyOgreExporter
 {
@@ -72,6 +73,16 @@ namespace EasyOgreExporter
     // prepare faces table
     m_faces.resize(numFaces);
 
+    INode* node = m_GameNode->GetMaxNode();
+
+    // Compute the pivot TM
+		Matrix3 piv(1);
+    piv.SetTrans(node->GetObjOffsetPos());
+		PreRotateMatrix(piv, node->GetObjOffsetRot());
+		ApplyScaling(piv, node->GetObjOffsetScale());
+    
+    Matrix3 transMT = TransformMatrix(piv, m_params.yUpAxis);
+
     for (size_t i = 0; i < numFaces; ++i)
     {
       FaceEx* face = m_GameMesh->GetFace(i);
@@ -80,7 +91,8 @@ namespace EasyOgreExporter
       for (size_t j = 0; j < 3; j++)
       {
         ExVertex vertex(face->vert[j]);
-        Point3 pos = m_GameMesh->GetVertex(face->vert[j], true);
+        Point3 pos = transMT * m_GameMesh->GetVertex(face->vert[j], true);
+
         //apply scale
         pos *= m_params.lum;
 
