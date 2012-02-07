@@ -37,6 +37,10 @@
 #include "maxscript/maxscript.h"
 #endif
 
+// This file is not included in the max SDK directly, but in the morpher sample.
+// It is required to get access to the Max Morpher. 
+#include "wm3.h"
+
 #pragma warning (disable : 4996)
 #pragma warning (disable : 4267)
 #pragma warning (disable : 4018)
@@ -46,10 +50,6 @@
 #define IDS_MORPHMTL                    39
 #define IDS_MTL_MAPNAME                 45
 #define IDS_MTL_BASENAME                46
-
-// This file is not included in the max SDK directly, but in the morpher sample.
-// It is required to get access to the Max Morpher.  
-#include "wm3.h"
 
 // OGRE API
 // Max defines PI and OgreMath.h fails to compile as a result.

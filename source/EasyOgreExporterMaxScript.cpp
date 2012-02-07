@@ -41,7 +41,7 @@
 	exportSkelAnims, \
 	exportBSAnims, \
 	exportVertAnims, \
-	exportBlendShapes, \
+	exportPoses, \
 	useSharedGeom, \
 	lightingOff, \
 	copyTextures, \
@@ -72,7 +72,7 @@
 	MACRO_FUNCTION(exportSkelAnims) \
 	MACRO_FUNCTION(exportBSAnims) \
 	MACRO_FUNCTION(exportVertAnims) \
-	MACRO_FUNCTION(exportBlendShapes) \
+	MACRO_FUNCTION(exportPoses) \
 	MACRO_FUNCTION(useSharedGeom) \
 	MACRO_FUNCTION(lightingOff) \
 	MACRO_FUNCTION(copyTextures) \

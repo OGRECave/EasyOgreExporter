@@ -59,8 +59,6 @@ namespace EasyOgreExporter
     // Write skeleton binary
     if (mParams.exportSkeleton && mesh->getSkeleton())
     {
-      // Restore skeleton to correct pose
-      mesh->getSkeleton()->restorePose();
       // Load skeleton animations
       mesh->getSkeleton()->loadAnims(pGameNode);
       
@@ -70,17 +68,6 @@ namespace EasyOgreExporter
         EasyOgreExporterLog("Error writing mesh binary file\n");
       }
     }
-
-    //TODO
-    /*
-    // Load vertex animations
-    if (mParams.exportVertAnims)
-      mesh->loadAnims(mParams);
-
-    // Load blend shapes
-    if (mParams.exportBlendShapes)
-      mesh->loadBlendShapes(mParams);
-    */
 
     delete mesh;
     return ret;

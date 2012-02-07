@@ -24,9 +24,7 @@
 #include "ExPrerequisites.h"
 #include "ExOgreConverter.h"
 #include "ExSkeleton.h"
-#include "ExBlendshape.h"
 #include "paramList.h"
-
 
 namespace EasyOgreExporter
 {
@@ -54,14 +52,12 @@ namespace EasyOgreExporter
       ExVertex()
       {
         iMaxId = -1;
-        iNext = -1;
       };
 
 		  //constructor
       ExVertex(int id)
       {
         iMaxId = id;
-        iNext = -2;
       };
   	  
       //destructor
@@ -108,7 +104,6 @@ namespace EasyOgreExporter
       int iMaxId;
 
       // next same vertex index in vertices list with the same position
-      int iNext;
       Point3 vPos;
       Point3 vNorm;
       Point4 vColor;
@@ -127,9 +122,9 @@ namespace EasyOgreExporter
     IGameMesh* m_GameMesh;
     IGameNode* m_GameNode;
     Ogre::Mesh* m_Mesh;
+    MorphR3* m_pMorphR3;
     Box3 m_Bounding;
     ExSkeleton* m_pSkeleton;
-    ExBlendShape* m_pBlendShape;
   private:
 
 	public:
@@ -147,13 +142,14 @@ namespace EasyOgreExporter
 
   protected:
     void buildVertices();
-    Ogre::SubMesh* createOgreSubmesh(int matId);
+    Ogre::SubMesh* createOgreSubmesh(Tab<FaceEx*> faces);
     bool createOgreSharedGeometry();
     void buildOgreGeometry(Ogre::VertexData* vdata, std::vector<ExVertex> verticesList);
 		Material* loadMaterial(IGameMaterial* pGameMaterial);
     void getModifiers();
     void loadAnims();
-    void loadBlendShapes();
+    void createPoses();
+
     std::vector<ExAnimation> m_vertexClips;
 		std::vector<ExAnimation> m_BSClips;
 

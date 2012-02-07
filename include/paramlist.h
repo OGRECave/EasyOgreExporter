@@ -57,7 +57,7 @@ namespace EasyOgreExporter
 		// class members
 		bool exportMesh, exportMaterial, exportAnimCurves, exportCameras, exportAll, exportVBA,
 			exportVertNorm, exportVertCol, exportTexCoord, exportCamerasAnim,
-			exportSkeleton, exportSkelAnims, exportBSAnims, exportVertAnims, exportBlendShapes, 
+			exportSkeleton, exportSkelAnims, exportBSAnims, exportVertAnims, exportPoses, 
 			useSharedGeom, lightingOff, copyTextures, exportParticles,
 			tangentsSplitMirrored, tangentsSplitRotated, tangentsUseParity, 
 			buildTangents, buildEdges, skelBB, bsBB, vertBB, normalizeScale, yUpAxis, exportScene;
@@ -88,7 +88,7 @@ namespace EasyOgreExporter
 			exportSkelAnims = true;
 			exportBSAnims = false;
 			exportVertAnims = false;
-			exportBlendShapes = false;
+			exportPoses = true;
 			exportAnimCurves = false;
 			exportCameras = false;
 			exportParticles = false;
@@ -138,7 +138,7 @@ namespace EasyOgreExporter
 			exportSkelAnims = source.exportSkelAnims;
 			exportBSAnims = source.exportBSAnims;
 			exportVertAnims = source.exportVertAnims;
-			exportBlendShapes = source.exportBlendShapes;
+			exportPoses = source.exportPoses;
 			exportAnimCurves = source.exportAnimCurves;
 			exportCameras = source.exportCameras;
 			exportAll = source.exportAll;

@@ -12,7 +12,6 @@
 *                                                                                *
 **********************************************************************************/
 
-
 #include "ExMesh.h"
 #include "EasyOgreExporterLog.h"
 #include "ExTools.h"
@@ -28,27 +27,16 @@ namespace EasyOgreExporter
     m_GameNode = pGameNode;
     m_Mesh = 0;
     m_pSkeleton = 0;
-    m_pBlendShape = 0;
+    m_pMorphR3 = 0;
     
     getModifiers();
     buildVertices();
-
-    // Load vertex animations
-    if (m_params.exportVertAnims)
-      loadAnims();
-
-    // Load blend shapes
-    if (m_params.exportBlendShapes && m_pBlendShape)
-      loadBlendShapes();
   }
 
   ExMesh::~ExMesh()
   {
     if(m_pSkeleton)
       delete m_pSkeleton;
-
-    if(m_pBlendShape)
-      delete m_pBlendShape;
 
     m_vertices.clear();
     m_vertexClips.clear();
@@ -62,14 +50,6 @@ namespace EasyOgreExporter
 
     int numVertices = numFaces * 3;
 
-    // prepare vertex table
-    /*m_vertices.resize(numVertices);
-    for (size_t i = 0; i < numVertices; i++)
-    {
-      m_vertices[i].iMaxId = -1;
-      m_vertices[i].iNext = -1;
-    }*/
-
     // prepare faces table
     m_faces.resize(numFaces);
 
@@ -82,8 +62,8 @@ namespace EasyOgreExporter
 		ApplyScaling(piv, node->GetObjOffsetScale());
     
     Matrix3 transMT = TransformMatrix(piv, m_params.yUpAxis);
-
-    for (size_t i = 0; i < numFaces; ++i)
+    
+    for (int i = 0; i < numFaces; ++i)
     {
       FaceEx* face = m_GameMesh->GetFace(i);
       m_faces[i].vertices.resize(3);
@@ -104,7 +84,6 @@ namespace EasyOgreExporter
         vertex.vPos = pos;
         vertex.vNorm = normal;
         vertex.vColor = fullColor;
-        vertex.iNext = -1;
 
         if(getSkeleton())
         {
@@ -132,33 +111,11 @@ namespace EasyOgreExporter
           vertex.lTexCoords[chan] = uv;
         }
 
-        //look for duplicated vertex postition
-        /*bool diff = true;
-        int lastFound = face->vert[j];
-        for (int k = face->vert[j]; k != -1 && diff; k = m_vertices[k].iNext)
-        {
-          //compare with current
-          if(m_vertices[k] == vertex)
-            diff = false;
-
-          lastFound = k;
-        }
-
-        if(diff)
-        {
-          m_vertices[face->vert[j]] = vertex;
-          m_faces[face->meshFaceIndex].vertices[j] = face->vert[j];
-        }
-        else*/
-        {
-          //add other vertex with the same position
-          m_vertices.push_back(vertex);
-          //save the new position to the last duplicated vertex found
-          //m_vertices[lastFound].iNext = m_vertices.size() -1;
-          m_faces[face->meshFaceIndex].vertices[j] = m_vertices.size() -1;
-        }
+        //add other vertex with the same position
+        m_vertices.push_back(vertex);
+        m_faces[face->meshFaceIndex].vertices[j] = m_vertices.size() -1;
       }
-    } // Loop vertices.
+    } // Loop faces.
   }
 
   ExSkeleton* ExMesh::getSkeleton()
@@ -196,23 +153,50 @@ namespace EasyOgreExporter
               }
             }
           }
+          /*
           else if(pGameModifier->IsMorpher())
           {
             IGameMorpher* pGameMorpher = static_cast<IGameMorpher*>(pGameModifier);
             if(pGameMorpher)
             {
               Modifier* pModifier = pGameMorpher->GetMaxModifier();
-
               // Sanity check.
               if(MR3_CLASS_ID == pModifier->ClassID())
-              {
-                MorphR3* pMorphR3 = static_cast<MorphR3*>(pModifier);
-                if(!m_pBlendShape)
-                  m_pBlendShape = new ExBlendShape(pMorphR3, m_GameNode, m_GameMesh, m_params);
-              }
+                m_pMorphR3 = static_cast<MorphR3*>(pModifier);
             }
           }
+          */
         }
+      }
+
+      // get the object reference of the node
+      Object* pObject = 0;
+      pObject = m_GameNode->GetMaxNode()->GetObjectRef();
+      if(pObject == 0)
+        return;
+
+      // loop through all derived objects
+      while(pObject->SuperClassID() == GEN_DERIVOB_CLASS_ID)
+      {
+        IDerivedObject* pDerivedObject = static_cast<IDerivedObject*>(pObject);
+
+        // loop through all modifiers
+        int stackId;
+        for(stackId = 0; stackId < pDerivedObject->NumModifiers(); stackId++)
+        {
+          // get the modifier
+          Modifier* pModifier = pDerivedObject->GetModifier(stackId);
+
+          // check if we found the morpher modifier
+          if(pModifier->ClassID() == MR3_CLASS_ID)
+          {
+            m_pMorphR3 = static_cast<MorphR3*>(pModifier);
+            return;
+          }
+        }
+
+        // continue with next derived object
+        pObject = pDerivedObject->GetObjRef();
       }
     }
   }
@@ -229,11 +213,6 @@ namespace EasyOgreExporter
     //TODO determine if there is mesh animation keys
     //load clip
     //loadClip(params.vertClipList[i].name, start, stop, rate);
-  }
-
-  void ExMesh::loadBlendShapes()
-  {
-    //TODO
   }
 
   // Write to a OGRE binary mesh
@@ -283,9 +262,20 @@ namespace EasyOgreExporter
       strName << materialIDs[i];
       subName = strName.str();
 
-      Ogre::SubMesh* pSubmesh = createOgreSubmesh(materialIDs[i]);
+      Tab<FaceEx*> faces = m_GameMesh->GetFacesFromMatID(materialIDs[i]);
+      if (faces.Count() <= 0)
+      {
+        EasyOgreExporterLog("Warning: No faces found in submesh %d\n", materialIDs[i]);
+        continue;
+      }
+
+      Ogre::SubMesh* pSubmesh = createOgreSubmesh(faces);
       m_Mesh->nameSubMesh(subName, i);
     }
+
+    // Create poses
+    if (m_params.exportPoses && m_pMorphR3)
+      createPoses();
 
     // Set skeleton link (if present)
     if (m_pSkeleton && m_params.exportSkeleton)
@@ -312,8 +302,7 @@ namespace EasyOgreExporter
       EasyOgreExporterLog("Info: Optimize mesh\n");
 
       // Automatic
-      Ogre::VertexDeclaration* newDcl = 
-      m_Mesh->sharedVertexData->vertexDeclaration->getAutoOrganisedDeclaration(
+      Ogre::VertexDeclaration* newDcl = m_Mesh->sharedVertexData->vertexDeclaration->getAutoOrganisedDeclaration(
       m_Mesh->hasSkeleton(), m_Mesh->hasVertexAnimation(), m_Mesh->getSharedVertexDataAnimationIncludesNormals());
 
       if (*newDcl != *(m_Mesh->sharedVertexData->vertexDeclaration))
@@ -337,8 +326,7 @@ namespace EasyOgreExporter
         const bool hasVertexAnim = sm->getVertexAnimationType() != Ogre::VAT_NONE;
 
         // Automatic
-        Ogre::VertexDeclaration* newDcl = 
-            sm->vertexData->vertexDeclaration->getAutoOrganisedDeclaration(
+        Ogre::VertexDeclaration* newDcl = sm->vertexData->vertexDeclaration->getAutoOrganisedDeclaration(
                 m_Mesh->hasSkeleton(), hasVertexAnim, sm->getVertexAnimationIncludesNormals());
         if (*newDcl != *(sm->vertexData->vertexDeclaration))
         {
@@ -423,6 +411,123 @@ namespace EasyOgreExporter
     return true;
   }
 
+  void ExMesh::createPoses()
+  {
+    INode* node = m_GameNode->GetMaxNode();
+    Tab<int> materialIDs = m_GameMesh->GetActiveMatIDs();
+
+    std::vector<std::vector<ExVertex>> subList;
+    if(!m_params.useSharedGeom)
+    {
+      for(int i=0; i < materialIDs.Count(); i++)
+      {
+        Tab<FaceEx*> faces = m_GameMesh->GetFacesFromMatID(materialIDs[i]);
+        if (faces.Count() <= 0)
+          continue;
+        
+        //construct a list of faces with the correct indices
+        std::vector<ExVertex> verticesList;
+        for (int i = 0; i < faces.Count(); i++)
+        {
+          ExFace face = m_faces[faces[i]->meshFaceIndex];
+          for (size_t j = 0; j < 3; j++)
+            verticesList.push_back(m_vertices[face.vertices[j]]);
+        }
+        subList.push_back(verticesList);
+      }
+    }
+
+    // Compute the pivot TM
+		Matrix3 piv(1);
+    piv.SetTrans(node->GetObjOffsetPos());
+		PreRotateMatrix(piv, node->GetObjOffsetRot());
+		ApplyScaling(piv, node->GetObjOffsetScale());
+    
+    Matrix3 transMT = TransformMatrix(piv, m_params.yUpAxis);
+    for(int i = 0; i < m_pMorphR3->chanBank.size() && i < MR3_NUM_CHANNELS; ++i)
+	  {
+      morphChannel &pMorphChannel = m_pMorphR3->chanBank[i];
+      if(pMorphChannel.mActive)
+		  {
+			  pMorphChannel.rebuildChannel();
+
+			  std::string posename = pMorphChannel.mName;
+			  int numMorphVertices = pMorphChannel.mNumPoints;
+				
+        if(numMorphVertices != m_GameMesh->GetNumberOfVerts())
+			  {
+				  MessageBox(GetCOREInterface()->GetMAXHWnd(), _T("Morph targets have failed to export because the morph vertex count did not match the base mesh.  Collapse the modifier stack prior to export, as smoothing is not supported with morph target export."), _T("Morph Target Export Failed."), MB_OK);
+			    break;
+        }
+			  else
+			  {
+				  EasyOgreExporterLog("Exporting Morph target: %s with %d vertices.\n", posename.c_str(), numMorphVertices);
+
+				  size_t numPoints = pMorphChannel.mPoints.size();
+				  std::vector<Point3> vmPoints;
+				  vmPoints.reserve(numPoints);
+				  for(size_t k = 0; k < numPoints; ++k)
+				  {
+					  vmPoints.push_back(pMorphChannel.mPoints[k]);
+				  }
+
+          if (m_params.useSharedGeom)
+          {
+            // Create a new pose for the ogre mesh
+            Ogre::Pose* pPose = m_Mesh->createPose(0, posename.c_str());
+            // Set the pose attributes
+            for (int k = 0; k < m_vertices.size(); k++)
+            {
+              ExVertex vertex = m_vertices[k];
+              Point3 pos = vmPoints[vertex.iMaxId];
+              if(m_params.yUpAxis)
+              {
+                float vy = pos.y;
+                pos.y = pos.z;
+                pos.z = -vy;
+              }
+              pos = transMT * pos;
+
+              // apply scale
+              pos *= m_params.lum;
+              // diff
+              pos -= vertex.vPos;
+              pPose->addVertex(k, Ogre::Vector3(pos.x, pos.y, pos.z));
+            }
+          }
+          else
+          {
+            for(int sub = 0; sub < subList.size(); sub++)
+            {
+              std::vector<ExVertex> verticesList = subList[sub];
+
+              // Create a new pose for the ogre submesh
+              Ogre::Pose* pPose = m_Mesh->createPose(sub + 1, posename.c_str());
+              // Set the pose attributes
+              for (int k = 0; k < verticesList.size(); k++)
+              {
+                ExVertex vertex = verticesList[k];
+                Point3 pos = vmPoints[vertex.iMaxId];
+                if(m_params.yUpAxis)
+                {
+                  float vy = pos.y;
+                  pos.y = pos.z;
+                  pos.z = -vy;
+                }
+                pos = transMT * pos;
+
+                // apply scale
+                pos *= m_params.lum;
+                // diff
+                pos -= vertex.vPos;
+                pPose->addVertex(k, Ogre::Vector3(pos.x, pos.y, pos.z));
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
   bool ExMesh::createOgreSharedGeometry()
   {
@@ -444,11 +549,11 @@ namespace EasyOgreExporter
       // Create a new vertex bone assignements list
       Ogre::Mesh::VertexBoneAssignmentList vbas;
       // Scan list of shared geometry vertices
-      for (size_t i = 0; i < m_vertices.size(); i++)
+      for (int i = 0; i < m_vertices.size(); i++)
       {
         ExVertex vertex = m_vertices[i];
         // Add all bone assignements for every vertex to the bone assignements list
-        for (size_t j = 0; j < vertex.lWeight.size(); j++)
+        for (int j = 0; j < vertex.lWeight.size(); j++)
         {
           Ogre::VertexBoneAssignment vba;
           vba.vertexIndex = i;
@@ -468,18 +573,16 @@ namespace EasyOgreExporter
       m_Mesh->_compileBoneAssignments();
       m_Mesh->_updateCompiledBoneAssignments();
     }
+
+    // Load vertex animations
+    //if (m_params.exportVertAnims)
+      //loadAnims();
+
     return true;
   }
 
-  Ogre::SubMesh* ExMesh::createOgreSubmesh(int matId)
+  Ogre::SubMesh* ExMesh::createOgreSubmesh(Tab<FaceEx*> faces)
 	{
-    Tab<FaceEx*> faces = m_GameMesh->GetFacesFromMatID(matId);
-    if (faces.Count() <= 0)
-    {
-      EasyOgreExporterLog("Warning: No faces found in submesh %d\n", matId);
-      return 0;
-    }
-
     int numVertices = faces.Count() * 3;
     Material* pMaterial = loadMaterial(m_GameMesh->GetMaterialFromFace(faces[0]));
 
@@ -512,7 +615,7 @@ namespace EasyOgreExporter
     {
       // rebuild vertices index, it must start on 0
       int vertIndex = 0;
-      for (size_t i = 0; i < faces.Count(); i++)
+      for (int i = 0; i < faces.Count(); i++)
       {
         facesIndex[i].resize(3);
         for (size_t j = 0; j < 3; j++)
@@ -524,7 +627,7 @@ namespace EasyOgreExporter
     }
     else
     {
-      for (size_t i = 0; i < faces.Count(); i++)
+      for (int i = 0; i < faces.Count(); i++)
       {
         facesIndex[i].resize(3);
         for (size_t j = 0; j < 3; j++)
@@ -538,7 +641,7 @@ namespace EasyOgreExporter
 	  if (bUse32BitIndexes)
     {
 		  Ogre::uint32* pIdx = static_cast<Ogre::uint32*>(pSubmesh->indexData->indexBuffer->lock(Ogre::HardwareBuffer::HBL_DISCARD));
-		  for (size_t i = 0; i < facesIndex.size(); i++)
+		  for (int i = 0; i < facesIndex.size(); i++)
 		  {
 			  *pIdx++ = static_cast<Ogre::uint32>(facesIndex[i][0]);
 			  *pIdx++ = static_cast<Ogre::uint32>(facesIndex[i][1]);
@@ -549,7 +652,7 @@ namespace EasyOgreExporter
     else
     {
       Ogre::uint16* pIdx = static_cast<Ogre::uint16*>(pSubmesh->indexData->indexBuffer->lock(Ogre::HardwareBuffer::HBL_DISCARD));
-      for (size_t i = 0; i < facesIndex.size(); i++)
+      for (int i = 0; i < facesIndex.size(); i++)
 	    {
 			  *pIdx++ = static_cast<Ogre::uint16>(facesIndex[i][0]);
 			  *pIdx++ = static_cast<Ogre::uint16>(facesIndex[i][1]);
@@ -562,7 +665,7 @@ namespace EasyOgreExporter
     {
       //construct a list of faces with the correct indices
       std::vector<ExVertex> verticesList;
-      for (size_t i = 0; i < faces.Count(); i++)
+      for (int i = 0; i < faces.Count(); i++)
       {
         ExFace face = m_faces[faces[i]->meshFaceIndex];
         for (size_t j = 0; j < 3; j++)
@@ -578,12 +681,12 @@ namespace EasyOgreExporter
 				// Create a new vertex bone assignements list
 				Ogre::SubMesh::VertexBoneAssignmentList vbas;
 
-				// Scan list of shared geometry vertices
-        for (size_t i = 0; i < verticesList.size(); i++)
+				// Scan list of geometry vertices
+        for (int i = 0; i < verticesList.size(); i++)
         {
           ExVertex vertex = verticesList[i];
           // Add all bone assignements for every vertex to the bone assignements list
-          for (size_t j = 0; j < vertex.lWeight.size(); j++)
+          for (int j = 0; j < vertex.lWeight.size(); j++)
           {
             Ogre::VertexBoneAssignment vba;
             vba.vertexIndex = i;
@@ -668,7 +771,7 @@ namespace EasyOgreExporter
 
     // Buffers are set up, so iterate the vertices.
     int iTexCoord = 0;
-    for (size_t i = 0; i < verticesList.size(); ++i)
+    for (int i = 0; i < verticesList.size(); ++i)
     {
       ExVertex vertex = verticesList[i];
 

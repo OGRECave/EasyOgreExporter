@@ -28,30 +28,6 @@ namespace EasyOgreExporter
 	// Track type
 	typedef enum { TT_SKELETON, TT_MORPH, TT_POSE } trackType;
 
-	// Target
-	typedef enum { T_MESH, T_SUBMESH } target;
-
-	// Vertex position
-	typedef struct vertexPositiontag
-	{
-		float x,y,z;
-	} vertexPosition;
-
-	// Vertex pose reference
-	typedef struct vertexPoseReftag
-	{
-		int poseIndex;
-		float poseWeight;
-	} vertexPoseRef;
-
-	// Vertex animation keyframe
-	typedef struct vertexKeyframetag
-	{
-		float time;
-		std::vector<vertexPosition> positions;
-		std::vector<vertexPoseRef> poserefs;
-	} vertexKeyframe;
-
 	// Skeleton animation keyframe
 	typedef struct skeletonKeyframeTag
 	{
@@ -60,23 +36,6 @@ namespace EasyOgreExporter
 		Quat rot;		            //rotation
 		Point3 scale;					  //scale
 	} skeletonKeyframe;
-
-	// Blend shape data
-	typedef struct vertexOffestTag
-	{
-		long index;
-		float x,y,z;
-	} vertexOffset;
-
-	typedef struct poseTag
-	{
-		target poseTarget;
-		long index;
-		int blendShapeIndex;
-		std::string name;
-		std::vector<vertexOffset> offsets;
-		morphChannel* pMChannel;
-	} pose;
 
 	// A class for storing an animation track
 	// each track can be either skeleton, morph or pose animation
@@ -99,17 +58,9 @@ namespace EasyOgreExporter
 		void clear()
     {
 			m_type = TT_SKELETON;
-			m_target = T_MESH;
 			m_index = 0;
 			m_bone = "";
-			m_vertexKeyframes.clear();
 			m_skeletonKeyframes.clear();
-		}
-
-		//add vertex animation keyframe
-		void addVertexKeyframe(vertexKeyframe& k)
-    {
-			m_vertexKeyframes.push_back(k);
 		}
 
 		//add skeleton animation keyframe
@@ -120,10 +71,8 @@ namespace EasyOgreExporter
 
 		//public members
 		trackType m_type;
-		target m_target;
 		int m_index;
 		std::string m_bone;
-		std::vector<vertexKeyframe> m_vertexKeyframes;
 		std::vector<skeletonKeyframe> m_skeletonKeyframes;
 	};
 	
