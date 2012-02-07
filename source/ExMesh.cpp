@@ -443,42 +443,82 @@ namespace EasyOgreExporter
 		PreRotateMatrix(piv, node->GetObjOffsetRot());
 		ApplyScaling(piv, node->GetObjOffsetScale());
     
-    Matrix3 transMT = TransformMatrix(piv, m_params.yUpAxis);
+    std::vector<morphChannel*> validChan;
     for(int i = 0; i < m_pMorphR3->chanBank.size() && i < MR3_NUM_CHANNELS; ++i)
 	  {
       morphChannel &pMorphChannel = m_pMorphR3->chanBank[i];
       if(pMorphChannel.mActive)
+        validChan.push_back(&pMorphChannel);
+    }
+
+    //index for pose animations
+    std::vector<std::vector<int>> poseIndexList;
+    poseIndexList.resize(subList.size());
+    int poseIndex = 0;
+
+    Matrix3 transMT = TransformMatrix(piv, m_params.yUpAxis);
+    for(int i = 0; i < validChan.size(); i++)
+	  {
+      morphChannel* pMorphChannel = validChan[i];
+		  pMorphChannel->rebuildChannel();
+
+		  std::string posename = pMorphChannel->mName;
+		  int numMorphVertices = pMorphChannel->mNumPoints;
+			
+      if(numMorphVertices != m_GameMesh->GetNumberOfVerts())
 		  {
-			  pMorphChannel.rebuildChannel();
+			  MessageBox(GetCOREInterface()->GetMAXHWnd(), _T("Morph targets have failed to export because the morph vertex count did not match the base mesh.  Collapse the modifier stack prior to export, as smoothing is not supported with morph target export."), _T("Morph Target Export Failed."), MB_OK);
+		    break;
+      }
+		  else
+		  {
+			  EasyOgreExporterLog("Exporting Morph target: %s with %d vertices.\n", posename.c_str(), numMorphVertices);
 
-			  std::string posename = pMorphChannel.mName;
-			  int numMorphVertices = pMorphChannel.mNumPoints;
-				
-        if(numMorphVertices != m_GameMesh->GetNumberOfVerts())
+			  size_t numPoints = pMorphChannel->mPoints.size();
+			  std::vector<Point3> vmPoints;
+			  vmPoints.reserve(numPoints);
+			  for(size_t k = 0; k < numPoints; ++k)
 			  {
-				  MessageBox(GetCOREInterface()->GetMAXHWnd(), _T("Morph targets have failed to export because the morph vertex count did not match the base mesh.  Collapse the modifier stack prior to export, as smoothing is not supported with morph target export."), _T("Morph Target Export Failed."), MB_OK);
-			    break;
-        }
-			  else
-			  {
-				  EasyOgreExporterLog("Exporting Morph target: %s with %d vertices.\n", posename.c_str(), numMorphVertices);
+				  vmPoints.push_back(pMorphChannel->mPoints[k]);
+			  }
 
-				  size_t numPoints = pMorphChannel.mPoints.size();
-				  std::vector<Point3> vmPoints;
-				  vmPoints.reserve(numPoints);
-				  for(size_t k = 0; k < numPoints; ++k)
-				  {
-					  vmPoints.push_back(pMorphChannel.mPoints[k]);
-				  }
-
-          if (m_params.useSharedGeom)
+        if(m_params.useSharedGeom)
+        {
+          // Create a new pose for the ogre mesh
+          Ogre::Pose* pPose = m_Mesh->createPose(0, posename.c_str());
+          // Set the pose attributes
+          for (int k = 0; k < m_vertices.size(); k++)
           {
-            // Create a new pose for the ogre mesh
-            Ogre::Pose* pPose = m_Mesh->createPose(0, posename.c_str());
-            // Set the pose attributes
-            for (int k = 0; k < m_vertices.size(); k++)
+            ExVertex vertex = m_vertices[k];
+            Point3 pos = vmPoints[vertex.iMaxId];
+            if(m_params.yUpAxis)
             {
-              ExVertex vertex = m_vertices[k];
+              float vy = pos.y;
+              pos.y = pos.z;
+              pos.z = -vy;
+            }
+            pos = transMT * pos;
+
+            // apply scale
+            pos *= m_params.lum;
+            // diff
+            pos -= vertex.vPos;
+            pPose->addVertex(k, Ogre::Vector3(pos.x, pos.y, pos.z));
+          }
+        }
+        else
+        {
+          for(int sub = 0; sub < subList.size(); sub++)
+          {
+            std::vector<ExVertex> verticesList = subList[sub];
+            poseIndexList[sub].push_back(poseIndex);
+
+            // Create a new pose for the ogre submesh
+            Ogre::Pose* pPose = m_Mesh->createPose(sub + 1, posename.c_str());
+            // Set the pose attributes
+            for (int k = 0; k < verticesList.size(); k++)
+            {
+              ExVertex vertex = verticesList[k];
               Point3 pos = vmPoints[vertex.iMaxId];
               if(m_params.yUpAxis)
               {
@@ -494,39 +534,99 @@ namespace EasyOgreExporter
               pos -= vertex.vPos;
               pPose->addVertex(k, Ogre::Vector3(pos.x, pos.y, pos.z));
             }
+
+            poseIndex ++;
           }
-          else
+        }
+      }
+    }
+    
+    //Poses animations
+    if(m_pMorphR3->IsAnimated())
+    {
+      Interval animRange = GetCOREInterface()->GetAnimRange();
+      int animRate = GetTicksPerFrame();
+      int animLenght = animRange.End() - animRange.Start();
+      float ogreLenght = (static_cast<float>(animLenght) / static_cast<float>(animRate)) / GetFrameRate();
+
+      //there is no key for morpher
+      //Tab<int> keyTimes;
+      //m_pMorphR3->GetKeyTimes(keyTimes, animRange, 0);
+
+      //add time steps
+      std::vector<int> keyTimes;
+      for (float t = animRange.Start(); t < animRange.End(); t += animRate)
+			  keyTimes.push_back(t);
+
+      //force the last key!
+		  keyTimes.push_back(animRange.End());
+      
+      if(keyTimes.size() > 0)
+      {
+        // Create a new animation for each clip
+        Ogre::Animation* pAnimation = m_Mesh->createAnimation("default_poses", ogreLenght);
+
+        if(m_params.useSharedGeom)
+        {
+          // Create a new track
+          Ogre::VertexAnimationTrack* pTrack = pAnimation->createVertexTrack(0, m_Mesh->sharedVertexData, Ogre::VAT_POSE);
+        
+          for (int i = 0; i < keyTimes.size(); i++)
           {
-            for(int sub = 0; sub < subList.size(); sub++)
+            int kTime = keyTimes[i];
+            float ogreTime = static_cast<float>((kTime - animRange.Start()) / static_cast<float>(animRate)) / GetFrameRate();
+            
+            //add key frame
+            Ogre::VertexPoseKeyFrame* pKeyframe = pTrack->createVertexPoseKeyFrame(ogreTime);
+
+            for(int pose = 0; pose < validChan.size(); pose++)
+	          {
+              morphChannel* pMorphChannel = validChan[pose];
+
+              //get weight value for this pose
+				      float weight;
+				      Interval junkInterval;
+              IParamBlock* paramBlock = pMorphChannel->cblock;
+				      paramBlock->GetValue(0, kTime, weight, junkInterval);
+
+              pKeyframe->addPoseReference(pose, weight / 100.0f);
+            }
+          }
+        }
+        else
+        {
+          // create a track for each submesh
+          for(int sub = 0; sub < subList.size(); sub++)
+          {
+            // Create a new track
+            Ogre::VertexAnimationTrack* pTrack = pAnimation->createVertexTrack(sub+1, m_Mesh->getSubMesh(sub)->vertexData, Ogre::VAT_POSE);
+            
+            for (int i = 0; i < keyTimes.size(); i++)
             {
-              std::vector<ExVertex> verticesList = subList[sub];
+              int kTime = keyTimes[i];
+              float ogreTime = static_cast<float>((kTime - animRange.Start()) / static_cast<float>(animRate)) / GetFrameRate();
+              
+              //add key frame
+              Ogre::VertexPoseKeyFrame* pKeyframe = pTrack->createVertexPoseKeyFrame(ogreTime);
 
-              // Create a new pose for the ogre submesh
-              Ogre::Pose* pPose = m_Mesh->createPose(sub + 1, posename.c_str());
-              // Set the pose attributes
-              for (int k = 0; k < verticesList.size(); k++)
-              {
-                ExVertex vertex = verticesList[k];
-                Point3 pos = vmPoints[vertex.iMaxId];
-                if(m_params.yUpAxis)
-                {
-                  float vy = pos.y;
-                  pos.y = pos.z;
-                  pos.z = -vy;
-                }
-                pos = transMT * pos;
+              for(int pose = 0; pose < validChan.size(); pose++)
+	            {
+                morphChannel* pMorphChannel = validChan[pose];
 
-                // apply scale
-                pos *= m_params.lum;
-                // diff
-                pos -= vertex.vPos;
-                pPose->addVertex(k, Ogre::Vector3(pos.x, pos.y, pos.z));
+                //get weight value for this pose
+				        float weight;
+				        Interval junkInterval;
+                IParamBlock* paramBlock = pMorphChannel->cblock;
+				        paramBlock->GetValue(0, kTime, weight, junkInterval);
+
+                pKeyframe->addPoseReference(poseIndexList[sub][pose], weight / 100.0f);
               }
             }
           }
         }
       }
     }
+
   }
 
   bool ExMesh::createOgreSharedGeometry()

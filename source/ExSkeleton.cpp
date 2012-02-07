@@ -438,7 +438,7 @@ namespace EasyOgreExporter
     if(useDefault)
     {
       Interval animRange = GetCOREInterface()->GetAnimRange();
-      loadClip("default", animRange.Start(), animRange.End(), GetTicksPerFrame());
+      loadClip("default_skl", animRange.Start(), animRange.End(), GetTicksPerFrame());
     }
 
 		return true;
