@@ -111,9 +111,26 @@ namespace EasyOgreExporter
           vertex.lTexCoords[chan] = uv;
         }
 
-        //add other vertex with the same position
-        m_vertices.push_back(vertex);
-        m_faces[face->meshFaceIndex].vertices[j] = m_vertices.size() -1;
+        //look for a duplicated vertex
+        int sameFound = -1;
+        for(int vi = 0; vi < m_vertices.size() && (sameFound == -1); vi ++)
+        {
+          if (m_vertices[vi] == vertex)
+          {
+            sameFound = vi;
+          }
+        }
+
+        //add vertex
+        if(sameFound == -1)
+        {
+          m_vertices.push_back(vertex);
+          m_faces[face->meshFaceIndex].vertices[j] = m_vertices.size() -1;
+        }
+        else
+        {
+          m_faces[face->meshFaceIndex].vertices[j] = sameFound;
+        }
       }
     } // Loop faces.
   }
@@ -273,10 +290,6 @@ namespace EasyOgreExporter
       m_Mesh->nameSubMesh(subName, i);
     }
 
-    // Create poses
-    if (m_params.exportPoses && m_pMorphR3)
-      createPoses();
-
     // Set skeleton link (if present)
     if (m_pSkeleton && m_params.exportSkeleton)
     {
@@ -292,6 +305,10 @@ namespace EasyOgreExporter
         //ignore loading exception
       }
     }
+
+    // Create poses
+    if (m_params.exportPoses && m_pMorphR3)
+      createPoses();
 
     // Make sure animation types are up to date first
 		m_Mesh->_determineAnimationTypes();
@@ -398,7 +415,7 @@ namespace EasyOgreExporter
     //TODO manage Ogre version
     try
     {
-      serializer.exportMesh(m_Mesh, meshfile.c_str());
+      serializer.exportMesh(m_Mesh, meshfile.c_str()/*, Ogre::MeshVersion::MESH_VERSION_1_7*/);
     }
     catch(Ogre::Exception &e)
     {
@@ -413,6 +430,33 @@ namespace EasyOgreExporter
 
   void ExMesh::createPoses()
   {
+    // Disable all skin Modifiers.
+    std::vector<Modifier*> disabledSkinModifiers;
+    IGameObject* pGameObject = m_GameNode->GetIGameObject();
+    if(pGameObject)
+    {
+      int numModifiers = pGameObject->GetNumModifiers();
+      for(int i = 0; i < numModifiers; ++i)
+      {
+        IGameModifier* pGameModifier = pGameObject->GetIGameModifier(i);
+        if(pGameModifier)
+        {
+          if(pGameModifier->IsSkin())
+          {
+            Modifier* pModifier = pGameModifier->GetMaxModifier();
+            if(pModifier)
+            {
+              if(pModifier->IsEnabled())
+              {
+                disabledSkinModifiers.push_back(pModifier);
+                pModifier->DisableMod();
+              }
+            }
+          }
+        }
+      }
+    }
+
     INode* node = m_GameNode->GetMaxNode();
     Tab<int> materialIDs = m_GameMesh->GetActiveMatIDs();
 
@@ -505,6 +549,8 @@ namespace EasyOgreExporter
             pos -= vertex.vPos;
             pPose->addVertex(k, Ogre::Vector3(pos.x, pos.y, pos.z));
           }
+
+          poseIndex ++;
         }
         else
         {
@@ -627,6 +673,11 @@ namespace EasyOgreExporter
       }
     }
 
+    // Re-enable skin modifiers.
+    for(int i = 0; i < disabledSkinModifiers.size(); ++i)
+    {
+      disabledSkinModifiers[i]->EnableMod();
+    }
   }
 
   bool ExMesh::createOgreSharedGeometry()
