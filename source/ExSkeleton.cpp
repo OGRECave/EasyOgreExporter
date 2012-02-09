@@ -578,6 +578,15 @@ namespace EasyOgreExporter
 		decomp_affine(relMat, &ap);
 
     Point3 trans = ap.t * m_params.lum;
+    
+    // don't know why root translation are Z X reverted
+    if(j.parentIndex < 0)
+    {
+      float x = trans.x;
+      trans.x = -trans.z;
+      trans.z = x;
+    }
+
     Point3 scale = ap.k;
     Quat rot = ap.q;
     // Notice that in Max we flip the w-component of the quaternion;

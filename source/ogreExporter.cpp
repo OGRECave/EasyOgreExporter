@@ -237,6 +237,7 @@ bool OgreExporter::exportScene()
   pIGame->InitialiseIGame(false);
   pIGame->SetStaticFrame(0);
 
+  //WARNING this apply transform only matrix from on iGameNode not on max iNode
   IGameConversionManager* pConversionManager = GetConversionManager();
   if(m_params.yUpAxis)
   {
