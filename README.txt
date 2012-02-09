@@ -10,7 +10,7 @@
 ////////////////////////////////////
 
 
-#Version 0.1 : January 26, 2012
+#Version 0.4 : Febrary 02, 2012
 
  - Ogre Scene file
  - meshs
@@ -18,13 +18,13 @@
  - biped skeletons
  - skeletons animation from the main track or from the biped mixer clips if available
  - Nodes animations included in the Ogre Scene file (from the main animation track)
- 
- 
+ - Mesh Poses
+ - Mesh Poses Animations
+ - Manage units convertion from max to meter
+
 #TODO
  
  - Mesh morph animations
- - Mesh Poses
- - Manage units convertion from max
  - Manage Mental ray materials if possible
  - Manage Automatic Shader creation in materials from DX normal maps
  - Export interface with options

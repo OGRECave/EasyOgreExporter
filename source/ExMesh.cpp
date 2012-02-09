@@ -310,6 +310,25 @@ namespace EasyOgreExporter
     if (m_params.exportPoses && m_pMorphR3)
       createPoses();
 
+
+    // Create a bounding box for the mesh
+    EasyOgreExporterLog("Info: Create mesh bounding box\n");
+    Ogre::AxisAlignedBox bbox = m_Mesh->getBounds();
+    
+    Point3 min1 = m_Bounding.Min();
+    Point3 max1 = m_Bounding.Max();
+
+    //reverse Z
+    Ogre::Vector3 min2(min1.x, min1.y, min1.z);
+    Ogre::Vector3 max2(max1.x, max1.y, max1.z);
+    Ogre::AxisAlignedBox newbbox;
+    newbbox.setExtents(min2, max2);
+    bbox.merge(newbbox);
+
+    // Define mesh bounds
+    m_Mesh->_setBounds(bbox, false);
+
+
     // Make sure animation types are up to date first
 		m_Mesh->_determineAnimationTypes();
 
@@ -317,6 +336,10 @@ namespace EasyOgreExporter
     if (m_Mesh->sharedVertexData)
     {
       EasyOgreExporterLog("Info: Optimize mesh\n");
+
+      Ogre::VertexData* vdata = m_Mesh->getVertexDataByTrackHandle(0);
+      Ogre::VertexDeclaration* newadcl = vdata->vertexDeclaration->getAutoOrganisedDeclaration(m_Mesh->hasSkeleton(), m_Mesh->hasVertexAnimation(), m_Mesh->getSharedVertexDataAnimationIncludesNormals());
+      vdata->reorganiseBuffers(newadcl);
 
       // Automatic
       Ogre::VertexDeclaration* newDcl = m_Mesh->sharedVertexData->vertexDeclaration->getAutoOrganisedDeclaration(
@@ -335,6 +358,7 @@ namespace EasyOgreExporter
 
     // Dedicated geometry
     Ogre::Mesh::SubMeshIterator smIt = m_Mesh->getSubMeshIterator();
+    int subIdx = 0;
     while (smIt.hasMoreElements())
     {
       Ogre::SubMesh* sm = smIt.getNext();
@@ -342,37 +366,25 @@ namespace EasyOgreExporter
       {
         const bool hasVertexAnim = sm->getVertexAnimationType() != Ogre::VAT_NONE;
 
+        Ogre::VertexData* vdata = m_Mesh->getVertexDataByTrackHandle(subIdx + 1);
+        Ogre::VertexDeclaration* newadcl = vdata->vertexDeclaration->getAutoOrganisedDeclaration(m_Mesh->hasSkeleton(), hasVertexAnim, sm->getVertexAnimationIncludesNormals());
+        vdata->reorganiseBuffers(newadcl);
+
         // Automatic
         Ogre::VertexDeclaration* newDcl = sm->vertexData->vertexDeclaration->getAutoOrganisedDeclaration(
                 m_Mesh->hasSkeleton(), hasVertexAnim, sm->getVertexAnimationIncludesNormals());
         if (*newDcl != *(sm->vertexData->vertexDeclaration))
         {
-            // Usages don't matter here since we're onlly exporting
-            Ogre::BufferUsageList bufferUsages;
-            for (size_t u = 0; u <= newDcl->getMaxSource(); ++u)
-                bufferUsages.push_back(Ogre::HardwareBuffer::HBU_STATIC_WRITE_ONLY);
+          // Usages don't matter here since we're onlly exporting
+          Ogre::BufferUsageList bufferUsages;
+          for (size_t u = 0; u <= newDcl->getMaxSource(); ++u)
+            bufferUsages.push_back(Ogre::HardwareBuffer::HBU_STATIC_WRITE_ONLY);
 
-            sm->vertexData->reorganiseBuffers(newDcl, bufferUsages);
+          sm->vertexData->reorganiseBuffers(newDcl, bufferUsages);
         }
       }
+      subIdx++;
     }
-
-    // Create a bounding box for the mesh
-    EasyOgreExporterLog("Info: Create mesh bounding box\n");
-    Ogre::AxisAlignedBox bbox = m_Mesh->getBounds();
-    
-    Point3 min1 = m_Bounding.Min();
-    Point3 max1 = m_Bounding.Max();
-
-    //reverse Z
-    Ogre::Vector3 min2(min1.x, min1.y, min1.z);
-    Ogre::Vector3 max2(max1.x, max1.y, max1.z);
-    Ogre::AxisAlignedBox newbbox;
-    newbbox.setExtents(min2, max2);
-    bbox.merge(newbbox);
-
-    // Define mesh bounds
-    m_Mesh->_setBounds(bbox, false);
 
     // Build edges list
     if (m_params.buildEdges)
@@ -849,7 +861,7 @@ namespace EasyOgreExporter
         }
 
 				// Rationalise the bone assignements list
-				pSubmesh->parent->_rationaliseBoneAssignments(pSubmesh->vertexData->vertexCount,vbas);
+				pSubmesh->parent->_rationaliseBoneAssignments(pSubmesh->vertexData->vertexCount, vbas);
 				// Add bone assignements to the submesh
 				for (Ogre::SubMesh::VertexBoneAssignmentList::iterator bi = vbas.begin(); bi != vbas.end(); bi++)
 				{
@@ -861,7 +873,6 @@ namespace EasyOgreExporter
 		return pSubmesh;
 	}
 
-  //TODO vertives index list against faces, needed for shared geometry
   void ExMesh::buildOgreGeometry(Ogre::VertexData* vdata, std::vector<ExVertex> verticesList)
   {
     // A VertexDeclaration declares the format of a set of vertex inputs,

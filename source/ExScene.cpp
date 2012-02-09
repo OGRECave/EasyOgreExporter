@@ -183,8 +183,8 @@ namespace EasyOgreExporter
           pAnimElement->SetAttribute("name", "default");
           pAnimElement->SetAttribute("enable", "true");
           pAnimElement->SetAttribute("loop", "false");
-          pAnimElement->SetAttribute("interpolationMode", "spline");
-          pAnimElement->SetAttribute("rotationInterpolationMode", "spherical");
+          pAnimElement->SetAttribute("interpolationMode", "linear");
+          pAnimElement->SetAttribute("rotationInterpolationMode", "linear");
           pAnimElement->SetDoubleAttribute("length", ogreAnimLength);
           pAnimsElement->LinkEndChild(pAnimElement);
           
