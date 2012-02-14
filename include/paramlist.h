@@ -27,6 +27,7 @@ namespace EasyOgreExporter
 {
 	std::string StripToTopParent(const std::string& filepath);
   std::string makeOutputPath(std::string common, std::string dir, std::string file, std::string ext);
+  std::string optimizeFileName(const std::string& filename);
 
 	class ExSubEntity;
 

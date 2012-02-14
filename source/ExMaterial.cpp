@@ -297,7 +297,7 @@ namespace EasyOgreExporter
             
 						tex.absFilename = textureName.GetCStr();
 						std::string filename = textureName.StripToLeaf().GetCStr();
-						tex.filename = filename;
+						tex.filename = optimizeFileName(filename);
 						tex.uvsetIndex = 0;
 						tex.uvsetName = pGameTexture->GetTextureName();
             
@@ -597,15 +597,7 @@ namespace EasyOgreExporter
 	{
 		for (int i=0; i<m_textures.size(); i++)
 		{
-      std::string destFile;
-
-      size_t pos = m_textures[i].absFilename.find_last_of("\\");
-      if(pos != std::string::npos)
-        destFile.assign(m_textures[i].absFilename.begin() + pos + 1, m_textures[i].absFilename.end());
-      else
-        destFile = m_textures[i].absFilename;
-
-      destFile = makeOutputPath(params.outputDir, params.texOutputDir, destFile, "");
+      std::string destFile = makeOutputPath(params.outputDir, params.texOutputDir, m_textures[i].filename, "");
 
 			// Copy file texture to output dir
       if(!CopyFile(m_textures[i].absFilename.c_str(), destFile.c_str(), false))

@@ -36,6 +36,17 @@ namespace EasyOgreExporter
 		return filepath.substr(ri+1);
 	}
 
+	// Helper function to replace special chars for file names
+	std::string optimizeFileName(const std::string& filename)
+	{
+    std::string newFilename = filename;
+    std::replace(newFilename.begin(), newFilename.end(), ' ', '_');
+    std::replace(newFilename.begin(), newFilename.end(), '\'', '_');
+    std::replace(newFilename.begin(), newFilename.end(), '"', '_');
+		return newFilename;;
+	}
+
+	// Helper function to generate full filepath
   std::string makeOutputPath(std::string common, std::string dir, std::string file, std::string ext)
   {
     std::string filePath = "";

@@ -607,19 +607,31 @@ namespace EasyOgreExporter
       int animLenght = animRange.End() - animRange.Start();
       float ogreLenght = (static_cast<float>(animLenght) / static_cast<float>(animRate)) / GetFrameRate();
 
-      //there is no key for morpher
-      //Tab<int> keyTimes;
-      //m_pMorphR3->GetKeyTimes(keyTimes, animRange, 0);
+      std::vector<int> animKeys;
+      for(int pose = 0; pose < validChan.size(); pose++)
+      {
+        morphChannel* pMorphChannel = validChan[pose];
 
-      //add time steps
-      std::vector<int> keyTimes;
-      for (float t = animRange.Start(); t < animRange.End(); t += animRate)
-			  keyTimes.push_back(t);
+        //get keys for this pose
+        IParamBlock* paramBlock = pMorphChannel->cblock;
+        IKeyControl* ikeys = GetKeyControlInterface(paramBlock->GetController(0));
+        for (int ik = 0; ik < ikeys->GetNumKeys(); ik++)
+        {
+          IKey nkey;
+          ikeys->GetKey(ik, &nkey);
 
-      //force the last key!
-		  keyTimes.push_back(animRange.End());
-      
-      if(keyTimes.size() > 0)
+          if((nkey.time >= animRange.Start()) && (nkey.time <= animRange.End()))
+          {
+            animKeys.push_back(nkey.time);
+          }
+        }
+      }
+
+      //sort and remove duplicated entries
+      std::sort(animKeys.begin(), animKeys.end());
+      animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
+
+      if(animKeys.size() > 0)
       {
         // Create a new animation for each clip
         Ogre::Animation* pAnimation = m_Mesh->createAnimation("default_poses", ogreLenght);
@@ -629,9 +641,9 @@ namespace EasyOgreExporter
           // Create a new track
           Ogre::VertexAnimationTrack* pTrack = pAnimation->createVertexTrack(0, m_Mesh->sharedVertexData, Ogre::VAT_POSE);
         
-          for (int i = 0; i < keyTimes.size(); i++)
+          for (int i = 0; i < animKeys.size(); i++)
           {
-            int kTime = keyTimes[i];
+            int kTime = animKeys[i];
             float ogreTime = static_cast<float>((kTime - animRange.Start()) / static_cast<float>(animRate)) / GetFrameRate();
             
             //add key frame
@@ -659,9 +671,9 @@ namespace EasyOgreExporter
             // Create a new track
             Ogre::VertexAnimationTrack* pTrack = pAnimation->createVertexTrack(sub+1, m_Mesh->getSubMesh(sub)->vertexData, Ogre::VAT_POSE);
             
-            for (int i = 0; i < keyTimes.size(); i++)
+            for (int i = 0; i < animKeys.size(); i++)
             {
-              int kTime = keyTimes[i];
+              int kTime = animKeys[i];
               float ogreTime = static_cast<float>((kTime - animRange.Start()) / static_cast<float>(animRate)) / GetFrameRate();
               
               //add key frame

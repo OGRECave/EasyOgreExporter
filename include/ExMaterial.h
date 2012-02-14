@@ -42,6 +42,7 @@ namespace EasyOgreExporter
 			scroll_u = scroll_v = 0;
 			rot = 0;
 			am_u = am_v = TAM_CLAMP;
+
 			// Most textures like normal, specular, bump, etc. can't just
 			// be summed into the diffuse channel and need
 			bCreateTextureUnit = false;
