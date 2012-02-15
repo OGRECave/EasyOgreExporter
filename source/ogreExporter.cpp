@@ -33,6 +33,12 @@
 namespace EasyOgreExporter
 {
 
+// Dummy function for progress bar
+DWORD WINAPI progressCb(LPVOID arg)
+{
+	return(0);
+}
+
 OgreSceneExporter::OgreSceneExporter()
 {
 }
@@ -188,7 +194,8 @@ DWORD WINAPI fn(LPVOID arg)
 OgreExporter::OgreExporter() :
   pIGame(NULL),
   sceneData(0),
-  ogreConverter(0)
+  ogreConverter(0),
+  nodeCount(0)
 {
 }
 
@@ -237,6 +244,9 @@ bool OgreExporter::exportScene()
   pIGame->InitialiseIGame(false);
   pIGame->SetStaticFrame(0);
 
+  std::string sTitle = "Easy Ogre Exporter: " + m_params.sceneFilename;
+  GetCOREInterface()->ProgressStart((char*)sTitle.c_str(), TRUE, progressCb, 0);
+
   //WARNING this apply transform only matrix from on iGameNode not on max iNode
   IGameConversionManager* pConversionManager = GetConversionManager();
   if(m_params.yUpAxis)
@@ -271,10 +281,16 @@ bool OgreExporter::exportScene()
   }
 
   if (sceneData)
+  {
+    GetCOREInterface()->ProgressUpdate(95, FALSE, "Writing scene file.");
     sceneData->writeSceneFile();
+  }
 
   if (ogreConverter)
+  {
+    GetCOREInterface()->ProgressUpdate(98, FALSE, "Writing material file.");
     ogreConverter->writeMaterialFile();
+  }
 
   if (sceneData)
   {
@@ -291,13 +307,20 @@ bool OgreExporter::exportScene()
   m_params.closeFiles();
   pIGame->ReleaseIGame();
   
+  GetCOREInterface()->ProgressUpdate(99, FALSE, "Done.");
   EasyOgreExporterLog("Info: export done.\n");
+
+  //close the progress bar
+  GetCOREInterface()->ProgressEnd();
+
   MessageBox(GetCOREInterface()->GetMAXHWnd(), _T("Export done successfully."), _T("Info"), MB_OK);
   return true;
 }
 
 bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
 {
+  GetCOREInterface()->ProgressUpdate((int)((float)(nodeCount + 10) / pIGame->GetTotalNodeCount() * 90.0f), FALSE, 0); 
+
   if(pGameNode)
   {
     IGameObject* pGameObject = pGameNode->GetIGameObject();
@@ -326,6 +349,8 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
       
       if(bShouldExport)
       {
+        GetCOREInterface()->ProgressUpdate((int)((float)(nodeCount + 10) / pIGame->GetTotalNodeCount() * 90.0f), FALSE, pGameNode->GetName()); 
+
         EasyOgreExporterLog("Found node: %s\n", pGameNode->GetName());
         switch(pGameObject->GetIGameType())
         {
@@ -399,6 +424,7 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
         }
       }
     }
+    nodeCount++;
   }
   return true;
 }

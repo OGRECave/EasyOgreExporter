@@ -414,6 +414,7 @@ namespace EasyOgreExporter
       catch(Ogre::Exception e)
       {
         canBuild = false;
+        EasyOgreExporterLog("Error: Creating mesh tangents failed\n");
       }
       if (canBuild)
         m_Mesh->buildTangentVectors(targetSemantic, srcTex, destTex, m_params.tangentsSplitMirrored, m_params.tangentsSplitRotated, m_params.tangentsUseParity);
@@ -633,6 +634,10 @@ namespace EasyOgreExporter
 
       if(animKeys.size() > 0)
       {
+        //sort and remove duplicated entries
+        std::sort(animKeys.begin(), animKeys.end());
+        animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
+
         // Create a new animation for each clip
         Ogre::Animation* pAnimation = m_Mesh->createAnimation("default_poses", ogreLenght);
 
@@ -694,6 +699,7 @@ namespace EasyOgreExporter
             }
           }
         }
+        animKeys.clear();
       }
     }
 

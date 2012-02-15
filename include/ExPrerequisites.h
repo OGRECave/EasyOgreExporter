@@ -30,7 +30,6 @@
 #include <IGame.h>
 #include <IGameModifier.h>
 #include <IPathConfigMgr.h> 
-#include <ILayerControl.h> 
 
 #ifdef PRE_MAX_2011
 #include "maxscrpt/maxscrpt.h"

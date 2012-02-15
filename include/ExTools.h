@@ -278,4 +278,261 @@ inline float ConvertToMeter(int metricDisp, int unitType)
   return scale;
 }
 
+inline void AddKeyTabToVector(IGameKeyTab tabkeys, Interval animRange, std::vector<int>* animKeys)
+{
+  for (int keyPos = 0; keyPos < tabkeys.Count(); keyPos++)
+  {
+    IGameKey nkey = tabkeys[keyPos];
+    if((nkey.t >= animRange.Start()) && (nkey.t <= animRange.End()))
+    {
+      animKeys->push_back(nkey.t);
+    }
+  }
+}
+
+inline bool GetAnimationsPosKeysTime(IGameControl* pGameControl, Interval animRange, std::vector<int>* animKeys)
+{
+  if(pGameControl->IsAnimated(IGAME_POS))
+  {
+    IGameKeyTab tkeys;
+    IGameControl::MaxControlType contType = pGameControl->GetControlType(IGAME_POS);
+
+    if(contType == IGameControl::IGAME_MAXSTD && pGameControl->GetBezierKeys(tkeys, IGAME_POS))
+	  {
+      0;
+	  }
+	  else if(contType == IGameControl::IGAME_INDEPENDENT_POS)
+	  {
+      IGameKeyTab xkeys;
+      if(pGameControl->GetBezierKeys(xkeys, IGAME_POS_X))
+      {
+        AddKeyTabToVector(xkeys, animRange, animKeys);
+      }
+
+      IGameKeyTab ykeys;
+      if(pGameControl->GetBezierKeys(ykeys, IGAME_POS_Y))
+      {
+        AddKeyTabToVector(ykeys, animRange, animKeys);
+      }
+
+      IGameKeyTab zkeys;
+      if(pGameControl->GetBezierKeys(zkeys, IGAME_POS_Z))
+      {
+        AddKeyTabToVector(zkeys, animRange, animKeys);
+      }
+    }
+	  else if(contType == IGameControl::IGAME_MAXSTD && pGameControl->GetLinearKeys(tkeys, IGAME_POS))
+    {
+		  0;
+    }
+	  else if(contType == IGameControl::IGAME_LIST)
+	  {
+	    int subNum = pGameControl->GetNumOfListSubControls(IGAME_POS);
+	    if(subNum)
+	    {
+		    for(int i= 0; i < subNum; i++)
+	      {
+		      IGameKeyTab SubKeys;
+			    IGameControl* subCont = pGameControl->GetListSubControl(i, IGAME_POS);
+          GetAnimationsPosKeysTime(subCont, animRange, animKeys);
+        }
+      }
+      else
+        return false;
+    }
+	  else
+      return false;
+    
+    AddKeyTabToVector(tkeys, animRange, animKeys);
+
+    return true;
+  }
+
+  return false;
+}
+
+inline bool GetAnimationsRotKeysTime(IGameControl* pGameControl, Interval animRange, std::vector<int>* animKeys)
+{
+  if(pGameControl->IsAnimated(IGAME_ROT))
+  {
+    IGameKeyTab tkeys;
+    IGameControl::MaxControlType contType = pGameControl->GetControlType(IGAME_ROT);
+
+    if(contType == IGameControl::IGAME_MAXSTD && pGameControl->GetTCBKeys(tkeys, IGAME_ROT))
+	  {
+      0;
+	  }
+    else if(contType == IGameControl::IGAME_MAXSTD && pGameControl->GetBezierKeys(tkeys, IGAME_ROT))
+	  {
+      0;
+	  }
+	  else if(contType == IGameControl::IGAME_MAXSTD && pGameControl->GetLinearKeys(tkeys, IGAME_ROT))
+    {
+		  0;
+    }
+    else if(contType == IGameControl::IGAME_EULER)
+	  {
+      IGameKeyTab xkeys;
+      if(pGameControl->GetBezierKeys(xkeys, IGAME_EULER_X))
+      {
+        AddKeyTabToVector(xkeys, animRange, animKeys);
+      }
+
+      IGameKeyTab ykeys;
+      if(pGameControl->GetBezierKeys(ykeys, IGAME_EULER_Y))
+      {
+        AddKeyTabToVector(ykeys, animRange, animKeys);
+      }
+
+      IGameKeyTab zkeys;
+      if(pGameControl->GetBezierKeys(zkeys, IGAME_EULER_Z))
+      {
+        AddKeyTabToVector(zkeys, animRange, animKeys);
+      }
+
+      IGameKeyTab xlkeys;
+      if(pGameControl->GetLinearKeys(xlkeys, IGAME_EULER_X))
+      {
+        AddKeyTabToVector(xlkeys, animRange, animKeys);
+      }
+
+      IGameKeyTab ylkeys;
+      if(pGameControl->GetLinearKeys(ylkeys, IGAME_EULER_Y))
+      {
+        AddKeyTabToVector(ylkeys, animRange, animKeys);
+      }
+
+      IGameKeyTab zlkeys;
+      if(pGameControl->GetLinearKeys(zlkeys, IGAME_EULER_Z))
+      {
+        AddKeyTabToVector(zlkeys, animRange, animKeys);
+      }
+	  }
+	  else if(contType == IGameControl::IGAME_LIST)
+	  {
+	    int subNum = pGameControl->GetNumOfListSubControls(IGAME_ROT);
+	    if(subNum)
+	    {
+		    for(int i= 0; i < subNum; i++)
+	      {
+		      IGameKeyTab SubKeys;
+			    IGameControl* subCont = pGameControl->GetListSubControl(i, IGAME_ROT);
+          GetAnimationsPosKeysTime(subCont, animRange, animKeys);
+        }
+      }
+      else
+        return false;
+    }
+	  else
+      return false;
+    
+    AddKeyTabToVector(tkeys, animRange, animKeys);
+
+    return true;
+  }
+
+  return false;
+}
+
+inline bool GetAnimationsScaleKeysTime(IGameControl* pGameControl, Interval animRange, std::vector<int>* animKeys)
+{
+  if(pGameControl->IsAnimated(IGAME_SCALE))
+  {
+    IGameKeyTab tkeys;
+    IGameControl::MaxControlType contType = pGameControl->GetControlType(IGAME_SCALE);
+
+    if(contType == IGameControl::IGAME_MAXSTD && pGameControl->GetBezierKeys(tkeys, IGAME_SCALE))
+	  {
+      0;
+	  }
+	  else if(contType == IGameControl::IGAME_MAXSTD && pGameControl->GetLinearKeys(tkeys, IGAME_SCALE))
+    {
+		  0;
+    }
+	  else if(contType == IGameControl::IGAME_LIST)
+	  {
+	    int subNum = pGameControl->GetNumOfListSubControls(IGAME_SCALE);
+	    if(subNum)
+	    {
+		    for(int i= 0; i < subNum; i++)
+	      {
+		      IGameKeyTab SubKeys;
+			    IGameControl* subCont = pGameControl->GetListSubControl(i, IGAME_SCALE);
+          GetAnimationsPosKeysTime(subCont, animRange, animKeys);
+        }
+      }
+      else
+        return false;
+    }
+	  else
+      return false;
+    
+    AddKeyTabToVector(tkeys, animRange, animKeys);
+
+    return true;
+  }
+
+  return false;
+}
+
+inline std::vector<int> GetAnimationsKeysTime(IGameNode* pGameNode, Interval animRange)
+{
+  std::vector<int> animKeys;
+  IGameControl* pGameControl = pGameNode->GetIGameControl();
+
+  if(pGameControl->IsAnimated(IGAME_POS))
+  {
+    if(!GetAnimationsPosKeysTime(pGameControl, animRange, &animKeys))
+    {
+      IGameKeyTab poskeys;
+      if(pGameControl->GetFullSampledKeys(poskeys, 1, IGameControlType(IGAME_TM), true))
+      {
+        AddKeyTabToVector(poskeys, animRange, &animKeys);
+        return animKeys;
+      }
+    }
+  }
+
+  if(pGameControl->IsAnimated(IGAME_ROT))
+  {
+    if(!GetAnimationsRotKeysTime(pGameControl, animRange, &animKeys))
+    {
+      IGameKeyTab rotkeys;
+      if(pGameControl->GetFullSampledKeys(rotkeys, 1, IGameControlType(IGAME_TM), true))
+      {
+        AddKeyTabToVector(rotkeys, animRange, &animKeys);
+
+        std::sort(animKeys.begin(), animKeys.end());
+        animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
+        return animKeys;
+      }
+    }
+  }
+
+  if(pGameControl->IsAnimated(IGAME_SCALE))
+  {
+    if(!GetAnimationsScaleKeysTime(pGameControl, animRange, &animKeys))
+    {
+      IGameKeyTab scalekeys;
+      if(pGameControl->GetFullSampledKeys(scalekeys, 1, IGameControlType(IGAME_TM), true))
+      {
+        AddKeyTabToVector(scalekeys, animRange, &animKeys);
+
+        std::sort(animKeys.begin(), animKeys.end());
+        animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
+        return animKeys;
+      }
+    }
+  }
+
+  //sort and remove duplicated entries
+  if(animKeys.size() > 0)
+  {
+    std::sort(animKeys.begin(), animKeys.end());
+    animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
+  }
+
+  return animKeys;
+}
+
 #endif

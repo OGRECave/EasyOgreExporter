@@ -65,6 +65,7 @@ private:
   ExOgreConverter* ogreConverter;
 	TimeValue m_curTime;
 	IGameScene* pIGame;
+  int nodeCount;
   
   bool exportNode(IGameNode* pGameNode, TiXmlElement* parent);
 };

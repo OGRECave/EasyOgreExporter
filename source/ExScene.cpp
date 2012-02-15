@@ -168,69 +168,7 @@ namespace EasyOgreExporter
     //IAnimLayerControlManager* layerManager = static_cast<IAnimLayerControlManager*>(GetCOREInterface(IANIMLAYERCONTROLMANAGER_INTERFACE));
     if(nodeControl->IsAnimated(IGAME_POS) || nodeControl->IsAnimated(IGAME_ROT) || nodeControl->IsAnimated(IGAME_SCALE))
     {
-      std::vector<int> animKeys;
-
-      //get the keys from max STD controllers
-      Control* controlPos = maxnode->GetTMController()->GetPositionController();
-	    IKeyControl* ikcPos = GetKeyControlInterface(controlPos);
-      if(ikcPos)
-      {
-        for (int keyPos = 0; keyPos < ikcPos->GetNumKeys(); keyPos++)
-        {
-          IKey nkey;
-          ikcPos->GetKey(keyPos, &nkey);
-          if((nkey.time >= animRange.Start()) && (nkey.time <= animRange.End()))
-          {
-            animKeys.push_back(nkey.time);
-          }
-        }
-      }
-
-	    Control* controlRot = maxnode->GetTMController()->GetRotationController();
-	    IKeyControl* ikcRot = GetKeyControlInterface(controlRot);
-      if(ikcRot)
-      {
-        for (int keyPos = 0; keyPos < ikcRot->GetNumKeys(); keyPos++)
-        {
-          IKey nkey;
-          ikcRot->GetKey(keyPos, &nkey);
-          if((nkey.time >= animRange.Start()) && (nkey.time <= animRange.End()))
-          {
-            animKeys.push_back(nkey.time);
-          }
-        }
-      }
-
-	    Control* controlScale = maxnode->GetTMController()->GetScaleController();
-	    IKeyControl* ikcScale = GetKeyControlInterface(controlScale);
-      if(ikcScale)
-      {
-        for (int keyPos = 0; keyPos < ikcScale->GetNumKeys(); keyPos++)
-        {
-          IKey nkey;
-          ikcScale->GetKey(keyPos, &nkey);
-          if((nkey.time >= animRange.Start()) && (nkey.time <= animRange.End()))
-          {
-            animKeys.push_back(nkey.time);
-          }
-        }
-      }
-
-      //if you prefer IGame
-      /*IGameKeyTab poskeys;
-      nodeControl->GetBezierKeys(poskeys, IGAME_POS);
-      for (int keyPos = 0; keyPos > poskeys.Count(); keyPos++)
-      {
-        IGameKey nkey = poskeys[keyPos];
-        if((nkey.t >= animRange.Start()) && (nkey.t <= animRange.End()))
-        {
-          animKeys.push_back(nkey.t);
-        }
-      }*/
-
-      //sort and remove duplicated entries
-      std::sort(animKeys.begin(), animKeys.end());
-      animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
+      std::vector<int> animKeys = GetAnimationsKeysTime(pGameNode, animRange);
 
       if(animKeys.size() > 0)
       {
@@ -307,6 +245,8 @@ namespace EasyOgreExporter
           pKeyScaleElement->SetDoubleAttribute("z", scale.z);
           pKeyElement->LinkEndChild(pKeyScaleElement);
         }
+
+        animKeys.clear();
       }
     }
 
