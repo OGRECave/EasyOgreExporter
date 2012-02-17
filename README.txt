@@ -10,7 +10,7 @@
 ////////////////////////////////////
 
 
-#Version 0.4 : Febrary 02, 2012
+#Version 0.5 : Febrary 17, 2012
 
  - Ogre Scene file
  - meshs
@@ -21,7 +21,8 @@
  - Mesh Poses
  - Mesh Poses Animations
  - Manage units convertion from max to meter
-
+ - animations from the motion mixer 
+ 
 #TODO
  
  - Mesh morph animations
