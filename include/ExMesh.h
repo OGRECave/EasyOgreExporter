@@ -149,6 +149,7 @@ namespace EasyOgreExporter
     void getModifiers();
     void loadAnims();
     void createPoses();
+    bool exportPosesAnimation(Interval animRange, std::string name, std::vector<morphChannel*> validChan, std::vector<std::vector<ExVertex>> subList, std::vector<std::vector<int>> poseIndexList, bool bDefault);
 
     std::vector<ExAnimation> m_vertexClips;
 		std::vector<ExAnimation> m_BSClips;

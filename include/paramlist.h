@@ -25,10 +25,6 @@
 
 namespace EasyOgreExporter
 {
-	std::string StripToTopParent(const std::string& filepath);
-  std::string makeOutputPath(std::string common, std::string dir, std::string file, std::string ext);
-  std::string optimizeFileName(const std::string& filename);
-
 	class ExSubEntity;
 
 	typedef struct clipInfoTag
@@ -61,7 +57,7 @@ namespace EasyOgreExporter
 			exportSkeleton, exportSkelAnims, exportBSAnims, exportVertAnims, exportPoses, 
 			useSharedGeom, lightingOff, copyTextures, exportParticles,
 			tangentsSplitMirrored, tangentsSplitRotated, tangentsUseParity, 
-			buildTangents, buildEdges, skelBB, bsBB, vertBB, normalizeScale, yUpAxis, exportScene;
+			buildTangents, buildEdges, skelBB, bsBB, vertBB, resampleAnims, normalizeScale, yUpAxis, exportScene;
 
 		float lum;	// Length Unit Multiplier
 
@@ -104,6 +100,8 @@ namespace EasyOgreExporter
 			skelBB = false;
 			bsBB = false;
 			vertBB = false;
+
+      resampleAnims = false;
 
       outputDir = "";
       meshOutputDir = "";
@@ -154,6 +152,8 @@ namespace EasyOgreExporter
 			skelBB = source.skelBB;
 			bsBB = source.bsBB;
 			vertBB = source.vertBB;
+
+      resampleAnims = source.resampleAnims;
 
       outputDir = source.outputDir;
 			meshOutputDir = source.meshOutputDir;
@@ -209,10 +209,6 @@ namespace EasyOgreExporter
 			if (outParticles)
 				outParticles.close();
 		}
-		// method to open files for writing
-		bool openFiles();
-		// method to close open output files
-		bool closeFiles();
 	};
 
 };	//end namespace

@@ -28,35 +28,7 @@
 
 
 namespace EasyOgreExporter
-{
-  inline std::string formatClipName(std::string fname, int id)
-  {
-    std::string sid;
-    std::stringstream strid;
-    strid << id;
-    sid = strid.str();
-
-    size_t dotIdx = fname.rfind(".", fname.length() -1);
-    size_t folderIndexForward = fname.rfind("/", fname.length() -1);
-    size_t folderIndexBackward = fname.rfind("\\", fname.length() -1);
-    size_t folderIndex;
-    if(folderIndexForward == std::string::npos)
-    {
-      folderIndex = folderIndexBackward;
-    }
-    else if(folderIndexBackward == std::string::npos)
-    {
-      folderIndex = folderIndexForward;
-    }
-    else
-    {
-      folderIndex = folderIndexBackward > folderIndexForward ? folderIndexBackward : folderIndexForward;
-    }
-    
-    std::string newName = fname.substr(folderIndex + 1, (dotIdx - (folderIndex + 1))) + "_" + sid;
-    return newName;
-  }
-  
+{  
   ExSkeleton::ExSkeleton(IGameSkin* pGameSkin, std::string name, ParamList &params)
 	{
 		m_joints.clear();
@@ -469,6 +441,7 @@ namespace EasyOgreExporter
 
     //force the last key
 		times.push_back(stop);
+    times.erase(std::unique(times.begin(), times.end()), times.end());
 
 		// get animation length
 		int length = 0;

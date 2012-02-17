@@ -260,10 +260,6 @@ bool OgreExporter::exportScene()
 
   Interval animInterval = GetCOREInterface()->GetAnimRange(); 
 
-  //TODO only in corresponded class
-  // Create output files
-  m_params.openFiles();
-
   ogreConverter = new ExOgreConverter(m_params);
 
   //Init Scene
@@ -304,7 +300,6 @@ bool OgreExporter::exportScene()
     ogreConverter = 0;
   }
 
-  m_params.closeFiles();
   pIGame->ReleaseIGame();
   
   GetCOREInterface()->ProgressUpdate(99, FALSE, "Done.");

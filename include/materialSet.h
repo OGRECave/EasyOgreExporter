@@ -22,6 +22,7 @@
 #define _MATERIALSET_H
 
 #include "ExMaterial.h"
+#include "ExTools.h"
 #include "ExPrerequisites.h"
 #include "EasyOgreExporterLog.h"
 

@@ -21,6 +21,85 @@
 #include "iskin.h"
 #include "IMixer8.h"
 
+
+// Helper function for getting the filename from a full path.
+inline std::string StripToTopParent(const std::string& filepath)
+{
+	int ri = filepath.find_last_of('\\');
+	int ri2 = filepath.find_last_of('/');
+	if(ri2 > ri)
+	{
+		ri = ri2;
+	}
+	return filepath.substr(ri+1);
+}
+
+// Helper function to replace special chars for file names
+inline std::string optimizeFileName(const std::string& filename)
+{
+  std::string newFilename = filename;
+  std::replace(newFilename.begin(), newFilename.end(), ' ', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '\'', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '"', '_');
+	return newFilename;;
+}
+
+// Helper function to generate full filepath
+inline std::string makeOutputPath(std::string common, std::string dir, std::string file, std::string ext)
+{
+  std::string filePath = "";
+  filePath.append(common);
+
+  if (!common.empty())
+  if ((common.compare((common.length() -2), 1, "/") != 0) && (common.compare((common.length() -2), 1, "\\") != 0))
+    filePath.append("\\");
+
+  filePath.append(dir);
+
+  if (!dir.empty())
+  if ((dir.compare((dir.length() -2), 1, "/") != 0) && (dir.compare((dir.length() -2), 1, "\\") != 0))
+    filePath.append("\\");
+
+  filePath.append(file);
+
+  if(!ext.empty())
+  {
+    filePath.append(".");
+    filePath.append(ext);
+  }
+
+  return filePath;
+}
+
+inline std::string formatClipName(std::string fname, int id)
+{
+  std::string sid;
+  std::stringstream strid;
+  strid << id;
+  sid = strid.str();
+
+  size_t dotIdx = fname.rfind(".", fname.length() -1);
+  size_t folderIndexForward = fname.rfind("/", fname.length() -1);
+  size_t folderIndexBackward = fname.rfind("\\", fname.length() -1);
+  size_t folderIndex;
+  if(folderIndexForward == std::string::npos)
+  {
+    folderIndex = folderIndexBackward;
+  }
+  else if(folderIndexBackward == std::string::npos)
+  {
+    folderIndex = folderIndexForward;
+  }
+  else
+  {
+    folderIndex = folderIndexBackward > folderIndexForward ? folderIndexBackward : folderIndexForward;
+  }
+  
+  std::string newName = fname.substr(folderIndex + 1, (dotIdx - (folderIndex + 1))) + "_" + sid;
+  return newName;
+}
+
+
 inline bool IsBone(INode *pNode)
 {
   if(pNode == NULL)
@@ -475,10 +554,20 @@ inline bool GetAnimationsScaleKeysTime(IGameControl* pGameControl, Interval anim
   return false;
 }
 
-inline std::vector<int> GetAnimationsKeysTime(IGameNode* pGameNode, Interval animRange)
+inline std::vector<int> GetAnimationsKeysTime(IGameNode* pGameNode, Interval animRange, bool resample)
 {
   std::vector<int> animKeys;
   IGameControl* pGameControl = pGameNode->GetIGameControl();
+
+  if(resample)
+  {
+    IGameKeyTab tkeys;
+    if(pGameControl->GetFullSampledKeys(tkeys, 1, IGameControlType(IGAME_TM), true))
+    {
+      AddKeyTabToVector(tkeys, animRange, &animKeys);
+      return animKeys;
+    }
+  }
 
   if(pGameControl->IsAnimated(IGAME_POS))
   {

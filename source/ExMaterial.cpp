@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "ExMaterial.h"
+#include "ExTools.h"
 #include "EasyOgreExporterLog.h"
 #include <imtl.h> 
 #ifdef PRE_MAX_2010
@@ -368,7 +369,7 @@ namespace EasyOgreExporter
 							}
 							prop = pUVGen->GetVOffsetData();
 							if(prop)
-							{							
+							{
 								prop->GetPropertyValue(transV);
 								tex.scroll_v = 0.5 * (covV-1.0)/covV + transV/covV;
 								if (fabs(tex.scroll_v) < PRECISION)
@@ -390,31 +391,23 @@ namespace EasyOgreExporter
 	{
     if(IGAME_POINT4_PROP == pGameProperty->GetType())
 		{
-			Point4 emptyColor(0,0,0,0);
 			Point4 matColor;
 			if(pGameProperty->GetPropertyValue(matColor))
 			{
-				if(emptyColor != matColor)
-				{
-					color = matColor;
-					return true;
-				}
+        color = matColor;
+  			return true;
 			}
 		}
 		else if (IGAME_POINT3_PROP == pGameProperty->GetType())
 		{
 			Point3 color3;
-			Point3 emptyColor(0,0,0);
 			if(pGameProperty->GetPropertyValue(color3))
 			{
-				if(color3 != emptyColor)
-				{
-					color.x = color3.x;
-					color.y = color3.y;
-					color.z = color3.z;
-					color.w = m_opacity; 
-					return true;
-				}
+				color.x = color3.x;
+				color.y = color3.y;
+				color.z = color3.z;
+				color.w = m_opacity; 
+				return true;
 			}
 		}
 

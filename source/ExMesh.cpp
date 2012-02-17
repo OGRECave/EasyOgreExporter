@@ -310,7 +310,6 @@ namespace EasyOgreExporter
     if (m_params.exportPoses && m_pMorphR3)
       createPoses();
 
-
     // Create a bounding box for the mesh
     EasyOgreExporterLog("Info: Create mesh bounding box\n");
     Ogre::AxisAlignedBox bbox = m_Mesh->getBounds();
@@ -439,6 +438,159 @@ namespace EasyOgreExporter
 
     pMesh.setNull();
     return true;
+  }
+
+  bool ExMesh::exportPosesAnimation(Interval animRange, std::string name, std::vector<morphChannel*> validChan, std::vector<std::vector<ExVertex>> subList, std::vector<std::vector<int>> poseIndexList, bool bDefault)
+  {
+    int animRate = GetTicksPerFrame();
+    int animLenght = animRange.End() - animRange.Start();
+    float ogreLenght = (static_cast<float>(animLenght) / static_cast<float>(animRate)) / GetFrameRate();
+
+    std::vector<int> animKeys;
+    if(bDefault)
+    {
+      for(int pose = 0; pose < validChan.size(); pose++)
+      {
+        morphChannel* pMorphChannel = validChan[pose];
+
+        //get keys for this pose
+        IParamBlock* paramBlock = pMorphChannel->cblock;
+        IKeyControl* ikeys = GetKeyControlInterface(paramBlock->GetController(0));
+        if(ikeys)
+        {
+          for (int ik = 0; ik < ikeys->GetNumKeys(); ik++)
+          {
+            IKey nkey;
+            ikeys->GetKey(ik, &nkey);
+
+            if((nkey.time >= animRange.Start()) && (nkey.time <= animRange.End()))
+            {
+              animKeys.push_back(nkey.time);
+            }
+          }
+        }
+      }
+
+      if(animKeys.size() > 0)
+      {
+        //sort and remove duplicated entries
+        std::sort(animKeys.begin(), animKeys.end());
+        animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
+      }
+    }
+    else // use sampled keys
+    {
+     //add time steps
+      for (float t = animRange.Start(); t < animRange.End(); t += animRate)
+			  animKeys.push_back(t);
+
+      //force the last key
+		  animKeys.push_back(animRange.End());
+      animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
+    }
+    
+    if(animKeys.size() > 0)
+    {
+      //look if any key change something before export
+      bool isAnimated = false;
+      std::vector<float> prevWeights;
+      for(int i = 0; i < validChan.size(); i++)
+      {
+        morphChannel* pMorphChannel = validChan[i];
+
+        //get initial weight value for this pose
+        float weight;
+        Interval junkInterval;
+        IParamBlock* paramBlock = pMorphChannel->cblock;
+        paramBlock->GetValue(0, 0, weight, junkInterval);
+        prevWeights.push_back(weight);
+      }
+
+      for (int i = 0; i < animKeys.size() && !isAnimated; i++)
+      {
+        for(int pose = 0; pose < validChan.size() && !isAnimated; pose++)
+        {
+          morphChannel* pMorphChannel = validChan[pose];
+
+          //get weight value for this pose
+          float weight;
+          Interval junkInterval;
+          IParamBlock* paramBlock = pMorphChannel->cblock;
+          paramBlock->GetValue(0, animKeys[i], weight, junkInterval);
+          if(prevWeights[pose] != weight)
+            isAnimated = true;
+        }
+      }
+      prevWeights.clear();
+
+      if(!isAnimated)
+        return false;
+
+      // Create a new animation for each clip
+      Ogre::Animation* pAnimation = m_Mesh->createAnimation(name.c_str(), ogreLenght);
+
+      if(m_params.useSharedGeom)
+      {
+        // Create a new track
+        Ogre::VertexAnimationTrack* pTrack = pAnimation->createVertexTrack(0, m_Mesh->sharedVertexData, Ogre::VAT_POSE);
+      
+        for (int i = 0; i < animKeys.size(); i++)
+        {
+          int kTime = animKeys[i];
+          float ogreTime = static_cast<float>((kTime - animRange.Start()) / static_cast<float>(animRate)) / GetFrameRate();
+          
+          //add key frame
+          Ogre::VertexPoseKeyFrame* pKeyframe = pTrack->createVertexPoseKeyFrame(ogreTime);
+
+          for(int pose = 0; pose < validChan.size(); pose++)
+          {
+            morphChannel* pMorphChannel = validChan[pose];
+
+            //get weight value for this pose
+		        float weight;
+		        Interval junkInterval;
+            IParamBlock* paramBlock = pMorphChannel->cblock;
+		        paramBlock->GetValue(0, kTime, weight, junkInterval);
+
+            pKeyframe->addPoseReference(pose, weight / 100.0f);
+          }
+        }
+      }
+      else
+      {
+        // create a track for each submesh
+        for(int sub = 0; sub < subList.size(); sub++)
+        {
+          // Create a new track
+          Ogre::VertexAnimationTrack* pTrack = pAnimation->createVertexTrack(sub+1, m_Mesh->getSubMesh(sub)->vertexData, Ogre::VAT_POSE);
+          
+          for (int i = 0; i < animKeys.size(); i++)
+          {
+            int kTime = animKeys[i];
+            float ogreTime = static_cast<float>((kTime - animRange.Start()) / static_cast<float>(animRate)) / GetFrameRate();
+            
+            //add key frame
+            Ogre::VertexPoseKeyFrame* pKeyframe = pTrack->createVertexPoseKeyFrame(ogreTime);
+
+            for(int pose = 0; pose < validChan.size(); pose++)
+            {
+              morphChannel* pMorphChannel = validChan[pose];
+
+              //get weight value for this pose
+		          float weight;
+		          Interval junkInterval;
+              IParamBlock* paramBlock = pMorphChannel->cblock;
+		          paramBlock->GetValue(0, kTime, weight, junkInterval);
+
+              pKeyframe->addPoseReference(poseIndexList[sub][pose], weight / 100.0f);
+            }
+          }
+        }
+      }
+      animKeys.clear();
+      return true;
+    }
+    return false;
   }
 
   void ExMesh::createPoses()
@@ -603,103 +755,63 @@ namespace EasyOgreExporter
     //Poses animations
     if(m_pMorphR3->IsAnimated())
     {
-      Interval animRange = GetCOREInterface()->GetAnimRange();
-      int animRate = GetTicksPerFrame();
-      int animLenght = animRange.End() - animRange.Start();
-      float ogreLenght = (static_cast<float>(animLenght) / static_cast<float>(animRate)) / GetFrameRate();
-
-      std::vector<int> animKeys;
-      for(int pose = 0; pose < validChan.size(); pose++)
+      //try to get animations in motion mixer
+      bool useDefault = true;
+      IMixer8* mixer = TheMaxMixerManager.GetMaxMixer(node);
+      if(mixer)
       {
-        morphChannel* pMorphChannel = validChan[pose];
-
-        //get keys for this pose
-        IParamBlock* paramBlock = pMorphChannel->cblock;
-        IKeyControl* ikeys = GetKeyControlInterface(paramBlock->GetController(0));
-        for (int ik = 0; ik < ikeys->GetNumKeys(); ik++)
+        int clipId = 0;
+        int numGroups = mixer->NumTrackgroups();
+        for (size_t j = 0; j < numGroups; j++)
         {
-          IKey nkey;
-          ikeys->GetKey(ik, &nkey);
+          IMXtrackgroup* group = mixer->GetTrackgroup(j);
+          EasyOgreExporterLog("Info : mixer track found %s\n", group->GetName());
 
-          if((nkey.time >= animRange.Start()) && (nkey.time <= animRange.End()))
+          int numTracks = group->NumTracks();
+          for (size_t k = 0; k < numTracks; k++)
           {
-            animKeys.push_back(nkey.time);
+            IMXtrack* track = group->GetTrack(k);
+            BOOL tMode = track->GetSolo();
+            track->SetSolo(TRUE);
+
+            int numClips = track->NumClips(BOT_ROW);
+            for (size_t l = 0; l < numClips; l++)
+            {
+              IMXclip* clip = track->GetClip(l, BOT_ROW);
+              if(clip)
+              {
+                Interval animRange;
+                int start;
+                int stop;
+                #ifdef PRE_MAX_2010
+                  std::string clipName = formatClipName(std::string(clip->GetFilename()), clipId);
+                #else
+                MaxSDK::AssetManagement::AssetUser &clipFile = const_cast<MaxSDK::AssetManagement::AssetUser&>(clip->GetFile());
+                  std::string clipName = formatClipName(std::string(clipFile.GetFileName()), clipId);
+                #endif
+                
+                clipName.append("_poses");
+
+                clip->GetGlobalBounds(&start, &stop);
+                animRange.SetStart(start);
+                animRange.SetEnd(stop);
+                EasyOgreExporterLog("Info : mixer clip found %s from %i to %i\n", clipName.c_str(), start, stop);
+                
+                if(exportPosesAnimation(animRange, clipName, validChan, subList, poseIndexList, false))
+                  useDefault = false;
+                
+                clipId++;
+              }
+            }
+            track->SetSolo(tMode);
           }
         }
       }
 
-      //sort and remove duplicated entries
-      std::sort(animKeys.begin(), animKeys.end());
-      animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
-
-      if(animKeys.size() > 0)
+      if(useDefault)
       {
-        //sort and remove duplicated entries
-        std::sort(animKeys.begin(), animKeys.end());
-        animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
-
-        // Create a new animation for each clip
-        Ogre::Animation* pAnimation = m_Mesh->createAnimation("default_poses", ogreLenght);
-
-        if(m_params.useSharedGeom)
-        {
-          // Create a new track
-          Ogre::VertexAnimationTrack* pTrack = pAnimation->createVertexTrack(0, m_Mesh->sharedVertexData, Ogre::VAT_POSE);
-        
-          for (int i = 0; i < animKeys.size(); i++)
-          {
-            int kTime = animKeys[i];
-            float ogreTime = static_cast<float>((kTime - animRange.Start()) / static_cast<float>(animRate)) / GetFrameRate();
-            
-            //add key frame
-            Ogre::VertexPoseKeyFrame* pKeyframe = pTrack->createVertexPoseKeyFrame(ogreTime);
-
-            for(int pose = 0; pose < validChan.size(); pose++)
-	          {
-              morphChannel* pMorphChannel = validChan[pose];
-
-              //get weight value for this pose
-				      float weight;
-				      Interval junkInterval;
-              IParamBlock* paramBlock = pMorphChannel->cblock;
-				      paramBlock->GetValue(0, kTime, weight, junkInterval);
-
-              pKeyframe->addPoseReference(pose, weight / 100.0f);
-            }
-          }
-        }
-        else
-        {
-          // create a track for each submesh
-          for(int sub = 0; sub < subList.size(); sub++)
-          {
-            // Create a new track
-            Ogre::VertexAnimationTrack* pTrack = pAnimation->createVertexTrack(sub+1, m_Mesh->getSubMesh(sub)->vertexData, Ogre::VAT_POSE);
-            
-            for (int i = 0; i < animKeys.size(); i++)
-            {
-              int kTime = animKeys[i];
-              float ogreTime = static_cast<float>((kTime - animRange.Start()) / static_cast<float>(animRate)) / GetFrameRate();
-              
-              //add key frame
-              Ogre::VertexPoseKeyFrame* pKeyframe = pTrack->createVertexPoseKeyFrame(ogreTime);
-
-              for(int pose = 0; pose < validChan.size(); pose++)
-	            {
-                morphChannel* pMorphChannel = validChan[pose];
-
-                //get weight value for this pose
-				        float weight;
-				        Interval junkInterval;
-                IParamBlock* paramBlock = pMorphChannel->cblock;
-				        paramBlock->GetValue(0, kTime, weight, junkInterval);
-
-                pKeyframe->addPoseReference(poseIndexList[sub][pose], weight / 100.0f);
-              }
-            }
-          }
-        }
-        animKeys.clear();
+        Interval animRange = GetCOREInterface()->GetAnimRange();
+        exportPosesAnimation(animRange, "default_poses", validChan, subList, poseIndexList, !m_params.resampleAnims);
       }
     }
 
