@@ -496,7 +496,7 @@ inline bool GetAnimationsRotKeysTime(IGameControl* pGameControl, Interval animRa
 	      {
 		      IGameKeyTab SubKeys;
 			    IGameControl* subCont = pGameControl->GetListSubControl(i, IGAME_ROT);
-          GetAnimationsPosKeysTime(subCont, animRange, animKeys);
+          GetAnimationsRotKeysTime(subCont, animRange, animKeys);
         }
       }
       else
@@ -537,7 +537,48 @@ inline bool GetAnimationsScaleKeysTime(IGameControl* pGameControl, Interval anim
 	      {
 		      IGameKeyTab SubKeys;
 			    IGameControl* subCont = pGameControl->GetListSubControl(i, IGAME_SCALE);
-          GetAnimationsPosKeysTime(subCont, animRange, animKeys);
+          GetAnimationsScaleKeysTime(subCont, animRange, animKeys);
+        }
+      }
+      else
+        return false;
+    }
+	  else
+      return false;
+    
+    AddKeyTabToVector(tkeys, animRange, animKeys);
+
+    return true;
+  }
+
+  return false;
+}
+
+inline bool GetAnimationsPointKeysTime(IGameControl* pGameControl, Interval animRange, std::vector<int>* animKeys)
+{
+  if(pGameControl->IsAnimated(IGAME_POINT3))
+  {
+    IGameKeyTab tkeys;
+    IGameControl::MaxControlType contType = pGameControl->GetControlType(IGAME_POINT3);
+
+    if(contType == IGameControl::IGAME_MAXSTD && pGameControl->GetBezierKeys(tkeys, IGAME_POINT3))
+	  {
+      0;
+	  }
+	  else if(contType == IGameControl::IGAME_MAXSTD && pGameControl->GetLinearKeys(tkeys, IGAME_POINT3))
+    {
+		  0;
+    }
+	  else if(contType == IGameControl::IGAME_LIST)
+	  {
+	    int subNum = pGameControl->GetNumOfListSubControls(IGAME_POINT3);
+	    if(subNum)
+	    {
+		    for(int i= 0; i < subNum; i++)
+	      {
+		      IGameKeyTab SubKeys;
+			    IGameControl* subCont = pGameControl->GetListSubControl(i, IGAME_POINT3);
+          GetAnimationsPointKeysTime(subCont, animRange, animKeys);
         }
       }
       else
@@ -611,6 +652,49 @@ inline std::vector<int> GetAnimationsKeysTime(IGameNode* pGameNode, Interval ani
         animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
         return animKeys;
       }
+    }
+  }
+
+  //sort and remove duplicated entries
+  if(animKeys.size() > 0)
+  {
+    std::sort(animKeys.begin(), animKeys.end());
+    animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
+  }
+
+  return animKeys;
+}
+
+inline std::vector<int> GetPointAnimationsKeysTime(IGameNode* pGameNode, Interval animRange, bool resample)
+{
+  std::vector<int> animKeys;
+  IGameControl* pGameControl = pGameNode->GetIGameControl();
+  int animRate = GetTicksPerFrame();
+
+  if(resample)
+  {
+    //add time steps
+    for (float t = animRange.Start(); t < animRange.End(); t += animRate)
+		  animKeys.push_back(t);
+
+    //force the last key
+	  animKeys.push_back(animRange.End());
+    animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
+    return animKeys;
+  }
+
+  if(pGameControl->IsAnimated(IGAME_POINT3))
+  {
+    if(!GetAnimationsPointKeysTime(pGameControl, animRange, &animKeys))
+    {
+      //add time steps
+      for (float t = animRange.Start(); t < animRange.End(); t += animRate)
+        animKeys.push_back(t);
+
+      //force the last key
+      animKeys.push_back(animRange.End());
+      animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
+      return animKeys;
     }
   }
 

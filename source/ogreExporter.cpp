@@ -23,6 +23,9 @@
 #include "EasyOgreExporterLog.h"
 #include "ExTools.h"
 
+#include "../resources/resource.h"
+#include "3dsmaxport.h"
+
 #if defined(WIN32)
 // For SHGetFolderPath.  Requires Windows XP or greater.
 #include <stdarg.h>
@@ -30,8 +33,136 @@
 #include <direct.h>
 #endif // defined(WIN32)
 
+
+//Exporter version
+float EXVERSION = 0.5f;
+
 namespace EasyOgreExporter
 {
+
+  /**
+  * Configuration interface
+  **/
+  INT_PTR CALLBACK IGameExporterOptionsDlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+  {
+    ParamList* exp = DLGetWindowLongPtr<ParamList*>(hWnd); 
+
+    switch(message)
+    {
+	    case WM_INITDIALOG:
+		    exp = (ParamList*)lParam;
+        DLSetWindowLongPtr(hWnd, lParam); 
+		    CenterWindow(hWnd, GetParent(hWnd));
+
+        //fill Ogre version combo box
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_RESETCONTENT, 0, 0);
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.8");
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.7");
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.4");
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.0");
+
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETCURSEL, (int)exp->meshVersion, 0);
+
+        //fill material prefix
+        SendDlgItemMessage(hWnd, IDC_MATPREFIX, WM_SETTEXT, 0, (LPARAM)(char*)exp->matPrefix.c_str());
+
+        //fill material sub dir
+        SendDlgItemMessage(hWnd, IDC_MATDIR, WM_SETTEXT, 0, (LPARAM)(char*)exp->materialOutputDir.c_str());
+
+        //fill texture sub dir
+        SendDlgItemMessage(hWnd, IDC_TEXDIR, WM_SETTEXT, 0, (LPARAM)(char*)exp->texOutputDir.c_str());
+
+        //fill mesh subdir
+        SendDlgItemMessage(hWnd, IDC_MESHDIR, WM_SETTEXT, 0, (LPARAM)(char*)exp->meshOutputDir.c_str());
+        
+        //advanced config
+		    CheckDlgButton(hWnd, IDC_SHAREDGEOM, exp->useSharedGeom);
+        CheckDlgButton(hWnd, IDC_EDGELIST, exp->buildEdges);
+        CheckDlgButton(hWnd, IDC_TANGENT, exp->buildTangents);
+        CheckDlgButton(hWnd, IDC_SPLITMIRROR, exp->tangentsSplitMirrored);
+        CheckDlgButton(hWnd, IDC_SPLITROT, exp->tangentsSplitRotated);
+        CheckDlgButton(hWnd, IDC_STOREPARITY, exp->tangentsUseParity);
+        CheckDlgButton(hWnd, IDC_RESAMPLE_ANIMS, exp->resampleAnims);
+    		
+		    //Versioning
+		    TCHAR Title [256];
+        _stprintf(Title, "Easy Ogre Exporter version %.1f", EXVERSION);
+		    SetWindowText(hWnd, Title);
+		    return TRUE;
+
+	    case WM_COMMAND:
+		    switch (LOWORD(wParam))
+        {
+			    case IDOK:
+            {
+              int ogreVerIdx = SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_GETCURSEL, 0, 0);
+              if (ogreVerIdx != CB_ERR)
+              {
+                switch (ogreVerIdx)
+                {
+                  case 0:
+                    exp->meshVersion = TOGRE_1_8;
+                    break;
+                  case 1:
+                    exp->meshVersion = TOGRE_1_7;
+                    break;
+                  case 2:
+                    exp->meshVersion = TOGRE_1_4;
+                    break;
+                  case 3:
+                    exp->meshVersion = TOGRE_1_0;
+                    break;
+
+                  default:
+                    exp->meshVersion = TOGRE_1_8;
+                }
+              }
+
+					    TSTR temp;
+              int len = 0;
+              
+              len = SendDlgItemMessage(hWnd, IDC_MATPREFIX, WM_GETTEXTLENGTH, 0, 0);
+					    temp.Resize(len+1);
+					    SendDlgItemMessage(hWnd, IDC_MATPREFIX, WM_GETTEXT, len+1, (LPARAM)temp.data());
+              exp->matPrefix = temp;
+
+              len = SendDlgItemMessage(hWnd, IDC_MATDIR, WM_GETTEXTLENGTH, 0, 0);
+					    temp.Resize(len+1);
+					    SendDlgItemMessage(hWnd, IDC_MATDIR, WM_GETTEXT, len+1, (LPARAM)temp.data());
+              exp->materialOutputDir = temp;
+
+              len = SendDlgItemMessage(hWnd, IDC_TEXDIR, WM_GETTEXTLENGTH, 0, 0);
+					    temp.Resize(len+1);
+					    SendDlgItemMessage(hWnd, IDC_TEXDIR, WM_GETTEXT, len+1, (LPARAM)temp.data());
+              exp->texOutputDir = temp;
+
+              len = SendDlgItemMessage(hWnd, IDC_MESHDIR, WM_GETTEXTLENGTH, 0, 0);
+					    temp.Resize(len+1);
+					    SendDlgItemMessage(hWnd, IDC_MESHDIR, WM_GETTEXT, len+1, (LPARAM)temp.data());
+              exp->meshOutputDir = temp;
+
+					    exp->useSharedGeom = IsDlgButtonChecked(hWnd, IDC_SHAREDGEOM);
+              exp->buildEdges = IsDlgButtonChecked(hWnd, IDC_EDGELIST);
+              exp->buildTangents = IsDlgButtonChecked(hWnd, IDC_TANGENT);
+              exp->tangentsSplitMirrored = IsDlgButtonChecked(hWnd, IDC_SPLITMIRROR);
+              exp->tangentsSplitRotated = IsDlgButtonChecked(hWnd, IDC_SPLITROT);
+              exp->tangentsUseParity = IsDlgButtonChecked(hWnd, IDC_STOREPARITY);
+              exp->resampleAnims = IsDlgButtonChecked(hWnd, IDC_RESAMPLE_ANIMS);
+
+              EndDialog(hWnd, 1);
+            }
+				    break;
+			    case IDCANCEL:
+				    EndDialog(hWnd,0);
+				    break;
+		    }
+    	
+	    default:
+		    return FALSE;
+
+    }
+    return TRUE;
+  }
 
 // Dummy function for progress bar
 DWORD WINAPI progressCb(LPVOID arg)
@@ -153,14 +284,9 @@ int	OgreSceneExporter::DoExport(const TCHAR* name, ExpInterface* pExpInterface, 
   params.texOutputDir = texOutDir.c_str();
   params.meshOutputDir = meshOutDir.c_str();
   params.materialOutputDir = matOutDir.c_str();
-  params.particlesOutputDir = partOutDir.c_str();
   params.matPrefix = matPrefix.c_str();
   params.sceneFilename = sceneFile.c_str();
   
-  bool success = false;
-  std::string scriptDir = IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_SCRIPTS_DIR);
-  std::string scriptPath = scriptDir + "\\EasyOgreGUI.ms";
-
   int unitType = 0;
   float unitScale = 0;
   GetMasterUnitInfo(&unitType, &unitScale);
@@ -169,20 +295,13 @@ int	OgreSceneExporter::DoExport(const TCHAR* name, ExpInterface* pExpInterface, 
   params.lum = ConvertToMeter(unitsInfo.metricDisp, unitType) * unitScale;
 
   ExData::maxInterface.m_params = params;
-  
-  /*FileStream scriptFile;
-  if(scriptFile.open(scriptPath.c_str(), "rt"))
+
+	if (!DialogBoxParam(hInstance, MAKEINTRESOURCE(IDD_PANEL), pInterface->GetMAXHWnd(), IGameExporterOptionsDlgProc, (LPARAM)&(ExData::maxInterface.m_params)))
   {
-    ExecuteScript(&scriptFile, &success);
-    scriptFile.close();
-  }
-  else*/
-  {
-    //MessageBox(GetCOREInterface()->GetMAXHWnd(), _T("Script file not found."), _T("Error"), MB_OK);
-    success = ExData::maxInterface.exportScene();
-  }
-  
-  return success;
+		return 1;
+	}
+
+  return ExData::maxInterface.exportScene();
 }
 
 // Dummy function for progress bar.
@@ -373,28 +492,34 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
           break;
         case IGameObject::IGAME_LIGHT:
           {
-            IGameLight* pGameLight = static_cast<IGameLight*>(pGameObject);
-            if(pGameLight)
+            if(m_params.exportLights)
             {
-              EasyOgreExporterLog("Found light: %s\n", pGameNode->GetName());
-              if (sceneData)
+              IGameLight* pGameLight = static_cast<IGameLight*>(pGameObject);
+              if(pGameLight)
               {
-                parent = sceneData->writeNodeData(parent, pGameNode, IGameObject::IGAME_LIGHT);
-                sceneData->writeLightData(parent, pGameLight);
+                EasyOgreExporterLog("Found light: %s\n", pGameNode->GetName());
+                if (sceneData)
+                {
+                  parent = sceneData->writeNodeData(parent, pGameNode, IGameObject::IGAME_LIGHT);
+                  sceneData->writeLightData(parent, pGameLight);
+                }
               }
             }
           }
           break;
         case IGameObject::IGAME_CAMERA:
           {
-            IGameCamera* pGameCamera = static_cast<IGameCamera*>(pGameObject);
-            if(pGameCamera)
+            if(m_params.exportCameras)
             {
-              EasyOgreExporterLog("Found camera: %s\n", pGameNode->GetName());
-              if (sceneData)
+              IGameCamera* pGameCamera = static_cast<IGameCamera*>(pGameObject);
+              if(pGameCamera)
               {
-                parent = sceneData->writeNodeData(parent, pGameNode, IGameObject::IGAME_CAMERA);
-                sceneData->writeCameraData(parent, pGameCamera);
+                EasyOgreExporterLog("Found camera: %s\n", pGameNode->GetName());
+                if (sceneData)
+                {
+                  parent = sceneData->writeNodeData(parent, pGameNode, IGameObject::IGAME_CAMERA);
+                  sceneData->writeCameraData(parent, pGameCamera);
+                }
               }
             }
           }

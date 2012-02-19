@@ -27,52 +27,39 @@ namespace EasyOgreExporter
 {
 	class ExSubEntity;
 
-	typedef struct clipInfoTag
-	{
-		float start;							//start time of the clip
-		float stop;								//end time of the clip
-		float rate;								//sample rate of anim curves, -1 means auto
-		std::string name;				  //clip name
-	} clipInfo;
-
-	typedef enum
-	{
-		NPT_CURFRAME,
-		NPT_BINDPOSE
-	} NeutralPoseType;
-
 	typedef enum
 	{
 		TS_TEXCOORD,
 		TS_TANGENT
 	} TangentSemantic;
 
+	typedef enum
+	{
+		TOGRE_1_8,
+		TOGRE_1_7,
+    TOGRE_1_4,
+    TOGRE_1_0
+	} OgreTarget;
+
 	/***** Class ParamList *****/
 	class ParamList
 	{
 	public:
 		// class members
-		bool exportMesh, exportMaterial, exportAnimCurves, exportCameras, exportAll, exportVBA,
-			exportVertNorm, exportVertCol, exportTexCoord, exportCamerasAnim,
-			exportSkeleton, exportSkelAnims, exportBSAnims, exportVertAnims, exportPoses, 
-			useSharedGeom, lightingOff, copyTextures, exportParticles,
-			tangentsSplitMirrored, tangentsSplitRotated, tangentsUseParity, 
-			buildTangents, buildEdges, skelBB, bsBB, vertBB, resampleAnims, normalizeScale, yUpAxis, exportScene;
+		bool exportMesh, exportMaterial, exportCameras, exportLights, lightingOff, exportAll,
+			exportVertNorm, exportVertCol, exportSkeleton, exportSkelAnims, exportVertAnims, exportPoses, 
+			useSharedGeom, copyTextures, tangentsSplitMirrored, tangentsSplitRotated, tangentsUseParity, 
+			buildTangents, buildEdges, resampleAnims, yUpAxis, exportScene;
 
 		float lum;	// Length Unit Multiplier
 
-		std::string outputDir, meshOutputDir, materialOutputDir, texOutputDir, particlesOutputDir, sceneFilename, matPrefix;
-
-		std::ofstream outParticles;
+		std::string outputDir, meshOutputDir, materialOutputDir, texOutputDir, sceneFilename, matPrefix;
 
 		std::vector<std::string> writtenMaterials;
 
-		std::vector<clipInfo> skelClipList;
-		std::vector<clipInfo> BSClipList;
-		std::vector<clipInfo> vertClipList;
-
-		NeutralPoseType neutralPoseType;
 		TangentSemantic tangentSemantic;
+
+    OgreTarget meshVersion;
 
 		std::vector<INode*> currentRootJoints;
 
@@ -83,23 +70,16 @@ namespace EasyOgreExporter
 			exportMaterial = true;
 			exportSkeleton = true;
 			exportSkelAnims = true;
-			exportBSAnims = false;
-			exportVertAnims = false;
+			exportVertAnims = true;
 			exportPoses = true;
-			exportAnimCurves = false;
-			exportCameras = false;
-			exportParticles = false;
+			exportCameras = true;
+      exportLights = true;
 			exportAll = true;
-			exportVBA = false;
 			exportVertNorm = true;
 			exportVertCol = true;
-			exportCamerasAnim = false;
+      lightingOff = false;
 			useSharedGeom = false;
-			lightingOff = false;
 			copyTextures = true;
-			skelBB = false;
-			bsBB = false;
-			vertBB = false;
 
       resampleAnims = false;
 
@@ -107,14 +87,9 @@ namespace EasyOgreExporter
       meshOutputDir = "";
       materialOutputDir = "";
       texOutputDir = "";
-      particlesOutputDir = "";
       sceneFilename = "";
       matPrefix = "";
-					
-      skelClipList.clear();
-			BSClipList.clear();
-			vertClipList.clear();
-			neutralPoseType = NPT_CURFRAME;
+		  
 			buildEdges = true;
 			buildTangents = true;
 			tangentsSplitMirrored = false;
@@ -122,36 +97,29 @@ namespace EasyOgreExporter
 			tangentsUseParity = false;
 			tangentSemantic = TS_TANGENT;
 			currentRootJoints.clear();
-			normalizeScale = true; // Remove's scale from animation (to solve for Max's unorthodox use of non-uniform scale)
 			yUpAxis = true;
 			exportScene = true;
+
+      meshVersion = TOGRE_1_8;
 		}
 
 		ParamList& operator=(ParamList& source)	
 		{
-			int i;
 			lum = source.lum;
 			exportMesh = source.exportMesh;
 			exportMaterial = source.exportMaterial;
 			exportSkeleton = source.exportSkeleton;
 			exportSkelAnims = source.exportSkelAnims;
-			exportBSAnims = source.exportBSAnims;
 			exportVertAnims = source.exportVertAnims;
 			exportPoses = source.exportPoses;
-			exportAnimCurves = source.exportAnimCurves;
 			exportCameras = source.exportCameras;
+      exportLights = source.exportLights;
 			exportAll = source.exportAll;
-			exportVBA = source.exportVBA;
 			exportVertNorm = source.exportVertNorm;
 			exportVertCol = source.exportVertCol;
-			exportCamerasAnim = source.exportCamerasAnim;
-			exportParticles = source.exportParticles;
 			useSharedGeom = source.useSharedGeom;
-			lightingOff = source.lightingOff;
 			copyTextures = source.copyTextures;
-			skelBB = source.skelBB;
-			bsBB = source.bsBB;
-			vertBB = source.vertBB;
+      lightingOff = source.lightingOff;
 
       resampleAnims = source.resampleAnims;
 
@@ -159,7 +127,6 @@ namespace EasyOgreExporter
 			meshOutputDir = source.meshOutputDir;
       materialOutputDir = source.materialOutputDir;
 			texOutputDir = source.texOutputDir;
-      particlesOutputDir = source.particlesOutputDir;
       sceneFilename = source.sceneFilename;
       matPrefix = source.matPrefix;
       			
@@ -169,46 +136,38 @@ namespace EasyOgreExporter
 			tangentsSplitRotated = source.tangentsSplitRotated;
 			tangentsUseParity = source.tangentsUseParity;
 			tangentSemantic = source.tangentSemantic;
-			skelClipList.resize(source.skelClipList.size());
-			normalizeScale = source.normalizeScale;
 			yUpAxis = source.yUpAxis;
 			exportScene = source.exportScene;
+      meshVersion = source.meshVersion;
 
-			for (i=0; i< skelClipList.size(); i++)
-			{
-				skelClipList[i].name = source.skelClipList[i].name;
-				skelClipList[i].start = source.skelClipList[i].start;
-				skelClipList[i].stop = source.skelClipList[i].stop;
-				skelClipList[i].rate = source.skelClipList[i].rate;
-			}
-			BSClipList.resize(source.BSClipList.size());
-			for (i=0; i< BSClipList.size(); i++)
-			{
-				BSClipList[i].name = source.BSClipList[i].name;
-				BSClipList[i].start = source.BSClipList[i].start;
-				BSClipList[i].stop = source.BSClipList[i].stop;
-				BSClipList[i].rate = source.BSClipList[i].rate;
-			}
-			vertClipList.resize(source.vertClipList.size());
-			for (i=0; i< vertClipList.size(); i++)
-			{
-				vertClipList[i].name = source.vertClipList[i].name;
-				vertClipList[i].start = source.vertClipList[i].start;
-				vertClipList[i].stop = source.vertClipList[i].stop;
-				vertClipList[i].rate = source.vertClipList[i].rate;
-			}
-			neutralPoseType = source.neutralPoseType;
-
-			for (i=0; i<source.currentRootJoints.size(); i++)
-				currentRootJoints.push_back(source.currentRootJoints[i]);
 			return *this;
 		}
 
 		// destructor
-		~ParamList() {
-			if (outParticles)
-				outParticles.close();
+		~ParamList()
+    {
 		}
+
+    Ogre::MeshVersion getOgreVersion()
+    {
+      switch(meshVersion)
+      {
+		    case TOGRE_1_8:
+          return Ogre::MeshVersion::MESH_VERSION_1_8;
+
+        case TOGRE_1_7:
+          return Ogre::MeshVersion::MESH_VERSION_1_7;
+
+        case TOGRE_1_4:
+          return Ogre::MeshVersion::MESH_VERSION_1_4;
+
+        case TOGRE_1_0:
+          return Ogre::MeshVersion::MESH_VERSION_1_0;
+
+        default:
+          return Ogre::MeshVersion::MESH_VERSION_LATEST;
+      }
+    }
 	};
 
 };	//end namespace

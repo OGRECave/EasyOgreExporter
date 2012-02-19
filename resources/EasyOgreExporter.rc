@@ -1,0 +1,124 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Français (France) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRA)
+#ifdef _WIN32
+LANGUAGE LANG_FRENCH, SUBLANG_FRENCH
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_PANEL DIALOGEX 0, 0, 229, 286
+STYLE DS_SYSMODAL | DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CLIENTEDGE
+CAPTION "Easy Ogre Exporter"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,111,265,50,14
+    PUSHBUTTON      "Annuler",IDCANCEL,166,265,50,14
+    LTEXT           "Bastien Bourineau @2012",IDC_STATIC,7,268,92,11
+    GROUPBOX        "Basic configuration",IDC_SIMPLE,7,7,215,96
+    LTEXT           "Ogre version",IDC_OGREV_LABEL,13,19,57,12
+    LTEXT           "Material prefix",IDC_MATPREFIX_LABEL,13,38,57,12
+    EDITTEXT        IDC_MATPREFIX,82,37,100,12,ES_AUTOHSCROLL
+    LTEXT           "Material sub dir",IDC_MATDIR_LABEL,13,54,57,12
+    EDITTEXT        IDC_MATDIR,82,53,100,12,ES_AUTOHSCROLL
+    LTEXT           "Textures sub dir",IDC_TEXDIR_LABEL,13,70,57,12
+    EDITTEXT        IDC_TEXDIR,82,69,100,12,ES_AUTOHSCROLL
+    LTEXT           "Mesh sub dir",IDC_MESHDIR_LABEL,13,86,57,12
+    EDITTEXT        IDC_MESHDIR,82,85,100,12,ES_AUTOHSCROLL
+    COMBOBOX        IDC_OGREVERSION,81,19,100,30,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Advanced configuration",IDC_STATIC,7,106,215,157
+    GROUPBOX        "Meshs",IDC_STATIC,13,120,202,99
+    GROUPBOX        "Animations",IDC_STATIC,13,220,201,33
+    CONTROL         "Resample animations (more accurate, but heavier)",IDC_RESAMPLE_ANIMS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,234,177,10
+    CONTROL         "Use shared geometry (not supported by all cards)",IDC_SHAREDGEOM,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,134,193,10
+    CONTROL         "Build edges list (used for stencil shadows)",IDC_EDGELIST,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,149,149,10
+    CONTROL         "Build tangent (used for shaders)",IDC_TANGENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,163,119,10
+    CONTROL         "Split mirrored",IDC_SPLITMIRROR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,178,58,10
+    CONTROL         "Split rotated",IDC_SPLITROT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,191,55,10
+    CONTROL         "Store parity in W",IDC_STOREPARITY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,205,70,10
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_PANEL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 222
+        VERTGUIDE, 19
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 279
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Français (France) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

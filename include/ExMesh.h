@@ -63,6 +63,11 @@ namespace EasyOgreExporter
       //destructor
 		  ~ExVertex()
       {
+        lTexCoords.clear();
+        lTangent.clear();
+        lBinormal.clear();
+        lWeight.clear();
+        lBoneIndex.clear();
       }
 
       bool cmpPointList(std::vector<Point3> l1, std::vector<Point3> l2)
@@ -90,7 +95,7 @@ namespace EasyOgreExporter
         return ((vPos.x == b.vPos.x) && (vPos.y == b.vPos.y) && (vPos.z == b.vPos.z) && 
             (vNorm.x == b.vNorm.x) && (vNorm.y == b.vNorm.y) && (vNorm.z == b.vNorm.z) && 
             (vColor.x == b.vColor.x) && (vColor.y == b.vColor.y) && (vColor.z == b.vColor.z) && (vColor.w == b.vColor.w) &&
-            (iMaxId == b.iMaxId) && cmpPointList(lTexCoords, b.lTexCoords));
+            (iMaxId == b.iMaxId) && cmpPointList(lTexCoords, b.lTexCoords) && cmpPointList(lTangent, b.lTangent) && cmpPointList(lBinormal, b.lBinormal));
       };
 
       bool operator!=(ExVertex const& b)
@@ -98,7 +103,7 @@ namespace EasyOgreExporter
         return ((vPos.x != b.vPos.x) || (vPos.y != b.vPos.y) || (vPos.z != b.vPos.z) || 
             (vNorm.x != b.vNorm.x) || (vNorm.y != b.vNorm.y) || (vNorm.z != b.vNorm.z) || 
             (vColor.x != b.vColor.x) || (vColor.y != b.vColor.y) || (vColor.z != b.vColor.z) || (vColor.w != b.vColor.w) ||
-            (iMaxId != b.iMaxId) || (!cmpPointList(lTexCoords, b.lTexCoords)));
+            (iMaxId != b.iMaxId) || (!cmpPointList(lTexCoords, b.lTexCoords)) || (!cmpPointList(lTangent, b.lTangent)) || (!cmpPointList(lBinormal, b.lBinormal)));
       };
 
       int iMaxId;
@@ -108,6 +113,8 @@ namespace EasyOgreExporter
       Point3 vNorm;
       Point4 vColor;
       std::vector<Point3> lTexCoords;
+      std::vector<Point3> lTangent;
+      std::vector<Point3> lBinormal;
       std::vector<float> lWeight;
       std::vector<int> lBoneIndex;
   };
@@ -124,6 +131,7 @@ namespace EasyOgreExporter
     Ogre::Mesh* m_Mesh;
     MorphR3* m_pMorphR3;
     Box3 m_Bounding;
+    float m_SphereRadius;
     ExSkeleton* m_pSkeleton;
   private:
 
@@ -147,12 +155,11 @@ namespace EasyOgreExporter
     void buildOgreGeometry(Ogre::VertexData* vdata, std::vector<ExVertex> verticesList);
 		Material* loadMaterial(IGameMaterial* pGameMaterial);
     void getModifiers();
-    void loadAnims();
     void createPoses();
     bool exportPosesAnimation(Interval animRange, std::string name, std::vector<morphChannel*> validChan, std::vector<std::vector<ExVertex>> subList, std::vector<std::vector<int>> poseIndexList, bool bDefault);
-
-    std::vector<ExAnimation> m_vertexClips;
-		std::vector<ExAnimation> m_BSClips;
+    bool exportMorphAnimation(Interval animRange, std::string name, std::vector<std::vector<ExVertex>> subList);
+    void createMorphAnimations();
+    void updateBounds(Point3);
 
     //cleaned and sorted vertices
     std::vector<ExVertex> m_vertices;

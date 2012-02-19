@@ -10,7 +10,7 @@
 ////////////////////////////////////
 
 
-#Version 0.5 : Febrary 17, 2012
+#Version 0.5 : Febrary 19, 2012
 
  - Ogre Scene file
  - meshs
@@ -20,18 +20,17 @@
  - Nodes animations included in the Ogre Scene file (from the main animation track)
  - Mesh Poses
  - Mesh Poses Animations
- - Manage units convertion from max to meter
- - animations from the motion mixer 
- 
-#TODO
- 
  - Mesh morph animations
- - Manage Mental ray materials if possible
- - Manage Automatic Shader creation in materials from DX normal maps
+ - animations from the motion mixer 
+ - Manage units convertion from max to meter
  - Export interface with options
-   - unit convertions
    - resources subdirs
    - material prefix
    - Ogre version
+   - advanced configuration
+    
+#TODO
+ - Manage Mental ray materials if possible
+ - Manage Automatic Shader creation in materials from DX normal maps
    
  

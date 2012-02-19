@@ -18,6 +18,8 @@
 #include "ExTools.h"
 #include "decomp.h"
 
+//TODO visibility range
+
 namespace EasyOgreExporter
 {
 	// constructor

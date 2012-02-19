@@ -16,6 +16,8 @@
 #include "EasyOgreExporterLog.h"
 #include "ExTools.h"
 
+//TODO bounding on skleton
+
 namespace EasyOgreExporter
 {
   ExMesh::ExMesh(ExOgreConverter* converter, ParamList &params, IGameNode* pGameNode, IGameMesh* pGameMesh, const std::string& name)
@@ -28,6 +30,7 @@ namespace EasyOgreExporter
     m_Mesh = 0;
     m_pSkeleton = 0;
     m_pMorphR3 = 0;
+    m_SphereRadius = 0;
     
     getModifiers();
     buildVertices();
@@ -39,10 +42,24 @@ namespace EasyOgreExporter
       delete m_pSkeleton;
 
     m_vertices.clear();
-    m_vertexClips.clear();
-		m_BSClips.clear();
   }
   
+  void ExMesh::updateBounds(Point3 pos)
+  {
+    Point3 minB = m_Bounding.Min();
+    Point3 maxB = m_Bounding.Max();
+    minB.x = std::min(minB.x, pos.x);
+    minB.y = std::min(minB.y, pos.y);
+    minB.z = std::min(minB.z, pos.z);
+    maxB.x = std::max(maxB.x, pos.x);
+    maxB.y = std::max(maxB.y, pos.y);
+    maxB.z = std::max(maxB.z, pos.z);
+    m_Bounding.pmin = minB;
+    m_Bounding.pmax = maxB;
+
+    m_SphereRadius = std::max(m_SphereRadius, pos.Length());
+  }
+
   void ExMesh::buildVertices()
   {
     int numFaces = m_GameMesh->GetNumberOfFaces();
@@ -85,6 +102,9 @@ namespace EasyOgreExporter
         vertex.vNorm = normal;
         vertex.vColor = fullColor;
 
+        //update bounding box
+        updateBounds(pos);
+
         if(getSkeleton())
         {
           // save vertex bone weight
@@ -95,6 +115,9 @@ namespace EasyOgreExporter
         }
 
         vertex.lTexCoords.resize(mapChannels.Count());
+        //vertex.lTangent.resize(mapChannels.Count());
+        //vertex.lBinormal.resize(mapChannels.Count());
+        //TODO Tangent and Binormal
         for (size_t chan = 0; chan < mapChannels.Count(); chan++)
         {
           Point3 uv;
@@ -218,20 +241,6 @@ namespace EasyOgreExporter
     }
   }
 
-  void ExMesh::loadAnims()
-  {
-    EasyOgreExporterLog("Loading vertex animations...\n");
-    
-    // clear animations data
-    m_vertexClips.clear();
-
-    //vertex animations 
-    Interval animRange = GetCOREInterface()->GetAnimRange();
-    //TODO determine if there is mesh animation keys
-    //load clip
-    //loadClip(params.vertClipList[i].name, start, stop, rate);
-  }
-
   // Write to a OGRE binary mesh
   bool ExMesh::writeOgreBinary()
   {
@@ -310,6 +319,10 @@ namespace EasyOgreExporter
     if (m_params.exportPoses && m_pMorphR3)
       createPoses();
 
+    // Create poses
+    if (m_params.exportVertAnims)
+      createMorphAnimations();
+
     // Create a bounding box for the mesh
     EasyOgreExporterLog("Info: Create mesh bounding box\n");
     Ogre::AxisAlignedBox bbox = m_Mesh->getBounds();
@@ -326,7 +339,7 @@ namespace EasyOgreExporter
 
     // Define mesh bounds
     m_Mesh->_setBounds(bbox, false);
-
+    m_Mesh->_setBoundingSphereRadius(m_SphereRadius);
 
     // Make sure animation types are up to date first
 		m_Mesh->_determineAnimationTypes();
@@ -424,10 +437,9 @@ namespace EasyOgreExporter
     std::string meshfile = makeOutputPath(m_params.outputDir, m_params.meshOutputDir, m_name, "mesh");
 
     EasyOgreExporterLog("Info: Write mesh file : %s\n", meshfile.c_str());
-    //TODO manage Ogre version
     try
     {
-      serializer.exportMesh(m_Mesh, meshfile.c_str()/*, Ogre::MeshVersion::MESH_VERSION_1_7*/);
+      serializer.exportMesh(m_Mesh, meshfile.c_str(), m_params.getOgreVersion());
     }
     catch(Ogre::Exception &e)
     {
@@ -438,6 +450,237 @@ namespace EasyOgreExporter
 
     pMesh.setNull();
     return true;
+  }
+
+  bool ExMesh::exportMorphAnimation(Interval animRange, std::string name, std::vector<std::vector<ExVertex>> subList)
+  {
+    int animRate = GetTicksPerFrame();
+    int animLenght = animRange.End() - animRange.Start();
+    float ogreLenght = (static_cast<float>(animLenght) / static_cast<float>(animRate)) / GetFrameRate();
+
+    // Compute the pivot TM
+    INode* node = m_GameNode->GetMaxNode();
+	  Matrix3 piv(1);
+    piv.SetTrans(node->GetObjOffsetPos());
+	  PreRotateMatrix(piv, node->GetObjOffsetRot());
+	  ApplyScaling(piv, node->GetObjOffsetScale());
+
+    Matrix3 transMT = TransformMatrix(piv, m_params.yUpAxis);
+    std::vector<int> animKeys = GetPointAnimationsKeysTime(m_GameNode, animRange, m_params.resampleAnims);
+    
+    // Does a better way exist to get vertex position by time ?
+    TimeValue initTime = GetCOREInterface()->GetTime();
+
+    if(animKeys.size() > 0)
+    {
+      //look if any key change something before export
+      bool isAnimated = false;
+      for (int i = 0; i < animKeys.size() && !isAnimated; i++)
+      {
+        GetCOREInterface()->SetTime(animKeys[i], 0);
+        for(int v = 0; v < m_vertices.size() && !isAnimated; v++)
+        {
+          Point3 pos = (transMT * m_GameMesh->GetVertex(m_vertices[v].iMaxId, true)) * m_params.lum;
+
+          if(m_vertices[v].vPos != pos)
+            isAnimated = true;
+        }
+      }
+      GetCOREInterface()->SetTime(initTime);
+
+      if(!isAnimated)
+        return false;
+
+      // Create a new animation for each clip
+      Ogre::Animation* pAnimation = m_Mesh->createAnimation(name.c_str(), ogreLenght);
+
+      if(m_params.useSharedGeom)
+      {
+        // Create a new track
+        Ogre::VertexAnimationTrack* pTrack = pAnimation->createVertexTrack(0, m_Mesh->sharedVertexData, Ogre::VAT_MORPH);
+      
+        for (int i = 0; i < animKeys.size(); i++)
+        {
+          int kTime = animKeys[i];
+          GetCOREInterface()->SetTime(kTime, 0);
+          float ogreTime = static_cast<float>((kTime - animRange.Start()) / static_cast<float>(animRate)) / GetFrameRate();
+          
+          //add key frame
+          Ogre::VertexMorphKeyFrame* pKeyframe = pTrack->createVertexMorphKeyFrame(ogreTime);
+
+          // Create vertex buffer for current keyframe
+          Ogre::HardwareVertexBufferSharedPtr pBuffer = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
+                                                          Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3),
+                                                          m_vertices.size(),
+                                                          Ogre::HardwareBuffer::HBU_STATIC, true);
+          float* pFloat = static_cast<float*>(pBuffer->lock(Ogre::HardwareBuffer::HBL_DISCARD));
+          
+          // Fill the vertex buffer with vertex positions
+          for(int v = 0; v < m_vertices.size(); v++)
+          {
+            Point3 pos = (transMT * m_GameMesh->GetVertex(m_vertices[v].iMaxId, true)) * m_params.lum;
+            
+            //update bounding box
+            updateBounds(pos);
+
+            *pFloat++ = static_cast<float>(pos.x);
+            *pFloat++ = static_cast<float>(pos.y);
+            *pFloat++ = static_cast<float>(pos.z);
+          }
+
+          // Unlock vertex buffer
+          pBuffer->unlock();
+
+          // Set vertex buffer for current keyframe
+          pKeyframe->setVertexBuffer(pBuffer);
+        }
+        GetCOREInterface()->SetTime(initTime);
+      }
+      else
+      {
+        // create a track for each submesh
+        for(int sub = 0; sub < subList.size(); sub++)
+        {
+          std::vector<ExVertex> lvert = subList[sub];
+          // Create a new track
+          Ogre::VertexAnimationTrack* pTrack = pAnimation->createVertexTrack(sub+1, m_Mesh->getSubMesh(sub)->vertexData, Ogre::VAT_MORPH);
+
+          for (int i = 0; i < animKeys.size(); i++)
+          {
+            int kTime = animKeys[i];
+            GetCOREInterface()->SetTime(kTime, 0);
+            float ogreTime = static_cast<float>((kTime - animRange.Start()) / static_cast<float>(animRate)) / GetFrameRate();
+            
+            //add key frame
+            Ogre::VertexMorphKeyFrame* pKeyframe = pTrack->createVertexMorphKeyFrame(ogreTime);
+
+            // Create vertex buffer for current keyframe
+            Ogre::HardwareVertexBufferSharedPtr pBuffer = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
+                                                            Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3),
+                                                            lvert.size(),
+                                                            Ogre::HardwareBuffer::HBU_STATIC, true);
+            float* pFloat = static_cast<float*>(pBuffer->lock(Ogre::HardwareBuffer::HBL_DISCARD));
+            
+            // Fill the vertex buffer with vertex positions
+            for(int v = 0; v < lvert.size(); v++)
+            {
+              Point3 pos = (transMT * m_GameMesh->GetVertex(lvert[v].iMaxId, true)) * m_params.lum;
+              
+              //update bounding box
+              updateBounds(pos);
+
+              *pFloat++ = pos.x;
+              *pFloat++ = pos.y;
+              *pFloat++ = pos.z;
+            }
+
+            // Unlock vertex buffer
+            pBuffer->unlock();
+
+            // Set vertex buffer for current keyframe
+            pKeyframe->setVertexBuffer(pBuffer);
+          }
+        }
+        GetCOREInterface()->SetTime(initTime);
+      }
+      animKeys.clear();
+      return true;
+    }
+    return false;
+  }
+
+  void ExMesh::createMorphAnimations()
+  {
+    IGameControl* nodeControl = m_GameNode->GetIGameControl();
+
+    //Vertex animations
+    if(!nodeControl->IsAnimated(IGAME_POINT3))
+      return;
+
+    EasyOgreExporterLog("Loading vertex animations...\n");
+   
+    INode* node = m_GameNode->GetMaxNode();
+    Tab<int> materialIDs = m_GameMesh->GetActiveMatIDs();
+
+    std::vector<std::vector<ExVertex>> subList;
+    if(!m_params.useSharedGeom)
+    {
+      for(int i=0; i < materialIDs.Count(); i++)
+      {
+        Tab<FaceEx*> faces = m_GameMesh->GetFacesFromMatID(materialIDs[i]);
+        if (faces.Count() <= 0)
+          continue;
+        
+        //construct a list of faces with the correct indices
+        std::vector<ExVertex> verticesList;
+        for (int i = 0; i < faces.Count(); i++)
+        {
+          ExFace face = m_faces[faces[i]->meshFaceIndex];
+          for (size_t j = 0; j < 3; j++)
+            verticesList.push_back(m_vertices[face.vertices[j]]);
+        }
+        subList.push_back(verticesList);
+      }
+    }
+
+    //try to get animations in motion mixer
+    bool useDefault = true;
+    IMixer8* mixer = TheMaxMixerManager.GetMaxMixer(node);
+    if(mixer)
+    {
+      int clipId = 0;
+      int numGroups = mixer->NumTrackgroups();
+      for (size_t j = 0; j < numGroups; j++)
+      {
+        IMXtrackgroup* group = mixer->GetTrackgroup(j);
+        EasyOgreExporterLog("Info : mixer track found %s\n", group->GetName());
+
+        int numTracks = group->NumTracks();
+        for (size_t k = 0; k < numTracks; k++)
+        {
+          IMXtrack* track = group->GetTrack(k);
+          BOOL tMode = track->GetSolo();
+          track->SetSolo(TRUE);
+
+          int numClips = track->NumClips(BOT_ROW);
+          for (size_t l = 0; l < numClips; l++)
+          {
+            IMXclip* clip = track->GetClip(l, BOT_ROW);
+            if(clip)
+            {
+              Interval animRange;
+              int start;
+              int stop;
+              #ifdef PRE_MAX_2010
+                std::string clipName = formatClipName(std::string(clip->GetFilename()), clipId);
+              #else
+              MaxSDK::AssetManagement::AssetUser &clipFile = const_cast<MaxSDK::AssetManagement::AssetUser&>(clip->GetFile());
+                std::string clipName = formatClipName(std::string(clipFile.GetFileName()), clipId);
+              #endif
+              
+              clipName.append("_morph");
+
+              clip->GetGlobalBounds(&start, &stop);
+              animRange.SetStart(start);
+              animRange.SetEnd(stop);
+              EasyOgreExporterLog("Info : mixer clip found %s from %i to %i\n", clipName.c_str(), start, stop);
+              
+              if(exportMorphAnimation(animRange, clipName, subList))
+                useDefault = false;
+              
+              clipId++;
+            }
+          }
+          track->SetSolo(tMode);
+        }
+      }
+    }
+
+    if(useDefault)
+    {
+      Interval animRange = GetCOREInterface()->GetAnimRange();
+      exportMorphAnimation(animRange, "default_morph", subList);
+    }
   }
 
   bool ExMesh::exportPosesAnimation(Interval animRange, std::string name, std::vector<morphChannel*> validChan, std::vector<std::vector<ExVertex>> subList, std::vector<std::vector<int>> poseIndexList, bool bDefault)
@@ -595,6 +838,8 @@ namespace EasyOgreExporter
 
   void ExMesh::createPoses()
   {
+    EasyOgreExporterLog("Loading poses and poses animations...\n");
+
     // Disable all skin Modifiers.
     std::vector<Modifier*> disabledSkinModifiers;
     IGameObject* pGameObject = m_GameNode->GetIGameObject();
@@ -710,6 +955,10 @@ namespace EasyOgreExporter
 
             // apply scale
             pos *= m_params.lum;
+            
+            //update bounding box
+            updateBounds(pos);
+
             // diff
             pos -= vertex.vPos;
             pPose->addVertex(k, Ogre::Vector3(pos.x, pos.y, pos.z));
@@ -741,6 +990,10 @@ namespace EasyOgreExporter
 
               // apply scale
               pos *= m_params.lum;
+
+              //update bounding box
+              updateBounds(pos);
+
               // diff
               pos -= vertex.vPos;
               pPose->addVertex(k, Ogre::Vector3(pos.x, pos.y, pos.z));
@@ -866,10 +1119,6 @@ namespace EasyOgreExporter
       m_Mesh->_compileBoneAssignments();
       m_Mesh->_updateCompiledBoneAssignments();
     }
-
-    // Load vertex animations
-    //if (m_params.exportVertAnims)
-      //loadAnims();
 
     return true;
   }
@@ -1066,19 +1315,6 @@ namespace EasyOgreExporter
     for (int i = 0; i < verticesList.size(); ++i)
     {
       ExVertex vertex = verticesList[i];
-
-      //update bounding box
-      Point3 pos = vertex.vPos;
-      Point3 minB = m_Bounding.Min();
-      Point3 maxB = m_Bounding.Max();
-      minB.x = std::min(minB.x, pos.x);
-      minB.y = std::min(minB.y, pos.y);
-      minB.z = std::min(minB.z, pos.z);
-      maxB.x = std::max(maxB.x, pos.x);
-      maxB.y = std::max(maxB.y, pos.y);
-      maxB.z = std::max(maxB.z, pos.z);
-      m_Bounding.pmin = minB;
-      m_Bounding.pmax = maxB;
 
       Ogre::VertexDeclaration::VertexElementList::const_iterator elemItr, elemEnd;
       elemEnd = elems.end();

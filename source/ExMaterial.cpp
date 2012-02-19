@@ -28,6 +28,9 @@
 #include "IFileResolutionManager.h"
 #endif	//PRE_MAX_2010 
 
+
+//TODO manage ambient, diffuse, spec, alpha layer types with colour_op_ex <operation> <source1> <source2> [<manual_factor>] [<manual_colour1>] [<manual_colour2>]
+
 namespace EasyOgreExporter
 {
 	// Constructor
@@ -229,6 +232,7 @@ namespace EasyOgreExporter
                     m_hasAlpha = true;
 
                 TheManager->DelBitmap(bitmap);
+                tex.type = ID_AM;
               }
 							break;
 						case ID_DI:
@@ -245,42 +249,55 @@ namespace EasyOgreExporter
                     m_hasAlpha = true;
 
                 TheManager->DelBitmap(bitmap);
+                tex.type = ID_DI;
               }
 							break;
 						case ID_SP:
 							EasyOgreExporterLog("Specular channel texture.\n");
+              tex.bCreateTextureUnit = true;
+              tex.type = ID_SP;
 							break;
 						case ID_SH:
 							EasyOgreExporterLog("SH channel texture.\n");
+              tex.type = ID_SH;
 							break;
 						case ID_SS:
 							EasyOgreExporterLog("Shininess Strenth channel texture.\n");
-							break;
+							tex.type = ID_SS;
+              break;
 						case ID_SI:
 							EasyOgreExporterLog("Self-illumination channel texture.\n");
               tex.bCreateTextureUnit = true;
-							break;
+							tex.type = ID_SI;
+              break;
 						case ID_OP:
 							EasyOgreExporterLog("opacity channel texture.\n");
+              tex.bCreateTextureUnit = true;
               m_hasAlpha = true;
+              tex.type = ID_OP;
 							break;
 						case ID_FI:
 							EasyOgreExporterLog("Filter Color channel texture.\n");
-							break;
+							tex.type = ID_FI;
+              break;
 						case ID_BU:
 							EasyOgreExporterLog("Bump channel texture.\n");
-							break;
+							tex.type = ID_BU;
+              break;
 						case ID_RL:
 							EasyOgreExporterLog("Reflection channel texture.\n");
+              tex.type = ID_RL;
               tex.bCreateTextureUnit = true;
               tex.bReflect = true;
 							break; 
 						case ID_RR:
 							EasyOgreExporterLog("Refraction channel texture.\n");
-							break;
+							tex.type = ID_RR;
+              break;
 						case ID_DP:
 							EasyOgreExporterLog("Displacement channel texture.\n");
-							break; 
+							tex.type = ID_DP;
+              break; 
 						}
             
             //get the texture multiplier

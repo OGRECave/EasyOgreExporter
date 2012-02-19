@@ -2269,10 +2269,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\EasyOgreExporterMaxScript.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\ExAnimation.h"
 				>
 			</File>
@@ -2318,10 +2314,6 @@
 			</File>
 			<File
 				RelativePath=".\include\paramlist.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\resource.h"
 				>
 			</File>
 			<File
@@ -2373,10 +2365,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\EasyOgreExporterMaxScript.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\source\ExData.cpp"
 				>
 			</File>
@@ -2402,6 +2390,18 @@
 			</File>
 			<File
 				RelativePath=".\source\ogreExporter.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="resources"
+			>
+			<File
+				RelativePath=".\resources\EasyOgreExporter.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\resources\resource.h"
 				>
 			</File>
 		</Filter>

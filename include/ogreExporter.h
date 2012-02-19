@@ -35,7 +35,7 @@ public:
 	// public methods
 	OgreSceneExporter();
 	virtual ~OgreSceneExporter();
-
+  
 	int ExtCount(void);
 	const TCHAR* Ext(int n);
 	const TCHAR* LongDesc(void);

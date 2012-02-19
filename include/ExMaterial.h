@@ -26,7 +26,6 @@
 
 namespace EasyOgreExporter
 {
-
 	typedef enum {MT_SURFACE_SHADER,MT_LAMBERT,MT_PHONG,MT_BLINN,MT_CGFX,MT_FACETED} MaterialType;
 
 	typedef enum {TOT_REPLACE,TOT_MODULATE,TOT_ADD,TOT_ALPHABLEND, TOT_MANUALBLEND} TexOpType;
@@ -37,11 +36,13 @@ namespace EasyOgreExporter
 	{
 	public:
 		//constructor
-		Texture() {
+		Texture()
+    {
 			scale_u = scale_v = 1;
 			scroll_u = scroll_v = 0;
 			rot = 0;
 			am_u = am_v = TAM_CLAMP;
+      type = 0;
 
 			// Most textures like normal, specular, bump, etc. can't just
 			// be summed into the diffuse channel and need
@@ -65,6 +66,7 @@ namespace EasyOgreExporter
 		double scale_u,scale_v;
 		double scroll_u,scroll_v;
 		double rot;
+    int type;
 	};
 
 
