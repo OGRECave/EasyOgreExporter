@@ -147,11 +147,17 @@ namespace EasyOgreExporter
         
         // get the relative transform
         Matrix3 keyTM = GetRelativeMatrix(maxnode, animKeys[i], mParams.yUpAxis);
+
+        //remove only key if the next key is not different
+        Matrix3 nextKeyTM;
+        nextKeyTM.IdentityMatrix();
+        if(i + 1 < animKeys.size())
+          nextKeyTM = GetRelativeMatrix(maxnode, animKeys[i + 1], mParams.yUpAxis);
         
         //skip if the key is equal to the last one
         if(i > 0)
         {
-          if(keyTM.Equals(prevKeyTM))
+          if(keyTM.Equals(prevKeyTM) && (keyTM.Equals(nextKeyTM)))
             continue;
 
           prevKeyTM = keyTM;
