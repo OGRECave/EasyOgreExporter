@@ -77,6 +77,7 @@ namespace EasyOgreExporter
         
         //advanced config
 		    CheckDlgButton(hWnd, IDC_SHAREDGEOM, exp->useSharedGeom);
+        CheckDlgButton(hWnd, IDC_GENLOD, exp->generateLOD);
         CheckDlgButton(hWnd, IDC_EDGELIST, exp->buildEdges);
         CheckDlgButton(hWnd, IDC_TANGENT, exp->buildTangents);
         CheckDlgButton(hWnd, IDC_SPLITMIRROR, exp->tangentsSplitMirrored);
@@ -142,6 +143,7 @@ namespace EasyOgreExporter
               exp->meshOutputDir = temp;
 
 					    exp->useSharedGeom = IsDlgButtonChecked(hWnd, IDC_SHAREDGEOM);
+              exp->generateLOD = IsDlgButtonChecked(hWnd, IDC_GENLOD);
               exp->buildEdges = IsDlgButtonChecked(hWnd, IDC_EDGELIST);
               exp->buildTangents = IsDlgButtonChecked(hWnd, IDC_TANGENT);
               exp->tangentsSplitMirrored = IsDlgButtonChecked(hWnd, IDC_SPLITMIRROR);
@@ -349,9 +351,6 @@ bool OgreExporter::exportScene()
   Ogre::SkeletonManager skelMgr;
   Ogre::MaterialManager matMgr;
   Ogre::DefaultHardwareBufferManager hardwareBufMgr;
-  // Doug Perkowski  - 03/09/10
-  // Creating LodStrategyManager
-  // http://www.ogre3d.org/forums/viewtopic.php?f=8&t=55844
   Ogre::LodStrategyManager lodstrategymanager;  
 
   m_params.currentRootJoints.clear();

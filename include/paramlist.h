@@ -49,7 +49,7 @@ namespace EasyOgreExporter
 		bool exportMesh, exportMaterial, exportCameras, exportLights, lightingOff, exportAll,
 			exportVertNorm, exportVertCol, exportSkeleton, exportSkelAnims, exportVertAnims, exportPoses, 
 			useSharedGeom, copyTextures, tangentsSplitMirrored, tangentsSplitRotated, tangentsUseParity, 
-			buildTangents, buildEdges, resampleAnims, yUpAxis, exportScene;
+			buildTangents, buildEdges, resampleAnims, yUpAxis, exportScene, generateLOD;
 
 		float lum;	// Length Unit Multiplier
 
@@ -82,6 +82,7 @@ namespace EasyOgreExporter
 			copyTextures = true;
 
       resampleAnims = false;
+      generateLOD = false;
 
       outputDir = "";
       meshOutputDir = "";
@@ -122,7 +123,8 @@ namespace EasyOgreExporter
       lightingOff = source.lightingOff;
 
       resampleAnims = source.resampleAnims;
-
+      generateLOD = source.generateLOD;
+     
       outputDir = source.outputDir;
 			meshOutputDir = source.meshOutputDir;
       materialOutputDir = source.materialOutputDir;

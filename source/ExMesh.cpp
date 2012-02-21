@@ -15,6 +15,7 @@
 #include "ExMesh.h"
 #include "EasyOgreExporterLog.h"
 #include "ExTools.h"
+#include "OgreProgressiveMesh.h"
 
 //TODO bounding on skleton
 
@@ -426,10 +427,57 @@ namespace EasyOgreExporter
       catch(Ogre::Exception e)
       {
         canBuild = false;
-        EasyOgreExporterLog("Error: Creating mesh tangents failed\n");
+        EasyOgreExporterLog("Error: Creating mesh tangents failed : %s\n", e.what());
       }
       if (canBuild)
         m_Mesh->buildTangentVectors(targetSemantic, srcTex, destTex, m_params.tangentsSplitMirrored, m_params.tangentsSplitRotated, m_params.tangentsUseParity);
+    }
+
+    //create LOD levels
+    //don't do it on small meshs
+    if((m_GameMesh->GetNumberOfVerts() > 64) && m_params.generateLOD)
+    {
+      EasyOgreExporterLog("Info: Generate mesh LOD\n");
+      try
+      {
+        unsigned short numLod;
+        Ogre::ProgressiveMesh::VertexReductionQuota quota = Ogre::ProgressiveMesh::VRQ_PROPORTIONAL;
+        
+        // Percentage -> parametric
+        //TODO from param
+        Ogre::Real reduction = 0.15f;
+        Ogre::Mesh::LodValueList valueList;
+
+        //TODO nb level in param
+        //On distance
+        float leveldist = m_SphereRadius * 2.0f;
+        for(int nLevel = 0; nLevel < 4; nLevel++)
+        {
+          leveldist = leveldist * (nLevel + 1);
+          valueList.push_back(leveldist);
+          EasyOgreExporterLog("Info: Generate mesh LOD Level : %f\n", leveldist);
+        }
+        
+        m_Mesh->setLodStrategy(Ogre::LodStrategyManager::getSingleton().getStrategy("Distance"));
+
+        //On pixel, don't seems to work
+        /*
+        int leveldist = 512;
+        for(int nLevel = 0; nLevel < 4; nLevel++)
+        {
+          leveldist = leveldist / (nLevel + 1);
+          valueList.push_back(leveldist * leveldist);
+          EasyOgreExporterLog("Info: Generate mesh LOD Level : %d\n", leveldist * leveldist);
+        }
+        
+        m_Mesh->setLodStrategy(Ogre::LodStrategyManager::getSingleton().getStrategy("PixelCount"));
+        */
+        Ogre::ProgressiveMesh::generateLodLevels(m_Mesh, valueList, quota, reduction);
+      }
+      catch(Ogre::Exception &e)
+      {
+        EasyOgreExporterLog("Error: Generating Mesh LOD : %s\n", e.what());
+      }
     }
 
     // Export the binary mesh
@@ -1283,11 +1331,12 @@ namespace EasyOgreExporter
     }
 
     // Add texture coordinates
+    //use VET_FLOAT2 to make ogre able to generate tangent ^^
     Tab<int> mapChannels = m_GameMesh->GetActiveMapChannelNum();
     for (size_t i = 0; i < mapChannels.Count(); i++)
     { 
-      decl->addElement(1, texSegmentSize, Ogre::VET_FLOAT3, Ogre::VES_TEXTURE_COORDINATES, i);
-      texSegmentSize += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3);
+      decl->addElement(1, texSegmentSize, Ogre::VET_FLOAT2, Ogre::VES_TEXTURE_COORDINATES, i);
+      texSegmentSize += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT2);
     }
 
     // Now create the vertex buffers.
@@ -1361,7 +1410,7 @@ namespace EasyOgreExporter
             elem.baseVertexPointerToElement(pTexVert, &pFloat);
             *pFloat++ = vertex.lTexCoords[iTexCoord].x;
             *pFloat++ = vertex.lTexCoords[iTexCoord].y;
-            *pFloat++ = vertex.lTexCoords[iTexCoord].z;
+            //*pFloat++ = vertex.lTexCoords[iTexCoord].z;
             iTexCoord++;
           }
           break;
