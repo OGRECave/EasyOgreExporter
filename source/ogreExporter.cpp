@@ -432,7 +432,7 @@ bool OgreExporter::exportScene()
 
 bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
 {
-  GetCOREInterface()->ProgressUpdate((int)((float)(nodeCount + 10) / pIGame->GetTotalNodeCount() * 90.0f), FALSE, 0); 
+  GetCOREInterface()->ProgressUpdate((int)(((float)nodeCount / pIGame->GetTotalNodeCount()) * 90.0f), FALSE, 0); 
 
   if(pGameNode)
   {
@@ -462,7 +462,7 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
       
       if(bShouldExport)
       {
-        GetCOREInterface()->ProgressUpdate((int)((float)(nodeCount + 10) / pIGame->GetTotalNodeCount() * 90.0f), FALSE, pGameNode->GetName()); 
+        GetCOREInterface()->ProgressUpdate((int)(((float)nodeCount / pIGame->GetTotalNodeCount()) * 90.0f), FALSE, pGameNode->GetName()); 
 
         EasyOgreExporterLog("Found node: %s\n", pGameNode->GetName());
         switch(pGameObject->GetIGameType())

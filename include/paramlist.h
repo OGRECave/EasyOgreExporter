@@ -155,19 +155,19 @@ namespace EasyOgreExporter
       switch(meshVersion)
       {
 		    case TOGRE_1_8:
-          return Ogre::MeshVersion::MESH_VERSION_1_8;
+          return Ogre::MESH_VERSION_1_8;
 
         case TOGRE_1_7:
-          return Ogre::MeshVersion::MESH_VERSION_1_7;
+          return Ogre::MESH_VERSION_1_7;
 
         case TOGRE_1_4:
-          return Ogre::MeshVersion::MESH_VERSION_1_4;
+          return Ogre::MESH_VERSION_1_4;
 
         case TOGRE_1_0:
-          return Ogre::MeshVersion::MESH_VERSION_1_0;
+          return Ogre::MESH_VERSION_1_0;
 
         default:
-          return Ogre::MeshVersion::MESH_VERSION_LATEST;
+          return Ogre::MESH_VERSION_LATEST;
       }
     }
 	};

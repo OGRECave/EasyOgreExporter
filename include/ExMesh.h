@@ -39,10 +39,45 @@ namespace EasyOgreExporter
       //destructor
 		  ~ExFace()
       {
+        vertices.clear();
+      };
+
+      bool operator==(ExFace const& b)
+      {
+        if(vertices.size() != b.vertices.size())
+          return false;
+
+        if(vertices.size() != 3)
+          return false;
+
+        return ((vertices[0] == b.vertices[0]) && (vertices[1] == b.vertices[1]) && (vertices[2] == b.vertices[2])) ||
+               ((vertices[0] == b.vertices[0]) && (vertices[1] == b.vertices[2]) && (vertices[2] == b.vertices[1])) ||
+               ((vertices[0] == b.vertices[1]) && (vertices[1] == b.vertices[2]) && (vertices[2] == b.vertices[0])) ||
+               ((vertices[0] == b.vertices[1]) && (vertices[1] == b.vertices[0]) && (vertices[2] == b.vertices[2])) ||
+               ((vertices[0] == b.vertices[2]) && (vertices[1] == b.vertices[1]) && (vertices[2] == b.vertices[0])) ||
+               ((vertices[0] == b.vertices[2]) && (vertices[1] == b.vertices[0]) && (vertices[2] == b.vertices[1]));
+      };
+
+      bool operator!=(ExFace const& b)
+      {
+        if(vertices.size() != b.vertices.size())
+          return true;
+
+        if(vertices.size() != 3)
+          return true;
+
+        return ((vertices[0] != b.vertices[0]) || (vertices[1] != b.vertices[1]) || (vertices[2] != b.vertices[2])) &&
+               ((vertices[0] != b.vertices[0]) || (vertices[1] != b.vertices[2]) || (vertices[2] != b.vertices[1])) &&
+               ((vertices[0] != b.vertices[1]) || (vertices[1] != b.vertices[2]) || (vertices[2] != b.vertices[0])) &&
+               ((vertices[0] != b.vertices[1]) || (vertices[1] != b.vertices[0]) || (vertices[2] != b.vertices[2])) &&
+               ((vertices[0] != b.vertices[2]) || (vertices[1] != b.vertices[1]) || (vertices[2] != b.vertices[0])) &&
+               ((vertices[0] != b.vertices[2]) || (vertices[1] != b.vertices[0]) || (vertices[2] != b.vertices[1]));
       };
 
       // vertice indices
       std::vector<int> vertices;
+
+      int iMaxId;
   };
 
   class ExVertex
@@ -52,6 +87,19 @@ namespace EasyOgreExporter
       ExVertex()
       {
         iMaxId = -1;
+      };
+
+      ExVertex(const ExVertex &vert)
+      {
+        iMaxId = vert.iMaxId;
+        vPos = Point3(vert.vPos);
+        vNorm = Point3(vert.vNorm);
+        vColor = Point4(vert.vColor);
+        lTexCoords = vert.lTexCoords;
+        lTangent = vert.lTangent;
+        lBinormal = vert.lBinormal;
+        lWeight = vert.lWeight;
+        lBoneIndex = vert.lBoneIndex;
       };
 
 		  //constructor
@@ -70,7 +118,7 @@ namespace EasyOgreExporter
         lBoneIndex.clear();
       }
 
-      bool cmpPointList(std::vector<Point3> l1, std::vector<Point3> l2)
+      bool cmpPointList(std::vector<Point3> l1, std::vector<Point3> l2, float sensivity)
       {
         if (l1.size() != l2.size())
           return false;
@@ -81,7 +129,7 @@ namespace EasyOgreExporter
         {
           Point3 uv1 = l1[i];
           Point3 uv2 = l2[i];
-          if((uv1.x != uv2.x) || (uv1.y != uv2.y) || (uv1.z != uv2.z))
+          if(!(uv1.Equals(uv2, sensivity)))
             ret = false;
 
           i++;
@@ -92,18 +140,20 @@ namespace EasyOgreExporter
 
       bool operator==(ExVertex const& b)
       {
-        return ((vPos.x == b.vPos.x) && (vPos.y == b.vPos.y) && (vPos.z == b.vPos.z) && 
-            (vNorm.x == b.vNorm.x) && (vNorm.y == b.vNorm.y) && (vNorm.z == b.vNorm.z) && 
-            (vColor.x == b.vColor.x) && (vColor.y == b.vColor.y) && (vColor.z == b.vColor.z) && (vColor.w == b.vColor.w) &&
-            (iMaxId == b.iMaxId) && cmpPointList(lTexCoords, b.lTexCoords) && cmpPointList(lTangent, b.lTangent) && cmpPointList(lBinormal, b.lBinormal));
+        float sensivity = 0.000001f;
+        return (vPos.Equals(b.vPos, sensivity) && 
+            vNorm.Equals(b.vNorm, sensivity) && 
+            vColor.Equals(b.vColor, sensivity) &&
+            /*(iMaxId == b.iMaxId) &&*/ cmpPointList(lTexCoords, b.lTexCoords, sensivity) && cmpPointList(lTangent, b.lTangent, sensivity) && cmpPointList(lBinormal, b.lBinormal, sensivity));
       };
 
       bool operator!=(ExVertex const& b)
       {
-        return ((vPos.x != b.vPos.x) || (vPos.y != b.vPos.y) || (vPos.z != b.vPos.z) || 
-            (vNorm.x != b.vNorm.x) || (vNorm.y != b.vNorm.y) || (vNorm.z != b.vNorm.z) || 
-            (vColor.x != b.vColor.x) || (vColor.y != b.vColor.y) || (vColor.z != b.vColor.z) || (vColor.w != b.vColor.w) ||
-            (iMaxId != b.iMaxId) || (!cmpPointList(lTexCoords, b.lTexCoords)) || (!cmpPointList(lTangent, b.lTangent)) || (!cmpPointList(lBinormal, b.lBinormal)));
+        float sensivity = 0.000001f;
+        return (!vPos.Equals(b.vPos, sensivity) ||
+            !vNorm.Equals(b.vNorm, sensivity) || 
+            !vColor.Equals(b.vColor, sensivity) ||
+            /*(iMaxId != b.iMaxId) ||*/ (!cmpPointList(lTexCoords, b.lTexCoords, sensivity)) || (!cmpPointList(lTangent, b.lTangent, sensivity)) || (!cmpPointList(lBinormal, b.lBinormal, sensivity)));
       };
 
       int iMaxId;
@@ -117,6 +167,33 @@ namespace EasyOgreExporter
       std::vector<Point3> lBinormal;
       std::vector<float> lWeight;
       std::vector<int> lBoneIndex;
+  };
+
+  class ExSubMesh
+  {
+  public:
+    std::vector<ExVertex> m_vertices;
+    std::vector<ExFace> m_faces;
+    int id;
+  protected:
+  private:
+
+  public:
+		//constructor
+		ExSubMesh(int idx)
+    {
+      id = idx;
+    };
+	  
+    //destructor
+		~ExSubMesh()
+    {
+      m_vertices.clear();
+      m_faces.clear();
+    };
+
+  protected:
+  private:
   };
 
 	class ExMesh
@@ -133,6 +210,12 @@ namespace EasyOgreExporter
     Box3 m_Bounding;
     float m_SphereRadius;
     ExSkeleton* m_pSkeleton;
+
+    //faces with new vertices index
+    std::vector<ExFace> m_faces;
+    //cleaned and sorted vertices
+    std::vector<ExVertex> m_vertices;
+    std::vector<ExSubMesh> m_subList;
   private:
 
 	public:
@@ -150,22 +233,17 @@ namespace EasyOgreExporter
 
   protected:
     void buildVertices();
-    Ogre::SubMesh* createOgreSubmesh(Tab<FaceEx*> faces);
+    Ogre::SubMesh* createOgreSubmesh(Material* pMaterial, ExSubMesh submesh);
     bool createOgreSharedGeometry();
     void buildOgreGeometry(Ogre::VertexData* vdata, std::vector<ExVertex> verticesList);
 		Material* loadMaterial(IGameMaterial* pGameMaterial);
     void getModifiers();
     void createPoses();
-    bool exportPosesAnimation(Interval animRange, std::string name, std::vector<morphChannel*> validChan, std::vector<std::vector<ExVertex>> subList, std::vector<std::vector<int>> poseIndexList, bool bDefault);
-    bool exportMorphAnimation(Interval animRange, std::string name, std::vector<std::vector<ExVertex>> subList);
+    bool exportPosesAnimation(Interval animRange, std::string name, std::vector<morphChannel*> validChan, std::vector<std::vector<int>> poseIndexList, bool bDefault);
+    bool exportMorphAnimation(Interval animRange, std::string name);
     void createMorphAnimations();
     void updateBounds(Point3);
 
-    //cleaned and sorted vertices
-    std::vector<ExVertex> m_vertices;
-
-    //faces with new vertices index
-    std::vector<ExFace> m_faces;
   private:
 	};
 

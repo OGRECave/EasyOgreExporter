@@ -28,9 +28,6 @@
 #include "IFileResolutionManager.h"
 #endif	//PRE_MAX_2010 
 
-
-//TODO manage ambient, diffuse, spec, alpha layer types with colour_op_ex <operation> <source1> <source2> [<manual_factor>] [<manual_colour1>] [<manual_colour2>]
-
 namespace EasyOgreExporter
 {
 	// Constructor
@@ -68,6 +65,9 @@ namespace EasyOgreExporter
     m_isTwoSided = false;
     m_isWire = false;
     m_hasAlpha = false;
+    m_hasAmbientMap = false;
+    m_hasDiffuseMap = false;
+    m_hasSpecularMap = false;
 		m_textures.clear();
 	}
 
@@ -222,6 +222,7 @@ namespace EasyOgreExporter
               {
 							  EasyOgreExporterLog("Ambient channel texture.\n");
                 tex.bCreateTextureUnit = true;
+                m_hasAmbientMap = true;
                 
                 BMMRES status; 
                 BitmapInfo bi(tex.absFilename.c_str());
@@ -239,6 +240,7 @@ namespace EasyOgreExporter
               {
 							  EasyOgreExporterLog("Diffuse channel texture.\n");
 							  tex.bCreateTextureUnit = true;
+                m_hasDiffuseMap = true;
                 
                 BMMRES status; 
                 BitmapInfo bi(tex.absFilename.c_str());
@@ -255,6 +257,7 @@ namespace EasyOgreExporter
 						case ID_SP:
 							EasyOgreExporterLog("Specular channel texture.\n");
               tex.bCreateTextureUnit = true;
+              m_hasSpecularMap = true;
               tex.type = ID_SP;
 							break;
 						case ID_SH:
@@ -302,16 +305,6 @@ namespace EasyOgreExporter
             
             //get the texture multiplier
             tex.fAmount = smat->GetTexmapAmt(texSlot, 0) * m_opacity;
-
-            // Set texture operation type
-            if(tex.fAmount < 1.0f)
-            {
-						  tex.opType = TOT_MANUALBLEND;
-            }
-            else
-            {
-              tex.opType = TOT_MODULATE;
-            }
             
 						tex.absFilename = textureName.GetCStr();
 						std::string filename = textureName.StripToLeaf().GetCStr();
@@ -518,14 +511,32 @@ namespace EasyOgreExporter
 		
     //ambient colour
 		// Format: ambient (<red> <green> <blue> [<alpha>]| vertexcolour)
+    if(m_hasAmbientMap)
+    {
+      m_ambient.x = 1.0f;
+      m_ambient.y = 1.0f;
+      m_ambient.z = 1.0f;
+    }
 		outMaterial << "\t\t\tambient " << m_ambient.x << " " << m_ambient.y << " " << m_ambient.z << " " << m_ambient.w << "\n";
 		
     //diffuse colour
 		//Format: diffuse (<red> <green> <blue> [<alpha>]| vertexcolour)
+    if(m_hasDiffuseMap)
+    {
+      m_diffuse.x = 1.0f;
+      m_diffuse.y = 1.0f;
+      m_diffuse.z = 1.0f;
+    }
 		outMaterial << "\t\t\tdiffuse " << m_diffuse.x << " " << m_diffuse.y << " " << m_diffuse.z << " " << m_diffuse.w << "\n";
 		
     //specular colour and shininess
-		outMaterial << "\t\t\tspecular " << m_specular.x << " " << m_specular.y << " " << m_specular.z	<< " " << m_specular.w << " " << m_shininess << "\n";
+    if(m_hasSpecularMap)
+    {
+      m_specular.x = 1.0f;
+      m_specular.y = 1.0f;
+      m_specular.z = 1.0f;
+    }
+    outMaterial << "\t\t\tspecular " << m_specular.x << " " << m_specular.y << " " << m_specular.z	<< " " << m_specular.w << " " << m_shininess << "\n";
 		
     //emissive colour
 		outMaterial << "\t\t\temissive " << m_emissive.x << " " << m_emissive.y << " " << m_emissive.z << " " << m_emissive.w << "\n";
@@ -541,6 +552,7 @@ namespace EasyOgreExporter
 			outMaterial << "\n\t\t\talpha_rejection greater 128\n";
 		
     //write texture units
+    //TODO manage ambient, diffuse, spec, alpha layer types with colour_op_ex <operation> <source1> <source2> [<manual_factor>] [<manual_colour1>] [<manual_colour2>]
 		for (int i=0; i<m_textures.size(); i++)
 		{
 			if(m_textures[i].bCreateTextureUnit == true)
@@ -552,8 +564,43 @@ namespace EasyOgreExporter
 				outMaterial << "\t\t\t\ttexture " << m_textures[i].filename.c_str() << "\n";
 				//write texture coordinate index
 				outMaterial << "\t\t\t\ttex_coord_set " << m_textures[i].uvsetIndex << "\n";
-				//write colour operation
-				switch (m_textures[i].opType)
+
+        /*
+        switch (m_textures[i].type)
+        {
+        case ID_DI:
+          outMaterial << "\t\t\t\tcolour_op_ex modulate src_texture src_diffuse " << m_textures[i].fAmount << "\n";
+        break;
+
+        case ID_SP:
+          outMaterial << "\t\t\t\tcolour_op_ex modulate src_texture src_specular " << m_textures[i].fAmount << "\n";
+        break;
+
+        default:
+          if(m_textures[i].fAmount >= 1.0f)
+          {
+            outMaterial << "\t\t\t\tcolour_op modulate\n";
+          }
+          else
+          {
+            outMaterial << "\t\t\t\tcolour_op_ex blend_manual src_texture src_current " << m_textures[i].fAmount << "\n";
+            outMaterial << "\t\t\t\tcolour_op_multipass_fallback one zero\n";
+          }
+        }*/
+
+        if(m_textures[i].fAmount >= 1.0f)
+        {
+          outMaterial << "\t\t\t\tcolour_op modulate\n";
+        }
+        else
+        {
+          outMaterial << "\t\t\t\tcolour_op_ex blend_manual src_texture src_current " << m_textures[i].fAmount << "\n";
+          outMaterial << "\t\t\t\tcolour_op_multipass_fallback one zero\n";
+        }
+
+        //write colour operation
+				/*
+        switch (m_textures[i].opType)
 				{
 				case TOT_REPLACE:
 					outMaterial << "\t\t\t\tcolour_op replace\n";
@@ -572,6 +619,8 @@ namespace EasyOgreExporter
           outMaterial << "\t\t\t\tcolour_op_multipass_fallback one zero\n";
 					break;
 				}
+        */
+
 				//write texture transforms
 				outMaterial << "\t\t\t\tscale " << m_textures[i].scale_u << " " << m_textures[i].scale_v << "\n";
 				outMaterial << "\t\t\t\tscroll " << m_textures[i].scroll_u << " " << m_textures[i].scroll_v << "\n";

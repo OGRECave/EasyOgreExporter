@@ -1658,7 +1658,7 @@
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2011\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;"
+				AdditionalLibraryDirectories=".\ext\2011\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"

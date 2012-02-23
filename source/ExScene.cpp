@@ -364,6 +364,13 @@ namespace EasyOgreExporter
       return 0;
     }
 
+    //object user params
+    float renderDistance = 0.0f;
+    IPropertyContainer* pc = pGameMesh->GetIPropertyContainer();
+    IGameProperty* pRenderDistance = pc->QueryProperty("renderingDistance");
+    if(pRenderDistance)
+      pRenderDistance->GetPropertyValue(renderDistance);
+
 		TiXmlElement* pEntityElement = new TiXmlElement("entity");
     pEntityElement->SetAttribute("name", parent->Attribute("name"));
 		pEntityElement->SetAttribute("id", id_counter);
@@ -371,6 +378,9 @@ namespace EasyOgreExporter
     std::string meshPath = std::string(parent->Attribute("name")) + ".mesh";
     pEntityElement->SetAttribute("meshFile", meshPath.c_str());
     pEntityElement->SetAttribute("castShadows", getBoolString(pGameMesh->CastShadows()).c_str());
+    if(renderDistance != 0.0f)
+      pEntityElement->SetDoubleAttribute("renderingDistance", renderDistance);
+
     parent->LinkEndChild(pEntityElement);
 
     TiXmlElement* pSubEntities = new TiXmlElement("subentities");

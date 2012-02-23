@@ -285,13 +285,13 @@ inline Matrix3 GetRelativeMatrix(INode *node, int t, bool yUp)
 }
 
 // Units conversion
-#define M2MM 0.001
-#define M2CM 0.01
-#define M2M  1.0
-#define M2KM 1000.0
-#define M2IN 0.0393701
-#define M2FT 0.00328084
-#define M2ML 0.000621371192
+#define M2MM 0.001f
+#define M2CM 0.01f
+#define M2M  1.0f
+#define M2KM 1000.0f
+#define M2IN 0.0393701f
+#define M2FT 0.00328084f
+#define M2ML 0.000621371192f
 
 inline float GetUnitValue(int unitType)
 {

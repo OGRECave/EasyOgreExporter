@@ -43,6 +43,8 @@ namespace EasyOgreExporter
       delete m_pSkeleton;
 
     m_vertices.clear();
+    m_faces.clear();
+    m_subList.clear();
   }
   
   void ExMesh::updateBounds(Point3 pos)
@@ -85,6 +87,7 @@ namespace EasyOgreExporter
     {
       FaceEx* face = m_GameMesh->GetFace(i);
       m_faces[i].vertices.resize(3);
+      m_faces[i].iMaxId = face->meshFaceIndex;
 
       for (size_t j = 0; j < 3; j++)
       {
@@ -95,8 +98,14 @@ namespace EasyOgreExporter
         pos *= m_params.lum;
 
         Point3 normal = m_GameMesh->GetNormal(face->norm[j], true);
+
         Point3 color = m_GameMesh->GetColorVertex(face->vert[j]);
         float alpha = m_GameMesh->GetAlphaVertex(face->vert[j]);
+        if((color.x == -1) && (color.x == -1) && (color.x == -1))
+          color.x = color.y = color.z = 0;
+        if(alpha == -1)
+          alpha = 1.0f;
+
         Point4 fullColor(color.x, color.y, color.z, alpha);
 
         vertex.vPos = pos;
@@ -121,16 +130,10 @@ namespace EasyOgreExporter
         //TODO Tangent and Binormal
         for (size_t chan = 0; chan < mapChannels.Count(); chan++)
         {
-          Point3 uv;
+          Point3 uv(0, 0, 0);
           if (m_GameMesh->GetMapVertex(mapChannels[chan], m_GameMesh->GetFaceTextureVertex(face->meshFaceIndex, j, mapChannels[chan]), uv))
           {
             uv.y = 1.0f - uv.y;
-          }
-          else
-          {
-            uv.x = 0;
-            uv.y = 0;
-            uv.z = 0;
           }
           vertex.lTexCoords[chan] = uv;
         }
@@ -157,6 +160,73 @@ namespace EasyOgreExporter
         }
       }
     } // Loop faces.
+
+    //sort submesh
+    Tab<int> materialIDs = m_GameMesh->GetActiveMatIDs();
+    for(int matid = 0; matid < materialIDs.Count(); matid++)
+    {
+      Tab<FaceEx*> faces = m_GameMesh->GetFacesFromMatID(materialIDs[matid]);
+      ExSubMesh submesh(matid);
+
+      //construct a list of faces with the correct indices
+      for (int fi = 0; fi < faces.Count(); fi++)
+      {
+        //get global face
+        ExFace face = m_faces[faces[fi]->meshFaceIndex];
+        
+        ExFace sface;
+        sface.iMaxId = face.iMaxId;
+        sface.vertices.resize(3);
+
+        for (size_t j = 0; j < 3; j++)
+        {
+          //get the vertex from the global vertices list
+          ExVertex vertex(m_vertices[face.vertices[j]]);
+          ExVertex svertex(vertex);
+          
+          //look for a duplicated vertex
+          /*
+          int sameFound = -1;
+          for(int vi = 0; vi < submesh.m_vertices.size() && (sameFound == -1); vi++)
+          {
+            if (submesh.m_vertices[vi] == vertex)
+            {
+              sameFound = vi;
+            }
+          }
+          
+          //add vertex
+          if(sameFound == -1)
+          {
+            submesh.m_vertices.push_back(vertex);
+            sface.vertices[j] = submesh.m_vertices.size() -1;
+          }
+          else
+          {
+            sface.vertices[j] = sameFound;
+          }*/
+          
+          submesh.m_vertices.push_back(svertex);
+          sface.vertices[j] = submesh.m_vertices.size() -1;
+        }
+
+        /*
+        int sameFaceFound = -1;
+        for(int sfi = 0; sfi < submesh.m_faces.size() && (sameFaceFound == -1); sfi++)
+        {
+          if (submesh.m_faces[sfi] == sface)
+          {
+            sameFaceFound = sfi;
+          }
+        }
+        if(sameFaceFound == -1)
+        {
+          submesh.m_faces.push_back(sface);
+        }*/
+        submesh.m_faces.push_back(sface);
+      }
+      m_subList.push_back(submesh);
+    }
   }
 
   ExSkeleton* ExMesh::getSkeleton()
@@ -245,13 +315,21 @@ namespace EasyOgreExporter
   // Write to a OGRE binary mesh
   bool ExMesh::writeOgreBinary()
   {
+    int numVertices = m_vertices.size();
+
     // If no mesh have been exported, skip mesh creation
-    if (m_GameMesh->GetNumberOfVerts() <= 0)
+    if (numVertices <= 0)
     {
       EasyOgreExporterLog("Warning: No vertices found in this mesh\n");
       return false;
     }
     
+    int ignoreLOD = 0;
+    IPropertyContainer* pc = m_GameMesh->GetIPropertyContainer();
+    IGameProperty* pIgnoreLod = pc->QueryProperty("noLOD");
+    if(pIgnoreLod)
+      pIgnoreLod->GetPropertyValue(ignoreLOD);
+
     // Construct mesh
     Ogre::MeshPtr pMesh;
     try
@@ -281,7 +359,7 @@ namespace EasyOgreExporter
     //generate submesh
     EasyOgreExporterLog("Info: Create Ogre submeshs\n");
     Tab<int> materialIDs = m_GameMesh->GetActiveMatIDs();
-    for(int i=0; i < materialIDs.Count(); i++)
+    for(int i=0; i < m_subList.size(); i++)
     {
       //Generate submesh name
       std::string subName;
@@ -296,24 +374,10 @@ namespace EasyOgreExporter
         continue;
       }
 
-      Ogre::SubMesh* pSubmesh = createOgreSubmesh(faces);
+      Material* pMaterial = loadMaterial(m_GameMesh->GetMaterialFromFace(faces[0]));
+      EasyOgreExporterLog("Info: create submesh : %s\n", subName.c_str());
+      Ogre::SubMesh* pSubmesh = createOgreSubmesh(pMaterial, m_subList[i]);
       m_Mesh->nameSubMesh(subName, i);
-    }
-
-    // Set skeleton link (if present)
-    if (m_pSkeleton && m_params.exportSkeleton)
-    {
-      EasyOgreExporterLog("Info: Link Ogre skeleton\n");
-      std::string filePath = m_name + ".skeleton";
-        //makeOutputPath("", params.meshOutputDir, m_name, "skeleton";
-      try
-      {
-        m_Mesh->setSkeletonName(filePath.c_str());
-      }
-      catch(Ogre::Exception &)
-      {
-        //ignore loading exception
-      }
     }
 
     // Create poses
@@ -342,9 +406,120 @@ namespace EasyOgreExporter
     m_Mesh->_setBounds(bbox, false);
     m_Mesh->_setBoundingSphereRadius(m_SphereRadius);
 
+    //free up some memory
+    m_vertices.clear();
+    m_faces.clear();
+    m_subList.clear();
+
+    //create LOD levels
+    //don't do it on small meshs
+    if((numVertices > 64) && m_params.generateLOD && !ignoreLOD)
+    {
+      EasyOgreExporterLog("Info: Generate mesh LOD\n");
+      try
+      {
+        Ogre::ProgressiveMesh::VertexReductionQuota quota = Ogre::ProgressiveMesh::VRQ_PROPORTIONAL;
+
+        // Percentage -> parametric
+        //TODO from param
+        Ogre::Real reduction = 0.15f;
+        Ogre::Mesh::LodValueList valueList;
+
+        //TODO nb level in param
+        //On distance
+        float leveldist = m_SphereRadius * 2.0f;
+        for(int nLevel = 0; nLevel < 4; nLevel++)
+        {
+          leveldist = (m_SphereRadius * 2.0f) * ((nLevel + 1) * (nLevel + 1));
+          //leveldist = leveldist * (nLevel + 1);
+
+          valueList.push_back(leveldist);
+          EasyOgreExporterLog("Info: Generate mesh LOD Level : %f\n", leveldist);
+        }
+        
+        m_Mesh->setLodStrategy(Ogre::LodStrategyManager::getSingleton().getStrategy("Distance"));
+
+        //On pixel, don't seems to work
+        /*
+        int leveldist = 512;
+        for(int nLevel = 0; nLevel < 4; nLevel++)
+        {
+          leveldist = leveldist / (nLevel + 1);
+          valueList.push_back(leveldist * leveldist);
+          EasyOgreExporterLog("Info: Generate mesh LOD Level : %d\n", leveldist * leveldist);
+        }
+        
+        m_Mesh->setLodStrategy(Ogre::LodStrategyManager::getSingleton().getStrategy("PixelCount"));
+        */
+        if(!(Ogre::ProgressiveMesh::generateLodLevels(m_Mesh, valueList, quota, reduction)))
+        {
+          m_Mesh->removeLodLevels();
+          EasyOgreExporterLog("Error: Generating Mesh LOD levels\n");
+        }
+      }
+      catch(Ogre::Exception &e)
+      {
+        EasyOgreExporterLog("Error: Generating Mesh LOD : %s\n", e.what());
+      }
+    }
+
+    // see somewhere that it could avoid some memory leaks
+    m_Mesh->load();
+
+    // Build edges list
+    if (m_params.buildEdges)
+    {
+      EasyOgreExporterLog("Info: Create mesh edge list\n");
+      try
+      {
+        m_Mesh->buildEdgeList();
+      }
+      catch(Ogre::Exception e)
+      {
+        EasyOgreExporterLog("Warning: Can not create mesh edge list : %s\n", e.what());
+      }
+    }
+
+    // Build tangents
+    if (m_params.buildTangents)
+    {
+      EasyOgreExporterLog("Info: Create mesh tangents\n");
+      Ogre::VertexElementSemantic targetSemantic = (m_params.tangentSemantic == TS_TANGENT) ? Ogre::VES_TANGENT : Ogre::VES_TEXTURE_COORDINATES;
+      bool canBuild = true;
+      unsigned short srcTex, destTex;
+      try
+      {
+        canBuild = !m_Mesh->suggestTangentVectorBuildParams(targetSemantic, srcTex, destTex);
+      }
+      catch(Ogre::Exception e)
+      {
+        canBuild = false;
+        EasyOgreExporterLog("Error: Creating mesh tangents failed : %s\n", e.what());
+      }
+      if (canBuild)
+        m_Mesh->buildTangentVectors(targetSemantic, srcTex, destTex, m_params.tangentsSplitMirrored, m_params.tangentsSplitRotated, m_params.tangentsUseParity);
+    }
+
+    // Set skeleton link (if present)
+    if (m_pSkeleton && m_params.exportSkeleton)
+    {
+      EasyOgreExporterLog("Info: Link Ogre skeleton\n");
+      std::string filePath = m_name + ".skeleton";
+        //makeOutputPath("", params.meshOutputDir, m_name, "skeleton";
+      try
+      {
+        m_Mesh->setSkeletonName(filePath.c_str());
+      }
+      catch(Ogre::Exception &)
+      {
+        //ignore loading exception
+      }
+    }
+
     // Make sure animation types are up to date first
 		m_Mesh->_determineAnimationTypes();
 
+    // reorganize mesh buffers
     // Shared geometry
     if (m_Mesh->sharedVertexData)
     {
@@ -399,87 +574,6 @@ namespace EasyOgreExporter
       subIdx++;
     }
 
-    // Build edges list
-    if (m_params.buildEdges)
-    {
-      EasyOgreExporterLog("Info: Create mesh edge list\n");
-      try
-      {
-        m_Mesh->buildEdgeList();
-      }
-      catch(Ogre::Exception e)
-      {
-        EasyOgreExporterLog("Warning: Can not create mesh edge list : %s\n", e.what());
-      }
-    }
-
-    // Build tangents
-    if (m_params.buildTangents)
-    {
-      EasyOgreExporterLog("Info: Create mesh tangents\n");
-      Ogre::VertexElementSemantic targetSemantic = (m_params.tangentSemantic == TS_TANGENT) ? Ogre::VES_TANGENT : Ogre::VES_TEXTURE_COORDINATES;
-      bool canBuild = true;
-      unsigned short srcTex, destTex;
-      try
-      {
-        canBuild = !m_Mesh->suggestTangentVectorBuildParams(targetSemantic, srcTex, destTex);
-      }
-      catch(Ogre::Exception e)
-      {
-        canBuild = false;
-        EasyOgreExporterLog("Error: Creating mesh tangents failed : %s\n", e.what());
-      }
-      if (canBuild)
-        m_Mesh->buildTangentVectors(targetSemantic, srcTex, destTex, m_params.tangentsSplitMirrored, m_params.tangentsSplitRotated, m_params.tangentsUseParity);
-    }
-
-    //create LOD levels
-    //don't do it on small meshs
-    if((m_GameMesh->GetNumberOfVerts() > 64) && m_params.generateLOD)
-    {
-      EasyOgreExporterLog("Info: Generate mesh LOD\n");
-      try
-      {
-        unsigned short numLod;
-        Ogre::ProgressiveMesh::VertexReductionQuota quota = Ogre::ProgressiveMesh::VRQ_PROPORTIONAL;
-        
-        // Percentage -> parametric
-        //TODO from param
-        Ogre::Real reduction = 0.15f;
-        Ogre::Mesh::LodValueList valueList;
-
-        //TODO nb level in param
-        //On distance
-        float leveldist = m_SphereRadius * 2.0f;
-        for(int nLevel = 0; nLevel < 4; nLevel++)
-        {
-          leveldist = leveldist * (nLevel + 1);
-          valueList.push_back(leveldist);
-          EasyOgreExporterLog("Info: Generate mesh LOD Level : %f\n", leveldist);
-        }
-        
-        m_Mesh->setLodStrategy(Ogre::LodStrategyManager::getSingleton().getStrategy("Distance"));
-
-        //On pixel, don't seems to work
-        /*
-        int leveldist = 512;
-        for(int nLevel = 0; nLevel < 4; nLevel++)
-        {
-          leveldist = leveldist / (nLevel + 1);
-          valueList.push_back(leveldist * leveldist);
-          EasyOgreExporterLog("Info: Generate mesh LOD Level : %d\n", leveldist * leveldist);
-        }
-        
-        m_Mesh->setLodStrategy(Ogre::LodStrategyManager::getSingleton().getStrategy("PixelCount"));
-        */
-        Ogre::ProgressiveMesh::generateLodLevels(m_Mesh, valueList, quota, reduction);
-      }
-      catch(Ogre::Exception &e)
-      {
-        EasyOgreExporterLog("Error: Generating Mesh LOD : %s\n", e.what());
-      }
-    }
-
     // Export the binary mesh
     Ogre::MeshSerializer serializer;
     std::string meshfile = makeOutputPath(m_params.outputDir, m_params.meshOutputDir, m_name, "mesh");
@@ -496,11 +590,13 @@ namespace EasyOgreExporter
       return false;
     }
 
+    Ogre::MeshManager::getSingleton().remove(pMesh->getHandle());
     pMesh.setNull();
+    m_Mesh = 0;
     return true;
   }
 
-  bool ExMesh::exportMorphAnimation(Interval animRange, std::string name, std::vector<std::vector<ExVertex>> subList)
+  bool ExMesh::exportMorphAnimation(Interval animRange, std::string name)
   {
     int animRate = GetTicksPerFrame();
     int animLenght = animRange.End() - animRange.Start();
@@ -587,9 +683,9 @@ namespace EasyOgreExporter
       else
       {
         // create a track for each submesh
-        for(int sub = 0; sub < subList.size(); sub++)
+        for(int sub = 0; sub < m_subList.size(); sub++)
         {
-          std::vector<ExVertex> lvert = subList[sub];
+          std::vector<ExVertex> lvert = m_subList[sub].m_vertices;
           // Create a new track
           Ogre::VertexAnimationTrack* pTrack = pAnimation->createVertexTrack(sub+1, m_Mesh->getSubMesh(sub)->vertexData, Ogre::VAT_MORPH);
 
@@ -648,28 +744,6 @@ namespace EasyOgreExporter
     EasyOgreExporterLog("Loading vertex animations...\n");
    
     INode* node = m_GameNode->GetMaxNode();
-    Tab<int> materialIDs = m_GameMesh->GetActiveMatIDs();
-
-    std::vector<std::vector<ExVertex>> subList;
-    if(!m_params.useSharedGeom)
-    {
-      for(int i=0; i < materialIDs.Count(); i++)
-      {
-        Tab<FaceEx*> faces = m_GameMesh->GetFacesFromMatID(materialIDs[i]);
-        if (faces.Count() <= 0)
-          continue;
-        
-        //construct a list of faces with the correct indices
-        std::vector<ExVertex> verticesList;
-        for (int i = 0; i < faces.Count(); i++)
-        {
-          ExFace face = m_faces[faces[i]->meshFaceIndex];
-          for (size_t j = 0; j < 3; j++)
-            verticesList.push_back(m_vertices[face.vertices[j]]);
-        }
-        subList.push_back(verticesList);
-      }
-    }
 
     //try to get animations in motion mixer
     bool useDefault = true;
@@ -713,7 +787,7 @@ namespace EasyOgreExporter
               animRange.SetEnd(stop);
               EasyOgreExporterLog("Info : mixer clip found %s from %i to %i\n", clipName.c_str(), start, stop);
               
-              if(exportMorphAnimation(animRange, clipName, subList))
+              if(exportMorphAnimation(animRange, clipName))
                 useDefault = false;
               
               clipId++;
@@ -727,11 +801,11 @@ namespace EasyOgreExporter
     if(useDefault)
     {
       Interval animRange = GetCOREInterface()->GetAnimRange();
-      exportMorphAnimation(animRange, "default_morph", subList);
+      exportMorphAnimation(animRange, "default_morph");
     }
   }
 
-  bool ExMesh::exportPosesAnimation(Interval animRange, std::string name, std::vector<morphChannel*> validChan, std::vector<std::vector<ExVertex>> subList, std::vector<std::vector<int>> poseIndexList, bool bDefault)
+  bool ExMesh::exportPosesAnimation(Interval animRange, std::string name, std::vector<morphChannel*> validChan, std::vector<std::vector<int>> poseIndexList, bool bDefault)
   {
     int animRate = GetTicksPerFrame();
     int animLenght = animRange.End() - animRange.Start();
@@ -850,7 +924,7 @@ namespace EasyOgreExporter
       else
       {
         // create a track for each submesh
-        for(int sub = 0; sub < subList.size(); sub++)
+        for(int sub = 0; sub < m_subList.size(); sub++)
         {
           // Create a new track
           Ogre::VertexAnimationTrack* pTrack = pAnimation->createVertexTrack(sub+1, m_Mesh->getSubMesh(sub)->vertexData, Ogre::VAT_POSE);
@@ -916,28 +990,6 @@ namespace EasyOgreExporter
     }
 
     INode* node = m_GameNode->GetMaxNode();
-    Tab<int> materialIDs = m_GameMesh->GetActiveMatIDs();
-
-    std::vector<std::vector<ExVertex>> subList;
-    if(!m_params.useSharedGeom)
-    {
-      for(int i=0; i < materialIDs.Count(); i++)
-      {
-        Tab<FaceEx*> faces = m_GameMesh->GetFacesFromMatID(materialIDs[i]);
-        if (faces.Count() <= 0)
-          continue;
-        
-        //construct a list of faces with the correct indices
-        std::vector<ExVertex> verticesList;
-        for (int i = 0; i < faces.Count(); i++)
-        {
-          ExFace face = m_faces[faces[i]->meshFaceIndex];
-          for (size_t j = 0; j < 3; j++)
-            verticesList.push_back(m_vertices[face.vertices[j]]);
-        }
-        subList.push_back(verticesList);
-      }
-    }
 
     // Compute the pivot TM
 		Matrix3 piv(1);
@@ -955,7 +1007,7 @@ namespace EasyOgreExporter
 
     //index for pose animations
     std::vector<std::vector<int>> poseIndexList;
-    poseIndexList.resize(subList.size());
+    poseIndexList.resize(m_subList.size());
     int poseIndex = 0;
 
     Matrix3 transMT = TransformMatrix(piv, m_params.yUpAxis);
@@ -967,7 +1019,7 @@ namespace EasyOgreExporter
 		  std::string posename = pMorphChannel->mName;
 		  int numMorphVertices = pMorphChannel->mNumPoints;
 			
-      if(numMorphVertices != m_GameMesh->GetNumberOfVerts())
+      if(numMorphVertices != (m_GameMesh->GetNumberOfVerts()))
 		  {
 			  MessageBox(GetCOREInterface()->GetMAXHWnd(), _T("Morph targets have failed to export because the morph vertex count did not match the base mesh.  Collapse the modifier stack prior to export, as smoothing is not supported with morph target export."), _T("Morph Target Export Failed."), MB_OK);
 		    break;
@@ -1016,9 +1068,9 @@ namespace EasyOgreExporter
         }
         else
         {
-          for(int sub = 0; sub < subList.size(); sub++)
+          for(int sub = 0; sub < m_subList.size(); sub++)
           {
-            std::vector<ExVertex> verticesList = subList[sub];
+            std::vector<ExVertex> verticesList = m_subList[sub].m_vertices;
             poseIndexList[sub].push_back(poseIndex);
 
             // Create a new pose for the ogre submesh
@@ -1098,7 +1150,7 @@ namespace EasyOgreExporter
                 animRange.SetEnd(stop);
                 EasyOgreExporterLog("Info : mixer clip found %s from %i to %i\n", clipName.c_str(), start, stop);
                 
-                if(exportPosesAnimation(animRange, clipName, validChan, subList, poseIndexList, false))
+                if(exportPosesAnimation(animRange, clipName, validChan, poseIndexList, false))
                   useDefault = false;
                 
                 clipId++;
@@ -1112,7 +1164,7 @@ namespace EasyOgreExporter
       if(useDefault)
       {
         Interval animRange = GetCOREInterface()->GetAnimRange();
-        exportPosesAnimation(animRange, "default_poses", validChan, subList, poseIndexList, !m_params.resampleAnims);
+        exportPosesAnimation(animRange, "default_poses", validChan, poseIndexList, !m_params.resampleAnims);
       }
     }
 
@@ -1171,10 +1223,9 @@ namespace EasyOgreExporter
     return true;
   }
 
-  Ogre::SubMesh* ExMesh::createOgreSubmesh(Tab<FaceEx*> faces)
+  Ogre::SubMesh* ExMesh::createOgreSubmesh(Material* pMaterial, ExSubMesh submesh)
 	{
-    int numVertices = faces.Count() * 3;
-    Material* pMaterial = loadMaterial(m_GameMesh->GetMaterialFromFace(faces[0]));
+    int numVertices = submesh.m_vertices.size();
 
     // Create a new submesh
 		Ogre::SubMesh* pSubmesh = m_Mesh->createSubMesh();
@@ -1200,29 +1251,27 @@ namespace EasyOgreExporter
 				                               Ogre::HardwareBuffer::HBU_STATIC_WRITE_ONLY);
 		
     std::vector<std::vector<int>> facesIndex;
-    facesIndex.resize(faces.Count());
+    facesIndex.resize(submesh.m_faces.size());
     if (!m_Mesh->sharedVertexData)
     {
       // rebuild vertices index, it must start on 0
-      int vertIndex = 0;
-      for (int i = 0; i < faces.Count(); i++)
+      for (int i = 0; i < submesh.m_faces.size(); i++)
       {
         facesIndex[i].resize(3);
         for (size_t j = 0; j < 3; j++)
         {
-          facesIndex[i][j] = vertIndex;
-          vertIndex++;
+          facesIndex[i][j] = submesh.m_faces[i].vertices[j];
         }
       }
     }
     else
     {
-      for (int i = 0; i < faces.Count(); i++)
+      for (int i = 0; i < submesh.m_faces.size(); i++)
       {
         facesIndex[i].resize(3);
         for (size_t j = 0; j < 3; j++)
         {
-          facesIndex[i][j] = m_faces[faces[i]->meshFaceIndex].vertices[j];
+          facesIndex[i][j] = m_faces[submesh.m_faces[i].iMaxId].vertices[j];
         }
       }
     }
@@ -1250,20 +1299,12 @@ namespace EasyOgreExporter
 		  }
 		  pSubmesh->indexData->indexBuffer->unlock();
 	  }
+    facesIndex.clear();
 
     if(!m_Mesh->sharedVertexData)
     {
-      //construct a list of faces with the correct indices
-      std::vector<ExVertex> verticesList;
-      for (int i = 0; i < faces.Count(); i++)
-      {
-        ExFace face = m_faces[faces[i]->meshFaceIndex];
-        for (size_t j = 0; j < 3; j++)
-          verticesList.push_back(m_vertices[face.vertices[j]]);
-      }
-
       //build geometry
-      buildOgreGeometry(pSubmesh->vertexData, verticesList);
+      buildOgreGeometry(pSubmesh->vertexData, submesh.m_vertices);
 
       // Write vertex bone assignements list
 			if (getSkeleton())
@@ -1272,9 +1313,9 @@ namespace EasyOgreExporter
 				Ogre::SubMesh::VertexBoneAssignmentList vbas;
 
 				// Scan list of geometry vertices
-        for (int i = 0; i < verticesList.size(); i++)
+        for (int i = 0; i < submesh.m_vertices.size(); i++)
         {
-          ExVertex vertex = verticesList[i];
+          ExVertex vertex = submesh.m_vertices[i];
           // Add all bone assignements for every vertex to the bone assignements list
           for (int j = 0; j < vertex.lWeight.size(); j++)
           {
@@ -1374,22 +1415,29 @@ namespace EasyOgreExporter
          switch (elem.getSemantic())
          {
          case Ogre::VES_POSITION:
-            elem.baseVertexPointerToElement(pVert, &pFloat);
-            *pFloat++ = vertex.vPos.x;
-            *pFloat++ = vertex.vPos.y;
-            *pFloat++ = vertex.vPos.z;
+            {
+              elem.baseVertexPointerToElement(pVert, &pFloat);
+              *pFloat++ = vertex.vPos.x;
+              *pFloat++ = vertex.vPos.y;
+              *pFloat++ = vertex.vPos.z;
+              //EasyOgreExporterLog("Info: vertex %d pos : %f %f %f\n", i, vertex.vPos.x, vertex.vPos.y, vertex.vPos.z);
+            }
             break;
          case Ogre::VES_NORMAL:
-            elem.baseVertexPointerToElement(pVert, &pFloat);
-            *pFloat++ = vertex.vNorm.x;
-            *pFloat++ = vertex.vNorm.y;
-            *pFloat++ = vertex.vNorm.z;
+            {
+              elem.baseVertexPointerToElement(pVert, &pFloat);
+              *pFloat++ = vertex.vNorm.x;
+              *pFloat++ = vertex.vNorm.y;
+              *pFloat++ = vertex.vNorm.z;
+              //EasyOgreExporterLog("Info: vertex %d normal : %f %f %f\n", i, vertex.vNorm.x, vertex.vNorm.y, vertex.vNorm.z);
+            }
             break;
           case Ogre::VES_DIFFUSE:
             {
               elem.baseVertexPointerToElement(pVert, &pRGBA);
               Ogre::ColourValue col(vertex.vColor.x, vertex.vColor.y, vertex.vColor.z, vertex.vColor.w);
               *pRGBA = Ogre::VertexElement::convertColourValue(col, Ogre::VertexElement::getBestColourVertexElementType());
+              //EasyOgreExporterLog("Info: vertex %d color : %f %f %f %f\n", i, vertex.vColor.x, vertex.vColor.y, vertex.vColor.z, vertex.vColor.w);
             }
             break;
          default:
@@ -1411,6 +1459,7 @@ namespace EasyOgreExporter
             *pFloat++ = vertex.lTexCoords[iTexCoord].x;
             *pFloat++ = vertex.lTexCoords[iTexCoord].y;
             //*pFloat++ = vertex.lTexCoords[iTexCoord].z;
+            //EasyOgreExporterLog("Info: vertex %d tex coord %d : %f %f\n", i, iTexCoord, vertex.lTexCoords[iTexCoord].x, vertex.lTexCoords[iTexCoord].y);
             iTexCoord++;
           }
           break;

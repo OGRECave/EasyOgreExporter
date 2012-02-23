@@ -111,6 +111,9 @@ namespace EasyOgreExporter
     bool m_isTwoSided;
     bool m_isWire;
     bool m_hasAlpha;
+    bool m_hasDiffuseMap;
+    bool m_hasAmbientMap;
+    bool m_hasSpecularMap;
 		std::vector<Texture> m_textures;
 
     std::string getMaterialName(std::string prefix);
