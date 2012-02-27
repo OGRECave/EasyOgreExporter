@@ -654,7 +654,7 @@ namespace EasyOgreExporter
 		Ogre::SkeletonSerializer serializer;
 
     std::string filePath = makeOutputPath(m_params.outputDir, m_params.meshOutputDir, m_name, "skeleton");
-		serializer.exportSkeleton(pSkeleton.getPointer(), filePath.c_str());
+		serializer.exportSkeleton(pSkeleton.getPointer(), filePath.c_str(), m_params.getSkeletonVersion());
 		pSkeleton.setNull();
 
 		// Skeleton successfully exported

@@ -170,6 +170,28 @@ namespace EasyOgreExporter
           return Ogre::MESH_VERSION_LATEST;
       }
     }
+
+    Ogre::SkeletonVersion getSkeletonVersion()
+    {
+      switch(meshVersion)
+      {
+		    case TOGRE_1_8:
+          return Ogre::SKELETON_VERSION_1_8;
+
+        case TOGRE_1_7:
+          return Ogre::SKELETON_VERSION_1_0;
+
+        case TOGRE_1_4:
+          return Ogre::SKELETON_VERSION_1_0;
+
+        case TOGRE_1_0:
+          return Ogre::SKELETON_VERSION_1_0;
+
+        default:
+          return Ogre::SKELETON_VERSION_LATEST;
+      }
+    }
+
 	};
 
 };	//end namespace
