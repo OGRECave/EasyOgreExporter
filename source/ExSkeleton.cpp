@@ -38,6 +38,7 @@ namespace EasyOgreExporter
     m_pGameSkin = pGameSkin;
     m_params = params;
     m_bipedControl = 0;
+    m_isBiped = false;
 	}
 
 	ExSkeleton::~ExSkeleton()
@@ -54,7 +55,6 @@ namespace EasyOgreExporter
 		m_animations.clear();
 		m_restorePose = "";
 	}
-
 
   const std::vector<float> ExSkeleton::getWeightList(int index)
   {
@@ -78,37 +78,82 @@ namespace EasyOgreExporter
     m_jointIds.resize(numVertices);
   
     std::vector<INode*> rootbones;
-    for(int i = 0; i < m_pGameSkin->GetTotalBoneCount(); ++i)
-    {
-      // pass true to only get bones used by vertices
-      INode* rootbone = m_pGameSkin->GetBone(i, false);
-      if(rootbone && m_pGameSkin->GetBoneIndex(rootbone, false) > -1)
-      {
-        while(m_pGameSkin->GetBoneIndex(rootbone->GetParentNode(), false) > -1)
-        {
-          rootbone = rootbone->GetParentNode();
-        }
-
-        bool bNewRootBone = true;
-        for(int j = 0; j < rootbones.size(); ++j)
-        {
-          if(rootbones[j] == rootbone)
-          {
-            // this bone isn't a root.
-            bNewRootBone = false;
-          }
-        }
-
-        if(bNewRootBone)
-          rootbones.push_back(rootbone);
-      }
-    }
-
+  
     //nothing to export
-    if(rootbones.size() == 0)
+    if(m_pGameSkin->GetTotalBoneCount() <= 0)
     {
       EasyOgreExporterLog("Warning : No assigned bones\n");
       return false;
+    }
+
+    IBipedExport* BipIface = 0;
+    Control* nodeControl = m_pGameSkin->GetBone(0, false)->GetTMController();
+    if ((nodeControl->ClassID() == BIPSLAVE_CONTROL_CLASS_ID) || (nodeControl->ClassID() == BIPBODY_CONTROL_CLASS_ID))
+    {
+      m_isBiped = true;
+    }
+
+    if(m_isBiped)
+    {
+      for(int i = 0; i < m_pGameSkin->GetTotalBoneCount(); ++i)
+      {
+        // pass true to only get bones used by vertices
+        INode* rootbone = m_pGameSkin->GetBone(i, false);
+        if(rootbone)
+        {
+          while(m_pGameSkin->GetBoneIndex(rootbone->GetParentNode(), false) > -1)
+          {
+            rootbone = rootbone->GetParentNode();
+          }
+
+          bool bNewRootBone = true;
+          for(int j = 0; j < rootbones.size(); ++j)
+          {
+            if(rootbones[j] == rootbone)
+            {
+              // this bone is already in the list
+              bNewRootBone = false;
+            }
+          }
+
+          if(bNewRootBone)
+          {
+            EasyOgreExporterLog("Info : Found a root bone : %s\n", rootbone->GetName());
+            rootbones.push_back(rootbone);
+          }
+        }
+      }
+    }
+    else
+    {
+      for(int i = 0; i < m_pGameSkin->GetTotalBoneCount(); ++i)
+      {
+        // pass true to only get bones used by vertices
+        INode* rootbone = m_pGameSkin->GetBone(i, false);
+        if(rootbone)
+        {
+          while(rootbone->GetParentNode() != GetCOREInterface()->GetRootNode())
+          {
+            rootbone = rootbone->GetParentNode();
+          }
+
+          bool bNewRootBone = true;
+          for(int j = 0; j < rootbones.size(); ++j)
+          {
+            if(rootbones[j] == rootbone)
+            {
+              // this bone is already in the list
+              bNewRootBone = false;
+            }
+          }
+
+          if(bNewRootBone)
+          {
+            EasyOgreExporterLog("Info : Found a root bone : %s\n", rootbone->GetName());
+            rootbones.push_back(rootbone);
+          }
+        }
+      }
     }
 
     for(int i = 0; i <rootbones.size(); ++i)
@@ -188,6 +233,8 @@ namespace EasyOgreExporter
       return false;
     }
 
+    int firstFrame = GetCOREInterface()->GetAnimRange().Start();
+
     // initialise joint to avoid bad searchs
 		joint newJoint;
 		newJoint.pNode = pNode;
@@ -252,19 +299,6 @@ namespace EasyOgreExporter
         m_bipedControl = nodeControl;
     }
 
-    /*
-    IBipedExport* BipIface = 0;
-    Control* nodeControl = pNode->GetTMController();
-    if ((nodeControl->ClassID() == BIPSLAVE_CONTROL_CLASS_ID) || (nodeControl->ClassID() == BIPBODY_CONTROL_CLASS_ID))
-    {
-      //Get the Biped Export Interface from the controller 
-      BipIface = (IBipedExport*) nodeControl->GetInterface(I_BIPINTERFACE);
-
-      //Remove the non uniform scale
-      BipIface->RemoveNonUniformScale(TRUE);
-      BipIface->BeginFigureMode(0);
-    }*/
-
     // Get bone matrix at initial pose
     ISkin* pskin = (ISkin*)m_pGameSkin->GetMaxModifier()->GetInterface(I_SKIN);
 
@@ -276,10 +310,10 @@ namespace EasyOgreExporter
 		Matrix3 ParentTM;
 
     if(pskin->GetBoneInitTM(pNode, boneTM, false) == SKIN_INVALID_NODE_PTR)
-      boneTM = pNode->GetNodeTM(0);
+      boneTM = pNode->GetNodeTM(firstFrame);
 
     if(pskin->GetBoneInitTM(pNodeParent, ParentTM, false) == SKIN_INVALID_NODE_PTR)
-      ParentTM = pNodeParent->GetNodeTM(0);
+      ParentTM = pNodeParent->GetNodeTM(firstFrame);
 
     Matrix3 localTM;
 		if(parentIdx >= 0)
@@ -321,12 +355,6 @@ namespace EasyOgreExporter
 				loadJoint(pChildNode);
 		}
 
-    //Release the interface when you are done with it
-    /*if(BipIface)
-    {
-      BipIface->EndFigureMode(0);
-      nodeControl->ReleaseInterface(I_BIPINTERFACE, BipIface);
-    }*/
 		return true;
 	}
 
@@ -523,7 +551,8 @@ namespace EasyOgreExporter
 
 		// display info
 		EasyOgreExporterLog("length: %f\n", m_animations[animIdx].m_length);
-		EasyOgreExporterLog("num keyframes: %d\n", animTracks[0].m_skeletonKeyframes.size());
+    if(animTracks.size() > 0)
+		  EasyOgreExporterLog("num keyframes: %d\n", animTracks[0].m_skeletonKeyframes.size());
 		
 		// clip successfully loaded
 		return true;
@@ -553,7 +582,7 @@ namespace EasyOgreExporter
     Point3 trans = ap.t * m_params.lum;
     
     // don't know why root translation are Z X reverted
-    if(j.parentIndex < 0)
+    if(j.parentIndex < 0 && m_isBiped)
     {
       float x = trans.x;
       trans.x = -trans.z;

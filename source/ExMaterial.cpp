@@ -477,10 +477,45 @@ namespace EasyOgreExporter
 		outMaterial << "material \"" << m_name.c_str() << "\"\n";
 		outMaterial << "{\n";
 
+    /*if(params.generateLOD)
+    {
+      outMaterial << "\tlod_strategy PixelCount\n";
+      outMaterial << "\tlod_values 65000 8000 2000\n";
+
+      for(int i = 0; i < 3; i++)
+        writeMaterialTechnique(params, outMaterial, i);
+    }
+    else*/
+    {
+      writeMaterialTechnique(params, outMaterial, -1);
+    }
+
+		//End material description
+		outMaterial << "}\n";
+
+		//Copy textures to output dir if required
+		if (params.copyTextures)
+			copyTextures(params);
+
+		return true;
+	}
+
+  void Material::writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod)
+  {
 		//Start technique description
 		outMaterial << "\ttechnique\n";
 		outMaterial << "\t{\n";
+    if(lod != -1)
+      outMaterial << "\t\tlod_index "<< lod <<"\n";
 
+    writeMaterialPass(params, outMaterial, lod);
+
+		//End technique description
+		outMaterial << "\t}\n";
+  }
+
+  void Material::writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod)
+  {
 		//Start render pass description
 		outMaterial << "\t\tpass\n";
 		outMaterial << "\t\t{\n";
@@ -511,7 +546,7 @@ namespace EasyOgreExporter
 		
     //ambient colour
 		// Format: ambient (<red> <green> <blue> [<alpha>]| vertexcolour)
-    if(m_hasAmbientMap)
+    if(m_hasAmbientMap && lod == 0)
     {
       m_ambient.x = 1.0f;
       m_ambient.y = 1.0f;
@@ -521,7 +556,7 @@ namespace EasyOgreExporter
 		
     //diffuse colour
 		//Format: diffuse (<red> <green> <blue> [<alpha>]| vertexcolour)
-    if(m_hasDiffuseMap)
+    if(m_hasDiffuseMap && lod < 2)
     {
       m_diffuse.x = 1.0f;
       m_diffuse.y = 1.0f;
@@ -530,7 +565,7 @@ namespace EasyOgreExporter
 		outMaterial << "\t\t\tdiffuse " << m_diffuse.x << " " << m_diffuse.y << " " << m_diffuse.z << " " << m_diffuse.w << "\n";
 		
     //specular colour and shininess
-    if(m_hasSpecularMap)
+    if(m_hasSpecularMap && lod == 0)
     {
       m_specular.x = 1.0f;
       m_specular.y = 1.0f;
@@ -553,30 +588,47 @@ namespace EasyOgreExporter
 		
     //write texture units
     //TODO manage ambient, diffuse, spec, alpha layer types with colour_op_ex <operation> <source1> <source2> [<manual_factor>] [<manual_colour1>] [<manual_colour2>]
-		for (int i=0; i<m_textures.size(); i++)
-		{
-			if(m_textures[i].bCreateTextureUnit == true)
-			{
-				//start texture unit description
-				outMaterial << "\n\t\t\ttexture_unit\n";
-				outMaterial << "\t\t\t{\n";
-				//write texture name
-				outMaterial << "\t\t\t\ttexture " << m_textures[i].filename.c_str() << "\n";
-				//write texture coordinate index
-				outMaterial << "\t\t\t\ttex_coord_set " << m_textures[i].uvsetIndex << "\n";
+		if(lod < 2) // no texture for last LOD
+    {
+      for (int i=0; i<m_textures.size(); i++)
+		  {
+			  if(m_textures[i].bCreateTextureUnit == true)
+			  {
+          //only diffuse on next lod
+          if((m_textures[i].type != ID_DI) && (lod > 0))
+            continue;
 
-        /*
-        switch (m_textures[i].type)
-        {
-        case ID_DI:
-          outMaterial << "\t\t\t\tcolour_op_ex modulate src_texture src_diffuse " << m_textures[i].fAmount << "\n";
-        break;
+				  //start texture unit description
+				  outMaterial << "\n\t\t\ttexture_unit\n";
+				  outMaterial << "\t\t\t{\n";
+				  //write texture name
+				  outMaterial << "\t\t\t\ttexture " << m_textures[i].filename.c_str() << "\n";
+				  //write texture coordinate index
+				  outMaterial << "\t\t\t\ttex_coord_set " << m_textures[i].uvsetIndex << "\n";
 
-        case ID_SP:
-          outMaterial << "\t\t\t\tcolour_op_ex modulate src_texture src_specular " << m_textures[i].fAmount << "\n";
-        break;
+          /*
+          switch (m_textures[i].type)
+          {
+          case ID_DI:
+            outMaterial << "\t\t\t\tcolour_op_ex modulate src_texture src_diffuse " << m_textures[i].fAmount << "\n";
+          break;
 
-        default:
+          case ID_SP:
+            outMaterial << "\t\t\t\tcolour_op_ex modulate src_texture src_specular " << m_textures[i].fAmount << "\n";
+          break;
+
+          default:
+            if(m_textures[i].fAmount >= 1.0f)
+            {
+              outMaterial << "\t\t\t\tcolour_op modulate\n";
+            }
+            else
+            {
+              outMaterial << "\t\t\t\tcolour_op_ex blend_manual src_texture src_current " << m_textures[i].fAmount << "\n";
+              outMaterial << "\t\t\t\tcolour_op_multipass_fallback one zero\n";
+            }
+          }*/
+
           if(m_textures[i].fAmount >= 1.0f)
           {
             outMaterial << "\t\t\t\tcolour_op modulate\n";
@@ -586,70 +638,47 @@ namespace EasyOgreExporter
             outMaterial << "\t\t\t\tcolour_op_ex blend_manual src_texture src_current " << m_textures[i].fAmount << "\n";
             outMaterial << "\t\t\t\tcolour_op_multipass_fallback one zero\n";
           }
-        }*/
 
-        if(m_textures[i].fAmount >= 1.0f)
-        {
-          outMaterial << "\t\t\t\tcolour_op modulate\n";
-        }
-        else
-        {
-          outMaterial << "\t\t\t\tcolour_op_ex blend_manual src_texture src_current " << m_textures[i].fAmount << "\n";
-          outMaterial << "\t\t\t\tcolour_op_multipass_fallback one zero\n";
-        }
+          //write colour operation
+				  /*
+          switch (m_textures[i].opType)
+				  {
+				  case TOT_REPLACE:
+					  outMaterial << "\t\t\t\tcolour_op replace\n";
+					  break;
+				  case TOT_ADD:
+					  outMaterial << "\t\t\t\tcolour_op add\n";
+					  break;
+				  case TOT_MODULATE:
+					  outMaterial << "\t\t\t\tcolour_op modulate\n";
+					  break;
+				  case TOT_ALPHABLEND:
+					  outMaterial << "\t\t\t\tcolour_op alpha_blend\n";
+					  break;
+          case TOT_MANUALBLEND:
+            outMaterial << "\t\t\t\tcolour_op_ex blend_manual src_texture src_current " << m_textures[i].fAmount << "\n";
+            outMaterial << "\t\t\t\tcolour_op_multipass_fallback one zero\n";
+					  break;
+				  }
+          */
 
-        //write colour operation
-				/*
-        switch (m_textures[i].opType)
-				{
-				case TOT_REPLACE:
-					outMaterial << "\t\t\t\tcolour_op replace\n";
-					break;
-				case TOT_ADD:
-					outMaterial << "\t\t\t\tcolour_op add\n";
-					break;
-				case TOT_MODULATE:
-					outMaterial << "\t\t\t\tcolour_op modulate\n";
-					break;
-				case TOT_ALPHABLEND:
-					outMaterial << "\t\t\t\tcolour_op alpha_blend\n";
-					break;
-        case TOT_MANUALBLEND:
-          outMaterial << "\t\t\t\tcolour_op_ex blend_manual src_texture src_current " << m_textures[i].fAmount << "\n";
-          outMaterial << "\t\t\t\tcolour_op_multipass_fallback one zero\n";
-					break;
-				}
-        */
+				  //write texture transforms
+				  outMaterial << "\t\t\t\tscale " << m_textures[i].scale_u << " " << m_textures[i].scale_v << "\n";
+				  outMaterial << "\t\t\t\tscroll " << m_textures[i].scroll_u << " " << m_textures[i].scroll_v << "\n";
+				  outMaterial << "\t\t\t\trotate " << m_textures[i].rot << "\n";
 
-				//write texture transforms
-				outMaterial << "\t\t\t\tscale " << m_textures[i].scale_u << " " << m_textures[i].scale_v << "\n";
-				outMaterial << "\t\t\t\tscroll " << m_textures[i].scroll_u << " " << m_textures[i].scroll_v << "\n";
-				outMaterial << "\t\t\t\trotate " << m_textures[i].rot << "\n";
+          if(m_textures[i].bReflect)
+            outMaterial << "\t\t\t\tenv_map " << "cubic_reflection" << "\n";
 
-        if(m_textures[i].bReflect)
-          outMaterial << "\t\t\t\tenv_map " << "cubic_reflection" << "\n";
-
-				//end texture unit desription
-				outMaterial << "\t\t\t}\n";
-			}
-		}
+				  //end texture unit desription
+				  outMaterial << "\t\t\t}\n";
+			  }
+		  }
+    }
 
 		//End render pass description
 		outMaterial << "\t\t}\n";
-
-		//End technique description
-		outMaterial << "\t}\n";
-
-		//End material description
-		outMaterial << "}\n";
-
-		//Copy textures to output dir if required
-		if (params.copyTextures)
-			copyTextures(params);
-
-		return true;
-	}
-
+  }
 
 	// Copy textures to path specified by params
 	bool Material::copyTextures(ParamList &params)

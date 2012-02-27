@@ -135,6 +135,9 @@ inline bool IsPossibleBone(INode *pNode)
 
   // bided
   Control *cont = pNode->GetTMController();
+  if(!cont)
+    return false;
+
   if(cont->ClassID() == FOOTPRINT_CLASS_ID)     //biped foot print    
     return false;
 

@@ -97,6 +97,7 @@ namespace EasyOgreExporter
 		std::string m_restorePose;
     std::string m_name;
     ParamList m_params;
+    bool m_isBiped;
 	};
 
 }	//end namespace

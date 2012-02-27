@@ -117,6 +117,10 @@ namespace EasyOgreExporter
 		std::vector<Texture> m_textures;
 
     std::string getMaterialName(std::string prefix);
+
+  private:
+    void writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod);
+    void writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod);
 	};
 
 };	//end of namespace

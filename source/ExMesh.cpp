@@ -326,7 +326,7 @@ namespace EasyOgreExporter
     
     int ignoreLOD = 0;
     IPropertyContainer* pc = m_GameMesh->GetIPropertyContainer();
-    IGameProperty* pIgnoreLod = pc->QueryProperty("noLOD");
+    IGameProperty* pIgnoreLod = pc->QueryProperty(_T("noLOD"));
     if(pIgnoreLod)
       pIgnoreLod->GetPropertyValue(ignoreLOD);
 
@@ -439,18 +439,19 @@ namespace EasyOgreExporter
         
         m_Mesh->setLodStrategy(Ogre::LodStrategyManager::getSingleton().getStrategy("Distance"));
 
-        //On pixel, don't seems to work
+        //On pixel, don't seems to work on mesh
         /*
-        int leveldist = 512;
+        int leveldist = 256;
         for(int nLevel = 0; nLevel < 4; nLevel++)
         {
-          leveldist = leveldist / (nLevel + 1);
+          leveldist = 256 / ((nLevel + 1) * (nLevel + 1));
           valueList.push_back(leveldist * leveldist);
           EasyOgreExporterLog("Info: Generate mesh LOD Level : %d\n", leveldist * leveldist);
         }
         
         m_Mesh->setLodStrategy(Ogre::LodStrategyManager::getSingleton().getStrategy("PixelCount"));
         */
+
         if(!(Ogre::ProgressiveMesh::generateLodLevels(m_Mesh, valueList, quota, reduction)))
         {
           m_Mesh->removeLodLevels();

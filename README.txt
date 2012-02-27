@@ -10,7 +10,7 @@
 ////////////////////////////////////
 
 
-#Version 0.5 : Febrary 19, 2012
+#Version 0.6 : Febrary 27, 2012
 
  - Ogre Scene file
  - meshs
@@ -28,7 +28,8 @@
    - material prefix
    - Ogre version
    - advanced configuration
-    
+   - automatic LOD generation
+   
 #TODO
  - Manage Mental ray materials if possible
  - Manage Automatic Shader creation in materials from DX normal maps

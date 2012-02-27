@@ -104,12 +104,13 @@ namespace EasyOgreExporter
   {
     std::vector<int> animKeys = GetAnimationsKeysTime(pGameNode, animRange, mParams.resampleAnims);
     INode* maxnode = pGameNode->GetMaxNode();
+    int firstFrame = GetCOREInterface()->GetAnimRange().Start();
 
     if(animKeys.size() > 0)
     {
       //look if any key change something before export
       bool isAnimated = false;
-      Matrix3 prevKeyTM = GetRelativeMatrix(maxnode, 0, mParams.yUpAxis);
+      Matrix3 prevKeyTM = GetRelativeMatrix(maxnode, firstFrame, mParams.yUpAxis);
       for(int i = 0; i < animKeys.size() && !isAnimated; i++)
       {
         if (maxnode->GetParentNode())
@@ -225,12 +226,14 @@ namespace EasyOgreExporter
 		if(!parent)
       parent = nodesElement;
 
+    int firstFrame = GetCOREInterface()->GetAnimRange().Start();
+
     INode* maxnode = pGameNode->GetMaxNode();
     if (maxnode->GetParentNode())
-      maxnode->GetParentNode()->EvalWorldState(0);
+      maxnode->GetParentNode()->EvalWorldState(firstFrame);
     
     // get the relative transform
-    Matrix3 nodeTM = GetRelativeMatrix(maxnode, 0, mParams.yUpAxis);
+    Matrix3 nodeTM = GetRelativeMatrix(maxnode, firstFrame, mParams.yUpAxis);
 
     AffineParts ap;
     decomp_affine(nodeTM, &ap);
@@ -367,7 +370,7 @@ namespace EasyOgreExporter
     //object user params
     float renderDistance = 0.0f;
     IPropertyContainer* pc = pGameMesh->GetIPropertyContainer();
-    IGameProperty* pRenderDistance = pc->QueryProperty("renderingDistance");
+    IGameProperty* pRenderDistance = pc->QueryProperty(_T("renderingDistance"));
     if(pRenderDistance)
       pRenderDistance->GetPropertyValue(renderDistance);
 
