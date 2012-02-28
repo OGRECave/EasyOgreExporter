@@ -324,7 +324,7 @@ namespace EasyOgreExporter
       return false;
     }
     
-    int ignoreLOD = 0;
+    BOOL ignoreLOD = FALSE;
     IPropertyContainer* pc = m_GameMesh->GetIPropertyContainer();
     IGameProperty* pIgnoreLod = pc->QueryProperty(_T("noLOD"));
     if(pIgnoreLod)
@@ -847,7 +847,7 @@ namespace EasyOgreExporter
     else // use sampled keys
     {
      //add time steps
-      for (float t = animRange.Start(); t < animRange.End(); t += animRate)
+      for (int t = animRange.Start(); t < animRange.End(); t += animRate)
 			  animKeys.push_back(t);
 
       //force the last key

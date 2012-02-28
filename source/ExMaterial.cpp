@@ -133,8 +133,8 @@ namespace EasyOgreExporter
         if(m_opacity < 1.0f)
           m_isTransparent = true;
 
-			  m_isTwoSided = smat->GetTwoSided();
-		    m_isWire = smat->GetWire();
+        m_isTwoSided = smat->GetTwoSided() ? true : false;
+		    m_isWire = smat->GetWire() ? true : false;
         if(smat->IsFaceted())
         {
           m_type = MT_FACETED;

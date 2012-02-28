@@ -22,6 +22,7 @@
 #include "ExData.h"
 #include "EasyOgreExporterLog.h"
 #include "ExTools.h"
+#include "tinyxml.h"
 
 #include "../resources/resource.h"
 #include "3dsmaxport.h"
@@ -35,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 0.6f;
+float EXVERSION = 0.7f;
 
 namespace EasyOgreExporter
 {
@@ -142,14 +143,14 @@ namespace EasyOgreExporter
 					    SendDlgItemMessage(hWnd, IDC_MESHDIR, WM_GETTEXT, len+1, (LPARAM)temp.data());
               exp->meshOutputDir = temp;
 
-					    exp->useSharedGeom = IsDlgButtonChecked(hWnd, IDC_SHAREDGEOM);
-              exp->generateLOD = IsDlgButtonChecked(hWnd, IDC_GENLOD);
-              exp->buildEdges = IsDlgButtonChecked(hWnd, IDC_EDGELIST);
-              exp->buildTangents = IsDlgButtonChecked(hWnd, IDC_TANGENT);
-              exp->tangentsSplitMirrored = IsDlgButtonChecked(hWnd, IDC_SPLITMIRROR);
-              exp->tangentsSplitRotated = IsDlgButtonChecked(hWnd, IDC_SPLITROT);
-              exp->tangentsUseParity = IsDlgButtonChecked(hWnd, IDC_STOREPARITY);
-              exp->resampleAnims = IsDlgButtonChecked(hWnd, IDC_RESAMPLE_ANIMS);
+              exp->useSharedGeom = IsDlgButtonChecked(hWnd, IDC_SHAREDGEOM) ? true : false;
+              exp->generateLOD = IsDlgButtonChecked(hWnd, IDC_GENLOD) ? true : false;
+              exp->buildEdges = IsDlgButtonChecked(hWnd, IDC_EDGELIST) ? true : false;
+              exp->buildTangents = IsDlgButtonChecked(hWnd, IDC_TANGENT) ? true : false;
+              exp->tangentsSplitMirrored = IsDlgButtonChecked(hWnd, IDC_SPLITMIRROR) ? true : false;
+              exp->tangentsSplitRotated = IsDlgButtonChecked(hWnd, IDC_SPLITROT) ? true : false;
+              exp->tangentsUseParity = IsDlgButtonChecked(hWnd, IDC_STOREPARITY) ? true : false;
+              exp->resampleAnims = IsDlgButtonChecked(hWnd, IDC_RESAMPLE_ANIMS) ? true : false;
 
               EndDialog(hWnd, 1);
             }
@@ -324,6 +325,65 @@ OgreExporter::~OgreExporter()
 {
 }
 
+void OgreExporter::initIGameConf(std::string path)
+{
+  TiXmlDocument xmlDoc;
+  TiXmlElement* igameProperties = new TiXmlElement("IGameProperties");
+  xmlDoc.LinkEndChild(igameProperties);
+  TiXmlElement* igameUserData = new TiXmlElement("ExportUserData");
+  igameProperties->LinkEndChild(igameUserData);
+
+  // renderingDistance
+  TiXmlElement* renderDist = new TiXmlElement("UserProperty");
+  TiXmlElement* renderDistId = new TiXmlElement("id");
+  TiXmlText* renderDistIdText = new TiXmlText("102");
+  renderDistId->LinkEndChild(renderDistIdText);
+  renderDist->LinkEndChild(renderDistId);
+  
+  TiXmlElement* renderDistSName = new TiXmlElement("simplename");
+  TiXmlText* renderDistSNameText = new TiXmlText("renderingDistance");
+  renderDistSName->LinkEndChild(renderDistSNameText);
+  renderDist->LinkEndChild(renderDistSName);
+
+  TiXmlElement* renderDistName = new TiXmlElement("keyName");
+  TiXmlText* renderDistNameText = new TiXmlText("renderingDistance");
+  renderDistName->LinkEndChild(renderDistNameText);
+  renderDist->LinkEndChild(renderDistName);
+
+  TiXmlElement* renderDistType = new TiXmlElement("type");
+  TiXmlText* renderDistTypeText = new TiXmlText("float");
+  renderDistType->LinkEndChild(renderDistTypeText);
+  renderDist->LinkEndChild(renderDistType);
+
+  igameUserData->LinkEndChild(renderDist);
+
+  // noLOD
+  TiXmlElement* noLod = new TiXmlElement("UserProperty");
+  TiXmlElement* noLodId = new TiXmlElement("id");
+  TiXmlText* noLodIdText = new TiXmlText("103");
+  noLodId->LinkEndChild(noLodIdText);
+  noLod->LinkEndChild(noLodId);
+  
+  TiXmlElement* noLodSName = new TiXmlElement("simplename");
+  TiXmlText* noLodSNameText = new TiXmlText("noLOD");
+  noLodSName->LinkEndChild(noLodSNameText);
+  noLod->LinkEndChild(noLodSName);
+
+  TiXmlElement* noLodName = new TiXmlElement("keyName");
+  TiXmlText* noLodNameText = new TiXmlText("noLOD");
+  noLodName->LinkEndChild(noLodNameText);
+  noLod->LinkEndChild(noLodName);
+
+  TiXmlElement* noLodType = new TiXmlElement("type");
+  TiXmlText* noLodTypeText = new TiXmlText("bool");
+  noLodType->LinkEndChild(noLodTypeText);
+  noLod->LinkEndChild(noLodType);
+
+  igameUserData->LinkEndChild(noLod);
+
+  xmlDoc.SaveFile(path.c_str());
+}
+
 bool OgreExporter::exportScene()
 {
   //Init log files
@@ -355,7 +415,14 @@ bool OgreExporter::exportScene()
 
   m_params.currentRootJoints.clear();
 
+  std::string plugConfDir = IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR);
+  std::string xmlConfPath = plugConfDir + "\\EasyOgreExporter\\IGameProp.xml";
+  _mkdir((std::string(plugConfDir + "\\EasyOgreExporter")).c_str());
+
+  initIGameConf(xmlConfPath);
+
   pIGame = GetIGameInterface();
+  pIGame->SetPropertyFile(xmlConfPath.c_str());
 
   // Passing in true causing crash on IGameNode->GetNodeParent.  
   // Test for selection in Translate node.

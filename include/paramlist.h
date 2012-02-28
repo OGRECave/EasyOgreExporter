@@ -150,6 +150,27 @@ namespace EasyOgreExporter
     {
 		}
 
+    std::string getOgreVersionName()
+    {
+      switch(meshVersion)
+      {
+		    case TOGRE_1_8:
+          return "1.8";
+
+        case TOGRE_1_7:
+          return "1.7";
+
+        case TOGRE_1_4:
+          return "1.4";
+
+        case TOGRE_1_0:
+          return "1.0";
+
+        default:
+          return "1.8";
+      }
+    }
+
     Ogre::MeshVersion getOgreVersion()
     {
       switch(meshVersion)

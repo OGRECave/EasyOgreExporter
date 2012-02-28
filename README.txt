@@ -10,7 +10,7 @@
 ////////////////////////////////////
 
 
-#Version 0.6 : Febrary 27, 2012
+#Version 0.7 : Febrary 28, 2012
 
  - Ogre Scene file
  - meshs
@@ -29,7 +29,14 @@
    - Ogre version
    - advanced configuration
    - automatic LOD generation
-   
+
+Available object user properties
+This attributes can be added from the Object property dialog in Max
+ - renderingDistance, this attribute is exporter in the ogre scene file, it define the visibility distance of a mesh 
+  * ex : renderingDistance=10.5
+ - noLOD, override the LOD generation for the specified object
+  * ex : noLOD=false
+
 #TODO
  - Manage Mental ray materials if possible
  - Manage Automatic Shader creation in materials from DX normal maps

@@ -66,7 +66,8 @@ private:
 	TimeValue m_curTime;
 	IGameScene* pIGame;
   int nodeCount;
-  
+
+  void initIGameConf(std::string path);
   bool exportNode(IGameNode* pGameNode, TiXmlElement* parent);
 };
 

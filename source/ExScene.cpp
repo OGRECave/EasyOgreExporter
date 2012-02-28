@@ -53,7 +53,7 @@ namespace EasyOgreExporter
     sceneElement->SetAttribute("unitsPerMeter", "1");
     sceneElement->SetAttribute("unitType", "meters");
     sceneElement->SetAttribute("formatVersion", "1.0");
-		sceneElement->SetAttribute("minOgreVersion", "1.8");
+    sceneElement->SetAttribute("minOgreVersion", mParams.getOgreVersionName().c_str());
 		sceneElement->SetAttribute("author", "EasyOgreExporter");
 
     //Environment setting

@@ -298,7 +298,7 @@ inline Matrix3 GetRelativeMatrix(INode *node, int t, bool yUp)
 
 inline float GetUnitValue(int unitType)
 {
-  float value = 1.0;
+  float value = 1.0f;
 
   switch(unitType)
   {
@@ -341,19 +341,19 @@ inline float ConvertToMeter(int metricDisp, int unitType)
   switch(metricDisp)
   {
     case UNIT_METRIC_DISP_MM:
-      scale = 1000 * GetUnitValue(unitType);
+      scale = 1000.0f * GetUnitValue(unitType);
     break;
 
     case UNIT_METRIC_DISP_CM:
-      scale = 100 * GetUnitValue(unitType);
+      scale = 100.0f * GetUnitValue(unitType);
     break;
 
     case UNIT_METRIC_DISP_M:
-      scale = 1 * GetUnitValue(unitType);
+      scale = 1.0f * GetUnitValue(unitType);
     break;
 
     case UNIT_METRIC_DISP_KM:
-      scale = 0.001 * GetUnitValue(unitType);
+      scale = 0.001f * GetUnitValue(unitType);
     break;
   }
 
@@ -677,7 +677,7 @@ inline std::vector<int> GetPointAnimationsKeysTime(IGameNode* pGameNode, Interva
   if(resample)
   {
     //add time steps
-    for (float t = animRange.Start(); t < animRange.End(); t += animRate)
+    for (int t = animRange.Start(); t < animRange.End(); t += animRate)
 		  animKeys.push_back(t);
 
     //force the last key
@@ -691,7 +691,7 @@ inline std::vector<int> GetPointAnimationsKeysTime(IGameNode* pGameNode, Interva
     if(!GetAnimationsPointKeysTime(pGameControl, animRange, &animKeys))
     {
       //add time steps
-      for (float t = animRange.Start(); t < animRange.End(); t += animRate)
+      for (int t = animRange.Start(); t < animRange.End(); t += animRate)
         animKeys.push_back(t);
 
       //force the last key
