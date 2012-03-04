@@ -30,6 +30,18 @@
 
 namespace EasyOgreExporter
 {
+
+  MatProc::MatProc()
+  {
+  }
+
+  bool MatProc::Proc(IGameProperty * prop)
+  {
+    EasyOgreExporterLog("Debug: Material properties : %s\n", prop->GetName());
+    return false;//lets keep going
+  }
+
+
 	// Constructor
   Material::Material(IGameMaterial* pGameMaterial, std::string prefix)
 	{
@@ -68,6 +80,7 @@ namespace EasyOgreExporter
     m_hasAmbientMap = false;
     m_hasDiffuseMap = false;
     m_hasSpecularMap = false;
+    m_hasBumpMap = false;
 		m_textures.clear();
 	}
 
@@ -100,6 +113,343 @@ namespace EasyOgreExporter
     return newMatName;
   }
 
+  void Material::loadManualTexture(IGameProperty* prop, int type, float amount)
+  {
+    if(prop)
+    {
+      if (prop->IsParamBlock())
+			{
+				if (prop->IsPBlock2())
+				{
+        #ifdef PRE_MAX_2012
+					int index = prop->GetParamBlockIndex();
+        #elif PRE_MAX_2011
+          int index = prop->GetParamBlockIndex();
+        #else
+          int index = prop->GetParamIndex();
+        #endif
+
+					IParamBlock2* pBlock = prop->GetMaxParamBlock2();
+					ParamID id = pBlock->IndextoID (index);
+					Texmap* pTexmap = pBlock->GetTexmap (id);
+					if (pTexmap)
+					{
+						MSTR className;
+						pTexmap->GetClassName(className);
+						const char* pName = className.data();
+						if (!strcmp(pName, "Bitmap"))
+						{
+							BitmapTex* pBitmapTex = static_cast<BitmapTex*>(pTexmap);
+              std::string path = pBitmapTex->GetMapName();
+
+              EasyOgreExporterLog("Texture Name: %s\n", path.c_str());
+			        
+              bool bFoundTexture = false;
+		          MaxSDK::Util::Path textureName(path.c_str());
+		          if(!DoesFileExist(path.c_str()))
+		          {
+          #ifdef PRE_MAX_2010
+			          if(IPathConfigMgr::GetPathConfigMgr()->SearchForXRefs(textureName))
+			          {
+				          bFoundTexture = true;
+			          }
+          #else
+			          IFileResolutionManager* pIFileResolutionManager = IFileResolutionManager::GetInstance();
+			          if(pIFileResolutionManager)
+			          {
+				          if(pIFileResolutionManager->GetFullFilePath(textureName, MaxSDK::AssetManagement::kXRefAsset))
+				          {
+					          bFoundTexture = true;
+				          }
+				          else if(pIFileResolutionManager->GetFullFilePath(textureName, MaxSDK::AssetManagement::kBitmapAsset))
+				          {
+					          bFoundTexture = true;
+				          }
+			          }
+          #endif // PRE_MAX_2010
+			          if(true == bFoundTexture)
+			          {
+				          EasyOgreExporterLog("Updated texture location: %s.\n", textureName.GetCStr());
+			          }
+			          else
+			          {
+				          EasyOgreExporterLog("Warning: Couldn't locate texture: %s.\n", path);
+			          }
+		          }
+
+              EasyOgreExporterLog("Diffuse channel texture.\n");
+              Texture tex;
+		          tex.bCreateTextureUnit = true;
+		          tex.uvsetIndex = 0;
+              tex.uvsetIndex = pBitmapTex->GetMapChannel() - 1;
+              tex.uvsetName = pBitmapTex->GetName();
+			        tex.absFilename = textureName.GetCStr();
+			        std::string filename = textureName.StripToLeaf().GetCStr();
+			        tex.filename = optimizeFileName(filename);
+              tex.fAmount = amount;
+              m_hasDiffuseMap = true;
+
+              if(bFoundTexture)
+              {
+                BMMRES status;
+                BitmapInfo bi(tex.absFilename.c_str());
+                Bitmap* bitmap = TheManager->Create(&bi); 
+                bitmap = TheManager->Load(&bi, &status);
+                if (status == BMMRES_SUCCESS) 
+                  if(bitmap->HasAlpha())
+                    m_hasAlpha = true;
+
+                TheManager->DelBitmap(bitmap);
+                tex.type = type;
+              }
+
+            //TODO from UV matrix
+              /*
+            UVGen* pUVGen = pBitmapTex->GetUVGen();
+						if(pUVGen)
+						{
+							float covU,covV;
+							prop = pUVGen->GetTextureTiling();
+							if(prop)
+							{
+								prop->GetPropertyValue(covU);
+								if (fabs(covU) < PRECISION)
+									covU = 666;
+								else
+									covU = 1/covU;
+								tex.scale_u = covU;
+								if (fabs(tex.scale_u) < PRECISION)
+									tex.scale_u = 0;
+							}
+							prop = pUVGen->GetVTilingData();
+							if(prop)
+							{
+								prop->GetPropertyValue(covV);
+								if (fabs(covV) < PRECISION)
+									covV = 666;
+								else
+									covV = 1/covV;
+								tex.scale_v = covV;
+								if (fabs(tex.scale_v) < PRECISION)
+									tex.scale_v = 0;
+							}
+							float rot;
+							prop = pUVGen->GetWAngleData();
+							if(prop)
+							{
+								prop->GetPropertyValue(rot);
+								tex.rot = -rot;
+								// convert radians to degrees.
+								tex.rot = tex.rot * 180.0f/3.1415926535f;
+								if (fabs(rot) < PRECISION)
+									tex.rot = 0;
+							}
+
+							float rotU, rotV;
+							prop = pUVGen->GetUAngleData();
+							if(prop)
+							{
+								prop->GetPropertyValue(rotU);
+								if (fabs(rotU) > PRECISION)
+									EasyOgreExporterLog("Warning: U rotation detected. This is unsupported.\n");
+							}
+							prop = pUVGen->GetVAngleData();
+							{
+								prop->GetPropertyValue(rotV);
+								if (fabs(rotV) > PRECISION)
+									EasyOgreExporterLog("Warning: V rotation detected. This is unsupported.\n");
+							}
+
+							float transU,transV;
+							prop = pUVGen->GetUOffsetData();
+							if(prop)
+							{	
+								prop->GetPropertyValue(transU);
+								tex.scroll_u = -0.5 * (covU-1.0)/covU - transU/covU;
+								if (fabs(tex.scroll_u) < PRECISION)
+									tex.scroll_u = 0;
+							}
+							prop = pUVGen->GetVOffsetData();
+							if(prop)
+							{
+								prop->GetPropertyValue(transV);
+								tex.scroll_v = 0.5 * (covV-1.0)/covV + transV/covV;
+								if (fabs(tex.scroll_v) < PRECISION)
+									tex.scroll_v = 0;
+							}
+              */
+
+              m_textures.push_back(tex);
+						}
+					}
+				}
+			}
+    }
+  }
+
+  void Material::loagGenericMaterial()
+  {
+    IPropertyContainer* pCont = m_GameMaterial->GetIPropertyContainer();
+    std::string matClass = m_GameMaterial->GetClassName();
+    
+    //enumerate material properties
+    /*
+    MatProc* proccy = new MatProc();
+    PropertyEnum* prope = static_cast<PropertyEnum*>(proccy);
+    pCont->EnumerateProperties(*prope);
+    */
+
+    // Architectural material
+    if(matClass == "Architectural")
+    {
+      IGameProperty* pOpacity = pCont->QueryProperty(_T("transparency"));
+      if(pOpacity)
+      {
+        pOpacity->GetPropertyValue(m_opacity);
+        m_opacity = 1.0f - m_opacity;
+        if(m_opacity < 1.0f)
+          m_isTransparent = true;
+      }
+
+      int twoSided = 0;
+      IGameProperty* pTwoSided = pCont->QueryProperty(_T("twoSided"));
+      if(pTwoSided)
+      {
+        pTwoSided->GetPropertyValue(twoSided);
+        m_isTwoSided = twoSided ? true : false;
+      }
+
+      float glossiness = 0.0f;
+      IGameProperty* pShininess = pCont->QueryProperty(_T("shininess"));
+      if(pShininess)
+      {
+        pShininess->GetPropertyValue(glossiness);
+        m_shininess = 255.0f * glossiness;
+      }
+
+      float luminance = 0.0f;
+      IGameProperty* pLuminance = pCont->QueryProperty(_T("luminance"));
+      if(pLuminance)
+      {
+        pLuminance->GetPropertyValue(luminance);
+        //3000 seems to be the max viewport value
+        luminance = luminance / 3000;
+        m_emissive.x = luminance;
+        m_emissive.y = luminance;
+        m_emissive.z = luminance;
+        m_emissive.w = m_opacity;
+      }
+
+      IGameProperty* pDiffuse = pCont->QueryProperty(_T("diffuse"));
+      if(pDiffuse)
+      {
+        Point3 diffuse;
+        pDiffuse->GetPropertyValue(diffuse);
+        m_diffuse.x = diffuse.x;
+        m_diffuse.y = diffuse.y;
+			  m_diffuse.z = diffuse.z;
+			  m_diffuse.w = m_opacity;
+
+        m_ambient.x = diffuse.x;
+        m_ambient.y = diffuse.y;
+			  m_ambient.z = diffuse.z;
+			  m_ambient.w = m_opacity;
+      }
+      
+      float reflectance = 0.0f;
+      IGameProperty* pReflectance = pCont->QueryProperty(_T("reflectanceScale"));
+      if(pReflectance)
+      {
+        pReflectance->GetPropertyValue(reflectance);
+        m_specular.x = 1.0f * (reflectance / 2.5f);
+        m_specular.y = 1.0f * (reflectance / 2.5f);
+			  m_specular.z = 1.0f * (reflectance / 2.5f);
+			  m_specular.w = m_opacity;
+      }
+      
+      float diffAmount = 1.0f;
+      IGameProperty* pDiffuseMul = pCont->QueryProperty(_T("diffuseMapAmount"));
+      if(pDiffuseMul)
+      {
+        pDiffuseMul->GetPropertyValue(diffAmount);
+      }
+
+      IGameProperty* pDiffuseMap = pCont->QueryProperty(_T("diffuseMap"));
+      loadManualTexture(pDiffuseMap, ID_DI, diffAmount);
+    }
+    //Mental ray Arch & Design material
+    else if(matClass == "Arch & Design")
+    {
+      IGameProperty* pOpacity = pCont->QueryProperty(_T("refr_weight"));
+      if(pOpacity)
+      {
+        pOpacity->GetPropertyValue(m_opacity);
+        m_opacity = 1.0f - m_opacity;
+        if(m_opacity < 1.0f)
+          m_isTransparent = true;
+      }
+
+      float glossiness = 0.0f;
+      IGameProperty* pShininess = pCont->QueryProperty(_T("refl_weight"));
+      if(pShininess)
+      {
+        pShininess->GetPropertyValue(glossiness);
+        m_shininess = 255.0f * glossiness;
+      }
+
+      //TODO
+      float luminance = 0.0f;
+      IGameProperty* pLuminance = pCont->QueryProperty(_T("luminance"));
+      if(pLuminance)
+      {
+        pLuminance->GetPropertyValue(luminance);
+        //3000 seems to be the max viewport value
+        luminance = luminance / 3000;
+        m_emissive.x = luminance;
+        m_emissive.y = luminance;
+        m_emissive.z = luminance;
+        m_emissive.w = m_opacity;
+      }
+
+      IGameProperty* pDiffuse = pCont->QueryProperty(_T("diff_color"));
+      if(pDiffuse)
+      {
+        Point4 diffuse;
+        pDiffuse->GetPropertyValue(diffuse);
+        m_diffuse.x = diffuse.x;
+        m_diffuse.y = diffuse.y;
+			  m_diffuse.z = diffuse.z;
+			  m_diffuse.w = m_opacity;
+
+        m_ambient.x = diffuse.x;
+        m_ambient.y = diffuse.y;
+			  m_ambient.z = diffuse.z;
+			  m_ambient.w = m_opacity;
+      }
+      
+      IGameProperty* pSpecular = pCont->QueryProperty(_T("refl_color"));
+      if(pSpecular)
+      {
+        Point4 specular;
+        pSpecular->GetPropertyValue(specular);
+        m_specular.x = specular.x;
+        m_specular.y = specular.y;
+			  m_specular.z = specular.z;
+			  m_specular.w = glossiness;
+      }
+
+      float diffAmount = 1.0f;
+      IGameProperty* pDiffuseMul = pCont->QueryProperty(_T("diff_weight"));
+      if(pDiffuseMul)
+      {
+        pDiffuseMul->GetPropertyValue(diffAmount);
+      }
+
+      IGameProperty* pDiffuseMap = pCont->QueryProperty(_T("diff_color_map"));
+      loadManualTexture(pDiffuseMap, ID_DI, diffAmount);
+    }
+  }
+
 	// Load material data
 	bool Material::load(ParamList& params)
 	{
@@ -110,17 +460,18 @@ namespace EasyOgreExporter
 		// GET MATERIAL DATA
 		if(m_GameMaterial)
 		{
-			if(!m_GameMaterial->IsEntitySupported())
+      IGameMaterial* pGameMaterial = m_GameMaterial;
+
+      if(m_GameMaterial->IsMultiType() && (m_GameMaterial->GetSubMaterialCount() > 0))
+        pGameMaterial = m_GameMaterial->GetSubMaterial(0);
+      
+			if(!pGameMaterial->IsEntitySupported())
 			{
-        EasyOgreExporterLog("Warning: IsEntitySupported() returned false for IGameMaterial : %s...\n", m_GameMaterial->GetClassName());
-			}
+        EasyOgreExporterLog("Warning: IsEntitySupported() returned false for IGameMaterial : %s... try generic loader\n", m_GameMaterial->GetClassName());
+			  loagGenericMaterial();
+      }
 			else
 			{
-        IGameMaterial* pGameMaterial = m_GameMaterial;
-
-        if(m_GameMaterial->IsMultiType() && (m_GameMaterial->GetSubMaterialCount() > 0))
-          pGameMaterial = m_GameMaterial->GetSubMaterial(0);
-        
         Mtl* maxMat = pGameMaterial->GetMaxMaterial();
         StdMat2* smat = 0;
         if(maxMat->ClassID() == Class_ID(DMTL_CLASS_ID, 0))
@@ -174,19 +525,66 @@ namespace EasyOgreExporter
 				EasyOgreExporterLog("Exporting %d textures...\n", texCount);
 				for(int i = 0; i < texCount; ++i)
 				{
-					
 					IGameTextureMap* pGameTexture = pGameMaterial->GetIGameTextureMap(i);
-					if(pGameTexture && pGameTexture->IsEntitySupported())
+          std::string texClass = pGameTexture->GetClassName();
+
+					if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == "Normal Bump")))
 					{
+            std::string path;
+            std::string texName;
+            if(pGameTexture->IsEntitySupported())
+            {
+              path = pGameTexture->GetBitmapFileName();
+              texName = pGameTexture->GetTextureName();
+            }
+            else
+            //normal map
+            {
+              IPropertyContainer* pCont = m_GameMaterial->GetIPropertyContainer();
+              IGameProperty* pNormalMap = pCont->QueryProperty(_T("normal_map"));
+              if(pNormalMap)
+              {
+                if (pNormalMap->IsParamBlock())
+			          {
+				          if (pNormalMap->IsPBlock2())
+				          {
+                  #ifdef PRE_MAX_2012
+                    int index = pNormalMap->GetParamBlockIndex();
+                  #elif PRE_MAX_2011
+					          int index = pNormalMap->GetParamBlockIndex();
+                  #else
+                    int index = pNormalMap->GetParamIndex();
+                  #endif
+
+					          IParamBlock2* pBlock = pNormalMap->GetMaxParamBlock2();
+					          ParamID id = pBlock->IndextoID(index);
+					          Texmap* pTexmap = pBlock->GetTexmap(id);
+					          if (pTexmap)
+					          {
+						          MSTR className;
+						          pTexmap->GetClassName(className);
+						          const char* pName = className.data();
+						          if (!strcmp(pName, "Bitmap"))
+						          {
+							          BitmapTex* pBitmapTex = static_cast<BitmapTex*>(pTexmap);
+                        path = pBitmapTex->GetMapName();
+                        texName = pBitmapTex->GetName();
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
 						EasyOgreExporterLog("Texture Index: %d\n",i);
-						EasyOgreExporterLog("Texture Name: %s\n", pGameTexture->GetTextureName());
+            EasyOgreExporterLog("Texture Name: %s\n", texName.c_str());
 
 						Texture tex;
-									
-						MaxSDK::Util::Path textureName(pGameTexture->GetBitmapFileName());
+					  
+					  bool bFoundTexture = false;
+            MaxSDK::Util::Path textureName(path.c_str());
 						if(!DoesFileExist(pGameTexture->GetBitmapFileName()))
 						{
-							bool bFoundTexture = false;
 #ifdef PRE_MAX_2010
 							if(IPathConfigMgr::GetPathConfigMgr()->SearchForXRefs(textureName))
 							{
@@ -212,9 +610,14 @@ namespace EasyOgreExporter
 							}
 							else
 							{
-								EasyOgreExporterLog("Warning: Couldn't locate texture: %s.\n", pGameTexture->GetTextureName());
+                EasyOgreExporterLog("Warning: Couldn't locate texture: %s.\n", texName.c_str());
 							}				
 						}
+
+						tex.absFilename = textureName.GetCStr();
+						std::string filename = textureName.StripToLeaf().GetCStr();
+						tex.filename = optimizeFileName(filename);
+
 						int texSlot = pGameTexture->GetStdMapSlot();
 						switch(texSlot)
 						{
@@ -224,15 +627,18 @@ namespace EasyOgreExporter
                 tex.bCreateTextureUnit = true;
                 m_hasAmbientMap = true;
                 
-                BMMRES status; 
-                BitmapInfo bi(tex.absFilename.c_str());
-                Bitmap* bitmap = TheManager->Create(&bi); 
-                bitmap = TheManager->Load(&bi, &status); 
-                if (status == BMMRES_SUCCESS) 
-                  if(bitmap->HasAlpha())
-                    m_hasAlpha = true;
+                if(bFoundTexture)
+                {
+                  BMMRES status; 
+                  BitmapInfo bi(tex.absFilename.c_str());
+                  Bitmap* bitmap = TheManager->Create(&bi); 
+                  bitmap = TheManager->Load(&bi, &status); 
+                  if (status == BMMRES_SUCCESS) 
+                    if(bitmap->HasAlpha())
+                      m_hasAlpha = true;
 
-                TheManager->DelBitmap(bitmap);
+                  TheManager->DelBitmap(bitmap);
+                }
                 tex.type = ID_AM;
               }
 							break;
@@ -242,15 +648,18 @@ namespace EasyOgreExporter
 							  tex.bCreateTextureUnit = true;
                 m_hasDiffuseMap = true;
                 
-                BMMRES status; 
-                BitmapInfo bi(tex.absFilename.c_str());
-                Bitmap* bitmap = TheManager->Create(&bi); 
-                bitmap = TheManager->Load(&bi, &status); 
-                if (status == BMMRES_SUCCESS) 
-                  if(bitmap->HasAlpha())
-                    m_hasAlpha = true;
+                if(bFoundTexture)
+                {
+                  BMMRES status; 
+                  BitmapInfo bi(tex.absFilename.c_str());
+                  Bitmap* bitmap = TheManager->Create(&bi); 
+                  bitmap = TheManager->Load(&bi, &status); 
+                  if (status == BMMRES_SUCCESS) 
+                    if(bitmap->HasAlpha())
+                      m_hasAlpha = true;
 
-                TheManager->DelBitmap(bitmap);
+                  TheManager->DelBitmap(bitmap);
+                }
                 tex.type = ID_DI;
               }
 							break;
@@ -285,7 +694,9 @@ namespace EasyOgreExporter
               break;
 						case ID_BU:
 							EasyOgreExporterLog("Bump channel texture.\n");
-							tex.type = ID_BU;
+							  tex.bCreateTextureUnit = true;
+                m_hasBumpMap = true;                
+							  tex.type = ID_BU;
               break;
 						case ID_RL:
 							EasyOgreExporterLog("Reflection channel texture.\n");
@@ -305,15 +716,11 @@ namespace EasyOgreExporter
             
             //get the texture multiplier
             tex.fAmount = smat->GetTexmapAmt(texSlot, 0) * m_opacity;
-            
-						tex.absFilename = textureName.GetCStr();
-						std::string filename = textureName.StripToLeaf().GetCStr();
-						tex.filename = optimizeFileName(filename);
 						tex.uvsetIndex = 0;
 						tex.uvsetName = pGameTexture->GetTextureName();
             
-						IGameUVGen *pUVGen = pGameTexture->GetIGameUVGen();
-						IGameProperty *prop = NULL;
+						IGameUVGen* pUVGen = pGameTexture->GetIGameUVGen();
+						IGameProperty* prop = NULL;
 						if(pUVGen)
 						{
 							float covU,covV;
@@ -629,7 +1036,7 @@ namespace EasyOgreExporter
             }
           }*/
 
-          if(m_textures[i].fAmount >= 1.0f)
+          if((m_textures[i].fAmount >= 1.0f) || (m_textures[i].type == ID_BU))
           {
             outMaterial << "\t\t\t\tcolour_op modulate\n";
           }

@@ -1534,7 +1534,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL&quot;"
-				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
+				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2012;"
 				StringPooling="false"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="0"
@@ -1627,7 +1627,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL&quot;"
-				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
+				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2012;"
 				StringPooling="false"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="0"
@@ -1720,7 +1720,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				AdditionalIncludeDirectories=".\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL&quot;"
-				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
+				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2012;"
 				StringPooling="false"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -1814,7 +1814,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				AdditionalIncludeDirectories=".\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL&quot;"
-				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
+				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2012;"
 				StringPooling="false"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -2064,6 +2064,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(OutDir)\EasyOgreExporter.dle&quot; &quot;$(ADSK_3DSMAX_x64_2012)Plugins&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -2251,6 +2252,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(OutDir)\EasyOgreExporter.dle&quot; &quot;$(ADSK_3DSMAX_x64_2012)Plugins&quot;"
 			/>
 		</Configuration>
 	</Configurations>

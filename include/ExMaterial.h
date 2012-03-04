@@ -32,6 +32,14 @@ namespace EasyOgreExporter
 
 	typedef enum {TAM_CLAMP,TAM_BORDER,TAM_WRAP,TAM_MIRROR} TexAddressMode;
 
+  class MatProc : public PropertyEnum
+  {
+    public:
+    MatProc();
+
+    virtual bool Proc(IGameProperty * prop);
+  };
+
 	class Texture
 	{
 	public:
@@ -114,11 +122,14 @@ namespace EasyOgreExporter
     bool m_hasDiffuseMap;
     bool m_hasAmbientMap;
     bool m_hasSpecularMap;
+    bool m_hasBumpMap;
 		std::vector<Texture> m_textures;
 
     std::string getMaterialName(std::string prefix);
 
   private:
+    void loadManualTexture(IGameProperty* prop, int type, float amount);
+    void loagGenericMaterial();
     void writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod);
     void writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod);
 	};
