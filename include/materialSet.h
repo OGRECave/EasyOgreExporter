@@ -40,12 +40,14 @@ namespace EasyOgreExporter
 		};
 
 		//destructor
-		~MaterialSet(){
+		~MaterialSet()
+    {
 		  clear();
 		}
 
 		//clear
-		void clear(){
+		void clear()
+    {
 			for (int i=0; i<m_materials.size(); i++)
 				delete m_materials[i];
 			m_materials.clear();
@@ -62,7 +64,8 @@ namespace EasyOgreExporter
     }
 
 		//add material
-		void addMaterial(Material* pMat){
+		void addMaterial(Material* pMat)
+    {
 			bool found = false;
 			for (int i=0; i<m_materials.size() && !found; i++)
 			{
@@ -103,7 +106,7 @@ namespace EasyOgreExporter
 			return NULL;
 		};
 		
-		//write materials to Ogre XML
+		//write materials to Ogre Script
 		bool writeOgreScript(ParamList &params)
     {
 			bool stat = false;

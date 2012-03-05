@@ -129,7 +129,7 @@ namespace EasyOgreExporter
 
   private:
     void loadManualTexture(IGameProperty* prop, int type, float amount);
-    void loagGenericMaterial();
+    void loadGenericMaterial();
     void writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod);
     void writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod);
 	};

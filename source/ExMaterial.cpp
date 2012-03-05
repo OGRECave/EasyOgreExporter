@@ -287,14 +287,13 @@ namespace EasyOgreExporter
     }
   }
 
-  void Material::loagGenericMaterial()
+  void Material::loadGenericMaterial()
   {
     IPropertyContainer* pCont = m_GameMaterial->GetIPropertyContainer();
     std::string matClass = m_GameMaterial->GetClassName();
     
     //enumerate material properties
-    /*
-    MatProc* proccy = new MatProc();
+    /*MatProc* proccy = new MatProc();
     PropertyEnum* prope = static_cast<PropertyEnum*>(proccy);
     pCont->EnumerateProperties(*prope);
     */
@@ -380,11 +379,18 @@ namespace EasyOgreExporter
     //Mental ray Arch & Design material
     else if(matClass == "Arch & Design")
     {
+      Point4 transColor;
+      IGameProperty* pTransColor = pCont->QueryProperty(_T("refr_color"));
+      if(pTransColor)
+      {
+        pTransColor->GetPropertyValue(transColor);
+      }
+
       IGameProperty* pOpacity = pCont->QueryProperty(_T("refr_weight"));
       if(pOpacity)
       {
         pOpacity->GetPropertyValue(m_opacity);
-        m_opacity = 1.0f - m_opacity;
+        m_opacity = 1.0f - (m_opacity * ((transColor.x + transColor.y + transColor.z) / 3.0f));
         if(m_opacity < 1.0f)
           m_isTransparent = true;
       }
@@ -435,7 +441,7 @@ namespace EasyOgreExporter
         m_specular.x = specular.x;
         m_specular.y = specular.y;
 			  m_specular.z = specular.z;
-			  m_specular.w = glossiness;
+			  m_specular.w = m_opacity;
       }
 
       float diffAmount = 1.0f;
@@ -468,7 +474,7 @@ namespace EasyOgreExporter
 			if(!pGameMaterial->IsEntitySupported())
 			{
         EasyOgreExporterLog("Warning: IsEntitySupported() returned false for IGameMaterial : %s... try generic loader\n", m_GameMaterial->GetClassName());
-			  loagGenericMaterial();
+			  loadGenericMaterial();
       }
 			else
 			{
