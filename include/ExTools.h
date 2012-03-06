@@ -113,14 +113,51 @@ inline bool IsBone(INode *pNode)
   if(os.obj->ClassID() == Class_ID(BONE_CLASS_ID, 0))
     return true;
 
-  // dummy type
-  if(os.obj->ClassID() == Class_ID(DUMMY_CLASS_ID, 0))
-    return true;
-
   // bided
-  Control *cont = pNode->GetTMController();   
+  Control* cont = pNode->GetTMController();   
   if(cont->ClassID() == BIPSLAVE_CONTROL_CLASS_ID ||       //others biped parts    
           cont->ClassID() == BIPBODY_CONTROL_CLASS_ID)     //biped root "Bip01"     
+  {
+    return true;
+  }
+
+  return false;   
+}
+
+inline bool IsBiped(INode *pNode)
+{
+  if(pNode == NULL)
+    return false; 
+
+  ObjectState os = pNode->EvalWorldState(0); 
+  if (!os.obj)
+    return false;
+
+  // bided
+  Control* cont = pNode->GetTMController();   
+  if(cont->ClassID() == BIPSLAVE_CONTROL_CLASS_ID ||       //others biped parts    
+          cont->ClassID() == BIPBODY_CONTROL_CLASS_ID ||   //biped root "Bip01"
+          cont->ClassID() == SKELOBJ_CLASS_ID ||
+          cont->ClassID() == BIPED_CLASS_ID)
+  {
+    return true;
+  }
+
+  return false;   
+}
+
+inline bool IsBipedRoot(INode *pNode)
+{
+  if(pNode == NULL)
+    return false; 
+
+  ObjectState os = pNode->EvalWorldState(0); 
+  if (!os.obj)
+    return false;
+
+  // bided
+  Control* cont = pNode->GetTMController();   
+  if(cont->ClassID() == BIPBODY_CONTROL_CLASS_ID)   //biped root "Bip01"
   {
     return true;
   }
@@ -134,7 +171,7 @@ inline bool IsPossibleBone(INode *pNode)
     return false; 
 
   // bided
-  Control *cont = pNode->GetTMController();
+  Control* cont = pNode->GetTMController();
   if(!cont)
     return false;
 

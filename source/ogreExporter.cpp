@@ -522,7 +522,7 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
 
         if (pGameObject->GetMaxType() == IGameObject::IGAME_MAX_UNKNOWN)
         {
-          EasyOgreExporterLog("Unsupported object type. Failed to export.\n");
+          EasyOgreExporterLog("Unsupported object type for : %s. Failed to export.\n", pGameNode->GetName());
           bShouldExport = false;
         }
       }

@@ -227,7 +227,7 @@ namespace EasyOgreExporter
 		int parentIdx = getJointIndex(pNodeParent);
 
     // test for supported bone type
-    if(!IsPossibleBone(pNode))
+    if((!IsPossibleBone(pNode)) || (IsBone(pNode) && (pNode->NumberOfChildren() == 0)))
     {
       EasyOgreExporterLog("Info : %s is not a bone.\n", pNode->GetName());
       return false;
@@ -245,15 +245,30 @@ namespace EasyOgreExporter
 
 		if(boneIndex == -1)
 		{
-			// Make sure we don't have a duplicate bone
-			for(size_t i = 0; i < m_joints.size(); ++i)
-			{
-				if(pNode->GetName() == m_joints[i].name)
-				{
-					EasyOgreExporterLog("Found bone with duplicate name %s.  Bone will not be exported!.\n", m_joints[i].name.c_str());
-					return false;
-				}
-			}
+      bool duplicated = true;
+      int dpid = 1;
+      while (duplicated)
+      {
+        bool found = false;
+
+			  // Make sure we don't have a duplicate bone name
+        for(size_t i = 0; i < m_joints.size(); ++i)
+			  {
+				  if(newJoint.name == m_joints[i].name)
+				  {
+            std::string sid;
+            std::stringstream strId;
+            strId << dpid;
+            sid = strId.str();
+
+            newJoint.name = std::string(pNode->GetName()) + sid;
+            found = true;
+            dpid++;
+				  }
+			  }
+        duplicated = found;
+      }
+      
 			// If this is a new joint, push one back to the end of the array.
 			// Otherwise we still continue in case we had previously thought
 			// this bone was a root bone (incorrectly).
@@ -299,6 +314,17 @@ namespace EasyOgreExporter
         m_bipedControl = nodeControl;
     }
 
+    DWORD actMode = 0;
+    IBipMaster* bipMaster = 0;
+    if(m_bipedControl)
+    {
+      //Get the Biped master Interface from the controller
+      bipMaster = (IBipMaster*) m_bipedControl->GetInterface(I_BIPMASTER);
+      actMode = bipMaster->GetActiveModes();
+      bipMaster->EndModes(actMode, 0);
+      bipMaster->BeginModes(BMODE_FIGURE, 0);
+    }
+
     // Get bone matrix at initial pose
     ISkin* pskin = (ISkin*)m_pGameSkin->GetMaxModifier()->GetInterface(I_SKIN);
 
@@ -334,8 +360,8 @@ namespace EasyOgreExporter
     // Notice that in Max we flip the w-component of the quaternion;
     rot.w = -rot.w;
 
-		if(boneIndex == m_joints.size() - 1)
-			EasyOgreExporterLog("Exporting joint %s. Trans(%f,%f,%f) Rot(%f,%f,%f,%f), Scale(%f,%f,%f).\n", pNode->GetName(), trans.x, trans.y, trans.z, rot.w, rot.x, rot.y, rot.z, scale.x, scale.y, scale.z);
+		//if(boneIndex == m_joints.size() - 1)
+		//	EasyOgreExporterLog("Exporting joint %s. Trans(%f,%f,%f) Rot(%f,%f,%f,%f), Scale(%f,%f,%f).\n", pNode->GetName(), trans.x, trans.y, trans.z, rot.w, rot.x, rot.y, rot.z, scale.x, scale.y, scale.z);
 
 		// Set joint coords
 		m_joints[boneIndex].bindMatrix = localTM;
@@ -346,6 +372,15 @@ namespace EasyOgreExporter
 		// If root is a root joint, save it's index in the roots list
 		if (parentIdx < 0)
 			m_roots.push_back(m_joints.size() - 1);
+
+    //release max interface
+    if(bipMaster)
+    {
+      bipMaster->EndModes(BMODE_FIGURE, 0);
+      bipMaster->BeginModes(actMode, 0);
+
+      m_bipedControl->ReleaseInterface(I_BIPMASTER, bipMaster);
+    }
 
 		// Load child joints
     for (size_t i = 0; i < pNode->NumberOfChildren(); i++)
@@ -582,7 +617,7 @@ namespace EasyOgreExporter
     Point3 trans = ap.t * m_params.lum;
     
     // don't know why root translation are Z X reverted
-    if(j.parentIndex < 0 && m_isBiped)
+    if(j.parentIndex < 0 && IsBipedRoot(bone))
     {
       float x = trans.x;
       trans.x = -trans.z;
