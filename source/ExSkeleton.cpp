@@ -325,7 +325,7 @@ namespace EasyOgreExporter
       bipMaster->BeginModes(BMODE_FIGURE, 0);
     }
 
-    // Get bone matrix at initial pose
+    // Get mesh matrix at initial pose
     ISkin* pskin = (ISkin*)m_pGameSkin->GetMaxModifier()->GetInterface(I_SKIN);
 
     GMatrix GSkinTM;
@@ -615,15 +615,6 @@ namespace EasyOgreExporter
 		decomp_affine(relMat, &ap);
 
     Point3 trans = ap.t * m_params.lum;
-    
-    // don't know why root translation are Z X reverted
-    if(j.parentIndex < 0 && IsBipedRoot(bone))
-    {
-      float x = trans.x;
-      trans.x = -trans.z;
-      trans.z = x;
-    }
-
     Point3 scale = ap.k;
     Quat rot = ap.q;
     // Notice that in Max we flip the w-component of the quaternion;
@@ -632,7 +623,30 @@ namespace EasyOgreExporter
 		//create keyframe
 		skeletonKeyframe key;
 		key.time = 0;
-		key.trans = trans;
+
+    // don't know why root translation are Z X reverted
+    // Damn is there another stupid cases ?
+    // what matrix should I use for translations ?
+    if(IsBipedRoot(bone))
+    {
+      key.trans.x = -trans.z;
+      key.trans.y = trans.y;
+      key.trans.z = trans.x;
+    }
+    else if(IsBipedRoot(bone->GetParentNode()))
+    {
+      key.trans.x = trans.x;
+      key.trans.y = -trans.z;
+      key.trans.z = trans.y;
+    }
+    else
+    {
+      // don't know why translation are reverted
+		  key.trans.x = trans.z;
+      key.trans.y = trans.x;
+      key.trans.z = trans.y;
+    }
+
 		key.rot = rot;
 		key.scale = scale;
 		return key;
