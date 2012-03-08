@@ -630,20 +630,28 @@ namespace EasyOgreExporter
 						case ID_AM:
               {
 							  EasyOgreExporterLog("Ambient channel texture.\n");
-                tex.bCreateTextureUnit = true;
-                m_hasAmbientMap = true;
-                
-                if(bFoundTexture)
+                if(smat->GetAmbDiffTexLock())
                 {
-                  BMMRES status; 
-                  BitmapInfo bi(tex.absFilename.c_str());
-                  Bitmap* bitmap = TheManager->Create(&bi); 
-                  bitmap = TheManager->Load(&bi, &status); 
-                  if (status == BMMRES_SUCCESS) 
-                    if(bitmap->HasAlpha())
-                      m_hasAlpha = true;
+                  EasyOgreExporterLog("Ambient channel locked, we use the diffuse texture instead.\n");
+                  tex.bCreateTextureUnit = false;
+                }
+                else
+                {
+                  tex.bCreateTextureUnit = true;
+                  m_hasAmbientMap = true;
+                  
+                  if(bFoundTexture)
+                  {
+                    BMMRES status; 
+                    BitmapInfo bi(tex.absFilename.c_str());
+                    Bitmap* bitmap = TheManager->Create(&bi); 
+                    bitmap = TheManager->Load(&bi, &status); 
+                    if (status == BMMRES_SUCCESS) 
+                      if(bitmap->HasAlpha())
+                        m_hasAlpha = true;
 
-                  TheManager->DelBitmap(bitmap);
+                    TheManager->DelBitmap(bitmap);
+                  }
                 }
                 tex.type = ID_AM;
               }
