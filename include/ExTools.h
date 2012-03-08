@@ -22,6 +22,20 @@
 #include "IMixer8.h"
 
 
+inline void trim(std::string& str)
+{
+  std::string::size_type pos = str.find_last_not_of(' ');
+  if(pos != std::string::npos)
+  {
+    str.erase(pos + 1);
+    pos = str.find_first_not_of(' ');
+    if(pos != std::string::npos)
+      str.erase(0, pos);
+  }
+  else
+    str.erase(str.begin(), str.end());
+}
+
 // Helper function for getting the filename from a full path.
 inline std::string StripToTopParent(const std::string& filepath)
 {
@@ -96,6 +110,7 @@ inline std::string formatClipName(std::string fname, int id)
   }
   
   std::string newName = fname.substr(folderIndex + 1, (dotIdx - (folderIndex + 1))) + "_" + sid;
+  trim(newName);
   return newName;
 }
 

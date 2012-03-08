@@ -1019,6 +1019,8 @@ namespace EasyOgreExporter
 
 		  std::string posename = pMorphChannel->mName;
 		  int numMorphVertices = pMorphChannel->mNumPoints;
+      //poses can have spaces before or after the name
+      trim(posename);
 			
       if(numMorphVertices != (m_GameMesh->GetNumberOfVerts()))
 		  {
