@@ -19,11 +19,54 @@
 
 namespace EasyOgreExporter
 {
-  // Constructor
-  ExVsShader::ExVsShader(std::string name, ExMaterial* mat)
+  // Common class ExShader
+  ExShader::ExShader(std::string name)
 	{
     m_name = name;
-    
+    m_type = ST_NONE;
+  }
+
+	ExShader::~ExShader()
+	{
+	}
+
+  void ExShader::constructShader(ExMaterial* mat)
+  {
+  }
+
+	std::string& ExShader::getName()
+	{
+		return m_name;
+	}
+
+	std::string& ExShader::getContent()
+	{
+		return m_content;
+	}
+
+  std::string& ExShader::getUniformParams()
+  {
+    return m_params;
+  }
+
+  std::string& ExShader::getProgram(std::string baseName)
+  {
+    return m_program;
+  }
+
+
+  // ExVsShader
+  ExVsShader::ExVsShader(std::string name) : ExShader(name)
+	{
+    m_type = ST_VSLIGHT;
+  }
+
+	ExVsShader::~ExVsShader()
+	{
+	}
+
+  void ExVsShader::constructShader(ExMaterial* mat)
+  {
     // get the material config
     bRef = mat->m_hasReflectionMap;
     bNormal = mat->m_hasBumpMap;
@@ -118,21 +161,6 @@ namespace EasyOgreExporter
     m_content = out.str();
 	}
 
-	// Destructor
-	ExVsShader::~ExVsShader()
-	{
-	}
-
-	std::string& ExVsShader::getName()
-	{
-		return m_name;
-	}
-
-	std::string& ExVsShader::getContent()
-	{
-		return m_content;
-	}
-
   std::string& ExVsShader::getUniformParams()
   {
     std::stringstream out;
@@ -168,11 +196,19 @@ namespace EasyOgreExporter
     return m_program;
   }
 
-  // Constructor
-  ExFpShader::ExFpShader(std::string name, ExMaterial* mat)
-	{
-    m_name = name;
 
+  // ExFpShader
+  ExFpShader::ExFpShader(std::string name) : ExShader(name)
+	{
+    m_type = ST_FPLIGHT;
+  }
+
+	ExFpShader::~ExFpShader()
+	{
+	}
+
+  void ExFpShader::constructShader(ExMaterial* mat)
+  {
     // get the material config
     bRef = mat->m_hasReflectionMap;
     bNormal = mat->m_hasBumpMap;
@@ -335,21 +371,6 @@ namespace EasyOgreExporter
 
     out << "}\n";
     m_content = out.str();
-	}
-
-	// Destructor
-	ExFpShader::~ExFpShader()
-	{
-	}
-
-	std::string& ExFpShader::getName()
-	{
-		return m_name;
-	}
-
-	std::string& ExFpShader::getContent()
-	{
-		return m_content;
 	}
 
   std::string& ExFpShader::getUniformParams()

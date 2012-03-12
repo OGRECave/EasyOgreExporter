@@ -152,98 +152,99 @@ namespace EasyOgreExporter
     return newMatName;
   }
 
-  std::string ExMaterial::getVsShaderName()
+  std::string ExMaterial::getShaderName(ExShader::ShaderType type)
   {
     std::string sname;
     std::stringstream out;
-    out << "vsGEN";
 
-    bool ref = false;
-    std::vector<int> texUnits;
-    for (int i=0; i<m_textures.size(); i++)
+    switch (type)
     {
-	    if(m_textures[i].bCreateTextureUnit == true)
-	    {
-        switch (m_textures[i].type)
+      case ExShader::ST_VSLIGHT :
+      {
+        out << "vsGEN";
+
+        std::vector<int> texUnits;
+        for (int i=0; i<m_textures.size(); i++)
         {
-          case ID_AM:
-            texUnits.push_back(m_textures[i].uvsetIndex);
-          break;
+          if(m_textures[i].bCreateTextureUnit == true)
+          {
+            switch (m_textures[i].type)
+            {
+              case ID_AM:
+                texUnits.push_back(m_textures[i].uvsetIndex);
+              break;
 
-          case ID_DI:
-            texUnits.push_back(m_textures[i].uvsetIndex);
-          break;
+              case ID_DI:
+                texUnits.push_back(m_textures[i].uvsetIndex);
+              break;
 
-          case ID_SP:
-            texUnits.push_back(m_textures[i].uvsetIndex);
-          break;
+              case ID_SP:
+                texUnits.push_back(m_textures[i].uvsetIndex);
+              break;
 
-          case ID_BU:
-            out << "NORM";
-            texUnits.push_back(m_textures[i].uvsetIndex);
-          break;
+              case ID_BU:
+                out << "NORM";
+                texUnits.push_back(m_textures[i].uvsetIndex);
+              break;
 
-          case ID_RL:
-            out << "REF";
-          break;
+              case ID_RL:
+                out << "REF";
+              break;
+            }
+          }
         }
-      }
-    }
+        std::sort(texUnits.begin(), texUnits.end());
+        texUnits.erase(std::unique(texUnits.begin(), texUnits.end()), texUnits.end());
 
-    std::sort(texUnits.begin(), texUnits.end());
-    texUnits.erase(std::unique(texUnits.begin(), texUnits.end()), texUnits.end());
-    
-    for (int i=0; i<texUnits.size(); i++)
-    {
-      out << texUnits[i];
+        for (int i=0; i<texUnits.size(); i++)
+        {
+          out << texUnits[i];
+        }
+        break;
+      }
+
+      case ExShader::ST_FPLIGHT:
+      {
+        out << "fpGEN";
+
+        for (int i=0; i<m_textures.size(); i++)
+        {
+	        if(m_textures[i].bCreateTextureUnit == true)
+	        {
+            switch (m_textures[i].type)
+            {
+              case ID_AM:
+                out << "AMB";
+                out << m_textures[i].uvsetIndex;
+              break;
+
+              case ID_DI:
+                out << "DIFF";
+                out << m_textures[i].uvsetIndex;
+              break;
+
+              case ID_SP:
+                out << "SPEC";
+                out << m_textures[i].uvsetIndex;
+              break;
+
+              case ID_BU:
+                out << "NORM";
+                out << m_textures[i].uvsetIndex;
+              break;
+
+              case ID_RL:
+                out << "REF";
+              break;
+            }
+          }
+        }
+        break;
+      }
     }
 
     sname = out.str();
     return sname;
-  }
-
-  std::string ExMaterial::getFpShaderName()
-  {
-    std::string sname;
-    std::stringstream out;
-    out << "fpGEN";
-
-    for (int i=0; i<m_textures.size(); i++)
-    {
-	    if(m_textures[i].bCreateTextureUnit == true)
-	    {
-        switch (m_textures[i].type)
-        {
-          case ID_AM:
-            out << "AMB";
-            out << m_textures[i].uvsetIndex;
-          break;
-
-          case ID_DI:
-            out << "DIFF";
-            out << m_textures[i].uvsetIndex;
-          break;
-
-          case ID_SP:
-            out << "SPEC";
-            out << m_textures[i].uvsetIndex;
-          break;
-
-          case ID_BU:
-            out << "NORM";
-            out << m_textures[i].uvsetIndex;
-          break;
-
-          case ID_RL:
-            out << "REF";
-          break;
-        }
-      }
-    }
-  
-    sname = out.str();
-    return sname;
-
   }
 
   void ExMaterial::loadTextureUV(IGameTextureMap* pGameTexture, Texture &tex)
@@ -646,6 +647,7 @@ namespace EasyOgreExporter
 		  IGameTextureMap* pGameTexture = pGameMaterial->GetIGameTextureMap(i);
       std::string texClass = pGameTexture->GetClassName();
 
+      EasyOgreExporterLog("Exporting %d texture from %s...\n", i, texClass.c_str());
 		  if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == "Normal Bump")))
 		  {
         std::string path;
@@ -658,7 +660,19 @@ namespace EasyOgreExporter
         else
         //normal map
         {
-          IPropertyContainer* pCont = m_GameMaterial->GetIPropertyContainer();
+          IPropertyContainer* pCont = pGameTexture->GetIPropertyContainer();
+
+          /*
+          //prop list
+          int numProps = pCont->GetNumberOfProperties();
+					for (int propIndex = 0; propIndex < numProps; ++propIndex)
+					{
+						IGameProperty* pProp = pCont->GetProperty(propIndex);
+            std::string pPropName = pProp->GetName();
+            EasyOgreExporterLog("Info : texture properties %s\n", pPropName.c_str());
+					}
+          */
+
           IGameProperty* pNormalMap = pCont->QueryProperty(_T("normal_map"));
           if(pNormalMap)
           {
@@ -699,7 +713,7 @@ namespace EasyOgreExporter
   		  
 		    bool bFoundTexture = false;
         MaxSDK::Util::Path textureName(path.c_str());
-			  if(!DoesFileExist(pGameTexture->GetBitmapFileName()))
+			  if(!DoesFileExist(path.c_str()))
 			  {
   #ifdef PRE_MAX_2010
 				  if(IPathConfigMgr::GetPathConfigMgr()->SearchForXRefs(textureName))
@@ -729,6 +743,11 @@ namespace EasyOgreExporter
             EasyOgreExporterLog("Warning: Couldn't locate texture: %s.\n", texName.c_str());
 				  }				
 			  }
+        else
+        {
+          bFoundTexture = true;
+        }
+
 
         Texture tex;
 			  tex.absFilename = textureName.GetCStr();
@@ -748,12 +767,12 @@ namespace EasyOgreExporter
             }
             else
             {
-              tex.bCreateTextureUnit = true;
+              tex.bCreateTextureUnit = bFoundTexture;
               m_hasAmbientMap = true;
               
               if(bFoundTexture)
               {
-                BMMRES status; 
+                BMMRES status;
                 BitmapInfo bi(tex.absFilename.c_str());
                 Bitmap* bitmap = TheManager->Create(&bi); 
                 bitmap = TheManager->Load(&bi, &status); 
@@ -770,7 +789,7 @@ namespace EasyOgreExporter
 			  case ID_DI:
           {
 				    EasyOgreExporterLog("Diffuse channel texture.\n");
-				    tex.bCreateTextureUnit = true;
+				    tex.bCreateTextureUnit = bFoundTexture;
             m_hasDiffuseMap = true;
             
             if(bFoundTexture)
@@ -790,7 +809,7 @@ namespace EasyOgreExporter
 				  break;
 			  case ID_SP:
 				  EasyOgreExporterLog("Specular channel texture.\n");
-          tex.bCreateTextureUnit = true;
+          tex.bCreateTextureUnit = bFoundTexture;
           m_hasSpecularMap = true;
           tex.type = ID_SP;
 				  break;
@@ -804,12 +823,13 @@ namespace EasyOgreExporter
           break;
 			  case ID_SI:
 				  EasyOgreExporterLog("Self-illumination channel texture.\n");
-          tex.bCreateTextureUnit = true;
+          tex.bCreateTextureUnit = bFoundTexture;
 				  tex.type = ID_SI;
           break;
 			  case ID_OP:
 				  EasyOgreExporterLog("opacity channel texture.\n");
-          tex.bCreateTextureUnit = true;
+          //do not create the texture unit
+          tex.bCreateTextureUnit = bFoundTexture;
           m_hasAlpha = true;
           tex.type = ID_OP;
 				  break;
@@ -819,14 +839,14 @@ namespace EasyOgreExporter
           break;
 			  case ID_BU:
 				  EasyOgreExporterLog("Bump channel texture.\n");
-				  tex.bCreateTextureUnit = true;
+				  tex.bCreateTextureUnit = bFoundTexture;
           m_hasBumpMap = true;                
 			    tex.type = ID_BU;
           break;
 			  case ID_RL:
 				  EasyOgreExporterLog("Reflection channel texture.\n");
           tex.type = ID_RL;
-          tex.bCreateTextureUnit = true;
+          tex.bCreateTextureUnit = bFoundTexture;
           tex.bReflect = true;
           m_hasReflectionMap = true;
 				  break; 
@@ -969,7 +989,7 @@ namespace EasyOgreExporter
 	}
 
 	// Write material data to an Ogre material script file
-  bool ExMaterial::writeOgreScript(ParamList &params, std::ofstream &outMaterial, ExVsShader* vsShader, ExFpShader* fpShader)
+  bool ExMaterial::writeOgreScript(ParamList &params, std::ofstream &outMaterial, ExShader* vsShader, ExShader* fpShader)
 	{
 		//Start material description
 		outMaterial << "material \"" << m_name.c_str() << "\"\n";
@@ -998,7 +1018,7 @@ namespace EasyOgreExporter
 		return true;
 	}
 
-  void ExMaterial::writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod, ExVsShader* vsShader, ExFpShader* fpShader)
+  void ExMaterial::writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsShader, ExShader* fpShader)
   {
 		//Start technique description
 		outMaterial << "\ttechnique\n";
@@ -1012,7 +1032,7 @@ namespace EasyOgreExporter
 		outMaterial << "\t}\n";
   }
 
-  void ExMaterial::writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod, ExVsShader* vsShader, ExFpShader* fpShader)
+  void ExMaterial::writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsShader, ExShader* fpShader)
   {
 		//Start render pass description
 		outMaterial << "\t\tpass\n";

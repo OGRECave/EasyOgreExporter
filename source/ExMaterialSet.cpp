@@ -41,13 +41,9 @@ namespace EasyOgreExporter
 			delete m_materials[i];
 		m_materials.clear();
 
-		for (int i=0; i<m_vsShaders.size(); i++)
-			delete m_vsShaders[i];
-		m_vsShaders.clear();
-
-	 for (int i=0; i<m_fpShaders.size(); i++)
-			delete m_fpShaders[i];
-		m_fpShaders.clear();
+		for (int i=0; i<m_Shaders.size(); i++)
+			delete m_Shaders[i];
+		m_Shaders.clear();
 	};
 
   ExMaterial* ExMaterialSet::getMaterialByName(std::string name)
@@ -60,64 +56,48 @@ namespace EasyOgreExporter
 		return 0;
   };
 
-  void ExMaterialSet::addVsShader(ExVsShader* vsShader)
+  void ExMaterialSet::addShader(ExShader* shader)
   {
-    m_vsShaders.push_back(vsShader);
+    m_Shaders.push_back(shader);
   };
 
-  ExVsShader* ExMaterialSet::getVsShader(std::string& name)
+  ExShader* ExMaterialSet::getShader(std::string& name)
   {
-		ExVsShader* vsShader = 0;
-		for (int i=0; i<m_vsShaders.size() && !vsShader; i++)
+		ExShader* shader = 0;
+		for (int i=0; i<m_Shaders.size() && !shader; i++)
 		{
-			if (m_vsShaders[i]->getName() == name)
+			if (m_Shaders[i]->getName() == name)
 			{
-				vsShader = m_vsShaders[i];
+				shader = m_Shaders[i];
 			}
 		}
-    return vsShader;
+    return shader;
   };
 
-  void ExMaterialSet::addFpShader(ExFpShader* fpShader)
+  ExShader* ExMaterialSet::createShader(ExMaterial* mat, ExShader::ShaderType type)
   {
-    m_fpShaders.push_back(fpShader);
-  };
-
-  ExFpShader* ExMaterialSet::getFpShader(std::string& name)
-  {
-		ExFpShader* fpShader = 0;
-		for (int i=0; i<m_fpShaders.size() && !fpShader; i++)
-		{
-			if (m_fpShaders[i]->getName() == name)
-			{
-				fpShader = m_fpShaders[i];
-			}
-		}
-    return fpShader;
-  };
-
-  ExVsShader* ExMaterialSet::createVsShader(ExMaterial* mat)
-  {
-    std::string sname = mat->getVsShaderName();
-    ExVsShader* vsShader = getVsShader(sname);
-    if(vsShader)
-      return vsShader;
+    std::string sname = mat->getShaderName(type);
+    ExShader* shader = getShader(sname);
+    if(shader)
+      return shader;
     
-    vsShader = new ExVsShader(sname, mat);
-    addVsShader(vsShader);
-    return vsShader;
-  }
+    switch (type)
+    {
+      case ExShader::ST_VSLIGHT :
+        shader = new ExVsShader(sname);
+      break;
 
-  ExFpShader* ExMaterialSet::createFpShader(ExMaterial* mat)
-  {
-    std::string sname = mat->getFpShaderName();
-    ExFpShader* fpShader = getFpShader(sname);
-    if(fpShader)
-      return fpShader;
-    
-    fpShader = new ExFpShader(sname, mat);
-    addFpShader(fpShader);
-    return fpShader;
+      case ExShader::ST_FPLIGHT :
+        shader = new ExFpShader(sname);
+      break;
+    }
+
+    if(shader)
+    {
+      shader->constructShader(mat);
+      addShader(shader);
+    }
+    return shader;
   }
 
 	//add material
@@ -182,8 +162,8 @@ namespace EasyOgreExporter
 
 		for (int i=0; i<m_materials.size(); i++)
 		{
-      ExVsShader* vsShader = params.exportProgram ? createVsShader(m_materials[i]) : 0;
-      ExFpShader* fpShader = params.exportProgram ? createFpShader(m_materials[i]) : 0;
+      ExShader* vsShader = params.exportProgram ? createShader(m_materials[i], ExShader::ST_VSLIGHT) : 0;
+      ExShader* fpShader = params.exportProgram ? createShader(m_materials[i], ExShader::ST_FPLIGHT) : 0;
 			stat = m_materials[i]->writeOgreScript(params, outMaterial, vsShader ,fpShader);
 
 			/*
@@ -219,21 +199,12 @@ namespace EasyOgreExporter
 		    return false;
 	    }
 
-      for (int i = 0; i < m_vsShaders.size(); i++)
+      for (int i = 0; i < m_Shaders.size(); i++)
       {
-        outShaderCG << m_vsShaders[i]->getContent();
+        outShaderCG << m_Shaders[i]->getContent();
         outShaderCG << "\n";
 
-        outProgram << m_vsShaders[i]->getProgram(params.sceneFilename);
-        outProgram << "\n";
-      }
-
-      for (int i = 0; i < m_fpShaders.size(); i++)
-      {
-        outShaderCG << m_fpShaders[i]->getContent();
-        outShaderCG << "\n";
-
-        outProgram << m_fpShaders[i]->getProgram(params.sceneFilename);
+        outProgram << m_Shaders[i]->getProgram(params.sceneFilename);
         outProgram << "\n";
       }
 

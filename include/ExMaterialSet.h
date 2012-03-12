@@ -34,8 +34,7 @@ namespace EasyOgreExporter
   public:
   private:
 		std::vector<ExMaterial*> m_materials;
-    std::vector<ExVsShader*> m_vsShaders;
-    std::vector<ExFpShader*> m_fpShaders;
+    std::vector<ExShader*> m_Shaders;
   protected:
 
 	public:
@@ -59,12 +58,9 @@ namespace EasyOgreExporter
 		//write materials to Ogre Script
 		bool writeOgreScript(ParamList &params);
   private:
-    void addVsShader(ExVsShader* vsShader);
-    ExVsShader* getVsShader(std::string& name);
-    void addFpShader(ExFpShader* fpShader);
-    ExFpShader* getFpShader(std::string& name);
-    ExVsShader* createVsShader(ExMaterial* mat);
-    ExFpShader* createFpShader(ExMaterial* mat);
+    ExShader* getShader(std::string& name);
+    void addShader(ExShader* shader);
+    ExShader* createShader(ExMaterial* mat, ExShader::ShaderType type);
 	protected:
 	};
 
