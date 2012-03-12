@@ -396,11 +396,11 @@ namespace EasyOgreExporter
       if (faces.Count() > 0)
       {
         IGameMaterial* pGameMaterial = pGameMesh->GetMaterialFromFace(faces[0]);
-        Material* mat = m_converter->getMaterialSet()->getMaterial(pGameMaterial);
+        ExMaterial* mat = m_converter->getMaterialSet()->getMaterial(pGameMaterial);
 
         TiXmlElement* pSubElement = new TiXmlElement("subentity");
         pSubElement->SetAttribute("index", i);
-        pSubElement->SetAttribute("materialName", mat->name().c_str());
+        pSubElement->SetAttribute("materialName", mat->getName().c_str());
         pSubEntities->LinkEndChild(pSubElement);
       }
     }

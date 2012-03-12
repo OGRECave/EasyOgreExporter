@@ -17,7 +17,7 @@
 
 
 #include "paramList.h"
-#include "materialSet.h"
+#include "ExMaterialSet.h"
 
 namespace EasyOgreExporter
 {
@@ -32,11 +32,11 @@ namespace EasyOgreExporter
 
 		  bool writeEntityData(IGameNode* pGameNode, IGameObject* pGameObject, IGameMesh* pGameMesh);
       bool writeMaterialFile();
-      MaterialSet* getMaterialSet();
+      ExMaterialSet* getMaterialSet();
 
 	  protected:
       ParamList mParams;
-      MaterialSet* mMaterialSet;
+      ExMaterialSet* mMaterialSet;
 	};
 
 }; // end of namespace

@@ -1,15 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
-// material.h
+// ExMaterial.h
 // Author   : Bastien BOURINEAU
 // Start Date : January 21, 2012
 ////////////////////////////////////////////////////////////////////////////////
 /*********************************************************************************
-*                                        *
-*   This program is free software; you can redistribute it and/or modify     *
+*                                                                                *
+*   This program is free software; you can redistribute it and/or modify         *
 *   it under the terms of the GNU Lesser General Public License as published by  *
-*   the Free Software Foundation; either version 2 of the License, or      *
-*   (at your option) any later version.                      *
-*                                        *
+*   the Free Software Foundation; either version 2 of the License, or            *
+*   (at your option) any later version.                                          *
+*                                                                                *
 **********************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////
 // Port to 3D Studio Max - Modified original version
@@ -23,14 +23,13 @@
 
 #include "ExPrerequisites.h"
 #include "paramList.h"
+#include "ExShader.h"
 
 namespace EasyOgreExporter
 {
-	typedef enum {MT_SURFACE_SHADER,MT_LAMBERT,MT_PHONG,MT_BLINN,MT_CGFX,MT_FACETED} MaterialType;
-
-	typedef enum {TOT_REPLACE,TOT_MODULATE,TOT_ADD,TOT_ALPHABLEND, TOT_MANUALBLEND} TexOpType;
-
-	typedef enum {TAM_CLAMP,TAM_BORDER,TAM_WRAP,TAM_MIRROR} TexAddressMode;
+	typedef enum {MT_SURFACE_SHADER, MT_LAMBERT, MT_PHONG, MT_BLINN, MT_CGFX,MT_FACETED} MaterialType;
+	typedef enum {TOT_REPLACE, TOT_MODULATE, TOT_ADD, TOT_ALPHABLEND, TOT_MANUALBLEND} TexOpType;
+	typedef enum {TAM_CLAMP, TAM_BORDER, TAM_WRAP, TAM_MIRROR} TexAddressMode;
 
   class MatProc : public PropertyEnum
   {
@@ -51,6 +50,7 @@ namespace EasyOgreExporter
 			rot = 0;
 			am_u = am_v = TAM_CLAMP;
       type = 0;
+      uvsetIndex = 0;
 
 			// Most textures like normal, specular, bump, etc. can't just
 			// be summed into the diffuse channel and need
@@ -70,43 +70,18 @@ namespace EasyOgreExporter
 		bool bCreateTextureUnit;
     bool bReflect;
     float fAmount;
-		TexAddressMode am_u,am_v;
-		double scale_u,scale_v;
-		double scroll_u,scroll_v;
+		TexAddressMode am_u, am_v;
+		double scale_u, scale_v;
+		double scroll_u, scroll_v;
 		double rot;
     int type;
 	};
 
 
-	/***** Class Material *****/
-	class Material
+	/***** Class ExMaterial *****/
+	class ExMaterial
 	{
-	public:
-		//constructor
-		Material(IGameMaterial* pGameMaterial, std::string prefix);
-
-		//destructor
-		~Material();
-
-		//get material name
-		std::string& name();
-
-		//clear material data
-		void clear();
-
-		//load material data
-		bool load(ParamList& params);
-
-		//write material data to Ogre material script
-		bool writeOgreScript(ParamList &params, std::ofstream &outMaterial);
-
-		//copy textures to path specified by params
-		bool copyTextures(ParamList &params);
-	public:
-		//load texture data
-		bool exportColor(Point4& color, IGameProperty* pGameProperty);
-    bool exportSpecular(IGameMaterial* pGameMaterial);
-		
+	public:		
     IGameMaterial* m_GameMaterial;
 		std::string m_name;
 		MaterialType m_type;
@@ -122,16 +97,48 @@ namespace EasyOgreExporter
     bool m_hasDiffuseMap;
     bool m_hasAmbientMap;
     bool m_hasSpecularMap;
+    bool m_hasReflectionMap;
     bool m_hasBumpMap;
 		std::vector<Texture> m_textures;
+  private:
+  protected:
 
-    std::string getMaterialName(std::string prefix);
+  public:
+		//constructor
+		ExMaterial(IGameMaterial* pGameMaterial, std::string prefix);
 
+		//destructor
+		~ExMaterial();
+
+		//get material name
+		std::string& getName();
+
+		//clear material data
+		void clear();
+
+		//load material data
+		bool load(ParamList& params);
+
+		//write material data to Ogre material script
+		bool writeOgreScript(ParamList &params, std::ofstream &outMaterial, ExVsShader* vsShader, ExFpShader* fpShader);
+
+		//copy textures to path specified by params
+		bool copyTextures(ParamList &params);
+
+    std::string getVsShaderName();
+    std::string getFpShaderName();
   private:
     void loadManualTexture(IGameProperty* prop, int type, float amount);
-    void loadGenericMaterial();
-    void writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod);
-    void writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod);
+    void loadTextureUV(IGameTextureMap* pGameTexture, Texture &tex);
+    void loadArchitectureMaterial(IGameMaterial* pGameMaterial);
+    void loadArchAndDesignMaterial(IGameMaterial* pGameMaterial);
+    void loadStandardMaterial(IGameMaterial* pGameMaterial);
+    void writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod, ExVsShader* vsShader, ExFpShader* fpShader);
+    void writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod, ExVsShader* vsShader, ExFpShader* fpShader);
+		bool exportColor(Point4& color, IGameProperty* pGameProperty);
+    bool exportSpecular(IGameMaterial* pGameMaterial);
+    std::string getMaterialName(std::string prefix);
+  protected:
 	};
 
 };	//end of namespace

@@ -233,10 +233,10 @@ namespace EasyOgreExporter
 
   protected:
     void buildVertices();
-    Ogre::SubMesh* createOgreSubmesh(Material* pMaterial, ExSubMesh submesh);
+    Ogre::SubMesh* createOgreSubmesh(ExMaterial* pMaterial, ExSubMesh submesh);
     bool createOgreSharedGeometry();
     void buildOgreGeometry(Ogre::VertexData* vdata, std::vector<ExVertex> verticesList);
-		Material* loadMaterial(IGameMaterial* pGameMaterial);
+		ExMaterial* loadMaterial(IGameMaterial* pGameMaterial);
     void getModifiers();
     void createPoses();
     bool exportPosesAnimation(Interval animRange, std::string name, std::vector<morphChannel*> validChan, std::vector<std::vector<int>> poseIndexList, bool bDefault);

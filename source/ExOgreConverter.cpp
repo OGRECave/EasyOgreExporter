@@ -23,7 +23,7 @@ namespace EasyOgreExporter
 	ExOgreConverter::ExOgreConverter(ParamList &params)
 	{
     mParams = params;
-    mMaterialSet = new MaterialSet();
+    mMaterialSet = new ExMaterialSet();
 	}
 
 	// destructor
@@ -36,7 +36,7 @@ namespace EasyOgreExporter
     }
 	}
   
-  MaterialSet* ExOgreConverter::getMaterialSet()
+  ExMaterialSet* ExOgreConverter::getMaterialSet()
   {
     return mMaterialSet;
   }

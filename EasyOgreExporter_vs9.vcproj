@@ -2283,6 +2283,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\ExMaterialSet.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\ExMesh.h"
 				>
 			</File>
@@ -2299,15 +2303,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\ExShader.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\ExSkeleton.h"
 				>
 			</File>
 			<File
 				RelativePath=".\include\ExTools.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\materialSet.h"
 				>
 			</File>
 			<File
@@ -2375,6 +2379,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\source\ExMaterialSet.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\source\ExMesh.cpp"
 				>
 			</File>
@@ -2384,6 +2392,10 @@
 			</File>
 			<File
 				RelativePath=".\source\ExScene.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\source\ExShader.cpp"
 				>
 			</File>
 			<File

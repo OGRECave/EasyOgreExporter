@@ -374,7 +374,7 @@ namespace EasyOgreExporter
         continue;
       }
 
-      Material* pMaterial = loadMaterial(m_GameMesh->GetMaterialFromFace(faces[0]));
+      ExMaterial* pMaterial = loadMaterial(m_GameMesh->GetMaterialFromFace(faces[0]));
       EasyOgreExporterLog("Info: create submesh : %s\n", subName.c_str());
       Ogre::SubMesh* pSubmesh = createOgreSubmesh(pMaterial, m_subList[i]);
       m_Mesh->nameSubMesh(subName, i);
@@ -1226,7 +1226,7 @@ namespace EasyOgreExporter
     return true;
   }
 
-  Ogre::SubMesh* ExMesh::createOgreSubmesh(Material* pMaterial, ExSubMesh submesh)
+  Ogre::SubMesh* ExMesh::createOgreSubmesh(ExMaterial* pMaterial, ExSubMesh submesh)
 	{
     int numVertices = submesh.m_vertices.size();
 
@@ -1236,7 +1236,7 @@ namespace EasyOgreExporter
 
     // Set material
     if(pMaterial)
-      pSubmesh->setMaterialName(pMaterial->name().c_str());
+      pSubmesh->setMaterialName(pMaterial->getName().c_str());
     
     // Set use shared geometry flag
     pSubmesh->useSharedVertices = (m_Mesh->sharedVertexData) ? true : false;
@@ -1478,9 +1478,9 @@ namespace EasyOgreExporter
     texBuf->unlock();
   }
 
-  Material* ExMesh::loadMaterial(IGameMaterial* pGameMaterial)
+  ExMaterial* ExMesh::loadMaterial(IGameMaterial* pGameMaterial)
 	{
-    Material* pMaterial = 0;
+    ExMaterial* pMaterial = 0;
 
     //try to load the material if it has already been created
 		pMaterial = m_converter->getMaterialSet()->getMaterial(pGameMaterial);
@@ -1488,7 +1488,7 @@ namespace EasyOgreExporter
     //otherwise create the material
 		if (!pMaterial)
 		{
-      pMaterial = new Material(pGameMaterial, m_params.matPrefix);
+      pMaterial = new ExMaterial(pGameMaterial, m_params.matPrefix);
 			m_converter->getMaterialSet()->addMaterial(pMaterial);
       pMaterial->load(m_params);
 		}

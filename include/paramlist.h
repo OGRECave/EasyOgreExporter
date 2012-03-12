@@ -46,14 +46,14 @@ namespace EasyOgreExporter
 	{
 	public:
 		// class members
-		bool exportMesh, exportMaterial, exportCameras, exportLights, lightingOff, exportAll,
+		bool exportMesh, exportMaterial, exportProgram, exportCameras, exportLights, lightingOff, exportAll,
 			exportVertNorm, exportVertCol, exportSkeleton, exportSkelAnims, exportVertAnims, exportPoses, 
 			useSharedGeom, copyTextures, tangentsSplitMirrored, tangentsSplitRotated, tangentsUseParity, 
 			buildTangents, buildEdges, resampleAnims, yUpAxis, exportScene, generateLOD;
 
 		float lum;	// Length Unit Multiplier
 
-		std::string outputDir, meshOutputDir, materialOutputDir, texOutputDir, sceneFilename, matPrefix;
+		std::string outputDir, meshOutputDir, materialOutputDir, programOutputDir, texOutputDir, sceneFilename, matPrefix;
 
 		std::vector<std::string> writtenMaterials;
 
@@ -68,6 +68,7 @@ namespace EasyOgreExporter
 			lum = 1.0f;
 			exportMesh = true;
 			exportMaterial = true;
+      exportProgram = true;
 			exportSkeleton = true;
 			exportSkelAnims = true;
 			exportVertAnims = true;
@@ -87,6 +88,7 @@ namespace EasyOgreExporter
       outputDir = "";
       meshOutputDir = "";
       materialOutputDir = "";
+      programOutputDir = "";
       texOutputDir = "";
       sceneFilename = "";
       matPrefix = "";
@@ -109,6 +111,7 @@ namespace EasyOgreExporter
 			lum = source.lum;
 			exportMesh = source.exportMesh;
 			exportMaterial = source.exportMaterial;
+      exportProgram = source.exportProgram;
 			exportSkeleton = source.exportSkeleton;
 			exportSkelAnims = source.exportSkelAnims;
 			exportVertAnims = source.exportVertAnims;
@@ -128,6 +131,7 @@ namespace EasyOgreExporter
       outputDir = source.outputDir;
 			meshOutputDir = source.meshOutputDir;
       materialOutputDir = source.materialOutputDir;
+      programOutputDir = source.programOutputDir;
 			texOutputDir = source.texOutputDir;
       sceneFilename = source.sceneFilename;
       matPrefix = source.matPrefix;

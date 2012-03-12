@@ -278,6 +278,7 @@ int	OgreSceneExporter::DoExport(const TCHAR* name, ExpInterface* pExpInterface, 
   std::string texOutDir = "bitmap";
   std::string meshOutDir = "mesh";
   std::string matOutDir = "material";
+  std::string progOutDir = "program";
   std::string partOutDir = "particle";
   std::string sceneFile = scenePath.substr(folderIndex + 1, (sceneIndex - (folderIndex + 1)));
   std::string matPrefix = sceneFile;
@@ -287,6 +288,7 @@ int	OgreSceneExporter::DoExport(const TCHAR* name, ExpInterface* pExpInterface, 
   params.texOutputDir = texOutDir.c_str();
   params.meshOutputDir = meshOutDir.c_str();
   params.materialOutputDir = matOutDir.c_str();
+  params.programOutputDir = progOutDir.c_str();
   params.matPrefix = matPrefix.c_str();
   params.sceneFilename = sceneFile.c_str();
   
@@ -394,7 +396,10 @@ bool OgreExporter::exportScene()
 #if defined(WIN32)
   if(m_params.exportMaterial)
     _mkdir((makeOutputPath(m_params.outputDir, m_params.materialOutputDir, "", "")).c_str());
-  
+ 
+  if(m_params.exportProgram)
+    _mkdir((makeOutputPath(m_params.outputDir, m_params.programOutputDir, "", "")).c_str());
+
   if(m_params.copyTextures)
     _mkdir((makeOutputPath(m_params.outputDir, m_params.texOutputDir, "", "")).c_str());  
   
