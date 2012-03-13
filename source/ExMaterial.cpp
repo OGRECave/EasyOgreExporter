@@ -159,9 +159,74 @@ namespace EasyOgreExporter
 
     switch (type)
     {
+      case ExShader::ST_VSAM :
+      {
+        out << "vsAmbGEN";
+
+        std::vector<int> texUnits;
+        for (int i=0; i<m_textures.size(); i++)
+        {
+          if(m_textures[i].bCreateTextureUnit == true)
+          {
+            switch (m_textures[i].type)
+            {
+              case ID_AM:
+                texUnits.push_back(m_textures[i].uvsetIndex);
+              break;
+
+              case ID_DI:
+                texUnits.push_back(m_textures[i].uvsetIndex);
+              break;
+
+              case ID_SI:
+                texUnits.push_back(m_textures[i].uvsetIndex);
+              break;
+            }
+          }
+        }
+        std::sort(texUnits.begin(), texUnits.end());
+        texUnits.erase(std::unique(texUnits.begin(), texUnits.end()), texUnits.end());
+
+        for (int i=0; i<texUnits.size(); i++)
+        {
+          out << texUnits[i];
+        }
+        break;
+      }
+
+      case ExShader::ST_FPAM:
+      {
+        out << "fpAmbGEN";
+
+        for (int i=0; i<m_textures.size(); i++)
+        {
+	        if(m_textures[i].bCreateTextureUnit == true)
+	        {
+            switch (m_textures[i].type)
+            {
+              case ID_AM:
+                out << "AMB";
+                out << m_textures[i].uvsetIndex;
+              break;
+
+              case ID_DI:
+                out << "DIFF";
+                out << m_textures[i].uvsetIndex;
+              break;
+
+              case ID_SI:
+                out << "LM";
+                out << m_textures[i].uvsetIndex;
+              break;
+            }
+          }
+        }
+        break;
+      }
+
       case ExShader::ST_VSLIGHT :
       {
-        out << "vsGEN";
+        out << "vsLightGEN";
 
         std::vector<int> texUnits;
         for (int i=0; i<m_textures.size(); i++)
@@ -205,7 +270,7 @@ namespace EasyOgreExporter
 
       case ExShader::ST_FPLIGHT:
       {
-        out << "fpGEN";
+        out << "fpLightGEN";
 
         for (int i=0; i<m_textures.size(); i++)
         {
@@ -748,7 +813,6 @@ namespace EasyOgreExporter
           bFoundTexture = true;
         }
 
-
         Texture tex;
 			  tex.absFilename = textureName.GetCStr();
 			  std::string filename = textureName.StripToLeaf().GetCStr();
@@ -989,7 +1053,7 @@ namespace EasyOgreExporter
 	}
 
 	// Write material data to an Ogre material script file
-  bool ExMaterial::writeOgreScript(ParamList &params, std::ofstream &outMaterial, ExShader* vsShader, ExShader* fpShader)
+  bool ExMaterial::writeOgreScript(ParamList &params, std::ofstream &outMaterial, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader)
 	{
 		//Start material description
 		outMaterial << "material \"" << m_name.c_str() << "\"\n";
@@ -1005,7 +1069,7 @@ namespace EasyOgreExporter
     }
     else*/
     {
-      writeMaterialTechnique(params, outMaterial, -1, vsShader, fpShader);
+      writeMaterialTechnique(params, outMaterial, -1, vsAmbShader, fpAmbShader, vsLightShader, fpLightShader);
     }
 
 		//End material description
@@ -1018,21 +1082,29 @@ namespace EasyOgreExporter
 		return true;
 	}
 
-  void ExMaterial::writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsShader, ExShader* fpShader)
+  void ExMaterial::writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader)
   {
 		//Start technique description
 		outMaterial << "\ttechnique\n";
 		outMaterial << "\t{\n";
     if(lod != -1)
       outMaterial << "\t\tlod_index "<< lod <<"\n";
-
-    writeMaterialPass(params, outMaterial, lod, vsShader, fpShader);
+    
+    if(vsAmbShader && fpAmbShader)
+    {
+      writeMaterialPass(params, outMaterial, lod, 1, vsAmbShader, fpAmbShader);
+      writeMaterialPass(params, outMaterial, lod, 2, vsLightShader, fpLightShader);
+    }
+    else
+    {
+      writeMaterialPass(params, outMaterial, lod, 0, vsLightShader, fpLightShader);
+    }
 
 		//End technique description
 		outMaterial << "\t}\n";
   }
 
-  void ExMaterial::writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsShader, ExShader* fpShader)
+  void ExMaterial::writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod, int amb, ExShader* vsShader, ExShader* fpShader)
   {
 		//Start render pass description
 		outMaterial << "\t\tpass\n";
@@ -1093,9 +1165,18 @@ namespace EasyOgreExporter
 		
     //emissive colour
 		outMaterial << "\t\t\temissive " << m_emissive.x << " " << m_emissive.y << " " << m_emissive.z << " " << m_emissive.w << "\n";
-		
+    
+    if(amb == 1)
+      outMaterial << "\n\t\t\tillumination_stage ambient\n";
+    else if(amb == 2)
+    {
+      outMaterial << "\n\t\t\tscene_blend add\n";
+			outMaterial << "\n\t\t\titeration once_per_light\n";
+			outMaterial << "\n\t\t\tillumination_stage per_light\n";
+    }
+
     //if material is transparent set blend mode and turn off depth_writing
-		if (m_isTransparent)
+		if (m_isTransparent && (amb != 2))
 		{
 			outMaterial << "\n\t\t\tscene_blend alpha_blend\n";
 			outMaterial << "\t\t\tdepth_write off\n";
@@ -1103,7 +1184,7 @@ namespace EasyOgreExporter
 
     if(m_hasAlpha)
 			outMaterial << "\n\t\t\talpha_rejection greater 128\n";
-		
+		    
     if(vsShader)
       outMaterial << vsShader->getUniformParams();
 
@@ -1121,6 +1202,14 @@ namespace EasyOgreExporter
           //only diffuse on next lod
           if((m_textures[i].type != ID_DI) && (lod > 0))
             continue;
+          
+          //do not use other textures for ambient pass
+          if((amb == 1) && ((m_textures[i].type != ID_AM) && (m_textures[i].type != ID_DI) && (m_textures[i].type != ID_SI)))
+            continue;
+
+          // do not use this textures for light pass
+          if((amb == 2) && ((m_textures[i].type == ID_AM) || (m_textures[i].type == ID_SI)))
+            continue;
 
 				  //start texture unit description
 				  outMaterial << "\n\t\t\ttexture_unit\n";
@@ -1129,29 +1218,6 @@ namespace EasyOgreExporter
 				  outMaterial << "\t\t\t\ttexture " << m_textures[i].filename.c_str() << "\n";
 				  //write texture coordinate index
 				  outMaterial << "\t\t\t\ttex_coord_set " << m_textures[i].uvsetIndex << "\n";
-
-          /*
-          switch (m_textures[i].type)
-          {
-          case ID_DI:
-            outMaterial << "\t\t\t\tcolour_op_ex modulate src_texture src_diffuse " << m_textures[i].fAmount << "\n";
-          break;
-
-          case ID_SP:
-            outMaterial << "\t\t\t\tcolour_op_ex modulate src_texture src_specular " << m_textures[i].fAmount << "\n";
-          break;
-
-          default:
-            if(m_textures[i].fAmount >= 1.0f)
-            {
-              outMaterial << "\t\t\t\tcolour_op modulate\n";
-            }
-            else
-            {
-              outMaterial << "\t\t\t\tcolour_op_ex blend_manual src_texture src_current " << m_textures[i].fAmount << "\n";
-              outMaterial << "\t\t\t\tcolour_op_multipass_fallback one zero\n";
-            }
-          }*/
 
           if((m_textures[i].fAmount >= 1.0f) || (m_textures[i].type == ID_BU))
           {

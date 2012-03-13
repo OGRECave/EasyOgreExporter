@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 0.8f;
+float EXVERSION = 0.9f;
 
 namespace EasyOgreExporter
 {
@@ -75,7 +75,10 @@ namespace EasyOgreExporter
 
         //fill mesh subdir
         SendDlgItemMessage(hWnd, IDC_MESHDIR, WM_SETTEXT, 0, (LPARAM)(char*)exp->meshOutputDir.c_str());
-        
+
+        //fill prog subdir
+        SendDlgItemMessage(hWnd, IDC_PROGDIR, WM_SETTEXT, 0, (LPARAM)(char*)exp->programOutputDir.c_str());
+
         //advanced config
 		    CheckDlgButton(hWnd, IDC_SHAREDGEOM, exp->useSharedGeom);
         CheckDlgButton(hWnd, IDC_GENLOD, exp->generateLOD);
@@ -86,6 +89,14 @@ namespace EasyOgreExporter
         CheckDlgButton(hWnd, IDC_STOREPARITY, exp->tangentsUseParity);
         CheckDlgButton(hWnd, IDC_RESAMPLE_ANIMS, exp->resampleAnims);
     		
+        //fill Shader mode combo box
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_RESETCONTENT, 0, 0);
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)"None");
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)"Only for Bump materials");
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)"All materials");
+        
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_SETCURSEL, (int)exp->exportProgram, 0);
+
 		    //Versioning
 		    TCHAR Title [256];
         _stprintf(Title, "Easy Ogre Exporter version %.1f", EXVERSION);
@@ -143,6 +154,11 @@ namespace EasyOgreExporter
 					    SendDlgItemMessage(hWnd, IDC_MESHDIR, WM_GETTEXT, len+1, (LPARAM)temp.data());
               exp->meshOutputDir = temp;
 
+              len = SendDlgItemMessage(hWnd, IDC_PROGDIR, WM_GETTEXTLENGTH, 0, 0);
+					    temp.Resize(len+1);
+					    SendDlgItemMessage(hWnd, IDC_PROGDIR, WM_GETTEXT, len+1, (LPARAM)temp.data());
+              exp->programOutputDir = temp;
+
               exp->useSharedGeom = IsDlgButtonChecked(hWnd, IDC_SHAREDGEOM) ? true : false;
               exp->generateLOD = IsDlgButtonChecked(hWnd, IDC_GENLOD) ? true : false;
               exp->buildEdges = IsDlgButtonChecked(hWnd, IDC_EDGELIST) ? true : false;
@@ -151,6 +167,26 @@ namespace EasyOgreExporter
               exp->tangentsSplitRotated = IsDlgButtonChecked(hWnd, IDC_SPLITROT) ? true : false;
               exp->tangentsUseParity = IsDlgButtonChecked(hWnd, IDC_STOREPARITY) ? true : false;
               exp->resampleAnims = IsDlgButtonChecked(hWnd, IDC_RESAMPLE_ANIMS) ? true : false;
+
+              int shaderIdx = SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_GETCURSEL, 0, 0);
+              if (shaderIdx != CB_ERR)
+              {
+                switch (shaderIdx)
+                {
+                  case 0:
+                    exp->exportProgram = SHADER_NONE;
+                    break;
+                  case 1:
+                    exp->exportProgram = SHADER_BUMP;
+                    break;
+                  case 2:
+                    exp->exportProgram = SHADER_ALL;
+                    break;
+
+                  default:
+                    exp->exportProgram = SHADER_BUMP;
+                }
+              }
 
               EndDialog(hWnd, 1);
             }
@@ -397,7 +433,7 @@ bool OgreExporter::exportScene()
   if(m_params.exportMaterial)
     _mkdir((makeOutputPath(m_params.outputDir, m_params.materialOutputDir, "", "")).c_str());
  
-  if(m_params.exportProgram)
+  if(m_params.exportProgram != SHADER_NONE)
     _mkdir((makeOutputPath(m_params.outputDir, m_params.programOutputDir, "", "")).c_str());
 
   if(m_params.copyTextures)

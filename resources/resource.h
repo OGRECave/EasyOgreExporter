@@ -4,6 +4,7 @@
 //
 #define IDD_PANEL                       101
 #define IDC_OGREVERSION                 1001
+#define IDC_SHADERMODE                  1002
 #define IDC_OGREV_LABEL                 1003
 #define IDC_MATPREFIX_LABEL             1004
 #define IDC_MATPREFIX                   1005
@@ -13,7 +14,9 @@
 #define IDC_TEXDIR                      1009
 #define IDC_MESHDIR_LABEL               1010
 #define IDC_MESHDIR                     1011
+#define IDC_SHADERS_LABEL               1012
 #define IDC_SIMPLE                      1013
+#define IDC_PROGDIR_LABEL               1014
 #define IDC_RESAMPLE_ANIMS              1015
 #define IDC_SHAREDGEOM                  1016
 #define IDC_EDGELIST                    1017
@@ -23,6 +26,8 @@
 #define IDC_STOREPARITY                 1021
 #define IDC_CHECK1                      1022
 #define IDC_GENLOD                      1022
+#define IDC_MESHDIR2                    1023
+#define IDC_PROGDIR                     1023
 
 // Next default values for new objects
 // 

@@ -63,15 +63,15 @@ namespace EasyOgreExporter
     private:
 	};
 
-  class ExVsShader: public ExShader
+  class ExVsAmbShader: public ExShader
 	{
 	  public:
     protected:
     private:
     
     public:
-      ExVsShader(std::string name);
-		  ~ExVsShader();
+      ExVsAmbShader(std::string name);
+		  ~ExVsAmbShader();
 
       virtual void constructShader(ExMaterial* mat);
       virtual std::string& getUniformParams();
@@ -80,18 +80,49 @@ namespace EasyOgreExporter
     private:
 	};
 
-  class ExFpShader: public ExShader
+  class ExFpAmbShader: public ExShader
 	{
 	  public:
     protected:
     private:
 
     public:
-		  //constructor
-      ExFpShader(std::string name);
+      ExFpAmbShader(std::string name);
+		  ~ExFpAmbShader();
 
-		  //destructor
-		  ~ExFpShader();
+      virtual void constructShader(ExMaterial* mat);
+      virtual std::string& getUniformParams();
+      virtual std::string& getProgram(std::string baseName);
+    protected:
+    private:
+	};
+
+  class ExVsLightShader: public ExShader
+	{
+	  public:
+    protected:
+    private:
+    
+    public:
+      ExVsLightShader(std::string name);
+		  ~ExVsLightShader();
+
+      virtual void constructShader(ExMaterial* mat);
+      virtual std::string& getUniformParams();
+      virtual std::string& getProgram(std::string baseName);
+    protected:
+    private:
+	};
+
+  class ExFpLightShader: public ExShader
+	{
+	  public:
+    protected:
+    private:
+
+    public:
+      ExFpLightShader(std::string name);
+		  ~ExFpLightShader();
 
       virtual void constructShader(ExMaterial* mat);
       virtual std::string& getUniformParams();

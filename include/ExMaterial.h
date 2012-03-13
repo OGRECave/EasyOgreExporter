@@ -120,7 +120,7 @@ namespace EasyOgreExporter
 		bool load(ParamList& params);
 
 		//write material data to Ogre material script
-		bool writeOgreScript(ParamList &params, std::ofstream &outMaterial, ExShader* vsShader, ExShader* fpShader);
+		bool writeOgreScript(ParamList &params, std::ofstream &outMaterial, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader);
 
 		//copy textures to path specified by params
 		bool copyTextures(ParamList &params);
@@ -132,8 +132,8 @@ namespace EasyOgreExporter
     void loadArchitectureMaterial(IGameMaterial* pGameMaterial);
     void loadArchAndDesignMaterial(IGameMaterial* pGameMaterial);
     void loadStandardMaterial(IGameMaterial* pGameMaterial);
-    void writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsShader, ExShader* fpShader);
-    void writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsShader, ExShader* fpShader);
+    void writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader);
+    void writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod, int amb, ExShader* vsShader, ExShader* fpShader);
 		bool exportColor(Point4& color, IGameProperty* pGameProperty);
     bool exportSpecular(IGameMaterial* pGameMaterial);
     std::string getMaterialName(std::string prefix);

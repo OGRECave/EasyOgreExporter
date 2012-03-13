@@ -83,12 +83,20 @@ namespace EasyOgreExporter
     
     switch (type)
     {
-      case ExShader::ST_VSLIGHT :
-        shader = new ExVsShader(sname);
+      case ExShader::ST_VSAM:
+        shader = new ExVsAmbShader(sname);
       break;
 
-      case ExShader::ST_FPLIGHT :
-        shader = new ExFpShader(sname);
+      case ExShader::ST_FPAM:
+        shader = new ExFpAmbShader(sname);
+      break;
+
+      case ExShader::ST_VSLIGHT:
+        shader = new ExVsLightShader(sname);
+      break;
+
+      case ExShader::ST_FPLIGHT:
+        shader = new ExFpLightShader(sname);
       break;
     }
 
@@ -162,9 +170,19 @@ namespace EasyOgreExporter
 
 		for (int i=0; i<m_materials.size(); i++)
 		{
-      ExShader* vsShader = params.exportProgram ? createShader(m_materials[i], ExShader::ST_VSLIGHT) : 0;
-      ExShader* fpShader = params.exportProgram ? createShader(m_materials[i], ExShader::ST_FPLIGHT) : 0;
-			stat = m_materials[i]->writeOgreScript(params, outMaterial, vsShader ,fpShader);
+      ExShader* vsAmbShader = 0;
+      ExShader* fpAmbShader = 0;
+      ExShader* vsLightShader = 0;
+      ExShader* fpLightShader = 0;
+
+      if((params.exportProgram == SHADER_ALL) || ((params.exportProgram == SHADER_BUMP) && (m_materials[i]->m_hasBumpMap)))
+      {
+        vsAmbShader = createShader(m_materials[i], ExShader::ST_VSAM);
+        fpAmbShader = createShader(m_materials[i], ExShader::ST_FPAM);
+        vsLightShader = createShader(m_materials[i], ExShader::ST_VSLIGHT);
+        fpLightShader = createShader(m_materials[i], ExShader::ST_FPLIGHT);
+      }
+      stat = m_materials[i]->writeOgreScript(params, outMaterial, vsAmbShader ,fpAmbShader, vsLightShader, fpLightShader);
 
 			/*
 			if (true != stat)
@@ -178,7 +196,7 @@ namespace EasyOgreExporter
 		}
     outMaterial.close();
 
-    if(params.exportProgram)
+    if(params.exportProgram != SHADER_NONE)
     {
       std::ofstream outShaderCG;
       std::ofstream outProgram;

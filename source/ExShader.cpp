@@ -55,17 +55,281 @@ namespace EasyOgreExporter
   }
 
 
-  // ExVsShader
-  ExVsShader::ExVsShader(std::string name) : ExShader(name)
+// ExVsAmbShader
+  ExVsAmbShader::ExVsAmbShader(std::string name) : ExShader(name)
+	{
+    m_type = ST_VSAM;
+  }
+
+	ExVsAmbShader::~ExVsAmbShader()
+	{
+	}
+
+  void ExVsAmbShader::constructShader(ExMaterial* mat)
+  {
+    // get the material config
+    bRef = mat->m_hasReflectionMap;
+    bNormal = mat->m_hasBumpMap;
+    bDiffuse = mat->m_hasDiffuseMap;
+    bSpecular = mat->m_hasSpecularMap;
+
+    std::vector<int> texUnits;
+    for (int i = 0; i < mat->m_textures.size(); i++)
+    {
+	    if(mat->m_textures[i].bCreateTextureUnit == true)
+      {
+        switch (mat->m_textures[i].type)
+        {
+          case ID_AM:
+            texUnits.push_back(mat->m_textures[i].uvsetIndex);
+          break;
+
+          case ID_DI:
+            texUnits.push_back(mat->m_textures[i].uvsetIndex);
+          break;
+
+          case ID_SI:
+            texUnits.push_back(mat->m_textures[i].uvsetIndex);
+          break;
+        }
+      }
+    }
+
+    std::sort(texUnits.begin(), texUnits.end());
+    texUnits.erase(std::unique(texUnits.begin(), texUnits.end()), texUnits.end());
+    std::stringstream out;
+
+    // generate the shader
+    out << "void " << m_name.c_str() << "(float4 position	: POSITION,\n"; 
+    out << "\tfloat3 normal : NORMAL,\n";
+
+    for (int i=0; i < texUnits.size(); i++)
+    {
+      out << "\tfloat2 uv" << texUnits[i] << " : TEXCOORD" << texUnits[i] << ",\n";
+    }
+
+    int texCoord = 0;
+    out << "\tout float4 oPos: POSITION,\n";
+
+    int lastAvailableTexCoord = texCoord;
+    for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
+    {
+      out << "\tout float2 oUv" << texUnits[i] << " : TEXCOORD" << texCoord++ << ",\n";
+    }
+
+    out << "\tuniform float4x4 wvpMat\n";
+    out << ")\n";
+    out << "{\n";
+
+    out << "\toPos = mul(wvpMat, position);\n";
+
+    texCoord = lastAvailableTexCoord;
+    for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
+    {
+      out << "\toUv" << texUnits[i] << " = uv" << texUnits[i] << ";\n";
+      texCoord++;
+    }
+
+    out << "}\n";
+    m_content = out.str();
+	}
+
+  std::string& ExVsAmbShader::getUniformParams()
+  {
+    std::stringstream out;
+    out << "\t\t\tvertex_program_ref " << m_name << "\n";
+		out << "\t\t\t{\n";
+		out << "\t\t\t}\n";
+    m_params = out.str();
+    return m_params;
+  }
+
+  std::string& ExVsAmbShader::getProgram(std::string baseName)
+  {
+    std::stringstream out;
+    out << "vertex_program " << m_name << " cg\n";
+    out << "{\n";
+    
+    out << "\tsource " << baseName << ".cg\n";
+    out << "\tprofiles vs_1_1 arbvp1\n";
+    out << "\tentry_point " << m_name << "\n";
+
+    out << "\tdefault_params\n";
+    out << "\t{\n";
+    out << "\t\tparam_named_auto wvpMat worldviewproj_matrix\n";
+    out << "\t}\n";
+    out << "}\n";
+
+    m_program = out.str();
+    return m_program;
+  }
+
+
+  // ExFpAmbShader
+  ExFpAmbShader::ExFpAmbShader(std::string name) : ExShader(name)
+	{
+    m_type = ST_FPAM;
+  }
+
+	ExFpAmbShader::~ExFpAmbShader()
+	{
+	}
+
+  void ExFpAmbShader::constructShader(ExMaterial* mat)
+  {
+    // get the material config
+    bRef = mat->m_hasReflectionMap;
+    bNormal = mat->m_hasBumpMap;
+    bDiffuse = mat->m_hasDiffuseMap;
+    bSpecular = mat->m_hasSpecularMap;
+    bool bAmbient = false;
+    bool bIllum = false;
+
+    std::vector<int> texUnits;
+    for (int i = 0; i < mat->m_textures.size(); i++)
+    {
+	    if(mat->m_textures[i].bCreateTextureUnit == true)
+      {
+        switch (mat->m_textures[i].type)
+        {
+          case ID_AM:
+            bAmbient = true;
+            texUnits.push_back(mat->m_textures[i].uvsetIndex);
+          break;
+
+          case ID_DI:
+            texUnits.push_back(mat->m_textures[i].uvsetIndex);
+          break;
+
+          case ID_SI:
+            bIllum = true;
+            texUnits.push_back(mat->m_textures[i].uvsetIndex);
+          break;
+        }
+      }
+    }
+
+    std::sort(texUnits.begin(), texUnits.end());
+    texUnits.erase(std::unique(texUnits.begin(), texUnits.end()), texUnits.end());
+    std::stringstream out;
+
+    int texCoord = 0;
+    // generate the shader
+    out << "float4 " << m_name.c_str() << "(float4 position	: POSITION,\n";
+
+    for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
+    {
+      out << "\tfloat2 uv" << texUnits[i] << " : TEXCOORD" << texCoord++ << ",\n";
+    }
+
+    out << "\tuniform float3 ambient,\n";
+    out << "\tuniform float4 matAmb";
+
+    int samplerId = 0;
+    int ambUv = 0;
+    int diffUv = 0;
+    int illUv = 0;
+
+    for (int i=0; i < mat->m_textures.size(); i++)
+    {
+	    if(mat->m_textures[i].bCreateTextureUnit == true)
+	    {
+        switch (mat->m_textures[i].type)
+        {
+          case ID_AM:
+            out << ",\n\tuniform sampler2D ambMap : register(s" << samplerId << ")";
+            ambUv = mat->m_textures[i].uvsetIndex;
+            samplerId++;
+          break;
+
+          case ID_DI:
+            out << ",\n\tuniform sampler2D diffuseMap : register(s" << samplerId << ")";
+            diffUv = mat->m_textures[i].uvsetIndex;
+            samplerId++;
+          break;
+
+          case ID_SI:
+            out << ",\n\tuniform sampler2D illMap : register(s" << samplerId << ")";
+            illUv = mat->m_textures[i].uvsetIndex;
+            samplerId++;
+          break;
+        }
+      }
+    }
+    
+    out << "): COLOR0\n";
+    out << "{\n";
+
+    if(bAmbient)
+      out << "\tfloat4 ambTex = tex2D(ambMap, uv" << ambUv << ");\n";
+
+    if(bDiffuse)
+      out << "\tfloat4 diffuseTex = tex2D(diffuseMap, uv" << diffUv << ");\n";
+    
+    if(bIllum)
+      out << "\tfloat4 illTex = tex2D(illMap, uv" << illUv << ");\n";
+    
+    out << "\tfloat4 retColor = float4(ambient, 1) * float4(matAmb.rgb, 1);\n";
+    
+    if(bAmbient)
+      out << "\tretColor *= ambTex;\n";
+
+    if(bDiffuse)
+      out << "\tretColor *= diffuseTex;\n";
+
+    if(bIllum)
+      out << "\tretColor *= illTex;\n";
+
+    out << "\treturn retColor;\n";
+
+    out << "}\n";
+    m_content = out.str();
+	}
+
+  std::string& ExFpAmbShader::getUniformParams()
+  {
+    std::stringstream out;
+    out << "\t\t\tfragment_program_ref " << m_name << "\n";
+		out << "\t\t\t{\n";
+		out << "\t\t\t}\n";
+    m_params = out.str();
+    return m_params;
+  }
+
+  std::string& ExFpAmbShader::getProgram(std::string baseName)
+  {
+    std::stringstream out;
+    out << "fragment_program " << m_name << " cg\n";
+    out << "{\n";
+    
+    out << "\tsource " << baseName << ".cg\n";
+    out << "\tprofiles ps_2_x arbfp1\n";
+    out << "\tentry_point " << m_name << "\n";
+
+    out << "\tdefault_params\n";
+    out << "\t{\n";
+    out << "\t\tparam_named_auto ambient ambient_light_colour\n";
+    out << "\t\tparam_named_auto matAmb surface_ambient_colour\n";
+
+    out << "\t}\n";
+    out << "}\n";
+
+    m_program = out.str();
+    return m_program;
+  }
+
+
+  // ExVsLightShader
+  ExVsLightShader::ExVsLightShader(std::string name) : ExShader(name)
 	{
     m_type = ST_VSLIGHT;
   }
 
-	ExVsShader::~ExVsShader()
+	ExVsLightShader::~ExVsLightShader()
 	{
 	}
 
-  void ExVsShader::constructShader(ExMaterial* mat)
+  void ExVsLightShader::constructShader(ExMaterial* mat)
   {
     // get the material config
     bRef = mat->m_hasReflectionMap;
@@ -86,10 +350,10 @@ namespace EasyOgreExporter
 
     // generate the shader
     out << "void " << m_name.c_str() << "(float4 position	: POSITION,\n"; 
-    out << "\tfloat3 normal		: NORMAL,\n";
+    out << "\tfloat3 normal : NORMAL,\n";
     if(bNormal)
     {
-      out << "\tfloat3 tangent	: TANGENT,\n";
+      out << "\tfloat3 tangent : TANGENT,\n";
     }
 
     for (int i=0; i < texUnits.size(); i++)
@@ -98,19 +362,19 @@ namespace EasyOgreExporter
     }
 
     int texCoord = 0;
-    out << "\tout float4 oPos: POSITION,\n";
-    out << "\tout float3 oNorm: TEXCOORD" << texCoord++ << ",\n";
+    out << "\tout float4 oPos : POSITION,\n";
+    out << "\tout float3 oNorm : TEXCOORD" << texCoord++ << ",\n";
 
     if(bNormal)
     {
-      out << "\tout float3 oTang: TEXCOORD" << texCoord++ << ",\n";
-      out << "\tout float3 oBinormal: TEXCOORD" << texCoord++ << ",\n";
+      out << "\tout float3 oTang : TEXCOORD" << texCoord++ << ",\n";
+      out << "\tout float3 oBinormal : TEXCOORD" << texCoord++ << ",\n";
     }
 
-    out << "\tout float3 oSpDir: TEXCOORD" << texCoord++ << ",\n";
-    out << "\tout float4 oWp: TEXCOORD" << texCoord++ << ",\n";
+    out << "\tout float3 oSpDir : TEXCOORD" << texCoord++ << ",\n";
+    out << "\tout float4 oWp : TEXCOORD" << texCoord++ << ",\n";
     if(bRef)
-      out << "\tout float3 otexProj: TEXCOORD" << texCoord++ << ",\n";
+      out << "\tout float3 otexProj : TEXCOORD" << texCoord++ << ",\n";
 
     int lastAvailableTexCoord = texCoord;
     for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
@@ -161,7 +425,7 @@ namespace EasyOgreExporter
     m_content = out.str();
 	}
 
-  std::string& ExVsShader::getUniformParams()
+  std::string& ExVsLightShader::getUniformParams()
   {
     std::stringstream out;
     out << "\t\t\tvertex_program_ref " << m_name << "\n";
@@ -171,7 +435,7 @@ namespace EasyOgreExporter
     return m_params;
   }
 
-  std::string& ExVsShader::getProgram(std::string baseName)
+  std::string& ExVsLightShader::getProgram(std::string baseName)
   {
     std::stringstream out;
     out << "vertex_program " << m_name << " cg\n";
@@ -197,17 +461,17 @@ namespace EasyOgreExporter
   }
 
 
-  // ExFpShader
-  ExFpShader::ExFpShader(std::string name) : ExShader(name)
+  // ExFpLightShader
+  ExFpLightShader::ExFpLightShader(std::string name) : ExShader(name)
 	{
     m_type = ST_FPLIGHT;
   }
 
-	ExFpShader::~ExFpShader()
+	ExFpLightShader::~ExFpLightShader()
 	{
 	}
 
-  void ExFpShader::constructShader(ExMaterial* mat)
+  void ExFpLightShader::constructShader(ExMaterial* mat)
   {
     // get the material config
     bRef = mat->m_hasReflectionMap;
@@ -231,22 +495,22 @@ namespace EasyOgreExporter
     int texCoord = 0;
     // generate the shader
     out << "float4 " << m_name.c_str() << "(float4 position	: POSITION,\n";
-    out << "\tfloat3 norm	    " << "    : TEXCOORD" << texCoord++ << ",\n";
+    out << "\tfloat3 norm	    " << " : TEXCOORD" << texCoord++ << ",\n";
 
     if(bNormal)
     {
-      out << "\tfloat3 tangent  " << "    : TEXCOORD" << texCoord++ << ",\n";
-      out << "\tfloat3 binormal " << "    : TEXCOORD" << texCoord++ << ",\n";
+      out << "\tfloat3 tangent  " << " : TEXCOORD" << texCoord++ << ",\n";
+      out << "\tfloat3 binormal " << " : TEXCOORD" << texCoord++ << ",\n";
     }
 
-    out << "\tfloat3 spDir          : TEXCOORD" << texCoord++ << ",\n";
-    out << "\tfloat4 wp             : TEXCOORD" << texCoord++ << ",\n";
+    out << "\tfloat3 spDir : TEXCOORD" << texCoord++ << ",\n";
+    out << "\tfloat4 wp : TEXCOORD" << texCoord++ << ",\n";
     if(bRef)
-      out << "\tfloat3 texProj      : TEXCOORD" << texCoord++ << ",\n";
+      out << "\tfloat3 texProj : TEXCOORD" << texCoord++ << ",\n";
 
     for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
     {
-      out << "\tfloat2 uv" << texUnits[i] << "       : TEXCOORD" << texCoord++ << ",\n";
+      out << "\tfloat2 uv" << texUnits[i] << " : TEXCOORD" << texCoord++ << ",\n";
     }
 
     out << "\tuniform float3 lightDif0,\n";
@@ -373,7 +637,7 @@ namespace EasyOgreExporter
     m_content = out.str();
 	}
 
-  std::string& ExFpShader::getUniformParams()
+  std::string& ExFpLightShader::getUniformParams()
   {
     std::stringstream out;
     out << "\t\t\tfragment_program_ref " << m_name << "\n";
@@ -383,7 +647,7 @@ namespace EasyOgreExporter
     return m_params;
   }
 
-  std::string& ExFpShader::getProgram(std::string baseName)
+  std::string& ExFpLightShader::getProgram(std::string baseName)
   {
     std::stringstream out;
     out << "fragment_program " << m_name << " cg\n";

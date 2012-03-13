@@ -35,6 +35,13 @@ namespace EasyOgreExporter
 
 	typedef enum
 	{
+		SHADER_NONE,
+		SHADER_BUMP,
+    SHADER_ALL
+	} ShaderMode;
+
+	typedef enum
+	{
 		TOGRE_1_8,
 		TOGRE_1_7,
     TOGRE_1_4,
@@ -46,7 +53,7 @@ namespace EasyOgreExporter
 	{
 	public:
 		// class members
-		bool exportMesh, exportMaterial, exportProgram, exportCameras, exportLights, lightingOff, exportAll,
+		bool exportMesh, exportMaterial, exportCameras, exportLights, lightingOff, exportAll,
 			exportVertNorm, exportVertCol, exportSkeleton, exportSkelAnims, exportVertAnims, exportPoses, 
 			useSharedGeom, copyTextures, tangentsSplitMirrored, tangentsSplitRotated, tangentsUseParity, 
 			buildTangents, buildEdges, resampleAnims, yUpAxis, exportScene, generateLOD;
@@ -61,6 +68,8 @@ namespace EasyOgreExporter
 
     OgreTarget meshVersion;
 
+    ShaderMode exportProgram;
+
 		std::vector<INode*> currentRootJoints;
 
 		// constructor
@@ -68,7 +77,7 @@ namespace EasyOgreExporter
 			lum = 1.0f;
 			exportMesh = true;
 			exportMaterial = true;
-      exportProgram = true;
+      exportProgram = SHADER_BUMP;
 			exportSkeleton = true;
 			exportSkelAnims = true;
 			exportVertAnims = true;
