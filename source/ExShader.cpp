@@ -111,17 +111,32 @@ namespace EasyOgreExporter
     int texCoord = 0;
     out << "\tout float4 oPos: POSITION,\n";
 
+    if(bRef)
+    {
+      out << "\tout float3 oNorm : TEXCOORD" << texCoord++ << ",\n";
+      out << "\tout float4 oWp : TEXCOORD" << texCoord++ << ",\n";
+    }
+
     int lastAvailableTexCoord = texCoord;
     for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
     {
       out << "\tout float2 oUv" << texUnits[i] << " : TEXCOORD" << texCoord++ << ",\n";
     }
 
+    if(bRef)
+      out << "\tuniform float4x4 wMat,\n";
+    
     out << "\tuniform float4x4 wvpMat\n";
+
     out << ")\n";
     out << "{\n";
 
     out << "\toPos = mul(wvpMat, position);\n";
+    if(bRef)
+    {
+      out << "\toWp = mul(wMat, position);\n";
+      out << "\toNorm = normal;\n";
+    }
 
     texCoord = lastAvailableTexCoord;
     for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
@@ -157,6 +172,10 @@ namespace EasyOgreExporter
     out << "\tdefault_params\n";
     out << "\t{\n";
     out << "\t\tparam_named_auto wvpMat worldviewproj_matrix\n";
+    
+    if(bRef)
+      out << "\t\tparam_named_auto wMat world_matrix\n";
+
     out << "\t}\n";
     out << "}\n";
 
@@ -216,6 +235,12 @@ namespace EasyOgreExporter
     int texCoord = 0;
     // generate the shader
     out << "float4 " << m_name.c_str() << "(float4 position	: POSITION,\n";
+    
+    if(bRef)
+    {
+      out << "\tfloat3 norm : TEXCOORD" << texCoord++ << ",\n";
+      out << "\tfloat4 wp : TEXCOORD" << texCoord++ << ",\n";
+    }
 
     for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
     {
@@ -224,6 +249,14 @@ namespace EasyOgreExporter
 
     out << "\tuniform float3 ambient,\n";
     out << "\tuniform float4 matAmb";
+
+    if(bRef)
+    {
+      out << ",\n\tuniform float3 camPos";
+      out << ",\n\tuniform float reflectivity";
+      out << ",\n\tuniform float fresnelMul";
+      out << ",\n\tuniform float fresnelPow";
+    }
 
     int samplerId = 0;
     int ambUv = 0;
@@ -253,6 +286,11 @@ namespace EasyOgreExporter
             illUv = mat->m_textures[i].uvsetIndex;
             samplerId++;
           break;
+
+          case ID_RL:
+            out << ",\n\tuniform samplerCUBE reflectMap : register(s" << samplerId << ")";
+            samplerId++;
+          break;
         }
       }
     }
@@ -280,6 +318,18 @@ namespace EasyOgreExporter
     if(bIllum)
       out << "\tretColor *= illTex;\n";
 
+    if(bRef)
+    {
+      out << "\tfloat3 normal = normalize(norm);\n";
+      out << "\tfloat3 camDir = normalize(camPos - wp.xyz);\n";
+      out << "\tfloat3 refVec = -reflect(camDir, normal);\n";
+      out << "\trefVec.z = -refVec.z;\n";
+      out << "\tfloat4 reflecTex = texCUBE(reflectMap, refVec);\n";
+      out << "\tfloat fresnel = (fresnelMul * reflectivity) * pow(1 + dot(-camDir, norm), fresnelPow / (reflectivity * fresnelPow));\n";
+      out << "\tfloat4 reflecVal = reflecTex * fresnel;\n";
+      out << "\tretColor += retColor * reflecVal;\n";
+    }
+
     out << "\treturn retColor;\n";
 
     out << "}\n";
@@ -291,6 +341,10 @@ namespace EasyOgreExporter
     std::stringstream out;
     out << "\t\t\tfragment_program_ref " << m_name << "\n";
 		out << "\t\t\t{\n";
+
+    if(bRef)
+      out << "\t\t\t\tparam_named reflectivity float " << mat->m_reflectivity << "\n";
+
 		out << "\t\t\t}\n";
     m_params = out.str();
     return m_params;
@@ -310,6 +364,14 @@ namespace EasyOgreExporter
     out << "\t{\n";
     out << "\t\tparam_named_auto ambient ambient_light_colour\n";
     out << "\t\tparam_named_auto matAmb surface_ambient_colour\n";
+    
+    if(bRef)
+    {
+      out << "\t\tparam_named_auto camPos camera_position\n";
+      out << "\t\tparam_named reflectivity float 1.0\n";
+      out << "\t\t\t\tparam_named fresnelMul float 8\n";
+      out << "\t\t\t\tparam_named fresnelPow float 1.8\n";
+    }
 
     out << "\t}\n";
     out << "}\n";
@@ -478,12 +540,12 @@ namespace EasyOgreExporter
     int texCoord = 0;
     // generate the shader
     out << "float4 " << m_name.c_str() << "(float4 position	: POSITION,\n";
-    out << "\tfloat3 norm	    " << " : TEXCOORD" << texCoord++ << ",\n";
+    out << "\tfloat3 norm : TEXCOORD" << texCoord++ << ",\n";
 
     if(bNormal)
     {
-      out << "\tfloat3 tangent  " << " : TEXCOORD" << texCoord++ << ",\n";
-      out << "\tfloat3 binormal " << " : TEXCOORD" << texCoord++ << ",\n";
+      out << "\tfloat3 tangent : TEXCOORD" << texCoord++ << ",\n";
+      out << "\tfloat3 binormal : TEXCOORD" << texCoord++ << ",\n";
     }
 
     out << "\tfloat3 spDir : TEXCOORD" << texCoord++ << ",\n";
@@ -505,8 +567,11 @@ namespace EasyOgreExporter
     out << "\tuniform float4 invSMSize,\n";
     out << "\tuniform float4 spotlightParams";
     if(bNormal)
+    {
       out << ",\n\tuniform float4x4 iTWMat";
-    
+      out << ",\n\tuniform float normalMul";
+    }
+
     if(bRef)
     {
       out << ",\n\tuniform float reflectivity";
@@ -567,10 +632,11 @@ namespace EasyOgreExporter
 
     if(bNormal)
     {
-      out << "\tfloat4 normalTex = tex2D(normalMap, uv" << normUv << ");\n";
+      out << "\tfloat3 normalTex = tex2D(normalMap, uv" << normUv << ");\n";
       out << "\tfloat3x3 tbn = float3x3(tangent, binormal, norm);\n";
-      out << "\tfloat3 normal = mul(transpose(tbn), normalTex.xyz * 2 - 1); // to object space\n";
+      out << "\tfloat3 normal = mul(transpose(tbn), (normalTex.xyz -0.5) * 2); // to object space\n";
       out << "\tnormal = normalize(mul((float3x3)iTWMat, normal));\n";
+      out << "\tnormal.z *= 1 / (1 + normalMul);\n";
     }
     else
     {
@@ -611,10 +677,10 @@ namespace EasyOgreExporter
 
     if(bRef)
     {
-      out << "\tfloat3 refVec = -reflect(camDir, normal * 2);\n";
+      out << "\tfloat3 refVec = -reflect(camDir, normal);\n";
       out << "\trefVec.z = -refVec.z;\n";
-      out << "\tfloat4 reflecTex = reflectivity * texCUBE(reflectMap, refVec);\n";
-      out << "\tfloat fresnel = fresnelMul * pow(1 + dot(-camDir, norm), fresnelPow);\n";
+      out << "\tfloat4 reflecTex = texCUBE(reflectMap, refVec);\n";
+      out << "\tfloat fresnel = (fresnelMul * reflectivity) * pow(1 + dot(-camDir, norm), fresnelPow / (reflectivity * fresnelPow));\n";
       out << "\tfloat4 reflecVal = reflecTex * fresnel;\n";
 
       out << "\tfloat3 reflectColor = (reflecVal.rgb * diffuseContrib) + (reflecVal.rbg * specularContrib);\n";
@@ -635,6 +701,11 @@ namespace EasyOgreExporter
     out << "\t\t\tfragment_program_ref " << m_name << "\n";
 		out << "\t\t\t{\n";
     
+    if(bNormal)
+    {
+      out << "\t\t\t\tparam_named normalMul float " << mat->m_normalMul << "\n";
+    }
+
     if(bRef)
     {
       out << "\t\t\t\tparam_named reflectivity float " << mat->m_reflectivity << "\n";
@@ -670,7 +741,10 @@ namespace EasyOgreExporter
     out << "\t\tparam_named_auto spotlightParams spotlight_params 0\n";
     
     if(bNormal)
+    {
       out << "\t\tparam_named_auto iTWMat inverse_transpose_world_matrix\n";
+      out << "\t\tparam_named normalMul float 1\n";
+    }
 
     if(bRef)
     {

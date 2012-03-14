@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 0.91f;
+float EXVERSION = 0.92f;
 
 namespace EasyOgreExporter
 {

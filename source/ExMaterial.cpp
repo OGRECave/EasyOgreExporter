@@ -183,6 +183,10 @@ namespace EasyOgreExporter
               case ID_SI:
                 texUnits.push_back(m_textures[i].uvsetIndex);
               break;
+
+              case ID_RL:
+                out << "REF";
+              break;
             }
           }
         }
@@ -219,6 +223,10 @@ namespace EasyOgreExporter
               case ID_SI:
                 out << "LM";
                 out << m_textures[i].uvsetIndex;
+              break;
+
+              case ID_RL:
+                out << "REF";
               break;
             }
           }
@@ -906,7 +914,7 @@ namespace EasyOgreExporter
 				  EasyOgreExporterLog("Bump channel texture.\n");
 				  tex.bCreateTextureUnit = bFoundTexture;
           m_hasBumpMap = true;
-          m_normalMul = smat->GetTexmapAmt(texSlot, 0) / 0.3f;
+          m_normalMul = smat->GetTexmapAmt(texSlot, 0);
 			    tex.type = ID_BU;
           break;
 			  case ID_RL:
@@ -1105,9 +1113,25 @@ namespace EasyOgreExporter
 
 		//End technique description
 		outMaterial << "\t}\n";
+
+    // if we got a shader we write a default technique for non supported hardware
+    if(vsAmbShader || fpAmbShader || vsLightShader || fpLightShader)
+    {
+      //Start technique description
+	    outMaterial << "\ttechnique\n";
+	    outMaterial << "\t{\n";
+      if(lod != -1)
+        outMaterial << "\t\tlod_index "<< lod <<"\n";
+      
+      outMaterial << "\tscheme basic_mat\n";
+      writeMaterialPass(params, outMaterial, lod, 3, 0, 0);
+
+	    //End technique description
+	    outMaterial << "\t}\n";
+    }
   }
 
-  void ExMaterial::writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod, int amb, ExShader* vsShader, ExShader* fpShader)
+  void ExMaterial::writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod, int mode, ExShader* vsShader, ExShader* fpShader)
   {
 		//Start render pass description
 		outMaterial << "\t\tpass\n";
@@ -1169,9 +1193,9 @@ namespace EasyOgreExporter
     //emissive colour
 		outMaterial << "\t\t\temissive " << m_emissive.x << " " << m_emissive.y << " " << m_emissive.z << " " << m_emissive.w << "\n";
     
-    if(amb == 1)
+    if(mode == 1)
       outMaterial << "\n\t\t\tillumination_stage ambient\n";
-    else if(amb == 2)
+    else if(mode == 2)
     {
       outMaterial << "\n\t\t\tscene_blend add\n";
 			outMaterial << "\n\t\t\titeration once_per_light\n";
@@ -1179,7 +1203,7 @@ namespace EasyOgreExporter
     }
 
     //if material is transparent set blend mode and turn off depth_writing
-		if (m_isTransparent && (amb != 2))
+		if (m_isTransparent && (mode != 2))
 		{
 			outMaterial << "\n\t\t\tscene_blend alpha_blend\n";
 			outMaterial << "\t\t\tdepth_write off\n";
@@ -1207,11 +1231,15 @@ namespace EasyOgreExporter
             continue;
           
           //do not use other textures for ambient pass
-          if((amb == 1) && ((m_textures[i].type != ID_AM) && (m_textures[i].type != ID_DI) && (m_textures[i].type != ID_SI)))
+          if((mode == 1) && ((m_textures[i].type != ID_AM) && (m_textures[i].type != ID_DI) && (m_textures[i].type != ID_SI) && (m_textures[i].type != ID_RL)))
             continue;
 
           // do not use this textures for light pass
-          if((amb == 2) && ((m_textures[i].type == ID_AM) || (m_textures[i].type == ID_SI)))
+          if((mode == 2) && ((m_textures[i].type == ID_AM) || (m_textures[i].type == ID_SI)))
+            continue;
+
+          // don't export normal and specular maps for non supported technique
+          if((mode == 3) && ((m_textures[i].type == ID_BU) || (m_textures[i].type == ID_SP)))
             continue;
 
 				  //start texture unit description
@@ -1221,7 +1249,7 @@ namespace EasyOgreExporter
           //write texture name
           outMaterial << "\t\t\t\ttexture " << m_textures[i].filename.c_str();
           std::string texExt = m_textures[i].filename.substr(m_textures[i].filename.find_last_of(".") + 1);
-				  if(texExt == "dds" || texExt == "DDS")
+				  if((m_textures[i].type == ID_RL) && (texExt == "dds" || texExt == "DDS"))
             outMaterial << " cubic\n";
           else
             outMaterial << "\n";
@@ -1238,7 +1266,7 @@ namespace EasyOgreExporter
           }
           else
           {
-            outMaterial << "\t\t\t\tcolour_op_ex blend_manual src_texture src_current " << m_textures[i].fAmount << "\n";
+            outMaterial << "\t\t\t\tcolour_op_ex blend_manual src_texture src_current " << (((mode == 3) && (m_textures[i].type == ID_RL)) ? m_textures[i].fAmount / 3.0f : m_textures[i].fAmount) << "\n";
             outMaterial << "\t\t\t\tcolour_op_multipass_fallback one zero\n";
           }
 
