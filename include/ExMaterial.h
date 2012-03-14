@@ -88,6 +88,8 @@ namespace EasyOgreExporter
 		Point4 m_ambient, m_diffuse, m_specular, m_emissive;
     float m_shininess;
     float m_opacity;
+    float m_reflectivity;
+    float m_normalMul;
 		bool m_lightingOff;
 		bool m_isTransparent;
 		bool m_isTextured;

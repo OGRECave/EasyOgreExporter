@@ -111,6 +111,8 @@ namespace EasyOgreExporter
 		m_emissive = Point4(0,0,0,1);
     m_opacity = 1.0f;
     m_shininess = 0.0f;
+    m_reflectivity = 0.0f;
+    m_normalMul = 1.0f;
     m_isTwoSided = false;
     m_isWire = false;
     m_hasAlpha = false;
@@ -253,7 +255,6 @@ namespace EasyOgreExporter
               break;
 
               case ID_RL:
-                out << "REF";
               break;
             }
           }
@@ -904,7 +905,8 @@ namespace EasyOgreExporter
 			  case ID_BU:
 				  EasyOgreExporterLog("Bump channel texture.\n");
 				  tex.bCreateTextureUnit = bFoundTexture;
-          m_hasBumpMap = true;                
+          m_hasBumpMap = true;
+          m_normalMul = smat->GetTexmapAmt(texSlot, 0) / 0.3f;
 			    tex.type = ID_BU;
           break;
 			  case ID_RL:
@@ -912,6 +914,7 @@ namespace EasyOgreExporter
           tex.type = ID_RL;
           tex.bCreateTextureUnit = bFoundTexture;
           tex.bReflect = true;
+          m_reflectivity = smat->GetTexmapAmt(texSlot, 0);
           m_hasReflectionMap = true;
 				  break; 
 			  case ID_RR:
@@ -1186,10 +1189,10 @@ namespace EasyOgreExporter
 			outMaterial << "\n\t\t\talpha_rejection greater 128\n";
 		    
     if(vsShader)
-      outMaterial << vsShader->getUniformParams();
+      outMaterial << vsShader->getUniformParams(this);
 
     if(fpShader)
-      outMaterial << fpShader->getUniformParams();
+      outMaterial << fpShader->getUniformParams(this);
 
     //write texture units
     //TODO manage ambient, diffuse, spec, alpha layer types with colour_op_ex <operation> <source1> <source2> [<manual_factor>] [<manual_colour1>] [<manual_colour2>]
@@ -1214,10 +1217,20 @@ namespace EasyOgreExporter
 				  //start texture unit description
 				  outMaterial << "\n\t\t\ttexture_unit\n";
 				  outMaterial << "\t\t\t{\n";
-				  //write texture name
-				  outMaterial << "\t\t\t\ttexture " << m_textures[i].filename.c_str() << "\n";
-				  //write texture coordinate index
+				  
+          //write texture name
+          outMaterial << "\t\t\t\ttexture " << m_textures[i].filename.c_str();
+          std::string texExt = m_textures[i].filename.substr(m_textures[i].filename.find_last_of(".") + 1);
+				  if(texExt == "dds" || texExt == "DDS")
+            outMaterial << " cubic\n";
+          else
+            outMaterial << "\n";
+				  
+          //write texture coordinate index
 				  outMaterial << "\t\t\t\ttex_coord_set " << m_textures[i].uvsetIndex << "\n";
+
+          //use anisotropic as default for better textures quality
+          //outMaterial << "\t\t\t\tfiltering anisotropic\n";
 
           if((m_textures[i].fAmount >= 1.0f) || (m_textures[i].type == ID_BU))
           {

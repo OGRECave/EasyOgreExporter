@@ -44,7 +44,7 @@ namespace EasyOgreExporter
 		return m_content;
 	}
 
-  std::string& ExShader::getUniformParams()
+  std::string& ExShader::getUniformParams(ExMaterial* mat)
   {
     return m_params;
   }
@@ -134,7 +134,7 @@ namespace EasyOgreExporter
     m_content = out.str();
 	}
 
-  std::string& ExVsAmbShader::getUniformParams()
+  std::string& ExVsAmbShader::getUniformParams(ExMaterial* mat)
   {
     std::stringstream out;
     out << "\t\t\tvertex_program_ref " << m_name << "\n";
@@ -269,7 +269,7 @@ namespace EasyOgreExporter
     if(bIllum)
       out << "\tfloat4 illTex = tex2D(illMap, uv" << illUv << ");\n";
     
-    out << "\tfloat4 retColor = float4(ambient, 1) * float4(matAmb.rgb, 1);\n";
+    out << "\tfloat4 retColor = float4(ambient, 1) * matAmb;\n";
     
     if(bAmbient)
       out << "\tretColor *= ambTex;\n";
@@ -286,7 +286,7 @@ namespace EasyOgreExporter
     m_content = out.str();
 	}
 
-  std::string& ExFpAmbShader::getUniformParams()
+  std::string& ExFpAmbShader::getUniformParams(ExMaterial* mat)
   {
     std::stringstream out;
     out << "\t\t\tfragment_program_ref " << m_name << "\n";
@@ -373,8 +373,6 @@ namespace EasyOgreExporter
 
     out << "\tout float3 oSpDir : TEXCOORD" << texCoord++ << ",\n";
     out << "\tout float4 oWp : TEXCOORD" << texCoord++ << ",\n";
-    if(bRef)
-      out << "\tout float3 otexProj : TEXCOORD" << texCoord++ << ",\n";
 
     int lastAvailableTexCoord = texCoord;
     for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
@@ -385,9 +383,6 @@ namespace EasyOgreExporter
     out << "\tuniform float4x4 wMat,\n";
     out << "\tuniform float4x4 wvpMat,\n";
     out << "\tuniform float4 spotlightDir";
-
-    if(bRef)
-      out << ",\n\tuniform float3 eyePositionW";
     
     out << ")\n";
     out << "{\n";
@@ -411,21 +406,11 @@ namespace EasyOgreExporter
     }
 
     out << "\toSpDir = mul(wMat, spotlightDir).xyz;\n";
-
-    if(bRef)
-    {
-      out << "\tfloat3 posW = mul(wMat, IN.p).xyz;\n";
-      out << "\tfloat3 refNorm = normalize(mul((float3x3)wMat, normal));\n";
-      out << "\tfloat3 eyePos = oWp.xyz - eyePositionW;\n";
-      
-      out << "\totexProj = reflect(eyePos, refNorm);\n";
-      out << "\totexProj.z = - otexProj.z;\n";
-    }
     out << "}\n";
     m_content = out.str();
 	}
 
-  std::string& ExVsLightShader::getUniformParams()
+  std::string& ExVsLightShader::getUniformParams(ExMaterial* mat)
   {
     std::stringstream out;
     out << "\t\t\tvertex_program_ref " << m_name << "\n";
@@ -450,8 +435,6 @@ namespace EasyOgreExporter
     out << "\t\tparam_named_auto wMat world_matrix\n";
     out << "\t\tparam_named_auto wvpMat worldviewproj_matrix\n";
     out << "\t\tparam_named_auto spotlightDir light_direction_object_space 0\n";
-    if(bRef)
-      out << "\t\tparam_named_auto eyePositionW camera_position\n";
 
     out << "\t}\n";
     out << "}\n";
@@ -505,8 +488,6 @@ namespace EasyOgreExporter
 
     out << "\tfloat3 spDir : TEXCOORD" << texCoord++ << ",\n";
     out << "\tfloat4 wp : TEXCOORD" << texCoord++ << ",\n";
-    if(bRef)
-      out << "\tfloat3 texProj : TEXCOORD" << texCoord++ << ",\n";
 
     for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
     {
@@ -527,7 +508,11 @@ namespace EasyOgreExporter
       out << ",\n\tuniform float4x4 iTWMat";
     
     if(bRef)
+    {
       out << ",\n\tuniform float reflectivity";
+      out << ",\n\tuniform float fresnelMul";
+      out << ",\n\tuniform float fresnelPow";
+    }
 
     int samplerId = 0;
     int diffUv = 0;
@@ -607,9 +592,6 @@ namespace EasyOgreExporter
     
     if(bSpecular)
       out << "\tfloat4 specTex = tex2D(specMap, uv" << specUv << ");\n";
-    
-    if(bRef)
-      out << "\tfloat4 reflecTex = texCUBE(reflectMap, texProj);\n";
 
     if(bDiffuse)
       out << "\tfloat3 diffuseContrib = (diffuse * lightDif0 * diffuseTex.rgb * matDif.rgb);\n";
@@ -623,25 +605,43 @@ namespace EasyOgreExporter
 
     out << "\tfloat3 light0C = (diffuseContrib + specularContrib) * la * spot;\n";
     
+    out << "\tfloat alpha = matDif.a;\n";
+    if(mat->m_hasDiffuseMap)
+      out << "\talpha *= diffuseTex.a;\n";
+
     if(bRef)
     {
-      out << "\tfloat3 reflectColor = (reflecTex.rgb * diffuseContrib * reflectivity) + (reflecTex.rbg * specularContrib * reflectivity);\n";
-      out << "\treturn float4(light0C + reflectColor, " << (mat->m_hasDiffuseMap ? "diffuseTex.a" : "1.0") <<");\n";
+      out << "\tfloat3 refVec = -reflect(camDir, normal * 2);\n";
+      out << "\trefVec.z = -refVec.z;\n";
+      out << "\tfloat4 reflecTex = reflectivity * texCUBE(reflectMap, refVec);\n";
+      out << "\tfloat fresnel = fresnelMul * pow(1 + dot(-camDir, norm), fresnelPow);\n";
+      out << "\tfloat4 reflecVal = reflecTex * fresnel;\n";
+
+      out << "\tfloat3 reflectColor = (reflecVal.rgb * diffuseContrib) + (reflecVal.rbg * specularContrib);\n";
+      out << "\treturn float4(light0C + reflectColor, alpha);\n";
     }
     else
     {
-      out << "\treturn float4(light0C, " << (mat->m_hasDiffuseMap ? "diffuseTex.a" : "1.0") <<");\n";
+      out << "\treturn float4(light0C, alpha);\n";
     }
 
     out << "}\n";
     m_content = out.str();
 	}
 
-  std::string& ExFpLightShader::getUniformParams()
+  std::string& ExFpLightShader::getUniformParams(ExMaterial* mat)
   {
     std::stringstream out;
     out << "\t\t\tfragment_program_ref " << m_name << "\n";
 		out << "\t\t\t{\n";
+    
+    if(bRef)
+    {
+      out << "\t\t\t\tparam_named reflectivity float " << mat->m_reflectivity << "\n";
+      out << "\t\t\t\tparam_named fresnelMul float 8\n";
+      out << "\t\t\t\tparam_named fresnelPow float 1.8\n";
+    }
+
 		out << "\t\t\t}\n";
     m_params = out.str();
     return m_params;
@@ -673,7 +673,11 @@ namespace EasyOgreExporter
       out << "\t\tparam_named_auto iTWMat inverse_transpose_world_matrix\n";
 
     if(bRef)
-      out << "\t\tparam_named reflectivity float 0\n";
+    {
+      out << "\t\tparam_named reflectivity float 1.0\n";
+      out << "\t\tparam_named fresnelMul float 8\n";
+      out << "\t\tparam_named fresnelPow float 1.8\n";
+    }
 
     out << "\t}\n";
     out << "}\n";
