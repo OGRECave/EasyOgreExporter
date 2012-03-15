@@ -117,6 +117,7 @@ namespace EasyOgreExporter
     m_isWire = false;
     m_hasAlpha = false;
     m_hasAmbientMap = false;
+    m_ambientLocked = false;
     m_hasDiffuseMap = false;
     m_hasSpecularMap = false;
     m_hasReflectionMap = false;
@@ -323,7 +324,7 @@ namespace EasyOgreExporter
 
   void ExMaterial::loadTextureUV(IGameTextureMap* pGameTexture, Texture &tex)
   {
-    if(!pGameTexture)
+    if(!pGameTexture || !pGameTexture->IsEntitySupported())
       return;
 
     IGameUVGen* pUVGen = pGameTexture->GetIGameUVGen();
@@ -568,7 +569,7 @@ namespace EasyOgreExporter
       m_specular.x = specular.x;
       m_specular.y = specular.y;
 		  m_specular.z = specular.z;
-		  m_specular.w = m_opacity;
+		  m_specular.w = 1.0;
     }
 
     float diffAmount = 1.0f;
@@ -648,7 +649,7 @@ namespace EasyOgreExporter
       m_specular.x = 1.0f * (reflectance / 2.5f);
       m_specular.y = 1.0f * (reflectance / 2.5f);
 		  m_specular.z = 1.0f * (reflectance / 2.5f);
-		  m_specular.w = m_opacity;
+		  m_specular.w = 1.0;
     }
     
     float diffAmount = 1.0f;
@@ -677,6 +678,7 @@ namespace EasyOgreExporter
     if(m_opacity < 1.0f)
       m_isTransparent = true;
 
+    m_ambientLocked = smat->GetAmbDiffTexLock() ? true : false;
     m_isTwoSided = smat->GetTwoSided() ? true : false;
     m_isWire = smat->GetWire() ? true : false;
     if(smat->IsFaceted())
@@ -833,7 +835,7 @@ namespace EasyOgreExporter
 			  case ID_AM:
           {
 				    EasyOgreExporterLog("Ambient channel texture.\n");
-            if(smat->GetAmbDiffTexLock())
+            if(m_ambientLocked)
             {
               EasyOgreExporterLog("Ambient channel locked, we use the diffuse texture instead.\n");
               tex.bCreateTextureUnit = false;
@@ -932,7 +934,7 @@ namespace EasyOgreExporter
 			  case ID_DP:
 				  EasyOgreExporterLog("Displacement channel texture.\n");
 				  tex.type = ID_DP;
-          break; 
+          break;
 			  }
         
         //get the texture multiplier
@@ -1036,7 +1038,7 @@ namespace EasyOgreExporter
 					m_specular.x = color3.x;
 					m_specular.y = color3.y;
 					m_specular.z = color3.z;
-					m_specular.w = m_opacity; 
+					m_specular.w = 1.0; 
 			}
 		}
     else
@@ -1163,7 +1165,7 @@ namespace EasyOgreExporter
 		
     //ambient colour
 		// Format: ambient (<red> <green> <blue> [<alpha>]| vertexcolour)
-    if(m_hasAmbientMap && lod == 0)
+    if((m_hasAmbientMap || (m_hasDiffuseMap && m_ambientLocked)) && (lod <= 0))
     {
       m_ambient.x = 1.0f;
       m_ambient.y = 1.0f;
@@ -1173,7 +1175,7 @@ namespace EasyOgreExporter
 		
     //diffuse colour
 		//Format: diffuse (<red> <green> <blue> [<alpha>]| vertexcolour)
-    if(m_hasDiffuseMap && lod < 2)
+    if(m_hasDiffuseMap && (lod < 2))
     {
       m_diffuse.x = 1.0f;
       m_diffuse.y = 1.0f;
@@ -1182,7 +1184,7 @@ namespace EasyOgreExporter
 		outMaterial << "\t\t\tdiffuse " << m_diffuse.x << " " << m_diffuse.y << " " << m_diffuse.z << " " << m_diffuse.w << "\n";
 		
     //specular colour and shininess
-    if(m_hasSpecularMap && lod == 0)
+    if(m_hasSpecularMap && (lod <= 0))
     {
       m_specular.x = 1.0f;
       m_specular.y = 1.0f;
@@ -1256,6 +1258,10 @@ namespace EasyOgreExporter
 				  
           //write texture coordinate index
 				  outMaterial << "\t\t\t\ttex_coord_set " << m_textures[i].uvsetIndex << "\n";
+
+          // better texture quality
+          if((mode == 2) && ((m_textures[i].type == ID_DI) || (m_textures[i].type == ID_BU)))
+            outMaterial << "\t\t\t\tmipmap_bias -3\n";
 
           //use anisotropic as default for better textures quality
           //outMaterial << "\t\t\t\tfiltering anisotropic\n";

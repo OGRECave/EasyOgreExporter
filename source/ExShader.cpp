@@ -325,7 +325,7 @@ namespace EasyOgreExporter
       out << "\tfloat3 refVec = -reflect(camDir, normal);\n";
       out << "\trefVec.z = -refVec.z;\n";
       out << "\tfloat4 reflecTex = texCUBE(reflectMap, refVec);\n";
-      out << "\tfloat fresnel = (fresnelMul * reflectivity) * pow(1 + dot(-camDir, norm), fresnelPow / (reflectivity * fresnelPow));\n";
+      out << "\tfloat fresnel = fresnelMul * reflectivity * pow(1 + dot(-camDir, normal), fresnelPow - (reflectivity * fresnelPow));\n";
       out << "\tfloat4 reflecVal = reflecTex * fresnel;\n";
       out << "\tretColor += retColor * reflecVal;\n";
     }
@@ -343,7 +343,11 @@ namespace EasyOgreExporter
 		out << "\t\t\t{\n";
 
     if(bRef)
+    {
       out << "\t\t\t\tparam_named reflectivity float " << mat->m_reflectivity << "\n";
+      out << "\t\t\t\tparam_named fresnelMul float 1.0\n";
+      out << "\t\t\t\tparam_named fresnelPow float 1.8\n";
+    }
 
 		out << "\t\t\t}\n";
     m_params = out.str();
@@ -369,8 +373,8 @@ namespace EasyOgreExporter
     {
       out << "\t\tparam_named_auto camPos camera_position\n";
       out << "\t\tparam_named reflectivity float 1.0\n";
-      out << "\t\t\t\tparam_named fresnelMul float 8\n";
-      out << "\t\t\t\tparam_named fresnelPow float 1.8\n";
+      out << "\t\tparam_named fresnelMul float 1.0\n";
+      out << "\t\tparam_named fresnelPow float 1.8\n";
     }
 
     out << "\t}\n";
@@ -633,10 +637,11 @@ namespace EasyOgreExporter
     if(bNormal)
     {
       out << "\tfloat3 normalTex = tex2D(normalMap, uv" << normUv << ");\n";
+      out << "\ttangent *= normalMul;\n";
+      out << "\tbinormal *= normalMul;\n";
       out << "\tfloat3x3 tbn = float3x3(tangent, binormal, norm);\n";
       out << "\tfloat3 normal = mul(transpose(tbn), (normalTex.xyz -0.5) * 2); // to object space\n";
       out << "\tnormal = normalize(mul((float3x3)iTWMat, normal));\n";
-      out << "\tnormal.z *= 1 / (1 + normalMul);\n";
     }
     else
     {
@@ -680,7 +685,7 @@ namespace EasyOgreExporter
       out << "\tfloat3 refVec = -reflect(camDir, normal);\n";
       out << "\trefVec.z = -refVec.z;\n";
       out << "\tfloat4 reflecTex = texCUBE(reflectMap, refVec);\n";
-      out << "\tfloat fresnel = (fresnelMul * reflectivity) * pow(1 + dot(-camDir, norm), fresnelPow / (reflectivity * fresnelPow));\n";
+      out << "\tfloat fresnel = fresnelMul * reflectivity * pow(1 + dot(-camDir, normal), fresnelPow - (reflectivity * fresnelPow));\n";
       out << "\tfloat4 reflecVal = reflecTex * fresnel;\n";
 
       out << "\tfloat3 reflectColor = (reflecVal.rgb * diffuseContrib) + (reflecVal.rbg * specularContrib);\n";
@@ -709,7 +714,7 @@ namespace EasyOgreExporter
     if(bRef)
     {
       out << "\t\t\t\tparam_named reflectivity float " << mat->m_reflectivity << "\n";
-      out << "\t\t\t\tparam_named fresnelMul float 8\n";
+      out << "\t\t\t\tparam_named fresnelMul float 1.0\n";
       out << "\t\t\t\tparam_named fresnelPow float 1.8\n";
     }
 
@@ -749,7 +754,7 @@ namespace EasyOgreExporter
     if(bRef)
     {
       out << "\t\tparam_named reflectivity float 1.0\n";
-      out << "\t\tparam_named fresnelMul float 8\n";
+      out << "\t\tparam_named fresnelMul float 1.0\n";
       out << "\t\tparam_named fresnelPow float 1.8\n";
     }
 

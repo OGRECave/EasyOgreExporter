@@ -12,7 +12,7 @@
 Ogre wiki page : http://www.ogre3d.org/tikiwiki/Easy+Ogre+Exporter
 Ogre forum thread : http://www.ogre3d.org/forums/viewtopic.php?f=8&t=68688
 
-#Version 0.9 : March 13, 2012
+#Version 0.93 : March 15, 2012
 
  - Ogre Scene file
  - meshs
@@ -20,7 +20,7 @@ Ogre forum thread : http://www.ogre3d.org/forums/viewtopic.php?f=8&t=68688
   - converted from the max standard materials, with colors, textures, multi uv and transparency
   - converted from the Architecture materials, with colors, diffuse texture, multi uv and transparency
   - converted from the Mentalray Archi / Design materials, with colors, diffuse texture, multi uv and transparency
-  - Automatic Shader creation for pixel lighting and normal / specular maps
+  - Automatic Shader creation for pixel lighting and normal / specular maps with a standard technique for non supported hardware
  - biped skeletons
  - skeletons animation from the main track or from the biped mixer clips if available
  - Nodes animations included in the Ogre Scene file (from the main animation track)

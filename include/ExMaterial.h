@@ -98,6 +98,7 @@ namespace EasyOgreExporter
     bool m_hasAlpha;
     bool m_hasDiffuseMap;
     bool m_hasAmbientMap;
+    bool m_ambientLocked;
     bool m_hasSpecularMap;
     bool m_hasReflectionMap;
     bool m_hasBumpMap;
