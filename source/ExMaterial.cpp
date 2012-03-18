@@ -122,6 +122,7 @@ namespace EasyOgreExporter
     m_hasSpecularMap = false;
     m_hasReflectionMap = false;
     m_hasBumpMap = false;
+    texUnitId = 0;
 		m_textures.clear();
 	}
 
@@ -222,7 +223,7 @@ namespace EasyOgreExporter
               break;
 
               case ID_SI:
-                out << "LM";
+                out << "EMI";
                 out << m_textures[i].uvsetIndex;
               break;
 
@@ -825,11 +826,13 @@ namespace EasyOgreExporter
         }
 
         Texture tex;
-			  tex.absFilename = textureName.GetCStr();
+			  int texSlot = pGameTexture->GetStdMapSlot();
+        tex.absFilename = textureName.GetCStr();
 			  std::string filename = textureName.StripToLeaf().GetCStr();
 			  tex.filename = optimizeFileName(filename);
-        
-			  int texSlot = pGameTexture->GetStdMapSlot();
+        //get the texture multiplier
+        tex.fAmount = smat->GetTexmapAmt(texSlot, 0);
+
 			  switch(texSlot)
 			  {
 			  case ID_AM:
@@ -843,21 +846,21 @@ namespace EasyOgreExporter
             else
             {
               tex.bCreateTextureUnit = bFoundTexture;
-              m_hasAmbientMap = true;
-              
               if(bFoundTexture)
               {
-                BMMRES status;
+                BMMRES status; 
                 BitmapInfo bi(tex.absFilename.c_str());
                 Bitmap* bitmap = TheManager->Create(&bi); 
                 bitmap = TheManager->Load(&bi, &status); 
                 if (status == BMMRES_SUCCESS) 
-                  if(bitmap->HasAlpha())
-                    m_hasAlpha = true;
+                  tex.bHasAlphaChannel = bitmap->HasAlpha();
 
                 TheManager->DelBitmap(bitmap);
               }
+
+              m_hasAmbientMap = true;
             }
+
             tex.type = ID_AM;
           }
 				  break;
@@ -874,11 +877,14 @@ namespace EasyOgreExporter
               Bitmap* bitmap = TheManager->Create(&bi); 
               bitmap = TheManager->Load(&bi, &status); 
               if (status == BMMRES_SUCCESS) 
-                if(bitmap->HasAlpha())
-                  m_hasAlpha = true;
+                tex.bHasAlphaChannel = bitmap->HasAlpha();
+
+              m_hasAlpha = tex.bHasAlphaChannel;
 
               TheManager->DelBitmap(bitmap);
             }
+            
+            tex.fAmount *= m_opacity;
             tex.type = ID_DI;
           }
 				  break;
@@ -937,8 +943,6 @@ namespace EasyOgreExporter
           break;
 			  }
         
-        //get the texture multiplier
-        tex.fAmount = smat->GetTexmapAmt(texSlot, 0) * m_opacity;
 			  tex.uvsetName = pGameTexture->GetTextureName();
         tex.uvsetIndex = pGameTexture->GetMapChannel() - 1;
         
@@ -1098,19 +1102,20 @@ namespace EasyOgreExporter
   void ExMaterial::writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader)
   {
 		//Start technique description
-		outMaterial << "\ttechnique\n";
+		outMaterial << "\ttechnique ";
+    outMaterial << m_name << "_technique" << "\n";
 		outMaterial << "\t{\n";
     if(lod != -1)
       outMaterial << "\t\tlod_index "<< lod <<"\n";
     
     if(vsAmbShader && fpAmbShader)
     {
-      writeMaterialPass(params, outMaterial, lod, 1, vsAmbShader, fpAmbShader);
-      writeMaterialPass(params, outMaterial, lod, 2, vsLightShader, fpLightShader);
+      writeMaterialPass(params, outMaterial, lod, vsAmbShader, fpAmbShader, ExShader::SP_AMBIENT);
+      writeMaterialPass(params, outMaterial, lod, vsLightShader, fpLightShader, ExShader::SP_LIGHT);
     }
     else
     {
-      writeMaterialPass(params, outMaterial, lod, 0, vsLightShader, fpLightShader);
+      writeMaterialPass(params, outMaterial, lod, vsLightShader, fpLightShader, ExShader::SP_NONE);
     }
 
 		//End technique description
@@ -1120,23 +1125,34 @@ namespace EasyOgreExporter
     if(vsAmbShader || fpAmbShader || vsLightShader || fpLightShader)
     {
       //Start technique description
-	    outMaterial << "\ttechnique\n";
+	    outMaterial << "\ttechnique ";
+      outMaterial << m_name << "_basic_technique" << "\n";
 	    outMaterial << "\t{\n";
       if(lod != -1)
         outMaterial << "\t\tlod_index "<< lod <<"\n";
       
       outMaterial << "\tscheme basic_mat\n";
-      writeMaterialPass(params, outMaterial, lod, 3, 0, 0);
+      writeMaterialPass(params, outMaterial, lod, 0, 0, ExShader::SP_NOSUPPORT);
 
 	    //End technique description
 	    outMaterial << "\t}\n";
     }
   }
 
-  void ExMaterial::writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod, int mode, ExShader* vsShader, ExShader* fpShader)
+  void ExMaterial::writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsShader, ExShader* fpShader, ExShader::ShaderPass pass)
   {
 		//Start render pass description
-		outMaterial << "\t\tpass\n";
+		outMaterial << "\t\tpass ";
+    outMaterial << m_name << "_";
+    if(pass == ExShader::SP_AMBIENT)
+      outMaterial << "Ambient\n";
+    else if(pass == ExShader::SP_LIGHT)
+      outMaterial << "Light\n";
+    else if(pass == ExShader::SP_DECAL)
+      outMaterial << "Decal\n";
+    else
+      outMaterial << "standard\n";
+
 		outMaterial << "\t\t{\n";
 		//set lighting off option if requested
 		if (m_lightingOff)
@@ -1195,17 +1211,22 @@ namespace EasyOgreExporter
     //emissive colour
 		outMaterial << "\t\t\temissive " << m_emissive.x << " " << m_emissive.y << " " << m_emissive.z << " " << m_emissive.w << "\n";
     
-    if(mode == 1)
+    if(pass == ExShader::SP_AMBIENT)
       outMaterial << "\n\t\t\tillumination_stage ambient\n";
-    else if(mode == 2)
+    else if(pass == ExShader::SP_LIGHT)
     {
-      outMaterial << "\n\t\t\tscene_blend add\n";
+      if(m_hasAlpha)
+        outMaterial << "\n\t\t\tseparate_scene_blend add modulate\n";
+      else
+        outMaterial << "\n\t\t\tscene_blend add\n";
+
 			outMaterial << "\n\t\t\titeration once_per_light\n";
 			outMaterial << "\n\t\t\tillumination_stage per_light\n";
+      outMaterial << "\t\t\tdepth_write off\n";
     }
 
     //if material is transparent set blend mode and turn off depth_writing
-		if (m_isTransparent && (mode != 2))
+    if (m_isTransparent && ((pass == ExShader::SP_AMBIENT) || (pass == ExShader::SP_NONE) || (pass == ExShader::SP_NOSUPPORT)))
 		{
 			outMaterial << "\n\t\t\tscene_blend alpha_blend\n";
 			outMaterial << "\t\t\tdepth_write off\n";
@@ -1233,19 +1254,44 @@ namespace EasyOgreExporter
             continue;
           
           //do not use other textures for ambient pass
-          if((mode == 1) && ((m_textures[i].type != ID_AM) && (m_textures[i].type != ID_DI) && (m_textures[i].type != ID_SI) && (m_textures[i].type != ID_RL)))
+          if((pass == ExShader::SP_AMBIENT) && ((m_textures[i].type != ID_AM) && (m_textures[i].type != ID_DI) && (m_textures[i].type != ID_SI) && (m_textures[i].type != ID_RL)))
             continue;
 
           // do not use this textures for light pass
-          if((mode == 2) && ((m_textures[i].type == ID_AM) || (m_textures[i].type == ID_SI)))
+          if((pass == ExShader::SP_LIGHT) && (m_textures[i].type == ID_SI))
             continue;
 
           // don't export normal and specular maps for non supported technique
-          if((mode == 3) && ((m_textures[i].type == ID_BU) || (m_textures[i].type == ID_SP)))
+          if((pass == ExShader::SP_NOSUPPORT) && ((m_textures[i].type == ID_BU) || (m_textures[i].type == ID_SP)))
             continue;
 
 				  //start texture unit description
-				  outMaterial << "\n\t\t\ttexture_unit\n";
+          outMaterial << "\n\t\t\ttexture_unit ";
+          outMaterial << m_name << "_";
+          switch (m_textures[i].type)
+				  {
+          case ID_AM:
+					  outMaterial << "Ambient";
+					  break;
+				  case ID_DI:
+					  outMaterial << "Diffuse";
+					  break;
+				  case ID_BU:
+					  outMaterial << "Normal";
+					  break;
+				  case ID_SP:
+					  outMaterial << "Specular";
+					  break;
+          case ID_RL:
+					  outMaterial << "Reflect";
+					  break;
+          case ID_SI:
+					  outMaterial << "Self-Illumination";
+					  break;
+          default:
+            outMaterial << "Unknown";
+				  }
+          outMaterial << "#" << (texUnitId++) << "\n";
 				  outMaterial << "\t\t\t{\n";
 				  
           //write texture name
@@ -1260,8 +1306,8 @@ namespace EasyOgreExporter
 				  outMaterial << "\t\t\t\ttex_coord_set " << m_textures[i].uvsetIndex << "\n";
 
           // better texture quality
-          if((mode == 2) && ((m_textures[i].type == ID_DI) || (m_textures[i].type == ID_BU)))
-            outMaterial << "\t\t\t\tmipmap_bias -3\n";
+          if(((pass != ExShader::SP_NONE) && (pass != ExShader::SP_NOSUPPORT)) && ((m_textures[i].type == ID_DI) || (m_textures[i].type == ID_BU)))
+            outMaterial << "\t\t\t\tmipmap_bias -1\n";
 
           //use anisotropic as default for better textures quality
           //outMaterial << "\t\t\t\tfiltering anisotropic\n";
@@ -1272,9 +1318,13 @@ namespace EasyOgreExporter
           }
           else
           {
-            outMaterial << "\t\t\t\tcolour_op_ex blend_manual src_texture src_current " << (((mode == 3) && (m_textures[i].type == ID_RL)) ? m_textures[i].fAmount / 3.0f : m_textures[i].fAmount) << "\n";
+            outMaterial << "\t\t\t\tcolour_op_ex blend_manual src_texture src_current " << (((pass == ExShader::SP_NOSUPPORT) && (m_textures[i].type == ID_RL)) ? m_textures[i].fAmount / 3.0f : m_textures[i].fAmount) << "\n";
             outMaterial << "\t\t\t\tcolour_op_multipass_fallback one zero\n";
           }
+
+          //remove alpha from ambient (common ligth map)
+          if((m_textures[i].type == ID_AM) && (m_textures[i].bHasAlphaChannel))
+            outMaterial << "\t\t\t\talpha_op_ex source2 src_manual src_current 1\n";
 
           //write colour operation
 				  /*

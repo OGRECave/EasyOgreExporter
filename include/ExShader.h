@@ -37,9 +37,23 @@ namespace EasyOgreExporter
 			  // lighting pixel shader
 			  ST_FPLIGHT
 		  };
+
+      enum ShaderPass
+		  {
+			  SP_NONE,
+			  // ambient pass
+			  SP_AMBIENT,
+			  // lighting pass
+			  SP_LIGHT,
+			  // decal pass
+			  SP_DECAL,
+        // non supported
+        SP_NOSUPPORT
+		  };
     protected:
       bool bRef;
       bool bNormal;
+      bool bAmbient;
       bool bDiffuse;
       bool bSpecular;
       ShaderType m_type;

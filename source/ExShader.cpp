@@ -201,7 +201,7 @@ namespace EasyOgreExporter
     bNormal = mat->m_hasBumpMap;
     bDiffuse = mat->m_hasDiffuseMap;
     bSpecular = mat->m_hasSpecularMap;
-    bool bAmbient = false;
+    bAmbient = mat->m_hasAmbientMap;
     bool bIllum = false;
 
     std::vector<int> texUnits;
@@ -212,7 +212,6 @@ namespace EasyOgreExporter
         switch (mat->m_textures[i].type)
         {
           case ID_AM:
-            bAmbient = true;
             texUnits.push_back(mat->m_textures[i].uvsetIndex);
           break;
 
@@ -248,7 +247,8 @@ namespace EasyOgreExporter
     }
 
     out << "\tuniform float3 ambient,\n";
-    out << "\tuniform float4 matAmb";
+    out << "\tuniform float4 matAmb,\n";
+    out << "\tuniform float4 matEmissive";
 
     if(bRef)
     {
@@ -307,16 +307,16 @@ namespace EasyOgreExporter
     if(bIllum)
       out << "\tfloat4 illTex = tex2D(illMap, uv" << illUv << ");\n";
     
-    out << "\tfloat4 retColor = float4(ambient, 1) * matAmb;\n";
+    out << "\tfloat4 retColor = max(matEmissive, float4(ambient, 1) * matAmb);\n";
     
     if(bAmbient)
-      out << "\tretColor *= ambTex;\n";
+      out << "\tretColor *= float4(ambTex.rgb, 1.0);\n";
 
     if(bDiffuse)
       out << "\tretColor *= diffuseTex;\n";
 
     if(bIllum)
-      out << "\tretColor *= illTex;\n";
+      out << "\tretColor = max(retColor, illTex);\n";
 
     if(bRef)
     {
@@ -327,7 +327,7 @@ namespace EasyOgreExporter
       out << "\tfloat4 reflecTex = texCUBE(reflectMap, refVec);\n";
       out << "\tfloat fresnel = fresnelMul * reflectivity * pow(1 + dot(-camDir, normal), fresnelPow - (reflectivity * fresnelPow));\n";
       out << "\tfloat4 reflecVal = reflecTex * fresnel;\n";
-      out << "\tretColor += retColor * reflecVal;\n";
+      out << "\tretColor += float4(ambient, 1) * matAmb * reflecVal;\n";
     }
 
     out << "\treturn retColor;\n";
@@ -368,6 +368,7 @@ namespace EasyOgreExporter
     out << "\t{\n";
     out << "\t\tparam_named_auto ambient ambient_light_colour\n";
     out << "\t\tparam_named_auto matAmb surface_ambient_colour\n";
+    out << "\t\tparam_named_auto matEmissive surface_emissive_colour\n";
     
     if(bRef)
     {
@@ -527,6 +528,7 @@ namespace EasyOgreExporter
     bNormal = mat->m_hasBumpMap;
     bDiffuse = mat->m_hasDiffuseMap;
     bSpecular = mat->m_hasSpecularMap;
+    bAmbient = mat->m_hasAmbientMap;
 
     std::vector<int> texUnits;
     for (int i = 0; i < mat->m_textures.size(); i++)
@@ -584,6 +586,7 @@ namespace EasyOgreExporter
     }
 
     int samplerId = 0;
+    int ambUv = 0;
     int diffUv = 0;
     int specUv = 0;
     int normUv = 0;
@@ -594,7 +597,11 @@ namespace EasyOgreExporter
 	    {
         switch (mat->m_textures[i].type)
         {
+          //could be a light map
           case ID_AM:
+            out << ",\n\tuniform sampler2D ambMap : register(s" << samplerId << ")";
+            ambUv = mat->m_textures[i].uvsetIndex;
+            samplerId++;
           break;
 
           case ID_DI:
@@ -628,11 +635,15 @@ namespace EasyOgreExporter
 
     // direction
     out << "\tfloat3 ld0 = normalize(lightPos0.xyz - (lightPos0.w * wp.xyz));\n";
-
-    out << "\thalf lightDist = length(lightPos0.xyz - wp.xyz) / lightAtt0.r;\n";
+    
     out << "\t// attenuation\n";
-    out << "\thalf ila = lightDist * lightDist; // quadratic falloff\n";
-    out << "\thalf la = 1.0 - ila;\n";
+    out << "\thalf lightDist = length(lightPos0.xyz - wp.xyz) / lightAtt0.r;\n";
+    out << "\thalf la = 1;\n";
+    out << "\tif(lightAtt0.a > 0.0)\n";
+    out << "\t{\n";
+    out << "\t\thalf ila = lightDist * lightDist; // quadratic falloff\n";
+    out << "\t\tla = 1.0 / (lightAtt0.g + lightAtt0.b * lightDist + lightAtt0.a * ila);\n";
+    out << "\t}\n";
 
     if(bNormal)
     {
@@ -658,21 +669,30 @@ namespace EasyOgreExporter
     out << "\tfloat3 halfVec = normalize(ld0 + camDir);\n";
     out << "\tfloat3 specular = pow(max(dot(normal, halfVec), 0), matShininess);\n";
 
+    if(bAmbient)
+      out << "\tfloat4 ambTex = tex2D(ambMap, uv" << ambUv << ");\n";
+
     if(bDiffuse)
       out << "\tfloat4 diffuseTex = tex2D(diffuseMap, uv" << diffUv << ");\n";
     
     if(bSpecular)
       out << "\tfloat4 specTex = tex2D(specMap, uv" << specUv << ");\n";
 
+    out << "\tfloat3 diffuseContrib = diffuse * lightDif0 * matDif.rgb;\n";
+    
+    if(bAmbient)
+      out << "\tdiffuseContrib *= ambTex.rgb;\n";
+
     if(bDiffuse)
-      out << "\tfloat3 diffuseContrib = (diffuse * lightDif0 * diffuseTex.rgb * matDif.rgb);\n";
-    else
-      out << "\tfloat3 diffuseContrib = (diffuse * lightDif0 * matDif.rgb);\n";
+      out << "\tdiffuseContrib *= diffuseTex.rgb;\n";
+
+    out << "\tfloat3 specularContrib = specular * lightSpec0 * matSpec.rgb;\n";
 
     if(bSpecular)
-      out << "\tfloat3 specularContrib = (specular * lightSpec0 * specTex.rgb * matSpec.rgb);\n";
-    else
-      out << "\tfloat3 specularContrib = (specular * lightSpec0 * matSpec.rgb);\n";
+      out << "\tspecularContrib *= specTex.rgb;\n";
+
+    if(bAmbient)
+      out << "\tspecularContrib *= ambTex.rgb;\n";
 
     out << "\tfloat3 light0C = (diffuseContrib + specularContrib) * la * spot;\n";
     

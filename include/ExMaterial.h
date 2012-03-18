@@ -56,6 +56,7 @@ namespace EasyOgreExporter
 			// be summed into the diffuse channel and need
 			bCreateTextureUnit = false;
       bReflect = false;
+      bHasAlphaChannel = false;
       fAmount = 1.0;
 		}
 		//destructor
@@ -69,6 +70,7 @@ namespace EasyOgreExporter
 		int uvsetIndex;
 		bool bCreateTextureUnit;
     bool bReflect;
+    bool bHasAlphaChannel;
     float fAmount;
 		TexAddressMode am_u, am_v;
 		double scale_u, scale_v;
@@ -104,6 +106,7 @@ namespace EasyOgreExporter
     bool m_hasBumpMap;
 		std::vector<Texture> m_textures;
   private:
+    unsigned int texUnitId;
   protected:
 
   public:
@@ -136,7 +139,7 @@ namespace EasyOgreExporter
     void loadArchAndDesignMaterial(IGameMaterial* pGameMaterial);
     void loadStandardMaterial(IGameMaterial* pGameMaterial);
     void writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader);
-    void writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod, int amb, ExShader* vsShader, ExShader* fpShader);
+    void writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsShader, ExShader* fpShader, ExShader::ShaderPass pass);
 		bool exportColor(Point4& color, IGameProperty* pGameProperty);
     bool exportSpecular(IGameMaterial* pGameMaterial);
     std::string getMaterialName(std::string prefix);
