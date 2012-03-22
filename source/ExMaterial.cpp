@@ -138,29 +138,20 @@ namespace EasyOgreExporter
 
     //read material name, adding the requested prefix
 		std::string tmpStr = prefix;
-		if (tmpStr != "")
-			tmpStr += "/";
-
     std::string maxmat = m_GameMaterial->GetMaterialName();
     trim(maxmat);
     tmpStr.append(maxmat);
 
-		for(size_t i = 0; i < tmpStr.size(); ++i)
-		{
-			if(tmpStr[i] == ':')
-				newMatName.append("_");
-			else
-				newMatName.append(tmpStr.substr(i, 1));
-		}
-
+    newMatName = optimizeResourceName(tmpStr);
     return newMatName;
   }
 
-  std::string ExMaterial::getShaderName(ExShader::ShaderType type)
+  std::string ExMaterial::getShaderName(ExShader::ShaderType type, std::string prefix)
   {
     std::string sname;
     std::stringstream out;
-
+    
+    out << prefix;
     switch (type)
     {
       case ExShader::ST_VSAM :
@@ -319,7 +310,7 @@ namespace EasyOgreExporter
       }
     }
 
-    sname = out.str();
+    sname = optimizeResourceName(out.str());
     return sname;
   }
 
@@ -1295,7 +1286,11 @@ namespace EasyOgreExporter
 				  outMaterial << "\t\t\t{\n";
 				  
           //write texture name
-          outMaterial << "\t\t\t\ttexture " << m_textures[i].filename.c_str();
+          std::string texName = params.resPrefix;
+          texName.append(m_textures[i].filename);
+          texName = optimizeFileName(texName);
+          outMaterial << "\t\t\t\ttexture " << texName.c_str();
+
           std::string texExt = m_textures[i].filename.substr(m_textures[i].filename.find_last_of(".") + 1);
 				  if((m_textures[i].type == ID_RL) && (texExt == "dds" || texExt == "DDS"))
             outMaterial << " cubic\n";
@@ -1372,7 +1367,11 @@ namespace EasyOgreExporter
 	{
 		for (int i=0; i<m_textures.size(); i++)
 		{
-      std::string destFile = makeOutputPath(params.outputDir, params.texOutputDir, m_textures[i].filename, "");
+      std::string texName = params.resPrefix;
+      texName.append(m_textures[i].filename);
+      texName = optimizeFileName(texName);
+
+      std::string destFile = makeOutputPath(params.outputDir, params.texOutputDir, texName, "");
 
 			// Copy file texture to output dir
       if(!CopyFile(m_textures[i].absFilename.c_str(), destFile.c_str(), false))

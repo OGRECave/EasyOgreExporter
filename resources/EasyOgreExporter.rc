@@ -63,8 +63,8 @@ BEGIN
     LTEXT           "Bastien Bourineau @2012",IDC_STATIC,7,305,92,11
     GROUPBOX        "Basic configuration",IDC_SIMPLE,7,7,215,109
     LTEXT           "Ogre version",IDC_OGREV_LABEL,13,19,57,12
-    LTEXT           "Material prefix",IDC_MATPREFIX_LABEL,13,38,57,12
-    EDITTEXT        IDC_MATPREFIX,82,37,100,12,ES_AUTOHSCROLL
+    LTEXT           "Resources prefix",IDC_RESPREFIX_LABEL,13,38,57,12
+    EDITTEXT        IDC_RESPREFIX,82,37,100,12,ES_AUTOHSCROLL
     LTEXT           "Material sub dir",IDC_MATDIR_LABEL,13,54,57,12
     EDITTEXT        IDC_MATDIR,82,53,100,12,ES_AUTOHSCROLL
     LTEXT           "Textures sub dir",IDC_TEXDIR_LABEL,13,70,57,12

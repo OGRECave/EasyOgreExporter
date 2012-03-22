@@ -6,8 +6,8 @@
 #define IDC_OGREVERSION                 1001
 #define IDC_SHADERMODE                  1002
 #define IDC_OGREV_LABEL                 1003
-#define IDC_MATPREFIX_LABEL             1004
-#define IDC_MATPREFIX                   1005
+#define IDC_RESPREFIX_LABEL             1004
+#define IDC_RESPREFIX                   1005
 #define IDC_MATDIR_LABEL                1006
 #define IDC_MATDIR                      1007
 #define IDC_TEXDIR_LABEL                1008
@@ -26,7 +26,6 @@
 #define IDC_STOREPARITY                 1021
 #define IDC_CHECK1                      1022
 #define IDC_GENLOD                      1022
-#define IDC_MESHDIR2                    1023
 #define IDC_PROGDIR                     1023
 
 // Next default values for new objects

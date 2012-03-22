@@ -60,7 +60,7 @@ namespace EasyOgreExporter
   private:
     ExShader* getShader(std::string& name);
     void addShader(ExShader* shader);
-    ExShader* createShader(ExMaterial* mat, ExShader::ShaderType type);
+    ExShader* createShader(ExMaterial* mat, ExShader::ShaderType type, ParamList &params);
 	protected:
 	};
 

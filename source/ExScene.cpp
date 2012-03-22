@@ -374,11 +374,15 @@ namespace EasyOgreExporter
     if(pRenderDistance)
       pRenderDistance->GetPropertyValue(renderDistance);
 
+    std::string meshName = mParams.resPrefix;
+    meshName.append(parent->Attribute("name"));
+    meshName = optimizeResourceName(meshName);
+
 		TiXmlElement* pEntityElement = new TiXmlElement("entity");
-    pEntityElement->SetAttribute("name", parent->Attribute("name"));
+    pEntityElement->SetAttribute("name", meshName.c_str());
 		pEntityElement->SetAttribute("id", id_counter);
 
-    std::string meshPath = std::string(parent->Attribute("name")) + ".mesh";
+    std::string meshPath = optimizeFileName(meshName + ".mesh");
     pEntityElement->SetAttribute("meshFile", meshPath.c_str());
     pEntityElement->SetAttribute("castShadows", getBoolString(pGameMesh->CastShadows()).c_str());
     if(renderDistance != 0.0f)

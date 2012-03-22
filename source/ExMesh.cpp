@@ -505,7 +505,7 @@ namespace EasyOgreExporter
     if (m_pSkeleton && m_params.exportSkeleton)
     {
       EasyOgreExporterLog("Info: Link Ogre skeleton\n");
-      std::string filePath = m_name + ".skeleton";
+      std::string filePath = optimizeFileName(m_name + ".skeleton");
         //makeOutputPath("", params.meshOutputDir, m_name, "skeleton";
       try
       {
@@ -577,7 +577,7 @@ namespace EasyOgreExporter
 
     // Export the binary mesh
     Ogre::MeshSerializer serializer;
-    std::string meshfile = makeOutputPath(m_params.outputDir, m_params.meshOutputDir, m_name, "mesh");
+    std::string meshfile = makeOutputPath(m_params.outputDir, m_params.meshOutputDir, optimizeFileName(m_name), "mesh");
 
     EasyOgreExporterLog("Info: Write mesh file : %s\n", meshfile.c_str());
     try
@@ -1488,7 +1488,7 @@ namespace EasyOgreExporter
     //otherwise create the material
 		if (!pMaterial)
 		{
-      pMaterial = new ExMaterial(pGameMaterial, m_params.matPrefix);
+      pMaterial = new ExMaterial(pGameMaterial, m_params.resPrefix);
 			m_converter->getMaterialSet()->addMaterial(pMaterial);
       pMaterial->load(m_params);
 		}

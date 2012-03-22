@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 0.94f;
+float EXVERSION = 0.95f;
 
 namespace EasyOgreExporter
 {
@@ -65,7 +65,7 @@ namespace EasyOgreExporter
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETCURSEL, (int)exp->meshVersion, 0);
 
         //fill material prefix
-        SendDlgItemMessage(hWnd, IDC_MATPREFIX, WM_SETTEXT, 0, (LPARAM)(char*)exp->matPrefix.c_str());
+        SendDlgItemMessage(hWnd, IDC_RESPREFIX, WM_SETTEXT, 0, (LPARAM)(char*)exp->resPrefix.c_str());
 
         //fill material sub dir
         SendDlgItemMessage(hWnd, IDC_MATDIR, WM_SETTEXT, 0, (LPARAM)(char*)exp->materialOutputDir.c_str());
@@ -99,7 +99,7 @@ namespace EasyOgreExporter
 
 		    //Versioning
 		    TCHAR Title [256];
-        _stprintf(Title, "Easy Ogre Exporter version %.1f", EXVERSION);
+        _stprintf(Title, "Easy Ogre Exporter version %.2f", EXVERSION);
 		    SetWindowText(hWnd, Title);
 		    return TRUE;
 
@@ -134,10 +134,10 @@ namespace EasyOgreExporter
 					    TSTR temp;
               int len = 0;
               
-              len = SendDlgItemMessage(hWnd, IDC_MATPREFIX, WM_GETTEXTLENGTH, 0, 0);
+              len = SendDlgItemMessage(hWnd, IDC_RESPREFIX, WM_GETTEXTLENGTH, 0, 0);
 					    temp.Resize(len+1);
-					    SendDlgItemMessage(hWnd, IDC_MATPREFIX, WM_GETTEXT, len+1, (LPARAM)temp.data());
-              exp->matPrefix = temp;
+					    SendDlgItemMessage(hWnd, IDC_RESPREFIX, WM_GETTEXT, len+1, (LPARAM)temp.data());
+              exp->resPrefix = temp;
 
               len = SendDlgItemMessage(hWnd, IDC_MATDIR, WM_GETTEXTLENGTH, 0, 0);
 					    temp.Resize(len+1);
@@ -317,7 +317,7 @@ int	OgreSceneExporter::DoExport(const TCHAR* name, ExpInterface* pExpInterface, 
   std::string progOutDir = "program";
   std::string partOutDir = "particle";
   std::string sceneFile = scenePath.substr(folderIndex + 1, (sceneIndex - (folderIndex + 1)));
-  std::string matPrefix = sceneFile;
+  std::string resPrefix = sceneFile;
   
   // Setup the paramlist.
   params.outputDir = outDir.c_str();
@@ -325,7 +325,7 @@ int	OgreSceneExporter::DoExport(const TCHAR* name, ExpInterface* pExpInterface, 
   params.meshOutputDir = meshOutDir.c_str();
   params.materialOutputDir = matOutDir.c_str();
   params.programOutputDir = progOutDir.c_str();
-  params.matPrefix = matPrefix.c_str();
+  params.resPrefix = resPrefix.c_str();
   params.sceneFilename = sceneFile.c_str();
   
   int unitType = 0;
@@ -335,6 +335,10 @@ int	OgreSceneExporter::DoExport(const TCHAR* name, ExpInterface* pExpInterface, 
   GetUnitDisplayInfo(&unitsInfo);
   params.lum = ConvertToMeter(unitsInfo.metricDisp, unitType) * unitScale;
 
+  std::string plugConfDir = IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR);
+  std::string xmlConfPath = plugConfDir + "\\EasyOgreExporter\\config.xml";
+  loadExportConf(xmlConfPath, params);
+
   ExData::maxInterface.m_params = params;
 
 	if (!DialogBoxParam(hInstance, MAKEINTRESOURCE(IDD_PANEL), pInterface->GetMAXHWnd(), IGameExporterOptionsDlgProc, (LPARAM)&(ExData::maxInterface.m_params)))
@@ -343,6 +347,109 @@ int	OgreSceneExporter::DoExport(const TCHAR* name, ExpInterface* pExpInterface, 
 	}
 
   return ExData::maxInterface.exportScene();
+}
+
+void OgreSceneExporter::loadExportConf(std::string path, ParamList &param)
+{
+  TiXmlDocument xmlDoc;
+  if(xmlDoc.LoadFile(path.c_str()))
+  {
+    TiXmlElement* rootElem = xmlDoc.RootElement();
+    TiXmlElement* child = rootElem->FirstChildElement("IDC_OGREVERSION");
+    if(child)
+    {
+      if(child->GetText())
+      {
+        switch (atoi(child->GetText()))
+        {
+          case 0:
+            param.meshVersion = TOGRE_1_8;
+            break;
+          case 1:
+            param.meshVersion = TOGRE_1_7;
+            break;
+          case 2:
+            param.meshVersion = TOGRE_1_4;
+            break;
+          case 3:
+            param.meshVersion = TOGRE_1_0;
+            break;
+        }
+      }
+    }
+
+    child = rootElem->FirstChildElement("IDC_RESPREFIX");
+    if(child)
+      param.resPrefix = child->GetText() ? child->GetText() : "";
+
+    child = rootElem->FirstChildElement("IDC_MATDIR");
+    if(child)
+      param.materialOutputDir = child->GetText() ? child->GetText() : "";
+    
+    child = rootElem->FirstChildElement("IDC_TEXDIR");
+    if(child)
+      param.texOutputDir = child->GetText() ? child->GetText() : "";
+
+    child = rootElem->FirstChildElement("IDC_MESHDIR");
+    if(child)
+      param.meshOutputDir = child->GetText() ? child->GetText() : "";
+
+    child = rootElem->FirstChildElement("IDC_PROGDIR");
+    if(child)
+      param.programOutputDir = child->GetText() ? child->GetText() : "";
+
+    child = rootElem->FirstChildElement("IDC_SHAREDGEOM");
+    if(child)
+      param.useSharedGeom = (child->GetText() && (atoi(child->GetText()) == 1)) ? true : false;
+
+    child = rootElem->FirstChildElement("IDC_GENLOD");
+    if(child)
+      param.generateLOD = (child->GetText() && (atoi(child->GetText()) == 1)) ? true : false;
+
+    child = rootElem->FirstChildElement("IDC_EDGELIST");
+    if(child)
+      param.buildEdges = (child->GetText() && (atoi(child->GetText()) == 1)) ? true : false;
+
+    child = rootElem->FirstChildElement("IDC_TANGENT");
+    if(child)
+      param.buildTangents = (child->GetText() && (atoi(child->GetText()) == 1)) ? true : false;
+
+    child = rootElem->FirstChildElement("IDC_SPLITMIRROR");
+    if(child)
+      param.tangentsSplitMirrored = (child->GetText() && (atoi(child->GetText()) == 1)) ? true : false;
+
+    child = rootElem->FirstChildElement("IDC_SPLITROT");
+    if(child)
+      param.tangentsSplitRotated = (child->GetText() && (atoi(child->GetText()) == 1)) ? true : false;
+
+    child = rootElem->FirstChildElement("IDC_STOREPARITY");
+    if(child)
+      param.tangentsUseParity = (child->GetText() && (atoi(child->GetText()) == 1)) ? true : false;
+
+    child = rootElem->FirstChildElement("IDC_RESAMPLE_ANIMS");
+    if(child)
+      param.resampleAnims = (child->GetText() && (atoi(child->GetText()) == 1)) ? true : false;
+
+    child = rootElem->FirstChildElement("IDC_SHADERMODE");
+    if(child)
+    {
+      if(child->GetText())
+      {
+        switch (atoi(child->GetText()))
+        {
+          case 0:
+            param.exportProgram = SHADER_NONE;
+            break;
+          case 1:
+            param.exportProgram = SHADER_BUMP;
+            break;
+          case 2:
+            param.exportProgram = SHADER_ALL;
+            break;
+        }
+      }
+    }
+  }
 }
 
 // Dummy function for progress bar.
@@ -361,6 +468,94 @@ OgreExporter::OgreExporter() :
 
 OgreExporter::~OgreExporter()
 {
+}
+
+void OgreExporter::saveExportConf(std::string path)
+{
+  TiXmlDocument xmlDoc;
+  TiXmlElement* contProperties = new TiXmlElement("Config");
+  xmlDoc.LinkEndChild(contProperties);
+
+  std::stringstream oVersionVal;
+  oVersionVal << m_params.meshVersion;
+  TiXmlElement* child = new TiXmlElement("IDC_OGREVERSION");
+  TiXmlText* childText = new TiXmlText(oVersionVal.str().c_str());
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  child = new TiXmlElement("IDC_RESPREFIX");
+  childText = new TiXmlText(m_params.resPrefix.c_str());
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  child = new TiXmlElement("IDC_MATDIR");
+  childText = new TiXmlText(m_params.materialOutputDir.c_str());
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  child = new TiXmlElement("IDC_TEXDIR");
+  childText = new TiXmlText(m_params.texOutputDir.c_str());
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+    
+  child = new TiXmlElement("IDC_MESHDIR");
+  childText = new TiXmlText(m_params.meshOutputDir.c_str());
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  child = new TiXmlElement("IDC_PROGDIR");
+  childText = new TiXmlText(m_params.programOutputDir.c_str());
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  child = new TiXmlElement("IDC_SHAREDGEOM");
+  childText = new TiXmlText(m_params.useSharedGeom ? "1" : "0");
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  child = new TiXmlElement("IDC_GENLOD");
+  childText = new TiXmlText(m_params.generateLOD ? "1" : "0");
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  child = new TiXmlElement("IDC_EDGELIST");
+  childText = new TiXmlText(m_params.buildEdges ? "1" : "0");
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  child = new TiXmlElement("IDC_TANGENT");
+  childText = new TiXmlText(m_params.buildTangents ? "1" : "0");
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  child = new TiXmlElement("IDC_SPLITMIRROR");
+  childText = new TiXmlText(m_params.tangentsSplitMirrored ? "1" : "0");
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  child = new TiXmlElement("IDC_SPLITROT");
+  childText = new TiXmlText(m_params.tangentsSplitRotated ? "1" : "0");
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  child = new TiXmlElement("IDC_STOREPARITY");
+  childText = new TiXmlText(m_params.tangentsUseParity ? "1" : "0");
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  child = new TiXmlElement("IDC_RESAMPLE_ANIMS");
+  childText = new TiXmlText(m_params.resampleAnims ? "1" : "0");
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  std::stringstream oShaderVal;
+  oShaderVal << m_params.exportProgram;
+  child = new TiXmlElement("IDC_SHADERMODE");
+  childText = new TiXmlText(oShaderVal.str().c_str());
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  xmlDoc.SaveFile(path.c_str());
 }
 
 void OgreExporter::initIGameConf(std::string path)
@@ -457,13 +652,16 @@ bool OgreExporter::exportScene()
   m_params.currentRootJoints.clear();
 
   std::string plugConfDir = IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR);
-  std::string xmlConfPath = plugConfDir + "\\EasyOgreExporter\\IGameProp.xml";
   _mkdir((std::string(plugConfDir + "\\EasyOgreExporter")).c_str());
 
-  initIGameConf(xmlConfPath);
+  std::string xmlIGameConfPath = plugConfDir + "\\EasyOgreExporter\\IGameProp.xml";
+  initIGameConf(xmlIGameConfPath);
+
+  std::string xmlConfPath = plugConfDir + "\\EasyOgreExporter\\config.xml";
+  saveExportConf(xmlConfPath);
 
   pIGame = GetIGameInterface();
-  pIGame->SetPropertyFile(xmlConfPath.c_str());
+  pIGame->SetPropertyFile(xmlIGameConfPath.c_str());
 
   // Passing in true causing crash on IGameNode->GetNodeParent.  
   // Test for selection in Translate node.

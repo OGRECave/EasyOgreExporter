@@ -74,9 +74,9 @@ namespace EasyOgreExporter
     return shader;
   };
 
-  ExShader* ExMaterialSet::createShader(ExMaterial* mat, ExShader::ShaderType type)
+  ExShader* ExMaterialSet::createShader(ExMaterial* mat, ExShader::ShaderType type, ParamList &params)
   {
-    std::string sname = mat->getShaderName(type);
+    std::string sname = mat->getShaderName(type, params.resPrefix);
     ExShader* shader = getShader(sname);
     if(shader)
       return shader;
@@ -177,10 +177,10 @@ namespace EasyOgreExporter
 
       if((params.exportProgram == SHADER_ALL) || ((params.exportProgram == SHADER_BUMP) && (m_materials[i]->m_hasBumpMap)))
       {
-        vsAmbShader = createShader(m_materials[i], ExShader::ST_VSAM);
-        fpAmbShader = createShader(m_materials[i], ExShader::ST_FPAM);
-        vsLightShader = createShader(m_materials[i], ExShader::ST_VSLIGHT);
-        fpLightShader = createShader(m_materials[i], ExShader::ST_FPLIGHT);
+        vsAmbShader = createShader(m_materials[i], ExShader::ST_VSAM, params);
+        fpAmbShader = createShader(m_materials[i], ExShader::ST_FPAM, params);
+        vsLightShader = createShader(m_materials[i], ExShader::ST_VSLIGHT, params);
+        fpLightShader = createShader(m_materials[i], ExShader::ST_FPLIGHT, params);
       }
       stat = m_materials[i]->writeOgreScript(params, outMaterial, vsAmbShader ,fpAmbShader, vsLightShader, fpLightShader);
 
@@ -201,7 +201,7 @@ namespace EasyOgreExporter
       std::ofstream outShaderCG;
       std::ofstream outProgram;
   	  
-      std::string cgFilePath = makeOutputPath(params.outputDir, params.programOutputDir, params.sceneFilename, "cg");
+      std::string cgFilePath = makeOutputPath(params.outputDir, params.programOutputDir, optimizeFileName(params.sceneFilename), "cg");
 	    outShaderCG.open(cgFilePath.c_str());
 	    if (!outShaderCG)
 	    {
@@ -209,7 +209,7 @@ namespace EasyOgreExporter
 		    return false;
 	    }
       
-      std::string prFilePath = makeOutputPath(params.outputDir, params.programOutputDir, params.sceneFilename, "program");
+      std::string prFilePath = makeOutputPath(params.outputDir, params.programOutputDir, optimizeFileName(params.sceneFilename), "program");
 	    outProgram.open(prFilePath.c_str());
 	    if (!outProgram)
 	    {
@@ -222,7 +222,7 @@ namespace EasyOgreExporter
         outShaderCG << m_Shaders[i]->getContent();
         outShaderCG << "\n";
 
-        outProgram << m_Shaders[i]->getProgram(params.sceneFilename);
+        outProgram << m_Shaders[i]->getProgram(optimizeFileName(params.sceneFilename));
         outProgram << "\n";
       }
 

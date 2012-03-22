@@ -44,7 +44,11 @@ namespace EasyOgreExporter
   bool ExOgreConverter::writeEntityData(IGameNode* pGameNode, IGameObject* pGameObject, IGameMesh* pGameMesh)
   {
     bool ret = false;
-    ExMesh* mesh = new ExMesh(this, mParams, pGameNode, pGameMesh, pGameNode->GetName());
+    
+    std::string meshName = mParams.resPrefix;
+    meshName.append(pGameNode->GetName());
+    meshName = optimizeResourceName(meshName);
+    ExMesh* mesh = new ExMesh(this, mParams, pGameNode, pGameMesh, meshName);
 
     if (mParams.exportMesh)
     {

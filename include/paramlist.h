@@ -60,7 +60,7 @@ namespace EasyOgreExporter
 
 		float lum;	// Length Unit Multiplier
 
-		std::string outputDir, meshOutputDir, materialOutputDir, programOutputDir, texOutputDir, sceneFilename, matPrefix;
+		std::string outputDir, meshOutputDir, materialOutputDir, programOutputDir, texOutputDir, sceneFilename, resPrefix;
 
 		std::vector<std::string> writtenMaterials;
 
@@ -100,7 +100,7 @@ namespace EasyOgreExporter
       programOutputDir = "";
       texOutputDir = "";
       sceneFilename = "";
-      matPrefix = "";
+      resPrefix = "";
 		  
 			buildEdges = true;
 			buildTangents = true;
@@ -143,7 +143,7 @@ namespace EasyOgreExporter
       programOutputDir = source.programOutputDir;
 			texOutputDir = source.texOutputDir;
       sceneFilename = source.sceneFilename;
-      matPrefix = source.matPrefix;
+      resPrefix = source.resPrefix;
       			
 			buildEdges = source.buildEdges;
 			buildTangents = source.buildTangents;

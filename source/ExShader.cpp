@@ -100,7 +100,7 @@ namespace EasyOgreExporter
     std::stringstream out;
 
     // generate the shader
-    out << "void " << m_name.c_str() << "(float4 position	: POSITION,\n"; 
+    out << "void " << optimizeFileName(m_name).c_str() << "(float4 position	: POSITION,\n"; 
     out << "\tfloat3 normal : NORMAL,\n";
 
     for (int i=0; i < texUnits.size(); i++)
@@ -167,7 +167,7 @@ namespace EasyOgreExporter
     
     out << "\tsource " << baseName << ".cg\n";
     out << "\tprofiles vs_1_1 arbvp1\n";
-    out << "\tentry_point " << m_name << "\n";
+    out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
     out << "\tdefault_params\n";
     out << "\t{\n";
@@ -233,7 +233,7 @@ namespace EasyOgreExporter
 
     int texCoord = 0;
     // generate the shader
-    out << "float4 " << m_name.c_str() << "(float4 position	: POSITION,\n";
+    out << "float4 " << optimizeFileName(m_name).c_str() << "(float4 position	: POSITION,\n";
     
     if(bRef)
     {
@@ -362,7 +362,7 @@ namespace EasyOgreExporter
     
     out << "\tsource " << baseName << ".cg\n";
     out << "\tprofiles ps_2_x arbfp1\n";
-    out << "\tentry_point " << m_name << "\n";
+    out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
     out << "\tdefault_params\n";
     out << "\t{\n";
@@ -416,7 +416,7 @@ namespace EasyOgreExporter
     std::stringstream out;
 
     // generate the shader
-    out << "void " << m_name.c_str() << "(float4 position	: POSITION,\n"; 
+    out << "void " << optimizeFileName(m_name).c_str() << "(float4 position	: POSITION,\n"; 
     out << "\tfloat3 normal : NORMAL,\n";
     if(bNormal)
     {
@@ -495,7 +495,7 @@ namespace EasyOgreExporter
     
     out << "\tsource " << baseName << ".cg\n";
     out << "\tprofiles vs_1_1 arbvp1\n";
-    out << "\tentry_point " << m_name << "\n";
+    out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
     out << "\tdefault_params\n";
     out << "\t{\n";
@@ -545,7 +545,7 @@ namespace EasyOgreExporter
 
     int texCoord = 0;
     // generate the shader
-    out << "float4 " << m_name.c_str() << "(float4 position	: POSITION,\n";
+    out << "float4 " << optimizeFileName(m_name).c_str() << "(float4 position	: POSITION,\n";
     out << "\tfloat3 norm : TEXCOORD" << texCoord++ << ",\n";
 
     if(bNormal)
@@ -751,7 +751,7 @@ namespace EasyOgreExporter
     
     out << "\tsource " << baseName << ".cg\n";
     out << "\tprofiles ps_2_x arbfp1\n";
-    out << "\tentry_point " << m_name << "\n";
+    out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
     out << "\tdefault_params\n";
     out << "\t{\n";

@@ -52,6 +52,19 @@ inline std::string StripToTopParent(const std::string& filepath)
 inline std::string optimizeFileName(const std::string& filename)
 {
   std::string newFilename = filename;
+  std::replace(newFilename.begin(), newFilename.end(), ':', '_');
+  std::replace(newFilename.begin(), newFilename.end(), ' ', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '\'', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '/', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '"', '_');
+	return newFilename;;
+}
+
+// Helper function to replace special chars for resources
+inline std::string optimizeResourceName(const std::string& filename)
+{
+  std::string newFilename = filename;
+  std::replace(newFilename.begin(), newFilename.end(), ':', '_');
   std::replace(newFilename.begin(), newFilename.end(), ' ', '_');
   std::replace(newFilename.begin(), newFilename.end(), '\'', '_');
   std::replace(newFilename.begin(), newFilename.end(), '"', '_');

@@ -131,7 +131,7 @@ namespace EasyOgreExporter
 		//copy textures to path specified by params
 		bool copyTextures(ParamList &params);
 
-    std::string getShaderName(ExShader::ShaderType type);
+    std::string getShaderName(ExShader::ShaderType type, std::string prefix);
   private:
     void loadManualTexture(IGameProperty* prop, int type, float amount);
     void loadTextureUV(IGameTextureMap* pGameTexture, Texture &tex);

@@ -48,6 +48,7 @@ public:
 	void ShowAbout(HWND hWnd);
 	BOOL SupportsOptions(int ext, DWORD options);
 	int	DoExport(const TCHAR* name, ExpInterface* pExpInterface, Interface* pInterface, BOOL suppressPrompts = FALSE, DWORD options = 0);
+  void loadExportConf(std::string path, ParamList &param);
 };
 
 class OgreExporter 
@@ -68,6 +69,7 @@ private:
   int nodeCount;
 
   void initIGameConf(std::string path);
+  void saveExportConf(std::string path);
   bool exportNode(IGameNode* pGameNode, TiXmlElement* parent);
 };
 
