@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 0.95f;
+float EXVERSION = 0.96f;
 
 namespace EasyOgreExporter
 {
@@ -56,6 +56,7 @@ namespace EasyOgreExporter
 		    CenterWindow(hWnd, GetParent(hWnd));
 
         //fill Ogre version combo box
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETMINVISIBLE, 30, 0);
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_RESETCONTENT, 0, 0);
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.8");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.7");
@@ -90,6 +91,7 @@ namespace EasyOgreExporter
         CheckDlgButton(hWnd, IDC_RESAMPLE_ANIMS, exp->resampleAnims);
     		
         //fill Shader mode combo box
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_SETMINVISIBLE, 30, 0);
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_RESETCONTENT, 0, 0);
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)"None");
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)"Only for Bump materials");
