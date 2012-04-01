@@ -27,6 +27,7 @@
 #define IDC_CHECK1                      1022
 #define IDC_GENLOD                      1022
 #define IDC_PROGDIR                     1023
+#define IDC_RESAMPLE_ANIMS2             1024
 
 // Next default values for new objects
 // 

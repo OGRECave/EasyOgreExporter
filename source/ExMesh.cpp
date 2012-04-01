@@ -16,6 +16,7 @@
 #include "EasyOgreExporterLog.h"
 #include "ExTools.h"
 #include "OgreProgressiveMesh.h"
+#include "IFrameTagManager.h"
 
 //TODO bounding on skleton
 
@@ -802,7 +803,38 @@ namespace EasyOgreExporter
     if(useDefault)
     {
       Interval animRange = GetCOREInterface()->GetAnimRange();
-      exportMorphAnimation(animRange, "default_morph");
+      IFrameTagManager* frameTagMgr = static_cast<IFrameTagManager*>(GetCOREInterface(FRAMETAGMANAGER_INTERFACE));
+      int cnt = frameTagMgr->GetTagCount();
+
+      if(!cnt)
+      {
+        exportMorphAnimation(animRange, "default_morph");
+      }
+      else
+      {
+        for(int i = 0; i < cnt; i++)
+        {
+          DWORD t = frameTagMgr->GetTagID(i);
+          DWORD tlock = frameTagMgr->GetLockIDByID(t);
+          
+          //ignore locked tags used for animation end
+          if(tlock != 0)
+            continue;
+
+          TimeValue tv = frameTagMgr->GetTimeByID(t, FALSE);
+          TimeValue te = animRange.End();
+          
+          DWORD tnext = 0;
+          if((i + 1) < cnt)
+          {
+            tnext = frameTagMgr->GetTagID(i + 1);
+            te = frameTagMgr->GetTimeByID(tnext, FALSE);
+          }
+
+          Interval ianim(tv, te);
+          exportMorphAnimation(ianim, std::string(frameTagMgr->GetNameByID(t)));
+        }
+      }
     }
   }
 
@@ -1167,7 +1199,38 @@ namespace EasyOgreExporter
       if(useDefault)
       {
         Interval animRange = GetCOREInterface()->GetAnimRange();
-        exportPosesAnimation(animRange, "default_poses", validChan, poseIndexList, !m_params.resampleAnims);
+        IFrameTagManager* frameTagMgr = static_cast<IFrameTagManager*>(GetCOREInterface(FRAMETAGMANAGER_INTERFACE));
+        int cnt = frameTagMgr->GetTagCount();
+
+        if(!cnt)
+        {
+          exportPosesAnimation(animRange, "default_poses", validChan, poseIndexList, !m_params.resampleAnims);
+        }
+        else
+        {
+          for(int i = 0; i < cnt; i++)
+          {
+            DWORD t = frameTagMgr->GetTagID(i);
+            DWORD tlock = frameTagMgr->GetLockIDByID(t);
+            
+            //ignore locked tags used for animation end
+            if(tlock != 0)
+              continue;
+
+            TimeValue tv = frameTagMgr->GetTimeByID(t, FALSE);
+            TimeValue te = animRange.End();
+            
+            DWORD tnext = 0;
+            if((i + 1) < cnt)
+            {
+              tnext = frameTagMgr->GetTagID(i + 1);
+              te = frameTagMgr->GetTimeByID(tnext, FALSE);
+            }
+
+            Interval ianim(tv, te);
+            exportPosesAnimation(ianim, std::string(frameTagMgr->GetNameByID(t)), validChan, poseIndexList, !m_params.resampleAnims);
+          }
+        }        
       }
     }
 

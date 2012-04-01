@@ -25,6 +25,7 @@
 #include "BipedApi.h"
 #include "IMixer.h"
 #include "iskin.h"
+#include "IFrameTagManager.h"
 
 
 namespace EasyOgreExporter
@@ -473,7 +474,38 @@ namespace EasyOgreExporter
     if(useDefault)
     {
       Interval animRange = GetCOREInterface()->GetAnimRange();
-      loadClip("default_skl", animRange.Start(), animRange.End(), GetTicksPerFrame());
+      IFrameTagManager* frameTagMgr = static_cast<IFrameTagManager*>(GetCOREInterface(FRAMETAGMANAGER_INTERFACE));
+      int cnt = frameTagMgr->GetTagCount();
+
+      if(!cnt)
+      {
+        loadClip("default_skl", animRange.Start(), animRange.End(), GetTicksPerFrame());
+      }
+      else
+      {
+        for(int i = 0; i < cnt; i++)
+        {
+          DWORD t = frameTagMgr->GetTagID(i);
+          DWORD tlock = frameTagMgr->GetLockIDByID(t);
+          
+          //ignore locked tags used for animation end
+          if(tlock != 0)
+            continue;
+
+          TimeValue tv = frameTagMgr->GetTimeByID(t, FALSE);
+          TimeValue te = animRange.End();
+          
+          DWORD tnext = 0;
+          if((i + 1) < cnt)
+          {
+            tnext = frameTagMgr->GetTagID(i + 1);
+            te = frameTagMgr->GetTimeByID(tnext, FALSE);
+          }
+
+          Interval ianim(tv, te);
+          loadClip(std::string(frameTagMgr->GetNameByID(t)), ianim.Start(), ianim.End(), GetTicksPerFrame());
+        }
+      }
     }
 
 		return true;
@@ -669,7 +701,6 @@ namespace EasyOgreExporter
 	{
 		return m_animations;
 	}
-
 
 	// Write to an OGRE binary skeleton
 	bool ExSkeleton::writeOgreBinary()

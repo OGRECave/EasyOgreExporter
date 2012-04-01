@@ -21,7 +21,6 @@
 #include "iskin.h"
 #include "IMixer8.h"
 
-
 inline void trim(std::string& str)
 {
   std::string::size_type pos = str.find_last_not_of(' ');
@@ -357,9 +356,9 @@ inline Matrix3 GetRelativeMatrix(INode *node, int t, bool yUp)
 #define M2CM 0.01f
 #define M2M  1.0f
 #define M2KM 1000.0f
-#define M2IN 0.0393701f
-#define M2FT 0.00328084f
-#define M2ML 0.000621371192f
+#define M2IN 0.0254f
+#define M2FT 0.3048f
+#define M2ML 1609.344f
 
 inline float GetUnitValue(int unitType)
 {
@@ -399,11 +398,12 @@ inline float GetUnitValue(int unitType)
   return value;
 }
 
-inline float ConvertToMeter(int metricDisp, int unitType)
+inline float ConvertToMeter(DispInfo disp, int unitType)
 {
-  float scale = 1.0f * GetUnitValue(unitType);
-
-  switch(metricDisp)
+  float scale = GetUnitValue(unitType);
+  
+  if(disp.dispType == UNITDISP_METRIC)
+  switch(disp.metricDisp)
   {
     case UNIT_METRIC_DISP_MM:
       scale = 1000.0f * GetUnitValue(unitType);

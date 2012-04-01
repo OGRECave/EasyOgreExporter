@@ -17,8 +17,7 @@
 #include "ExMaterial.h"
 #include "ExTools.h"
 #include "decomp.h"
-
-//TODO visibility range
+#include "IFrameTagManager.h"
 
 namespace EasyOgreExporter
 {
@@ -348,7 +347,38 @@ namespace EasyOgreExporter
       if(useDefault)
       {
         Interval animRange = GetCOREInterface()->GetAnimRange();
-        exportNodeAnimation(pAnimsElement, pGameNode, animRange, "default", mParams.resampleAnims, type);
+        IFrameTagManager* frameTagMgr = static_cast<IFrameTagManager*>(GetCOREInterface(FRAMETAGMANAGER_INTERFACE));
+        int cnt = frameTagMgr->GetTagCount();
+
+        if(!cnt)
+        {
+          exportNodeAnimation(pAnimsElement, pGameNode, animRange, "default", mParams.resampleAnims, type);
+        }
+        else
+        {
+          for(int i = 0; i < cnt; i++)
+          {
+            DWORD t = frameTagMgr->GetTagID(i);
+            DWORD tlock = frameTagMgr->GetLockIDByID(t);
+            
+            //ignore locked tags used for animation end
+            if(tlock != 0)
+              continue;
+
+            TimeValue tv = frameTagMgr->GetTimeByID(t, FALSE);
+            TimeValue te = animRange.End();
+            
+            DWORD tnext = 0;
+            if((i + 1) < cnt)
+            {
+              tnext = frameTagMgr->GetTagID(i + 1);
+              te = frameTagMgr->GetTimeByID(tnext, FALSE);
+            }
+
+            Interval ianim(tv, te);
+            exportNodeAnimation(pAnimsElement, pGameNode, ianim, std::string(frameTagMgr->GetNameByID(t)), mParams.resampleAnims, type);
+          }
+        }
       }
     }
 

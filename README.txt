@@ -12,7 +12,7 @@
 Ogre wiki page : http://www.ogre3d.org/tikiwiki/Easy+Ogre+Exporter
 Ogre forum thread : http://www.ogre3d.org/forums/viewtopic.php?f=8&t=68688
 
-#Version 0.95 : March 22, 2012
+#Version 0.97 : April 1, 2012
 
  - Ogre Scene file
  - meshs
@@ -28,6 +28,7 @@ Ogre forum thread : http://www.ogre3d.org/forums/viewtopic.php?f=8&t=68688
  - Mesh Poses Animations
  - Mesh morph animations
  - animations from the motion mixer 
+ - animations clips from track tags
  - Manage units convertion from max to meter
  - Export interface with options
    - resources subdirs
