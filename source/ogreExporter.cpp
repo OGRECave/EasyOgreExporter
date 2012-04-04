@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 0.97f;
+float EXVERSION = 0.98f;
 
 namespace EasyOgreExporter
 {
@@ -333,9 +333,7 @@ int	OgreSceneExporter::DoExport(const TCHAR* name, ExpInterface* pExpInterface, 
   int unitType = 0;
   float unitScale = 0;
   GetMasterUnitInfo(&unitType, &unitScale);
-  DispInfo unitsInfo;
-  GetUnitDisplayInfo(&unitsInfo);
-  params.lum = ConvertToMeter(unitsInfo, unitType) * unitScale;
+  params.lum = ConvertToMeter(unitType) * unitScale;
 
   std::string plugConfDir = IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR);
   std::string xmlConfPath = plugConfDir + "\\EasyOgreExporter\\config.xml";

@@ -398,31 +398,9 @@ inline float GetUnitValue(int unitType)
   return value;
 }
 
-inline float ConvertToMeter(DispInfo disp, int unitType)
+inline float ConvertToMeter(int unitType)
 {
-  float scale = GetUnitValue(unitType);
-  
-  if(disp.dispType == UNITDISP_METRIC)
-  switch(disp.metricDisp)
-  {
-    case UNIT_METRIC_DISP_MM:
-      scale = 1000.0f * GetUnitValue(unitType);
-    break;
-
-    case UNIT_METRIC_DISP_CM:
-      scale = 100.0f * GetUnitValue(unitType);
-    break;
-
-    case UNIT_METRIC_DISP_M:
-      scale = 1.0f * GetUnitValue(unitType);
-    break;
-
-    case UNIT_METRIC_DISP_KM:
-      scale = 0.001f * GetUnitValue(unitType);
-    break;
-  }
-
-  return scale;
+  return GetUnitValue(unitType);
 }
 
 inline void AddKeyTabToVector(IGameKeyTab tabkeys, Interval animRange, std::vector<int>* animKeys)
