@@ -56,7 +56,7 @@ namespace EasyOgreExporter
 		bool exportMesh, exportMaterial, exportCameras, exportLights, lightingOff, exportAll,
 			exportVertNorm, exportVertCol, exportSkeleton, exportSkelAnims, exportVertAnims, exportPoses, 
 			useSharedGeom, copyTextures, tangentsSplitMirrored, tangentsSplitRotated, tangentsUseParity, 
-			buildTangents, buildEdges, resampleAnims, yUpAxis, exportScene, generateLOD;
+			buildTangents, buildEdges, resampleAnims, yUpAxis, exportScene, generateLOD, convertToDDS;
 
 		float lum;	// Length Unit Multiplier
 
@@ -71,6 +71,8 @@ namespace EasyOgreExporter
     ShaderMode exportProgram;
 
 		std::vector<INode*> currentRootJoints;
+
+    unsigned int maxTextureSize;
 
 		// constructor
 		ParamList()	{
@@ -91,6 +93,8 @@ namespace EasyOgreExporter
 			useSharedGeom = false;
 			copyTextures = true;
 
+      convertToDDS = false;
+      maxTextureSize = 2048;
       resampleAnims = false;
       generateLOD = false;
 
@@ -134,6 +138,8 @@ namespace EasyOgreExporter
 			copyTextures = source.copyTextures;
       lightingOff = source.lightingOff;
 
+      convertToDDS = source.convertToDDS;
+      maxTextureSize = source.maxTextureSize;
       resampleAnims = source.resampleAnims;
       generateLOD = source.generateLOD;
      

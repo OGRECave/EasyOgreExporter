@@ -23,16 +23,12 @@
 
 inline void trim(std::string& str)
 {
-  std::string::size_type pos = str.find_last_not_of(' ');
-  if(pos != std::string::npos)
-  {
-    str.erase(pos + 1);
-    pos = str.find_first_not_of(' ');
-    if(pos != std::string::npos)
-      str.erase(0, pos);
-  }
+  size_t spos = str.find_first_not_of(" \f\n\r\t\v");
+  size_t lpos = str.find_last_not_of(" \f\n\r\t\v");
+  if((std::string::npos == spos) || (std::string::npos == lpos))
+    str.clear();
   else
-    str.erase(str.begin(), str.end());
+    str = str.substr(spos, lpos-spos+1);
 }
 
 // Helper function for getting the filename from a full path.

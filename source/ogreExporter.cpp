@@ -51,6 +51,7 @@ namespace EasyOgreExporter
     switch(message)
     {
 	    case WM_INITDIALOG:
+      {
 		    exp = (ParamList*)lParam;
         DLSetWindowLongPtr(hWnd, lParam); 
 		    CenterWindow(hWnd, GetParent(hWnd));
@@ -88,23 +89,51 @@ namespace EasyOgreExporter
         CheckDlgButton(hWnd, IDC_SPLITMIRROR, exp->tangentsSplitMirrored);
         CheckDlgButton(hWnd, IDC_SPLITROT, exp->tangentsSplitRotated);
         CheckDlgButton(hWnd, IDC_STOREPARITY, exp->tangentsUseParity);
+
+        CheckDlgButton(hWnd, IDC_CONVDDS, exp->convertToDDS);
         CheckDlgButton(hWnd, IDC_RESAMPLE_ANIMS, exp->resampleAnims);
     		
         //fill Shader mode combo box
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_SETMINVISIBLE, 30, 0);
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_RESETCONTENT, 0, 0);
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)"None");
-        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)"Only for Bump materials");
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)"Only for Normal/Specular");
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)"All materials");
         
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_SETCURSEL, (int)exp->exportProgram, 0);
+
+        //fill Max texture size combo box
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_SETMINVISIBLE, 30, 0);
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_RESETCONTENT, 0, 0);
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)"64");
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)"128");
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)"512");
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)"1024");
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)"2048");
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)"4096");
+
+        int texSel = 0;
+        if (exp->maxTextureSize == 128)
+          texSel = 1;
+        else if (exp->maxTextureSize == 256)
+          texSel = 2;
+        else if (exp->maxTextureSize == 512)
+          texSel = 3;
+        else if (exp->maxTextureSize == 1024)
+          texSel = 4;
+        else if (exp->maxTextureSize == 2048)
+          texSel = 5;
+        else if (exp->maxTextureSize == 4096)
+          texSel = 6;
+
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_SETCURSEL, texSel, 0);
 
 		    //Versioning
 		    TCHAR Title [256];
         _stprintf(Title, "Easy Ogre Exporter version %.2f", EXVERSION);
 		    SetWindowText(hWnd, Title);
 		    return TRUE;
-
+      }
 	    case WM_COMMAND:
 		    switch (LOWORD(wParam))
         {
@@ -168,6 +197,7 @@ namespace EasyOgreExporter
               exp->tangentsSplitMirrored = IsDlgButtonChecked(hWnd, IDC_SPLITMIRROR) ? true : false;
               exp->tangentsSplitRotated = IsDlgButtonChecked(hWnd, IDC_SPLITROT) ? true : false;
               exp->tangentsUseParity = IsDlgButtonChecked(hWnd, IDC_STOREPARITY) ? true : false;
+              exp->convertToDDS = IsDlgButtonChecked(hWnd, IDC_CONVDDS) ? true : false;
               exp->resampleAnims = IsDlgButtonChecked(hWnd, IDC_RESAMPLE_ANIMS) ? true : false;
 
               int shaderIdx = SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_GETCURSEL, 0, 0);
@@ -187,6 +217,38 @@ namespace EasyOgreExporter
 
                   default:
                     exp->exportProgram = SHADER_BUMP;
+                }
+              }
+
+              int texIdx = SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_GETCURSEL, 0, 0);
+              if (texIdx != CB_ERR)
+              {
+                switch (texIdx)
+                {
+                  case 0:
+                    exp->maxTextureSize = 64;
+                    break;
+                  case 1:
+                    exp->maxTextureSize = 128;
+                    break;
+                  case 2:
+                    exp->maxTextureSize = 256;
+                    break;
+                  case 3:
+                    exp->maxTextureSize = 512;
+                    break;
+                  case 4:
+                    exp->maxTextureSize = 1024;
+                    break;
+                  case 5:
+                    exp->maxTextureSize = 2048;
+                    break;
+                  case 6:
+                    exp->maxTextureSize = 4096;
+                    break;
+
+                  default:
+                    exp->maxTextureSize = 2048;
                 }
               }
 
@@ -426,6 +488,10 @@ void OgreSceneExporter::loadExportConf(std::string path, ParamList &param)
     if(child)
       param.tangentsUseParity = (child->GetText() && (atoi(child->GetText()) == 1)) ? true : false;
 
+    child = rootElem->FirstChildElement("IDC_CONVDDS");
+    if(child)
+      param.convertToDDS = (child->GetText() && (atoi(child->GetText()) == 1)) ? true : false;
+
     child = rootElem->FirstChildElement("IDC_RESAMPLE_ANIMS");
     if(child)
       param.resampleAnims = (child->GetText() && (atoi(child->GetText()) == 1)) ? true : false;
@@ -449,6 +515,10 @@ void OgreSceneExporter::loadExportConf(std::string path, ParamList &param)
         }
       }
     }
+
+    child = rootElem->FirstChildElement("IDC_TEXSIZE");
+    if(child && child->GetText())
+      param.maxTextureSize = atoi(child->GetText());
   }
 }
 
@@ -548,10 +618,22 @@ void OgreExporter::saveExportConf(std::string path)
   child->LinkEndChild(childText);
   contProperties->LinkEndChild(child);
 
+  child = new TiXmlElement("IDC_CONVDDS");
+  childText = new TiXmlText(m_params.convertToDDS ? "1" : "0");
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
   std::stringstream oShaderVal;
   oShaderVal << m_params.exportProgram;
   child = new TiXmlElement("IDC_SHADERMODE");
   childText = new TiXmlText(oShaderVal.str().c_str());
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  std::stringstream oTexVal;
+  oTexVal << m_params.maxTextureSize;
+  child = new TiXmlElement("IDC_TEXSIZE");
+  childText = new TiXmlText(oTexVal.str().c_str());
   child->LinkEndChild(childText);
   contProperties->LinkEndChild(child);
 

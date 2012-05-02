@@ -175,7 +175,7 @@ namespace EasyOgreExporter
       ExShader* vsLightShader = 0;
       ExShader* fpLightShader = 0;
 
-      if((params.exportProgram == SHADER_ALL) || ((params.exportProgram == SHADER_BUMP) && (m_materials[i]->m_hasBumpMap)))
+      if((params.exportProgram == SHADER_ALL) || ((params.exportProgram == SHADER_BUMP) && ((m_materials[i]->m_hasBumpMap) || (m_materials[i]->m_hasSpecularMap))))
       {
         vsAmbShader = createShader(m_materials[i], ExShader::ST_VSAM, params);
         fpAmbShader = createShader(m_materials[i], ExShader::ST_FPAM, params);

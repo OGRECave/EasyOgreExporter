@@ -27,7 +27,12 @@
 #define IDC_CHECK1                      1022
 #define IDC_GENLOD                      1022
 #define IDC_PROGDIR                     1023
-#define IDC_RESAMPLE_ANIMS2             1024
+#define IDC_CONVDDS                     1024
+#define IDC_SHADERMODE2                 1025
+#define IDC_TEX_SIZE                    1025
+#define IDC_TEXSIZE                     1025
+#define IDC_TEX_SIZE_LABEL              1026
+#define IDC_TEXSIZE_LABEL               1026
 
 // Next default values for new objects
 // 
