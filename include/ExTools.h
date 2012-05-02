@@ -43,6 +43,16 @@ inline std::string StripToTopParent(const std::string& filepath)
 	return filepath.substr(ri+1);
 }
 
+inline std::string ToLowerCase(std::string str)
+{
+  char* cstr = (char*)str.c_str();
+  for (int i = 0; i < str.length(); i++)
+  {
+    cstr[i] = tolower(cstr[i]);
+  }
+  return str = cstr;
+}
+
 // Helper function to replace special chars for file names
 inline std::string optimizeFileName(const std::string& filename)
 {

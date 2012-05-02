@@ -18,6 +18,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "ExMaterialSet.h"
+#include <nvtt/nvtt.h>
 
 namespace EasyOgreExporter
 {
@@ -182,17 +183,8 @@ namespace EasyOgreExporter
         vsLightShader = createShader(m_materials[i], ExShader::ST_VSLIGHT, params);
         fpLightShader = createShader(m_materials[i], ExShader::ST_FPLIGHT, params);
       }
-      stat = m_materials[i]->writeOgreScript(params, outMaterial, vsAmbShader ,fpAmbShader, vsLightShader, fpLightShader);
-
-			/*
-			if (true != stat)
-			{
-				std::string msg = "Error writing material ";
-				msg += m_materials[i]->name();
-				msg += ", aborting operation";
-				MGlobal::displayInfo(msg);
-			}
-			*/
+      
+      m_materials[i]->writeOgreScript(params, outMaterial, vsAmbShader ,fpAmbShader, vsLightShader, fpLightShader);
 		}
     outMaterial.close();
 
@@ -229,6 +221,120 @@ namespace EasyOgreExporter
       outShaderCG.close();
       outProgram.close();
     }
+
+    
+		//Copy textures to output dir if required
+		if (params.copyTextures)
+    {
+      EasyOgreExporterLog("Copy material textures files\n");
+      std::vector<std::string> lTexDone;
+
+		  for (int i=0; i<m_materials.size(); i++)
+		  {
+		    for (int j=0; j<m_materials[i]->m_textures.size(); j++)
+		    {
+          Texture tex = m_materials[i]->m_textures[j];
+
+          //Copy only each files once
+          if(std::find(lTexDone.begin(), lTexDone.end(), tex.absFilename) == lTexDone.end())
+          {
+            bool ddsMode = false;
+            
+            std::string texName = params.resPrefix;
+            texName.append(tex.filename);
+            texName = optimizeFileName(texName);
+
+            std::string destFile = makeOutputPath(params.outputDir, params.texOutputDir, texName, "");
+            std::string texExt = ToLowerCase(texName.substr(texName.find_last_of(".") + 1));
+
+            //DDS conversion
+            if(params.convertToDDS && (texExt != "dds") && DoesFileExist(tex.absFilename.c_str()))
+            {
+              destFile = makeOutputPath(params.outputDir, params.texOutputDir, texName.substr(0, texName.find_last_of(".")), "DDS");
+
+              //load bitmap
+              BMMRES status;
+              BitmapInfo bi(tex.absFilename.c_str());
+              Bitmap* bitmap = TheManager->Create(&bi); 
+              bitmap = TheManager->Load(&bi, &status);
+              if (status == BMMRES_SUCCESS) 
+              {
+                unsigned int width = bitmap->Width();
+                unsigned int height = bitmap->Height();
+
+                if(bitmap->Flags() & MAP_FLIPPED)
+                  EasyOgreExporterLog("Info texture file %s is flipped\n", tex.filename.c_str());
+                if(bitmap->Flags() & MAP_INVERTED)
+                  EasyOgreExporterLog("Info texture file %s is inverted\n", tex.filename.c_str());
+
+                int bpp = 4;
+                int bpl = width * bpp;
+
+                int atype;
+                int btype;
+                unsigned char* bBuff = (unsigned char*)bitmap->GetStoragePtr(&btype);
+                unsigned char* aBuff = (unsigned char*)bitmap->GetAlphaPtr(&atype); 
+                unsigned char* pBuff = (unsigned char*)malloc(width * height * bpp);
+
+                if ((btype != BMM_NO_TYPE) && (bBuff != 0))
+                {
+                  //add alpha to buffer and convert to BGRA
+                  for (int x = 0; x < width; x++)
+                  {
+                    for(int y = 0; y < height; y++) 
+                    {
+                      unsigned long destByte = (x * bpp) + (bpl * y);
+                      unsigned long srcByte = (x * 3) + (width * 3 * y);
+                      unsigned long srcAlphaByte = x + (width * y);
+
+                      pBuff[destByte] = bBuff[srcByte+2];
+                      pBuff[destByte+1] = bBuff[srcByte+1];
+                      pBuff[destByte+2] = bBuff[srcByte];
+                      pBuff[destByte+3] = (atype != BMM_NO_TYPE && aBuff != 0) ? aBuff[srcAlphaByte] : 0xff;
+                    }
+                  }
+
+                  nvtt::InputOptions inputOptions;
+                  inputOptions.setTextureLayout(nvtt::TextureType_2D, width, height);
+                  inputOptions.setMipmapData(pBuff, width, height);
+                  inputOptions.setFormat(nvtt::InputFormat_BGRA_8UB);
+                  inputOptions.setAlphaMode(bitmap->HasAlpha() ? nvtt::AlphaMode_Transparency : nvtt::AlphaMode_None);
+                  inputOptions.setMaxExtents(params.maxTextureSize);
+                  inputOptions.setMipmapGeneration(true);
+                  inputOptions.setRoundMode(nvtt::RoundMode_ToNearestPowerOfTwo);
+                  
+                  nvtt::OutputOptions outputOptions;
+                  outputOptions.setFileName(destFile.c_str());
+
+                  nvtt::CompressionOptions compressionOptions;
+                  compressionOptions.setQuality(nvtt::Quality_Production);
+                  compressionOptions.setFormat(bitmap->HasAlpha() ? nvtt::Format_DXT1a : nvtt::Format_DXT1);
+                  compressionOptions.setTargetDecoder(nvtt::Decoder_D3D9);
+                  
+                  nvtt::Context context;
+                  ddsMode = context.process(inputOptions, compressionOptions, outputOptions);
+                  free(pBuff);
+                }
+                TheManager->DelBitmap(bitmap);
+              }
+            }
+
+            if(!ddsMode)
+            {
+			        // Copy file texture to output dir
+              if(!CopyFile(tex.absFilename.c_str(), destFile.c_str(), false))
+                EasyOgreExporterLog("Error while copying texture file %s\n", tex.absFilename.c_str());
+            }
+            
+            lTexDone.push_back(tex.absFilename);
+          }
+		    }
+		  }
+
+      lTexDone.clear();
+    }
+
+    //textures copy
 		return true;
 	};
 

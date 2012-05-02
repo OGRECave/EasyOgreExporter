@@ -21,7 +21,6 @@
 #include "ExMaterial.h"
 #include "ExTools.h"
 #include "EasyOgreExporterLog.h"
-#include "nvtt.h"
 #include <imtl.h> 
 #ifdef PRE_MAX_2010
 #include "IPathConfigMgr.h"
@@ -91,6 +90,7 @@ namespace EasyOgreExporter
 	// Destructor
 	ExMaterial::~ExMaterial()
 	{
+    m_textures.clear();
 	}
 
 	// Get material name
@@ -1083,10 +1083,6 @@ namespace EasyOgreExporter
 		//End material description
 		outMaterial << "}\n";
 
-		//Copy textures to output dir if required
-		if (params.copyTextures)
-			copyTextures(params);
-
 		return true;
 	}
 
@@ -1299,8 +1295,8 @@ namespace EasyOgreExporter
 
           outMaterial << "\t\t\t\ttexture " << texName.c_str();
 
-          std::string texExt = m_textures[i].filename.substr(m_textures[i].filename.find_last_of(".") + 1);
-          if((m_textures[i].type == ID_RL) && (texExt == "dds" || texExt == "DDS"))
+          std::string texExt = ToLowerCase(m_textures[i].filename.substr(m_textures[i].filename.find_last_of(".") + 1));
+          if((m_textures[i].type == ID_RL) && (texExt == "dds"))
             outMaterial << " cubic\n";
           else
             outMaterial << "\n";
@@ -1369,98 +1365,5 @@ namespace EasyOgreExporter
 		//End render pass description
 		outMaterial << "\t\t}\n";
   }
-
-	// Copy textures to path specified by params
-	bool ExMaterial::copyTextures(ParamList &params)
-	{
-		for (int i=0; i<m_textures.size(); i++)
-		{
-      bool ddsMode = false;
-      std::string texName = params.resPrefix;
-      texName.append(m_textures[i].filename);
-      texName = optimizeFileName(texName);
-
-      std::string destFile = makeOutputPath(params.outputDir, params.texOutputDir, texName, "");
-      std::string texExt = texName.substr(texName.find_last_of(".") + 1);
-
-      //DDS conversion
-      if(params.convertToDDS && (texExt != "dds") && (texExt != "DDS") && DoesFileExist(m_textures[i].absFilename.c_str()))
-      {
-        destFile = makeOutputPath(params.outputDir, params.texOutputDir, texName.substr(0, texName.find_last_of(".")), "DDS");
-
-        //load bitmap
-        BMMRES status;
-        BitmapInfo bi(m_textures[i].absFilename.c_str());
-        Bitmap* bitmap = TheManager->Create(&bi); 
-        bitmap = TheManager->Load(&bi, &status);
-        if (status == BMMRES_SUCCESS) 
-        {
-          unsigned int width = bitmap->Width();
-          unsigned int height = bitmap->Height();
-
-          if(bitmap->Flags() & MAP_FLIPPED)
-            EasyOgreExporterLog("Info texture file %s is flipped\n", m_textures[i].filename.c_str());
-          if(bitmap->Flags() & MAP_INVERTED)
-            EasyOgreExporterLog("Info texture file %s is inverted\n", m_textures[i].filename.c_str());
-
-          int bpp = 4;
-          int bpl = width * bpp;
-
-          int atype;
-          int btype;
-          unsigned char* bBuff = (unsigned char*)bitmap->GetStoragePtr(&btype);
-          unsigned char* aBuff = (unsigned char*)bitmap->GetAlphaPtr(&atype); 
-          unsigned char* pBuff = (unsigned char*)malloc(width * height * bpp);
-
-          if ((btype != BMM_NO_TYPE) && (bBuff != 0))
-          {
-            //add alpha to buffer and convert to BGRA
-            for (int x = 0; x < width; x++)
-            {
-              for(int y = 0; y < height; y++) 
-              {
-                unsigned long destByte = (x * bpp) + (bpl * y);
-                unsigned long srcByte = (x * 3) + (width * 3 * y);
-                unsigned long srcAlphaByte = x + (width * y);
-
-                pBuff[destByte] = bBuff[srcByte+2];
-                pBuff[destByte+1] = bBuff[srcByte+1];
-                pBuff[destByte+2] = bBuff[srcByte];
-                pBuff[destByte+3] = (atype != BMM_NO_TYPE && aBuff != 0) ? aBuff[srcAlphaByte] : 0xff;
-              }
-            }
-
-            nvtt::InputOptions inputOptions;
-            inputOptions.setTextureLayout(nvtt::TextureType_2D, width, height);
-            inputOptions.setMipmapData(pBuff, width, height);
-            inputOptions.setFormat(nvtt::InputFormat_BGRA_8UB);
-            inputOptions.setAlphaMode(bitmap->HasAlpha() ? nvtt::AlphaMode_Transparency : nvtt::AlphaMode_None);
-            inputOptions.setMaxExtents(params.maxTextureSize);
-            inputOptions.setMipmapGeneration(true);
-            inputOptions.setRoundMode(nvtt::RoundMode_ToNearestPowerOfTwo);
-            nvtt::OutputOptions outputOptions;
-            outputOptions.setFileName(destFile.c_str());
-
-            nvtt::CompressionOptions compressionOptions;
-            compressionOptions.setFormat(bitmap->HasAlpha() ? nvtt::Format_DXT1a : nvtt::Format_DXT1);
-            compressionOptions.setTargetDecoder(nvtt::Decoder_D3D9);
-            nvtt::Context compressor;
-            ddsMode = compressor.process(inputOptions, compressionOptions, outputOptions);
-            
-            free(pBuff);
-          }
-          TheManager->DelBitmap(bitmap);
-        }
-      }
-
-      if(!ddsMode)
-      {
-			  // Copy file texture to output dir
-        if(!CopyFile(m_textures[i].absFilename.c_str(), destFile.c_str(), false))
-          EasyOgreExporterLog("Error while copying texture file %s\n", m_textures[i].absFilename.c_str());
-      }
-		}
-		return true;
-	}
 
 };	//end namespace

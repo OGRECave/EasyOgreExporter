@@ -128,9 +128,6 @@ namespace EasyOgreExporter
 		//write material data to Ogre material script
 		bool writeOgreScript(ParamList &params, std::ofstream &outMaterial, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader);
 
-		//copy textures to path specified by params
-		bool copyTextures(ParamList &params);
-
     std::string getShaderName(ExShader::ShaderType type, std::string prefix);
   private:
     void loadManualTexture(IGameProperty* prop, int type, float amount);

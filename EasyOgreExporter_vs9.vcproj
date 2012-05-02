@@ -1907,7 +1907,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src\nvtt"
+				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -2000,7 +2000,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src\nvtt"
+				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -2093,7 +2093,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src\nvtt"
+				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -2187,7 +2187,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src\nvtt"
+				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
 				StringPooling="false"
 				MinimalRebuild="false"
