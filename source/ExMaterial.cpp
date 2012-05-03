@@ -21,7 +21,10 @@
 #include "ExMaterial.h"
 #include "ExTools.h"
 #include "EasyOgreExporterLog.h"
-#include <imtl.h> 
+#include <imtl.h>
+
+#include <nvimage/DirectDrawSurface.h>
+
 #ifdef PRE_MAX_2010
 #include "IPathConfigMgr.h"
 #else
@@ -1294,9 +1297,17 @@ namespace EasyOgreExporter
           }
 
           outMaterial << "\t\t\t\ttexture " << texName.c_str();
-
+          
+          bool isCubic = false;
           std::string texExt = ToLowerCase(m_textures[i].filename.substr(m_textures[i].filename.find_last_of(".") + 1));
-          if((m_textures[i].type == ID_RL) && (texExt == "dds"))
+          if(texExt == "dds")
+          {
+            //detect if the texture is a cubemap
+            nv::DirectDrawSurface ddsMap(m_textures[i].absFilename.c_str());
+            if(ddsMap.isValid() && ddsMap.isTextureCube())
+              isCubic = true;
+          }
+          if(isCubic)
             outMaterial << " cubic\n";
           else
             outMaterial << "\n";
@@ -1354,7 +1365,12 @@ namespace EasyOgreExporter
 				  outMaterial << "\t\t\t\trotate " << m_textures[i].rot << "\n";
 
           if(m_textures[i].bReflect)
-            outMaterial << "\t\t\t\tenv_map " << "cubic_reflection" << "\n";
+          {
+            if(isCubic)
+              outMaterial << "\t\t\t\tenv_map " << "cubic_reflection" << "\n";
+            else
+              outMaterial << "\t\t\t\tenv_map " << "planar" << "\n";
+          }
 
 				  //end texture unit desription
 				  outMaterial << "\t\t\t}\n";

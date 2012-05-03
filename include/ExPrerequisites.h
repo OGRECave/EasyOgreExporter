@@ -23,6 +23,10 @@
 
 #define PRECISION 0.000001
 
+#if _MSC_VER <1600
+#define nullptr 0
+#endif
+
 // Change this to the appropriate value to target Windows XP or later.
 #define WINVER 0x0501
 #define _WIN32_WINNT 0x0501

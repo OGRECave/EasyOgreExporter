@@ -130,7 +130,7 @@ namespace EasyOgreExporter
 
 		    //Versioning
 		    TCHAR Title [256];
-        _stprintf(Title, "Easy Ogre Exporter version %.2f", EXVERSION);
+        _stprintf(Title, _T("Easy Ogre Exporter version %.2f"), EXVERSION);
 		    SetWindowText(hWnd, Title);
 		    return TRUE;
       }
@@ -820,7 +820,7 @@ bool OgreExporter::exportScene()
 
 bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
 {
-  GetCOREInterface()->ProgressUpdate((int)(((float)nodeCount / pIGame->GetTotalNodeCount()) * 90.0f), FALSE, 0); 
+  GetCOREInterface()->ProgressUpdate((int)(((float)nodeCount / pIGame->GetTotalNodeCount()) * 90.0f), TRUE); 
 
   if(pGameNode)
   {

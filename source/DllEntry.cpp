@@ -12,7 +12,7 @@
 *                                                                                *
 **********************************************************************************/
 
-#include "max.h"
+#include "ExPrerequisites.h"
 #include "iparamb2.h"
 
 extern ClassDesc2* GetEasyOgreExporterDesc(void);

@@ -47,4 +47,24 @@ This attributes can be added from the Object property dialog in Max
 #TODO
  - Setup (automatic install)
    
- 
+
+#Build
+to build the exporter it's a little complicated because of some max sdk components :/
+
+- create an ext directory in EOE project directory
+
+Ogre 32 & 64b in static :
+- rebuild all Ogre dependencies with _SECURE_SCL=0 in preprocessor
+- rebuild ogre with _SECURE_SCL=0 in preprocessor
+
+- copy the ogre 32 to ext/ogre3d_secure_scl/sdk/static (bin/, lib/, include/)
+- copy the ogre 64 to ext/ogre3d_secure_scl/sdk_x64/static (bin/, lib/, include/)
+
+Max SDK: (for each max sdk ^^)
+- build the maxsdk\samples\modifiers\morpher lib in 32 & 64b
+- copy max sdk in ext/maxversion ex: ext/2012/include, ext/2012/lib, ext/2012/libx64
+- also copy the morpher sample lib and include in the corresponding directories
+
+Then you can open the EOE vcproj and build.
+
+To debug in max you need to build in hybrid mode and launch max from the debugger

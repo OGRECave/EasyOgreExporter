@@ -308,7 +308,7 @@ namespace EasyOgreExporter
 
                   nvtt::CompressionOptions compressionOptions;
                   compressionOptions.setQuality(nvtt::Quality_Production);
-                  compressionOptions.setFormat(bitmap->HasAlpha() ? nvtt::Format_DXT1a : nvtt::Format_DXT1);
+                  compressionOptions.setFormat(bitmap->HasAlpha() ? nvtt::Format_DXT5 : nvtt::Format_DXT1);
                   compressionOptions.setTargetDecoder(nvtt::Decoder_D3D9);
                   
                   nvtt::Context context;

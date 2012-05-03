@@ -179,6 +179,12 @@ namespace EasyOgreExporter
           {
             m_weights[i].push_back(1.0f);
             m_jointIds[i].push_back(boneIndex);
+            if(m_weights[i].size() > 4)
+            {
+              EasyOgreExporterLog("Warning : Vertex found with mode than 4 weights on skeleton %s with bone %s\n", m_name.c_str(), pBoneNode->GetName());
+              std::string mess = "Vertex found with mode than 4 weights on skeleton " + m_name + " with bone " + pBoneNode->GetName() + "\nThis is not compatible with hardware skinning method.";
+              MessageBox(GetCOREInterface()->GetMAXHWnd(), _T(mess.c_str()), _T("Warning"), MB_OK);
+            }
           }
         }
       }
@@ -196,6 +202,12 @@ namespace EasyOgreExporter
             {
               m_weights[i].push_back(m_pGameSkin->GetWeight(i, j));
               m_jointIds[i].push_back(boneIndex);
+              if(m_weights[i].size() > 4)
+              {
+                EasyOgreExporterLog("Warning : Vertex found with mode than 4 weights on skeleton %s with bone %s\n", m_name.c_str(), pBoneNode->GetName());
+                std::string mess = "Vertex found with mode than 4 weights on skeleton " + m_name + " with bone " + pBoneNode->GetName() + "\nThis is not compatible with hardware skinning method.";
+                MessageBox(GetCOREInterface()->GetMAXHWnd(), _T(mess.c_str()), _T("Warning"), MB_OK);
+              }
             }
           }
         }
