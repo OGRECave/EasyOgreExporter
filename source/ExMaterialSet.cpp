@@ -278,19 +278,40 @@ namespace EasyOgreExporter
 
                 if ((btype != BMM_NO_TYPE) && (bBuff != 0))
                 {
-                  //add alpha to buffer and convert to BGRA
-                  for (int x = 0; x < width; x++)
+                  if(bitmap->Storage()->Type() == BMM_GRAY_8)
                   {
-                    for(int y = 0; y < height; y++) 
+                    //add alpha to buffer and convert to BGRA from grey
+                    for (int x = 0; x < width; x++)
                     {
-                      unsigned long destByte = (x * bpp) + (bpl * y);
-                      unsigned long srcByte = (x * 3) + (width * 3 * y);
-                      unsigned long srcAlphaByte = x + (width * y);
+                      for(int y = 0; y < height; y++) 
+                      {
+                        unsigned long destByte = (x * bpp) + (bpl * y);
+                        unsigned long srcByte = x + (width * y);
+                        unsigned long srcAlphaByte = x + (width * y);
 
-                      pBuff[destByte] = bBuff[srcByte+2];
-                      pBuff[destByte+1] = bBuff[srcByte+1];
-                      pBuff[destByte+2] = bBuff[srcByte];
-                      pBuff[destByte+3] = (atype != BMM_NO_TYPE && aBuff != 0) ? aBuff[srcAlphaByte] : 0xff;
+                        pBuff[destByte] = bBuff[srcByte];
+                        pBuff[destByte+1] = bBuff[srcByte];
+                        pBuff[destByte+2] = bBuff[srcByte];
+                        pBuff[destByte+3] = (atype != BMM_NO_TYPE && aBuff != 0) ? aBuff[srcAlphaByte] : 0xff;
+                      }
+                    }
+                  }
+                  else
+                  {
+                    //add alpha to buffer and convert to BGRA
+                    for (int x = 0; x < width; x++)
+                    {
+                      for(int y = 0; y < height; y++) 
+                      {
+                        unsigned long destByte = (x * bpp) + (bpl * y);
+                        unsigned long srcByte = (x * 3) + (width * 3 * y);
+                        unsigned long srcAlphaByte = x + (width * y);
+
+                        pBuff[destByte] = bBuff[srcByte+2];
+                        pBuff[destByte+1] = bBuff[srcByte+1];
+                        pBuff[destByte+2] = bBuff[srcByte];
+                        pBuff[destByte+3] = (atype != BMM_NO_TYPE && aBuff != 0) ? aBuff[srcAlphaByte] : 0xff;
+                      }
                     }
                   }
 
@@ -300,8 +321,9 @@ namespace EasyOgreExporter
                   inputOptions.setFormat(nvtt::InputFormat_BGRA_8UB);
                   inputOptions.setAlphaMode(bitmap->HasAlpha() ? nvtt::AlphaMode_Transparency : nvtt::AlphaMode_None);
                   inputOptions.setMaxExtents(params.maxTextureSize);
-                  inputOptions.setMipmapGeneration(true);
                   inputOptions.setRoundMode(nvtt::RoundMode_ToNearestPowerOfTwo);
+                  inputOptions.setMipmapGeneration(true);
+                  inputOptions.setWrapMode(nvtt::WrapMode_Clamp);
                   
                   nvtt::OutputOptions outputOptions;
                   outputOptions.setFileName(destFile.c_str());
