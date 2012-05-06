@@ -165,6 +165,7 @@ namespace EasyOgreExporter
 
     int numSkinnedVertices = m_pGameSkin->GetNumOfSkinnedVerts();
     EasyOgreExporterLog("Num. Skinned Vertices: %d\n", numSkinnedVertices);
+    std::vector<std::string> lwarnings;
     for(int i = 0; i < numSkinnedVertices; ++i)
     {
       int type = m_pGameSkin->GetVertexType(i);
@@ -179,12 +180,9 @@ namespace EasyOgreExporter
           {
             m_weights[i].push_back(1.0f);
             m_jointIds[i].push_back(boneIndex);
+
             if(m_weights[i].size() > 4)
-            {
-              EasyOgreExporterLog("Warning : Vertex found with mode than 4 weights on skeleton %s with bone %s\n", m_name.c_str(), pBoneNode->GetName());
-              std::string mess = "Vertex found with mode than 4 weights on skeleton " + m_name + " with bone " + pBoneNode->GetName() + "\nThis is not compatible with hardware skinning method.";
-              MessageBox(GetCOREInterface()->GetMAXHWnd(), _T(mess.c_str()), _T("Warning"), MB_OK);
-            }
+              lwarnings.push_back(pBoneNode->GetName());
           }
         }
       }
@@ -202,17 +200,35 @@ namespace EasyOgreExporter
             {
               m_weights[i].push_back(m_pGameSkin->GetWeight(i, j));
               m_jointIds[i].push_back(boneIndex);
+
               if(m_weights[i].size() > 4)
-              {
-                EasyOgreExporterLog("Warning : Vertex found with mode than 4 weights on skeleton %s with bone %s\n", m_name.c_str(), pBoneNode->GetName());
-                std::string mess = "Vertex found with mode than 4 weights on skeleton " + m_name + " with bone " + pBoneNode->GetName() + "\nThis is not compatible with hardware skinning method.";
-                MessageBox(GetCOREInterface()->GetMAXHWnd(), _T(mess.c_str()), _T("Warning"), MB_OK);
-              }
+                lwarnings.push_back(pBoneNode->GetName());
             }
           }
         }
       }
     }
+
+    //sort and remove duplicated entries
+    if(lwarnings.size() > 0)
+    {
+      std::sort(lwarnings.begin(), lwarnings.end());
+      lwarnings.erase(std::unique(lwarnings.begin(), lwarnings.end()), lwarnings.end());
+    }
+
+    if(lwarnings.size() > 0)
+    {
+      std::string mess = "Warning : Vertex found with more than 4 weights on :\n";
+
+      for(int i = 0; i < lwarnings.size(); ++i)
+        mess.append("skeleton " + m_name + " with bone " + lwarnings[i] + "\n");
+
+      mess.append("This is not compatible with hardware skinning method.");
+      EasyOgreExporterLog("Warning : Vertex found with more than 4 weights on :\n%s", mess.c_str());
+      MessageBox(GetCOREInterface()->GetMAXHWnd(), _T(mess.c_str()), _T("Warning"), MB_OK);
+    }
+    lwarnings.clear();
+
     return true;
   }
 
@@ -339,8 +355,9 @@ namespace EasyOgreExporter
     }
 
     // Get mesh matrix at initial pose
-    ISkin* pskin = (ISkin*)m_pGameSkin->GetMaxModifier()->GetInterface(I_SKIN);
-
+    Modifier* skinMod = m_pGameSkin->GetMaxModifier();
+    ISkin* pskin = (ISkin*)skinMod->GetInterface(I_SKIN);
+    
     GMatrix GSkinTM;
     m_pGameSkin->GetInitSkinTM(GSkinTM);
     Matrix3 SkinTM = GSkinTM.ExtractMatrix3();
@@ -348,10 +365,10 @@ namespace EasyOgreExporter
 		Matrix3 boneTM;
 		Matrix3 ParentTM;
 
-    if(pskin->GetBoneInitTM(pNode, boneTM, false) == SKIN_INVALID_NODE_PTR)
+    if(!pskin || pskin->GetBoneInitTM(pNode, boneTM, false) == SKIN_INVALID_NODE_PTR)
       boneTM = pNode->GetNodeTM(firstFrame);
 
-    if(pskin->GetBoneInitTM(pNodeParent, ParentTM, false) == SKIN_INVALID_NODE_PTR)
+    if(!pskin || pskin->GetBoneInitTM(pNodeParent, ParentTM, false) == SKIN_INVALID_NODE_PTR)
       ParentTM = pNodeParent->GetNodeTM(firstFrame);
 
     Matrix3 localTM;
