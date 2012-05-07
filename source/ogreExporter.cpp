@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 0.99f;
+float EXVERSION = 0.991f;
 
 namespace EasyOgreExporter
 {
@@ -130,7 +130,7 @@ namespace EasyOgreExporter
 
 		    //Versioning
 		    TCHAR Title [256];
-        _stprintf(Title, _T("Easy Ogre Exporter version %.2f"), EXVERSION);
+        _stprintf(Title, _T("Easy Ogre Exporter version %.3f"), EXVERSION);
 		    SetWindowText(hWnd, Title);
 		    return TRUE;
       }
