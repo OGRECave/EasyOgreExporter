@@ -124,7 +124,10 @@ namespace EasyOgreExporter
     }
 
     if(bRef)
+    {
       out << "\tuniform float4x4 wMat,\n";
+      out << "\tuniform float4x4 witMat,\n";
+    }
     
     out << "\tuniform float4x4 wvpMat\n";
 
@@ -135,7 +138,7 @@ namespace EasyOgreExporter
     if(bRef)
     {
       out << "\toWp = mul(wMat, position);\n";
-      out << "\toNorm = normal;\n";
+      out << "\toNorm = normalize(mul((float3x3)witMat, normal));\n";
     }
 
     texCoord = lastAvailableTexCoord;
@@ -174,8 +177,10 @@ namespace EasyOgreExporter
     out << "\t\tparam_named_auto wvpMat worldviewproj_matrix\n";
     
     if(bRef)
+    {
+      out << "\t\tparam_named_auto witMat inverse_transpose_world_matrix\n";
       out << "\t\tparam_named_auto wMat world_matrix\n";
-
+    }
     out << "\t}\n";
     out << "}\n";
 
@@ -237,7 +242,7 @@ namespace EasyOgreExporter
     
     if(bRef)
     {
-      out << "\tfloat3 norm : TEXCOORD" << texCoord++ << ",\n";
+      out << "\tfloat3 normal : TEXCOORD" << texCoord++ << ",\n";
       out << "\tfloat4 wp : TEXCOORD" << texCoord++ << ",\n";
     }
 
@@ -320,7 +325,6 @@ namespace EasyOgreExporter
 
     if(bRef)
     {
-      out << "\tfloat3 normal = normalize(norm);\n";
       out << "\tfloat3 camDir = normalize(camPos - wp.xyz);\n";
       out << "\tfloat3 refVec = -reflect(camDir, normal);\n";
       out << "\trefVec.z = -refVec.z;\n";

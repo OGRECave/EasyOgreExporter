@@ -120,6 +120,7 @@ namespace EasyOgreExporter
     m_isTwoSided = false;
     m_isWire = false;
     m_hasAlpha = false;
+    m_bPreMultipliedAlpha = true;
     m_hasAmbientMap = false;
     m_ambientLocked = false;
     m_hasDiffuseMap = false;
@@ -476,12 +477,14 @@ namespace EasyOgreExporter
               {
                 BMMRES status;
                 BitmapInfo bi(tex.absFilename.c_str());
-                Bitmap* bitmap = TheManager->Create(&bi); 
+                Bitmap* bitmap = TheManager->Create(&bi);
                 bitmap = TheManager->Load(&bi, &status);
-                if (status == BMMRES_SUCCESS) 
+                if (status == BMMRES_SUCCESS)
                   if(bitmap->HasAlpha())
+                  {
                     m_hasAlpha = true;
-
+                    m_bPreMultipliedAlpha = pBitmapTex->GetPremultAlpha(0) ? true : false;
+                  }
                 TheManager->DelBitmap(bitmap);
                 tex.type = type;
               }
@@ -717,6 +720,17 @@ namespace EasyOgreExporter
 	  {
 		  IGameTextureMap* pGameTexture = pGameMaterial->GetIGameTextureMap(i);
       std::string texClass = pGameTexture->GetClassName();
+      IPropertyContainer* pCont = pGameTexture->GetIPropertyContainer();
+
+      //prop list
+      /*int numProps = pCont->GetNumberOfProperties();
+			for (int propIndex = 0; propIndex < numProps; ++propIndex)
+			{
+				IGameProperty* pProp = pCont->GetProperty(propIndex);
+        std::string pPropName = pProp->GetName();
+        EasyOgreExporterLog("Info : texture properties %s\n", pPropName.c_str());
+			}
+      */
 
       EasyOgreExporterLog("Exporting %d texture from %s...\n", i, texClass.c_str());
 		  if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == "Normal Bump")))
@@ -731,19 +745,6 @@ namespace EasyOgreExporter
         else
         //normal map
         {
-          IPropertyContainer* pCont = pGameTexture->GetIPropertyContainer();
-
-          /*
-          //prop list
-          int numProps = pCont->GetNumberOfProperties();
-					for (int propIndex = 0; propIndex < numProps; ++propIndex)
-					{
-						IGameProperty* pProp = pCont->GetProperty(propIndex);
-            std::string pPropName = pProp->GetName();
-            EasyOgreExporterLog("Info : texture properties %s\n", pPropName.c_str());
-					}
-          */
-
           IGameProperty* pNormalMap = pCont->QueryProperty(_T("normal_map"));
           if(pNormalMap)
           {
@@ -826,8 +827,8 @@ namespace EasyOgreExporter
 			  tex.filename = optimizeFileName(filename);
         //get the texture multiplier
         tex.fAmount = smat->GetTexmapAmt(texSlot, 0);
-
-			  switch(texSlot)
+        
+        switch(texSlot)
 			  {
 			  case ID_AM:
           {
@@ -846,7 +847,7 @@ namespace EasyOgreExporter
                 BitmapInfo bi(tex.absFilename.c_str());
                 Bitmap* bitmap = TheManager->Create(&bi); 
                 bitmap = TheManager->Load(&bi, &status); 
-                if (status == BMMRES_SUCCESS) 
+                if (status == BMMRES_SUCCESS)
                   tex.bHasAlphaChannel = bitmap->HasAlpha();
 
                 TheManager->DelBitmap(bitmap);
@@ -870,10 +871,18 @@ namespace EasyOgreExporter
               BitmapInfo bi(tex.absFilename.c_str());
               Bitmap* bitmap = TheManager->Create(&bi); 
               bitmap = TheManager->Load(&bi, &status); 
-              if (status == BMMRES_SUCCESS) 
+              if (status == BMMRES_SUCCESS)
                 tex.bHasAlphaChannel = bitmap->HasAlpha();
 
               m_hasAlpha = tex.bHasAlphaChannel;
+
+              int preMult = 0;
+              IGameProperty* pPreMult = pCont->QueryProperty(_T("preMultAlpha"));
+              if(pPreMult)
+              {
+                pPreMult->GetPropertyValue(preMult);
+                m_bPreMultipliedAlpha = preMult ? true : false;
+              }
 
               TheManager->DelBitmap(bitmap);
             }
@@ -1216,15 +1225,15 @@ namespace EasyOgreExporter
     }
 
     //if material is transparent set blend mode and turn off depth_writing
-    if (m_isTransparent && ((pass == ExShader::SP_AMBIENT) || (pass == ExShader::SP_NONE) || (pass == ExShader::SP_NOSUPPORT)))
+    if (m_isTransparent || (m_bPreMultipliedAlpha && m_hasAlpha) && ((pass == ExShader::SP_AMBIENT) || (pass == ExShader::SP_NONE) || (pass == ExShader::SP_NOSUPPORT)))
 		{
 			outMaterial << "\n\t\t\tscene_blend alpha_blend\n";
 			outMaterial << "\t\t\tdepth_write off\n";
 		}
 
-    if(m_hasAlpha)
+    if(m_hasAlpha && !m_bPreMultipliedAlpha)
 			outMaterial << "\n\t\t\talpha_rejection greater 128\n";
-		    
+		
     if(vsShader)
       outMaterial << vsShader->getUniformParams(this);
 

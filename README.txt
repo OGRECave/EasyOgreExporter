@@ -12,7 +12,7 @@
 Ogre wiki page : http://www.ogre3d.org/tikiwiki/Easy+Ogre+Exporter
 Ogre forum thread : http://www.ogre3d.org/forums/viewtopic.php?f=8&t=68688
 
-#Version 0.99 : May 4, 2012
+#Version 0.992 : May 24, 2012
 
  - Ogre Scene file
  - meshs
@@ -44,6 +44,9 @@ This attributes can be added from the Object property dialog in Max
   * ex : renderingDistance=10.5
  - noLOD, override the LOD generation for the specified object
   * ex : noLOD=false
+
+Materials use :
+ - disable "PreMultiplied Alpha" option on diffuse textures with an alpha channel to use alpha_rejection (usefull for folliages)
 
 #TODO
  - Setup (automatic install)
