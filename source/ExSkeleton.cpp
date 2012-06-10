@@ -182,7 +182,16 @@ namespace EasyOgreExporter
             m_jointIds[i].push_back(boneIndex);
 
             if(m_weights[i].size() > 4)
-              lwarnings.push_back(pBoneNode->GetName());
+			{
+#ifdef UNICODE
+				std::wstring name_w = pBoneNode->GetName();
+				std::string name_s;
+				name_s.assign(name_w.begin(),name_w.end());
+				lwarnings.push_back(name_s);
+#else
+				lwarnings.push_back(pBoneNode->GetName());
+#endif
+			}
           }
         }
       }
@@ -202,7 +211,16 @@ namespace EasyOgreExporter
               m_jointIds[i].push_back(boneIndex);
 
               if(m_weights[i].size() > 4)
-                lwarnings.push_back(pBoneNode->GetName());
+			  {
+#ifdef UNICODE
+				std::wstring name_w = pBoneNode->GetName();
+				std::string name_s;
+				name_s.assign(name_w.begin(),name_w.end());
+				lwarnings.push_back(name_s);
+#else
+				lwarnings.push_back(pBoneNode->GetName());
+#endif
+			  }
             }
           }
         }
@@ -225,7 +243,13 @@ namespace EasyOgreExporter
 
       mess.append("This is not compatible with hardware skinning method.");
       EasyOgreExporterLog("Warning : Vertex found with more than 4 weights on :\n%s", mess.c_str());
+#ifdef UNICODE
+	  std::wstring mess_w;
+	  mess_w.assign(mess.begin(),mess.end());
+	  MessageBox(GetCOREInterface()->GetMAXHWnd(), mess_w.data(), _T("Warning"), MB_OK);
+#else
       MessageBox(GetCOREInterface()->GetMAXHWnd(), _T(mess.c_str()), _T("Warning"), MB_OK);
+#endif
     }
     lwarnings.clear();
 
@@ -267,7 +291,14 @@ namespace EasyOgreExporter
     // initialise joint to avoid bad searchs
 		joint newJoint;
 		newJoint.pNode = pNode;
+#ifdef UNICODE
+		std::wstring name_w = pNode->GetName();
+		std::string name_s;
+		name_s.assign(name_w.begin(),name_w.end());
+		newJoint.name = name_s;
+#else
 		newJoint.name = pNode->GetName();
+#endif
 		newJoint.nodeID = pNode->GetHandle();
 		newJoint.id = -1;
 		newJoint.parentIndex = parentIdx;
@@ -290,7 +321,13 @@ namespace EasyOgreExporter
             strId << dpid;
             sid = strId.str();
 
+#ifdef UNICODE
+			std::wstring name_w = pNode->GetName();
+			std::string name_s;
+            newJoint.name = std::string(name_s) + sid;
+#else
             newJoint.name = std::string(pNode->GetName()) + sid;
+#endif
             found = true;
             dpid++;
 				  }
@@ -476,7 +513,14 @@ namespace EasyOgreExporter
                 std::string clipName = formatClipName(std::string(clip->GetFilename()), clipId);
               #else
               MaxSDK::AssetManagement::AssetUser &clipFile = const_cast<MaxSDK::AssetManagement::AssetUser&>(clip->GetFile());
-                std::string clipName = formatClipName(std::string(clipFile.GetFileName()), clipId);
+#ifdef UNICODE
+			  std::wstring clipFileName_w = clipFile.GetFileName();
+			  std::string clipFileName_s;
+			  clipFileName_s.assign(clipFileName_w.begin(),clipFileName_w.end());
+              std::string clipName = formatClipName(std::string(clipFileName_s), clipId);
+#else
+              std::string clipName = formatClipName(std::string(clipFile.GetFileName()), clipId);
+#endif
               #endif
 
               clip->GetGlobalBounds(&start, &stop);
@@ -532,7 +576,14 @@ namespace EasyOgreExporter
           }
 
           Interval ianim(tv, te);
+#ifdef UNICODE
+		  std::wstring name_w = frameTagMgr->GetNameByID(t);
+		  std::string name_s;
+		  name_s.assign(name_w.begin(),name_w.end());
+          loadClip(std::string(name_s), ianim.Start(), ianim.End(), GetTicksPerFrame());
+#else
           loadClip(std::string(frameTagMgr->GetNameByID(t)), ianim.Start(), ianim.End(), GetTicksPerFrame());
+#endif
         }
       }
     }

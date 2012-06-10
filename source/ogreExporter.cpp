@@ -57,6 +57,40 @@ namespace EasyOgreExporter
 		    CenterWindow(hWnd, GetParent(hWnd));
 
         //fill Ogre version combo box
+#ifdef UNICODE
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETMINVISIBLE, 30, 0);
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_RESETCONTENT, 0, 0);
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)L"Ogre 1.8");
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)L"Ogre 1.7");
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)L"Ogre 1.4");
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)L"Ogre 1.0");
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETCURSEL, (int)exp->meshVersion, 0);
+
+        //fill material prefix
+		std::wstring resPrefix_w;
+		resPrefix_w.assign(exp->resPrefix.begin(),exp->resPrefix.end());
+		SendDlgItemMessage(hWnd, IDC_RESPREFIX, WM_SETTEXT, 0, (LPARAM)resPrefix_w.data());
+
+        //fill material sub dir
+		std::wstring materialOutputDir_w;
+		materialOutputDir_w.assign(exp->materialOutputDir.begin(),exp->materialOutputDir.end());
+        SendDlgItemMessage(hWnd, IDC_MATDIR, WM_SETTEXT, 0, (LPARAM)materialOutputDir_w.data());
+
+        //fill texture sub dir
+		std::wstring texOutputDir_w;
+		texOutputDir_w.assign(exp->texOutputDir.begin(),exp->texOutputDir.end());
+        SendDlgItemMessage(hWnd, IDC_TEXDIR, WM_SETTEXT, 0, (LPARAM)texOutputDir_w.data());
+
+        //fill mesh subdir
+		std::wstring meshOutputDir_w;
+		meshOutputDir_w.assign(exp->meshOutputDir.begin(),exp->meshOutputDir.end());
+        SendDlgItemMessage(hWnd, IDC_MESHDIR, WM_SETTEXT, 0, (LPARAM)meshOutputDir_w.data());
+
+        //fill prog subdir
+		std::wstring programOutputDir_w;
+		programOutputDir_w.assign(exp->programOutputDir.begin(),exp->programOutputDir.end());
+		SendDlgItemMessage(hWnd, IDC_PROGDIR, WM_SETTEXT, 0, (LPARAM)programOutputDir_w.data());
+#else
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETMINVISIBLE, 30, 0);
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_RESETCONTENT, 0, 0);
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.8");
@@ -64,9 +98,7 @@ namespace EasyOgreExporter
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.4");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.0");
 
-        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETCURSEL, (int)exp->meshVersion, 0);
-
-        //fill material prefix
+		//fill material prefix
         SendDlgItemMessage(hWnd, IDC_RESPREFIX, WM_SETTEXT, 0, (LPARAM)(char*)exp->resPrefix.c_str());
 
         //fill material sub dir
@@ -80,6 +112,7 @@ namespace EasyOgreExporter
 
         //fill prog subdir
         SendDlgItemMessage(hWnd, IDC_PROGDIR, WM_SETTEXT, 0, (LPARAM)(char*)exp->programOutputDir.c_str());
+#endif
 
         //advanced config
 		    CheckDlgButton(hWnd, IDC_SHAREDGEOM, exp->useSharedGeom);
@@ -93,6 +126,27 @@ namespace EasyOgreExporter
         CheckDlgButton(hWnd, IDC_CONVDDS, exp->convertToDDS);
         CheckDlgButton(hWnd, IDC_RESAMPLE_ANIMS, exp->resampleAnims);
     		
+#ifdef UNICODE
+        //fill Shader mode combo box
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_SETMINVISIBLE, 30, 0);
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_RESETCONTENT, 0, 0);
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)L"None");
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)L"Only for Normal/Specular");
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)L"All materials");
+        
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_SETCURSEL, (int)exp->exportProgram, 0);
+
+        //fill Max texture size combo box
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_SETMINVISIBLE, 30, 0);
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_RESETCONTENT, 0, 0);
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)L"64");
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)L"128");
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)L"256");
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)L"512");
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)L"1024");
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)L"2048");
+        SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)L"4096");
+#else
         //fill Shader mode combo box
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_SETMINVISIBLE, 30, 0);
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_RESETCONTENT, 0, 0);
@@ -112,6 +166,7 @@ namespace EasyOgreExporter
         SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)"1024");
         SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)"2048");
         SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)"4096");
+#endif
 
         int texSel = 0;
         if (exp->maxTextureSize == 128)
@@ -163,33 +218,63 @@ namespace EasyOgreExporter
                 }
               }
 
-					    TSTR temp;
+		      TSTR temp;
               int len = 0;
               
               len = SendDlgItemMessage(hWnd, IDC_RESPREFIX, WM_GETTEXTLENGTH, 0, 0);
 					    temp.Resize(len+1);
 					    SendDlgItemMessage(hWnd, IDC_RESPREFIX, WM_GETTEXT, len+1, (LPARAM)temp.data());
+#ifdef UNICODE
+			  std::wstring temp_w = temp.data();
+			  std::string temp_s;
+			  temp_s.assign(temp_w.begin(),temp_w.end());
+              exp->resPrefix = temp_s;
+#else
               exp->resPrefix = temp;
+#endif
 
               len = SendDlgItemMessage(hWnd, IDC_MATDIR, WM_GETTEXTLENGTH, 0, 0);
 					    temp.Resize(len+1);
 					    SendDlgItemMessage(hWnd, IDC_MATDIR, WM_GETTEXT, len+1, (LPARAM)temp.data());
+#ifdef UNICODE
+			  temp_w = temp.data();
+			  temp_s.assign(temp_w.begin(),temp_w.end());
+              exp->materialOutputDir = temp_s;
+#else
               exp->materialOutputDir = temp;
+#endif
 
               len = SendDlgItemMessage(hWnd, IDC_TEXDIR, WM_GETTEXTLENGTH, 0, 0);
 					    temp.Resize(len+1);
 					    SendDlgItemMessage(hWnd, IDC_TEXDIR, WM_GETTEXT, len+1, (LPARAM)temp.data());
+#ifdef UNICODE
+			  temp_w = temp.data();
+			  temp_s.assign(temp_w.begin(),temp_w.end());
+              exp->texOutputDir = temp_s;
+#else
               exp->texOutputDir = temp;
+#endif
 
               len = SendDlgItemMessage(hWnd, IDC_MESHDIR, WM_GETTEXTLENGTH, 0, 0);
 					    temp.Resize(len+1);
 					    SendDlgItemMessage(hWnd, IDC_MESHDIR, WM_GETTEXT, len+1, (LPARAM)temp.data());
+#ifdef UNICODE
+			  temp_w = temp.data();
+			  temp_s.assign(temp_w.begin(),temp_w.end());
+              exp->meshOutputDir = temp_s;
+#else
               exp->meshOutputDir = temp;
-
+#endif
               len = SendDlgItemMessage(hWnd, IDC_PROGDIR, WM_GETTEXTLENGTH, 0, 0);
 					    temp.Resize(len+1);
 					    SendDlgItemMessage(hWnd, IDC_PROGDIR, WM_GETTEXT, len+1, (LPARAM)temp.data());
+#ifdef UNICODE
+			  temp_w = temp.data();
+			  temp_s.assign(temp_w.begin(),temp_w.end());
+              exp->programOutputDir = temp_s;
+#else
               exp->programOutputDir = temp;
+#endif
 
               exp->useSharedGeom = IsDlgButtonChecked(hWnd, IDC_SHAREDGEOM) ? true : false;
               exp->generateLOD = IsDlgButtonChecked(hWnd, IDC_GENLOD) ? true : false;
@@ -346,7 +431,13 @@ int	OgreSceneExporter::DoExport(const TCHAR* name, ExpInterface* pExpInterface, 
   params.exportAll = (options & SCENE_EXPORT_SELECTED) ? false : true;
 
   // Using only a scene filename, construct the other paths
+#ifdef UNICODE
+  std::wstring scenePath_w = name;
+  std::string scenePath;
+  scenePath.assign(scenePath_w.begin(),scenePath_w.end());
+#else
   std::string scenePath = name;
+#endif
   for (int i=0; i<scenePath.length(); ++i)
   {
     scenePath[i]=tolower(scenePath[i]);
@@ -398,7 +489,13 @@ int	OgreSceneExporter::DoExport(const TCHAR* name, ExpInterface* pExpInterface, 
   GetMasterUnitInfo(&unitType, &unitScale);
   params.lum = ConvertToMeter(unitType) * unitScale;
 
+#ifdef UNICODE
+  std::wstring plugConfDir_w = IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR);
+  std::string plugConfDir;
+  plugConfDir.assign(plugConfDir_w.begin(),plugConfDir_w.end());
+#else
   std::string plugConfDir = IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR);
+#endif
   std::string xmlConfPath = plugConfDir + "\\EasyOgreExporter\\config.xml";
   loadExportConf(xmlConfPath, params);
 
@@ -734,7 +831,14 @@ bool OgreExporter::exportScene()
 
   m_params.currentRootJoints.clear();
 
+#ifdef UNICODE
+  std::wstring plugConfDir_w = IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR);
+  std::string plugConfDir;
+  plugConfDir.assign(plugConfDir_w.begin(),plugConfDir_w.end());
+#else
   std::string plugConfDir = IPathConfigMgr::GetPathConfigMgr()->GetDir(APP_PLUGCFG_DIR);
+#endif
+
   _mkdir((std::string(plugConfDir + "\\EasyOgreExporter")).c_str());
 
   std::string xmlIGameConfPath = plugConfDir + "\\EasyOgreExporter\\IGameProp.xml";
@@ -744,7 +848,13 @@ bool OgreExporter::exportScene()
   saveExportConf(xmlConfPath);
 
   pIGame = GetIGameInterface();
+#ifdef UNICODE
+  std::wstring xmlIGameConfPath_w; 
+  xmlIGameConfPath_w.assign(xmlIGameConfPath.begin(),xmlIGameConfPath.end());
+  pIGame->SetPropertyFile(xmlIGameConfPath_w.data());
+#else
   pIGame->SetPropertyFile(xmlIGameConfPath.c_str());
+#endif
 
   // Passing in true causing crash on IGameNode->GetNodeParent.  
   // Test for selection in Translate node.
@@ -752,7 +862,13 @@ bool OgreExporter::exportScene()
   pIGame->SetStaticFrame(0);
 
   std::string sTitle = "Easy Ogre Exporter: " + m_params.sceneFilename;
+#ifdef UNICODE
+  std::wstring title_w;
+  title_w.assign(sTitle.begin(),sTitle.end());
+  GetCOREInterface()->ProgressStart(title_w.data(), TRUE, progressCb, 0);
+#else
   GetCOREInterface()->ProgressStart((char*)sTitle.c_str(), TRUE, progressCb, 0);
+#endif
 
   //WARNING this apply transform only matrix from on iGameNode not on max iNode
   IGameConversionManager* pConversionManager = GetConversionManager();
@@ -785,13 +901,21 @@ bool OgreExporter::exportScene()
 
   if (sceneData)
   {
+#ifdef UNICODE
+    GetCOREInterface()->ProgressUpdate(95, FALSE, L"Writing scene file.");
+#else
     GetCOREInterface()->ProgressUpdate(95, FALSE, "Writing scene file.");
+#endif
     sceneData->writeSceneFile();
   }
 
   if (ogreConverter)
   {
+#ifdef UNICODE
+    GetCOREInterface()->ProgressUpdate(98, FALSE, L"Writing material file.");
+#else
     GetCOREInterface()->ProgressUpdate(98, FALSE, "Writing material file.");
+#endif
     ogreConverter->writeMaterialFile();
   }
 
@@ -809,7 +933,11 @@ bool OgreExporter::exportScene()
 
   pIGame->ReleaseIGame();
   
+#ifdef UNICODE
+  GetCOREInterface()->ProgressUpdate(99, FALSE, L"Done.");
+#else
   GetCOREInterface()->ProgressUpdate(99, FALSE, "Done.");
+#endif
   EasyOgreExporterLog("Info: export done.\n");
 
   //close the progress bar

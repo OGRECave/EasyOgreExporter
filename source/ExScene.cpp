@@ -259,7 +259,14 @@ namespace EasyOgreExporter
     rot.w = -rot.w;
 
 		TiXmlElement* pNodeElement = new TiXmlElement("node");
+#ifdef UNICODE
+		std::wstring name_w = pGameNode->GetName();
+		std::string name_s;
+		name_s.assign(name_w.begin(),name_w.end());
+		pNodeElement->SetAttribute("name", name_s.c_str());
+#else
 		pNodeElement->SetAttribute("name", pGameNode->GetName());
+#endif
 		pNodeElement->SetAttribute("id", id_counter);
 		pNodeElement->SetAttribute("isTarget", "false");
 		parent->LinkEndChild(pNodeElement);
@@ -325,7 +332,14 @@ namespace EasyOgreExporter
                   std::string clipName = formatClipName(std::string(clip->GetFilename()), clipId);
                 #else
                 MaxSDK::AssetManagement::AssetUser &clipFile = const_cast<MaxSDK::AssetManagement::AssetUser&>(clip->GetFile());
+#ifdef UNICODE
+				std::wstring clipFileName_w = clipFile.GetFileName();
+				std::string clipFileName_s;
+				clipFileName_s.assign(clipFileName_w.begin(),clipFileName_w.end());
+				std::string clipName = formatClipName(clipFileName_s, clipId);
+#else
                   std::string clipName = formatClipName(std::string(clipFile.GetFileName()), clipId);
+#endif
                 #endif
 
                 clip->GetGlobalBounds(&start, &stop);
@@ -376,7 +390,14 @@ namespace EasyOgreExporter
             }
 
             Interval ianim(tv, te);
+#ifdef UNICODE
+			std::wstring name_w = frameTagMgr->GetNameByID(t);
+			std::string name_s;
+			name_s.assign(name_w.begin(), name_w.end());
+            exportNodeAnimation(pAnimsElement, pGameNode, ianim, std::string(name_s), mParams.resampleAnims, type);
+#else
             exportNodeAnimation(pAnimsElement, pGameNode, ianim, std::string(frameTagMgr->GetNameByID(t)), mParams.resampleAnims, type);
+#endif
           }
         }
       }
@@ -504,7 +525,13 @@ namespace EasyOgreExporter
       return 0;
     }
 
+#ifdef UNICODE
+	std::wstring lightClass_w = pGameLight->GetClassName();
+    std::string lightClass;
+	lightClass.assign(lightClass_w.begin(), lightClass_w.end());
+#else
     std::string lightClass = pGameLight->GetClassName();
+#endif
     if(lightClass == "Missing Light")
     {
       EasyOgreExporterLog("Unsupported light type. Failed to export.\n");

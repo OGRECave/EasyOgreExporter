@@ -248,13 +248,26 @@ namespace EasyOgreExporter
             std::string texExt = ToLowerCase(texName.substr(texName.find_last_of(".") + 1));
 
             //DDS conversion
+#ifdef UNICODE
+			std::wstring absFilename_w;
+			absFilename_w.assign(tex.absFilename.begin(),tex.absFilename.end());
+			if(params.convertToDDS && (texExt != "dds") && DoesFileExist(absFilename_w.data()))
+#else
             if(params.convertToDDS && (texExt != "dds") && DoesFileExist(tex.absFilename.c_str()))
+#endif
             {
               destFile = makeOutputPath(params.outputDir, params.texOutputDir, texName.substr(0, texName.find_last_of(".")), "DDS");
 
               //load bitmap
               BMMRES status;
-              BitmapInfo bi(tex.absFilename.c_str());
+ #ifdef UNICODE
+			std::string absFilename_s = tex.absFilename.c_str();
+			std::wstring absFilename_w;
+			absFilename_w.assign(absFilename_s.begin(),absFilename_s.end());
+			BitmapInfo bi(absFilename_w.c_str());
+#else
+			BitmapInfo bi(tex.absFilename.c_str());
+#endif
               Bitmap* bitmap = TheManager->Create(&bi); 
               bitmap = TheManager->Load(&bi, &status);
               if (status == BMMRES_SUCCESS) 
@@ -331,23 +344,38 @@ namespace EasyOgreExporter
                   nvtt::CompressionOptions compressionOptions;
                   compressionOptions.setQuality(nvtt::Quality_Production);
                   compressionOptions.setFormat(bitmap->HasAlpha() ? nvtt::Format_DXT5 : nvtt::Format_DXT1);
+#if(NVTT_VERSION<200)
                   compressionOptions.setTargetDecoder(nvtt::Decoder_D3D9);
-                  
+#endif                  
+
+#if(NVTT_VERSION<200)
                   nvtt::Context context;
                   ddsMode = context.process(inputOptions, compressionOptions, outputOptions);
+#else
+                  nvtt::Compressor compressor;
+                  ddsMode = compressor.process(inputOptions, compressionOptions, outputOptions);
+#endif                  
                   free(pBuff);
                 }
                 TheManager->DelBitmap(bitmap);
               }
             }
 
-            if(!ddsMode)
-            {
-			        // Copy file texture to output dir
-              if(!CopyFile(tex.absFilename.c_str(), destFile.c_str(), false))
-                EasyOgreExporterLog("Error while copying texture file %s\n", tex.absFilename.c_str());
-            }
-            
+			if(!ddsMode)
+			{
+				// Copy file texture to output dir
+#ifdef UNICODE
+				std::wstring absFilename_w;
+				absFilename_w.assign(tex.absFilename.begin(),tex.absFilename.end());
+				std::wstring destFile_w;
+				destFile_w.assign(destFile.begin(),destFile.end());
+				if(!CopyFile(absFilename_w.data(), destFile_w.data(), false))
+#else
+				if(!CopyFile(tex.absFilename.c_str(), destFile.c_str(), false))
+#endif
+					EasyOgreExporterLog("Error while copying texture file %s\n", tex.absFilename.c_str());
+			}
+
             lTexDone.push_back(tex.absFilename);
           }
 		    }

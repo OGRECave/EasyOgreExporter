@@ -46,7 +46,14 @@ namespace EasyOgreExporter
     bool ret = false;
     
     std::string meshName = mParams.resPrefix;
+#ifdef UNICODE
+	std::wstring name_w = pGameNode->GetName();
+	std::string name_s;
+	name_s.assign(name_w.begin(),name_w.end());
+    meshName.append(name_s);
+#else
     meshName.append(pGameNode->GetName());
+#endif
     meshName = optimizeResourceName(meshName);
     ExMesh* mesh = new ExMesh(this, mParams, pGameNode, pGameMesh, meshName);
 

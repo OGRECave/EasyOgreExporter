@@ -779,7 +779,14 @@ namespace EasyOgreExporter
                 std::string clipName = formatClipName(std::string(clip->GetFilename()), clipId);
               #else
               MaxSDK::AssetManagement::AssetUser &clipFile = const_cast<MaxSDK::AssetManagement::AssetUser&>(clip->GetFile());
+#ifdef UNICODE
+			  std::wstring clipFileName_w = clipFile.GetFileName();
+			  std::string clipFileName_s;
+			  clipFileName_s.assign(clipFileName_w.begin(),clipFileName_w.end());
+                std::string clipName = formatClipName(clipFileName_s, clipId);
+#else
                 std::string clipName = formatClipName(std::string(clipFile.GetFileName()), clipId);
+#endif
               #endif
               
               clipName.append("_morph");
@@ -832,7 +839,14 @@ namespace EasyOgreExporter
           }
 
           Interval ianim(tv, te);
+#ifdef UNICODE
+		  std::wstring name_w = frameTagMgr->GetNameByID(t);
+		  std::string name_s;
+		  name_s.assign(name_w.begin(),name_w.end());
+          exportMorphAnimation(ianim, name_s);
+#else
           exportMorphAnimation(ianim, std::string(frameTagMgr->GetNameByID(t)));
+#endif
         }
       }
     }
@@ -1049,7 +1063,13 @@ namespace EasyOgreExporter
       morphChannel* pMorphChannel = validChan[i];
 		  pMorphChannel->rebuildChannel();
 
+#ifdef UNICODE
+		  std::wstring posename_w = pMorphChannel->mName;
+		  std::string posename;
+		  posename.assign(posename_w.begin(),posename_w .end());
+#else
 		  std::string posename = pMorphChannel->mName;
+#endif
 		  int numMorphVertices = pMorphChannel->mNumPoints;
       //poses can have spaces before or after the name
       trim(posename);
@@ -1175,7 +1195,16 @@ namespace EasyOgreExporter
                   std::string clipName = formatClipName(std::string(clip->GetFilename()), clipId);
                 #else
                 MaxSDK::AssetManagement::AssetUser &clipFile = const_cast<MaxSDK::AssetManagement::AssetUser&>(clip->GetFile());
-                  std::string clipName = formatClipName(std::string(clipFile.GetFileName()), clipId);
+
+#ifdef UNICODE
+				std::wstring clipFileName_w = clipFile.GetFileName();
+				std::string clipFileName_s;
+				clipFileName_s.assign(clipFileName_w.begin(),clipFileName_w.end());
+                std::string clipName = formatClipName(clipFileName_s, clipId);
+#else
+                std::string clipName = formatClipName(std::string(clipFile.GetFileName()), clipId);
+#endif
+                
                 #endif
                 
                 clipName.append("_poses");
@@ -1228,7 +1257,14 @@ namespace EasyOgreExporter
             }
 
             Interval ianim(tv, te);
+#ifdef UNICODE
+			std::wstring name_w = frameTagMgr->GetNameByID(t);
+			std::string name_s;
+			name_s.assign(name_w.begin(), name_w.end());
+            exportPosesAnimation(ianim, name_s, validChan, poseIndexList, !m_params.resampleAnims);
+#else
             exportPosesAnimation(ianim, std::string(frameTagMgr->GetNameByID(t)), validChan, poseIndexList, !m_params.resampleAnims);
+#endif
           }
         }        
       }
