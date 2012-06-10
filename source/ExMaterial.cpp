@@ -792,8 +792,13 @@ namespace EasyOgreExporter
 			if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == "Normal Bump")))
 #endif
 			{
+#ifdef UNICODE
 				MSTR path;
 				MSTR texName;
+#else
+        std::string path;
+        std::string texName;
+#endif
 				if(pGameTexture->IsEntitySupported())
 				{
 					path = pGameTexture->GetBitmapFileName();
@@ -842,16 +847,19 @@ namespace EasyOgreExporter
 					}
 				}
 
-				EasyOgreExporterLog("Texture Index: %d\n",i);
+				EasyOgreExporterLog("Texture Index: %d\n", i);
+				bool bFoundTexture = false;
+        bool bFileExist = false;
 #ifdef UNICODE
 				EasyOgreExporterLog("Texture Name: %ls\n", texName.data());
+				MaxSDK::Util::Path textureName(path);
+        bFileExist = DoesFileExist(path);
 #else
 				EasyOgreExporterLog("Texture Name: %s\n", texName.c_str());
+				MaxSDK::Util::Path textureName(path.c_str());
+        bFileExist = DoesFileExist(path.c_str());
 #endif
-
-				bool bFoundTexture = false;
-				MaxSDK::Util::Path textureName(path);
-				if(!DoesFileExist(path))
+        if(!bFileExist)
 				{
 #ifdef PRE_MAX_2010
 					if(IPathConfigMgr::GetPathConfigMgr()->SearchForXRefs(textureName))

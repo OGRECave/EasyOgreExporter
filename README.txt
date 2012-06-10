@@ -2,17 +2,18 @@
 /*     EASY OGRE MAX EXPORTER     */
 /**********************************/
 
-/**********************************/
-/* Author     : Bastien BOURINEAU */
-/* Start Date : January 13, 2012  */
-/* Licence    : LGPL V2 or later  */
-/**********************************/
+/**********************************************************/
+/* Author       : Bastien BOURINEAU                       */
+/* Start Date   : January 13, 2012                        */
+/* Licence      : LGPL V2 or later                        */
+/* Contributors : Nir Benda (BJoe) for UNICODE conversion */
+/**********************************************************/
 ////////////////////////////////////
 
 Ogre wiki page : http://www.ogre3d.org/tikiwiki/Easy+Ogre+Exporter
 Ogre forum thread : http://www.ogre3d.org/forums/viewtopic.php?f=8&t=68688
 
-#Version 0.992 : May 24, 2012
+#Version 0.993 : June 10, 2012
 
  - Ogre Scene file
  - meshs
