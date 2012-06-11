@@ -63,6 +63,8 @@
 // OGRE API
 // Max defines PI and OgreMath.h fails to compile as a result.
 #undef PI 
+// Max defines base_type and boost(which ogre uses) fails to compile as a result.
+#undef base_type
 #include "Ogre.h"
 
 // This used to be contained in a file called OgreNoMemoryMacros.h, which was removed in version 1.6 of Ogre.
