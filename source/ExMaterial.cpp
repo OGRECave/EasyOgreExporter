@@ -1330,7 +1330,8 @@ namespace EasyOgreExporter
 		else if(pass == ExShader::SP_LIGHT)
 		{
 			if(m_hasAlpha)
-				outMaterial << "\n\t\t\tseparate_scene_blend add modulate\n";
+        outMaterial << "\n\t\t\tseparate_scene_blend src_alpha one src_alpha one_minus_src_alpha \n";
+        //outMaterial << "\n\t\t\tseparate_scene_blend add modulate\n";
 			else
 				outMaterial << "\n\t\t\tscene_blend add\n";
 

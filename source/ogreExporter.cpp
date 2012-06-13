@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 0.993f;
+float EXVERSION = 0.994f;
 
 namespace EasyOgreExporter
 {
@@ -67,29 +67,29 @@ namespace EasyOgreExporter
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETCURSEL, (int)exp->meshVersion, 0);
 
         //fill material prefix
-		std::wstring resPrefix_w;
-		resPrefix_w.assign(exp->resPrefix.begin(),exp->resPrefix.end());
-		SendDlgItemMessage(hWnd, IDC_RESPREFIX, WM_SETTEXT, 0, (LPARAM)resPrefix_w.data());
+		    std::wstring resPrefix_w;
+		    resPrefix_w.assign(exp->resPrefix.begin(),exp->resPrefix.end());
+		    SendDlgItemMessage(hWnd, IDC_RESPREFIX, WM_SETTEXT, 0, (LPARAM)resPrefix_w.data());
 
         //fill material sub dir
-		std::wstring materialOutputDir_w;
-		materialOutputDir_w.assign(exp->materialOutputDir.begin(),exp->materialOutputDir.end());
+		    std::wstring materialOutputDir_w;
+		    materialOutputDir_w.assign(exp->materialOutputDir.begin(),exp->materialOutputDir.end());
         SendDlgItemMessage(hWnd, IDC_MATDIR, WM_SETTEXT, 0, (LPARAM)materialOutputDir_w.data());
 
         //fill texture sub dir
-		std::wstring texOutputDir_w;
-		texOutputDir_w.assign(exp->texOutputDir.begin(),exp->texOutputDir.end());
+		    std::wstring texOutputDir_w;
+		    texOutputDir_w.assign(exp->texOutputDir.begin(),exp->texOutputDir.end());
         SendDlgItemMessage(hWnd, IDC_TEXDIR, WM_SETTEXT, 0, (LPARAM)texOutputDir_w.data());
 
         //fill mesh subdir
-		std::wstring meshOutputDir_w;
-		meshOutputDir_w.assign(exp->meshOutputDir.begin(),exp->meshOutputDir.end());
+		    std::wstring meshOutputDir_w;
+		    meshOutputDir_w.assign(exp->meshOutputDir.begin(),exp->meshOutputDir.end());
         SendDlgItemMessage(hWnd, IDC_MESHDIR, WM_SETTEXT, 0, (LPARAM)meshOutputDir_w.data());
 
         //fill prog subdir
-		std::wstring programOutputDir_w;
-		programOutputDir_w.assign(exp->programOutputDir.begin(),exp->programOutputDir.end());
-		SendDlgItemMessage(hWnd, IDC_PROGDIR, WM_SETTEXT, 0, (LPARAM)programOutputDir_w.data());
+		    std::wstring programOutputDir_w;
+		    programOutputDir_w.assign(exp->programOutputDir.begin(),exp->programOutputDir.end());
+		    SendDlgItemMessage(hWnd, IDC_PROGDIR, WM_SETTEXT, 0, (LPARAM)programOutputDir_w.data());
 #else
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETMINVISIBLE, 30, 0);
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_RESETCONTENT, 0, 0);
@@ -97,8 +97,9 @@ namespace EasyOgreExporter
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.7");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.4");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.0");
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETCURSEL, (int)exp->meshVersion, 0);
 
-		//fill material prefix
+		    //fill material prefix
         SendDlgItemMessage(hWnd, IDC_RESPREFIX, WM_SETTEXT, 0, (LPARAM)(char*)exp->resPrefix.c_str());
 
         //fill material sub dir
@@ -218,16 +219,16 @@ namespace EasyOgreExporter
                 }
               }
 
-		      TSTR temp;
+              TSTR temp;
               int len = 0;
               
               len = SendDlgItemMessage(hWnd, IDC_RESPREFIX, WM_GETTEXTLENGTH, 0, 0);
 					    temp.Resize(len+1);
 					    SendDlgItemMessage(hWnd, IDC_RESPREFIX, WM_GETTEXT, len+1, (LPARAM)temp.data());
 #ifdef UNICODE
-			  std::wstring temp_w = temp.data();
-			  std::string temp_s;
-			  temp_s.assign(temp_w.begin(),temp_w.end());
+			        std::wstring temp_w = temp.data();
+			        std::string temp_s;
+			        temp_s.assign(temp_w.begin(),temp_w.end());
               exp->resPrefix = temp_s;
 #else
               exp->resPrefix = temp;
@@ -237,8 +238,8 @@ namespace EasyOgreExporter
 					    temp.Resize(len+1);
 					    SendDlgItemMessage(hWnd, IDC_MATDIR, WM_GETTEXT, len+1, (LPARAM)temp.data());
 #ifdef UNICODE
-			  temp_w = temp.data();
-			  temp_s.assign(temp_w.begin(),temp_w.end());
+			        temp_w = temp.data();
+			        temp_s.assign(temp_w.begin(),temp_w.end());
               exp->materialOutputDir = temp_s;
 #else
               exp->materialOutputDir = temp;
@@ -248,8 +249,8 @@ namespace EasyOgreExporter
 					    temp.Resize(len+1);
 					    SendDlgItemMessage(hWnd, IDC_TEXDIR, WM_GETTEXT, len+1, (LPARAM)temp.data());
 #ifdef UNICODE
-			  temp_w = temp.data();
-			  temp_s.assign(temp_w.begin(),temp_w.end());
+			        temp_w = temp.data();
+			        temp_s.assign(temp_w.begin(),temp_w.end());
               exp->texOutputDir = temp_s;
 #else
               exp->texOutputDir = temp;
@@ -259,8 +260,8 @@ namespace EasyOgreExporter
 					    temp.Resize(len+1);
 					    SendDlgItemMessage(hWnd, IDC_MESHDIR, WM_GETTEXT, len+1, (LPARAM)temp.data());
 #ifdef UNICODE
-			  temp_w = temp.data();
-			  temp_s.assign(temp_w.begin(),temp_w.end());
+			        temp_w = temp.data();
+			        temp_s.assign(temp_w.begin(),temp_w.end());
               exp->meshOutputDir = temp_s;
 #else
               exp->meshOutputDir = temp;
@@ -269,8 +270,8 @@ namespace EasyOgreExporter
 					    temp.Resize(len+1);
 					    SendDlgItemMessage(hWnd, IDC_PROGDIR, WM_GETTEXT, len+1, (LPARAM)temp.data());
 #ifdef UNICODE
-			  temp_w = temp.data();
-			  temp_s.assign(temp_w.begin(),temp_w.end());
+			        temp_w = temp.data();
+			        temp_s.assign(temp_w.begin(),temp_w.end());
               exp->programOutputDir = temp_s;
 #else
               exp->programOutputDir = temp;
