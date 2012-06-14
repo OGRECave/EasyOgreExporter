@@ -801,8 +801,15 @@ namespace EasyOgreExporter
 #endif
 				if(pGameTexture->IsEntitySupported())
 				{
-					path = pGameTexture->GetBitmapFileName();
-					texName = pGameTexture->GetTextureName();
+          texName = pGameTexture->GetTextureName();
+          
+          // hack in case of the user cancel the bitmap add, max sdk just crash on null pointer ...
+#ifdef UNICODE
+          if(!texName.isNull())
+#else
+          if(!texName.empty())
+#endif
+            path = pGameTexture->GetBitmapFileName();
 				}
 				else
 					//normal map
@@ -846,7 +853,7 @@ namespace EasyOgreExporter
 						}
 					}
 				}
-
+        
 				EasyOgreExporterLog("Texture Index: %d\n", i);
 				bool bFoundTexture = false;
         bool bFileExist = false;
