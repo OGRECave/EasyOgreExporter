@@ -20,6 +20,7 @@
 #include "decomp.h"
 #include "iskin.h"
 #include "IMixer8.h"
+#include "iInstanceMgr.h"
 
 inline void trim(std::string& str)
 {
@@ -758,6 +759,39 @@ inline std::vector<int> GetPointAnimationsKeysTime(IGameNode* pGameNode, Interva
   }
 
   return animKeys;
+}
+
+inline std::string getFirstInstanceName(IGameNode* pGameNode)
+{
+  INodeTab nodeInstances;
+  IInstanceMgr* instMgr = IInstanceMgr::GetInstanceMgr();
+  
+  //Get nodes instances
+  instMgr->GetInstances(*(pGameNode->GetMaxNode()), nodeInstances);
+
+  std::string nodeName;
+#ifdef UNICODE
+	std::wstring pNodeName_w = nodeInstances[0]->GetName();
+	nodeName.assign(pNodeName_w.begin(), pNodeName_w.end());
+#else
+	nodeName = nodeInstances[nodeInstances.Count() - 1]->GetName();
+#endif
+
+  return nodeName;
+}
+
+inline bool isFirstInstance(IGameNode* pGameNode)
+{
+  INodeTab nodeInstances;
+  IInstanceMgr* instMgr = IInstanceMgr::GetInstanceMgr();
+  
+  //Get nodes instances
+  instMgr->GetInstances(*(pGameNode->GetMaxNode()), nodeInstances);
+
+  if(nodeInstances[nodeInstances.Count() - 1] == pGameNode->GetMaxNode())
+    return true;
+  
+  return false;
 }
 
 #endif

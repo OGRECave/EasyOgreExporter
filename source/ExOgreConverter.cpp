@@ -44,7 +44,7 @@ namespace EasyOgreExporter
   bool ExOgreConverter::writeEntityData(IGameNode* pGameNode, IGameObject* pGameObject, IGameMesh* pGameMesh)
   {
     bool ret = false;
-    
+
     std::string meshName = mParams.resPrefix;
 #ifdef UNICODE
 	std::wstring name_w = pGameNode->GetName();
@@ -67,7 +67,7 @@ namespace EasyOgreExporter
     }
 
     // Write skeleton binary
-    if (mParams.exportSkeleton && mesh->getSkeleton())
+    if (mParams.exportSkeleton && mesh->getSkeleton() && isFirstInstance(pGameNode))
     {
       // Load skeleton animations
       mesh->getSkeleton()->loadAnims(pGameNode);

@@ -407,7 +407,7 @@ namespace EasyOgreExporter
 		return pNodeElement;
 	}
 
-	TiXmlElement* ExScene::writeEntityData(TiXmlElement* parent, IGameMesh* pGameMesh)
+	TiXmlElement* ExScene::writeEntityData(TiXmlElement* parent, IGameNode* pGameNode, IGameMesh* pGameMesh)
 	{
 		if(!parent)
       return 0;
@@ -433,7 +433,12 @@ namespace EasyOgreExporter
     pEntityElement->SetAttribute("name", meshName.c_str());
 		pEntityElement->SetAttribute("id", id_counter);
 
-    std::string meshPath = optimizeFileName(meshName + ".mesh");
+    std::string instName = mParams.resPrefix;
+    instName.append(getFirstInstanceName(pGameNode));
+    instName = optimizeResourceName(instName);
+    
+    std::string meshPath = optimizeFileName(instName + ".mesh");
+
     pEntityElement->SetAttribute("meshFile", meshPath.c_str());
     pEntityElement->SetAttribute("castShadows", getBoolString(pGameMesh->CastShadows()).c_str());
     if(renderDistance != 0.0f)

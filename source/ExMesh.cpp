@@ -381,6 +381,16 @@ namespace EasyOgreExporter
       m_Mesh->nameSubMesh(subName, i);
     }
 
+    //ignore instanciated mesh
+    if(isFirstInstance(m_GameNode) == false)
+    {
+      EasyOgreExporterLog("Info: Ignore instanciated mesh\n");
+      Ogre::MeshManager::getSingleton().remove(pMesh->getHandle());
+      pMesh.setNull();
+      m_Mesh = 0;
+      return false;
+    }
+
     // Create poses
     if (m_params.exportPoses && m_pMorphR3)
       createPoses();

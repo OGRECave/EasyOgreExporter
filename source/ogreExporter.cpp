@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 0.994f;
+float EXVERSION = 0.995f;
 
 namespace EasyOgreExporter
 {
@@ -996,12 +996,12 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
 
                 if(ogreConverter)
                   if (!ogreConverter->writeEntityData(pGameNode, pGameObject, pGameMesh))
-                    EasyOgreExporterLog("Error, mesh skipped\n");
+                    EasyOgreExporterLog("Warning, mesh skipped\n");
 
                 if (sceneData)
                 {
                   parent = sceneData->writeNodeData(parent, pGameNode, IGameObject::IGAME_MESH);
-                  sceneData->writeEntityData(parent, pGameMesh);
+                  sceneData->writeEntityData(parent, pGameNode, pGameMesh);
                 }
               }
             }
