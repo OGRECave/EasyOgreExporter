@@ -488,6 +488,10 @@ namespace EasyOgreExporter
 									EasyOgreExporterLog("Warning: Couldn't locate texture: %s.\n", path);
 								}
 							}
+              else
+              {
+                bFoundTexture = true;
+              }
 
 							Texture tex;
 							tex.bCreateTextureUnit = true;
@@ -531,7 +535,7 @@ namespace EasyOgreExporter
 								if (status == BMMRES_SUCCESS)
 									if(bitmap->HasAlpha())
 									{
-										m_hasAlpha = true;
+										m_hasAlpha = (pBitmapTex->GetAlphaSource() == ALPHA_NONE) ? false : true;
 										m_bPreMultipliedAlpha = pBitmapTex->GetPremultAlpha(0) ? true : false;
 									}
 									TheManager->DelBitmap(bitmap);
@@ -779,9 +783,9 @@ namespace EasyOgreExporter
 			/*int numProps = pCont->GetNumberOfProperties();
 			for (int propIndex = 0; propIndex < numProps; ++propIndex)
 			{
-			IGameProperty* pProp = pCont->GetProperty(propIndex);
-			std::string pPropName = pProp->GetName();
-			EasyOgreExporterLog("Info : texture properties %s\n", pPropName.c_str());
+			  IGameProperty* pProp = pCont->GetProperty(propIndex);
+			  std::string pPropName = pProp->GetName();
+			  EasyOgreExporterLog("Info : texture properties %s\n", pPropName.c_str());
 			}
 			*/
 
@@ -984,7 +988,16 @@ namespace EasyOgreExporter
 							if (status == BMMRES_SUCCESS)
 								tex.bHasAlphaChannel = bitmap->HasAlpha();
 
-							m_hasAlpha = tex.bHasAlphaChannel;
+              if(tex.bHasAlphaChannel)
+              {
+                int alphaSrc = 0;
+							  IGameProperty* pAlphaSrc = pCont->QueryProperty(_T("alphaSource"));
+							  if(pAlphaSrc)
+							  {
+								  pAlphaSrc->GetPropertyValue(alphaSrc);
+								  m_hasAlpha = ((alphaSrc + 1) == ALPHA_NONE) ? false : true;
+							  }
+              }
 
 							int preMult = 0;
 							IGameProperty* pPreMult = pCont->QueryProperty(_T("preMultAlpha"));
