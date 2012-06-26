@@ -243,6 +243,9 @@ namespace EasyOgreExporter
     bool exportMorphAnimation(Interval animRange, std::string name);
     void createMorphAnimations();
     void updateBounds(Point3);
+    bool haveVertexColor;
+    bool haveVertexAlpha;
+    bool haveVertexIllum;
 
   private:
 	};

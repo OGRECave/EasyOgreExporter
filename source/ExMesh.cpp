@@ -33,7 +33,10 @@ namespace EasyOgreExporter
     m_pSkeleton = 0;
     m_pMorphR3 = 0;
     m_SphereRadius = 0;
-    
+    haveVertexColor = (pGameMesh->GetNumberOfColorVerts() > 0) ? true : false;
+    haveVertexAlpha = (pGameMesh->GetNumberOfAlphaVerts() > 0) ? true : false;
+    haveVertexIllum = (pGameMesh->GetNumberOfIllumVerts() > 0) ? true : false;
+
     getModifiers();
     buildVertices();
   }
@@ -68,7 +71,7 @@ namespace EasyOgreExporter
   {
     int numFaces = m_GameMesh->GetNumberOfFaces();
     Tab<int> mapChannels = m_GameMesh->GetActiveMapChannelNum();
-
+    
     int numVertices = numFaces * 3;
 
     // prepare faces table
@@ -100,14 +103,19 @@ namespace EasyOgreExporter
 
         Point3 normal = m_GameMesh->GetNormal(face->norm[j], true);
 
-        Point3 color = m_GameMesh->GetColorVertex(face->vert[j]);
-        float alpha = m_GameMesh->GetAlphaVertex(face->vert[j]);
-        if((color.x == -1) && (color.x == -1) && (color.x == -1))
-          color.x = color.y = color.z = 0;
-        if(alpha == -1)
-          alpha = 1.0f;
-
-        Point4 fullColor(color.x, color.y, color.z, alpha);
+        Point3 color(0, 0, 0);
+        Point4 fullColor(0, 0, 0, 1);
+        if(haveVertexColor && m_GameMesh->GetColorVertex(face->vert[j], color))
+        {
+          float alpha = 1.0f;
+          if(!m_GameMesh->GetAlphaVertex(face->vert[j], alpha))
+            alpha = 1.0f;
+          
+          if((color.x == -1) && (color.x == -1) && (color.x == -1))
+            color.x = color.y = color.z = 0;
+          
+          fullColor = Point4(color.x, color.y, color.z, alpha);
+        }
 
         vertex.vPos = pos;
         vertex.vNorm = normal;
@@ -125,18 +133,19 @@ namespace EasyOgreExporter
           vertex.lBoneIndex = getSkeleton()->getJointList(face->vert[j]);
         }
 
-        vertex.lTexCoords.resize(mapChannels.Count());
-        //vertex.lTangent.resize(mapChannels.Count());
-        //vertex.lBinormal.resize(mapChannels.Count());
         //TODO Tangent and Binormal
         for (size_t chan = 0; chan < mapChannels.Count(); chan++)
         {
-          Point3 uv(0, 0, 0);
-          if (m_GameMesh->GetMapVertex(mapChannels[chan], m_GameMesh->GetFaceTextureVertex(face->meshFaceIndex, j, mapChannels[chan]), uv))
+          //skip vertex color, alpha and illum channels
+          if(mapChannels[chan] > 0)
           {
-            uv.y = 1.0f - uv.y;
+            Point3 uv(0, 0, 0);
+            if (m_GameMesh->GetMapVertex(mapChannels[chan], m_GameMesh->GetFaceTextureVertex(face->meshFaceIndex, j, mapChannels[chan]), uv))
+            {
+              uv.y = 1.0f - uv.y;
+            }
+            vertex.lTexCoords.push_back(uv);
           }
-          vertex.lTexCoords[chan] = uv;
         }
 
         //look for a duplicated vertex
@@ -1477,7 +1486,7 @@ namespace EasyOgreExporter
     }
 
     // Add vertex colour
-    if (m_params.exportVertCol)
+    if (m_params.exportVertCol && haveVertexColor)
     {
       decl->addElement(0, vBufSegmentSize, Ogre::VET_COLOUR, Ogre::VES_DIFFUSE);
       vBufSegmentSize += Ogre::VertexElement::getTypeSize(Ogre::VET_COLOUR);
@@ -1486,10 +1495,15 @@ namespace EasyOgreExporter
     // Add texture coordinates
     //use VET_FLOAT2 to make ogre able to generate tangent ^^
     Tab<int> mapChannels = m_GameMesh->GetActiveMapChannelNum();
+    int countTex = 0;
     for (size_t i = 0; i < mapChannels.Count(); i++)
-    { 
-      decl->addElement(1, texSegmentSize, Ogre::VET_FLOAT2, Ogre::VES_TEXTURE_COORDINATES, i);
-      texSegmentSize += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT2);
+    {
+      if(mapChannels[i] > 0)
+      {
+        decl->addElement(1, texSegmentSize, Ogre::VET_FLOAT2, Ogre::VES_TEXTURE_COORDINATES, countTex);
+        texSegmentSize += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT2);
+        countTex++;
+      }
     }
 
     // Now create the vertex buffers.
@@ -1505,7 +1519,7 @@ namespace EasyOgreExporter
     // Lock them. pVert & pTexVert are pointers to the start of the hardware buffers.
     unsigned char* pVert = static_cast<unsigned char*>(vbuf->lock(Ogre::HardwareBuffer::HBL_DISCARD));
     unsigned char* pTexVert = static_cast<unsigned char*>(texBuf->lock(Ogre::HardwareBuffer::HBL_DISCARD));
-    Ogre::RGBA* pRGBA;
+    Ogre::ARGB* pCol;
     float* pFloat;
 
     // Get the element lists for the buffers.
@@ -1546,9 +1560,9 @@ namespace EasyOgreExporter
             break;
           case Ogre::VES_DIFFUSE:
             {
-              elem.baseVertexPointerToElement(pVert, &pRGBA);
-              Ogre::ColourValue col(vertex.vColor.x, vertex.vColor.y, vertex.vColor.z, vertex.vColor.w);
-              *pRGBA = Ogre::VertexElement::convertColourValue(col, Ogre::VertexElement::getBestColourVertexElementType());
+              elem.baseVertexPointerToElement(pVert, &pCol);
+              Ogre::ColourValue cv(vertex.vColor.x, vertex.vColor.y, vertex.vColor.z, vertex.vColor.w);
+							*pCol++ = Ogre::VertexElement::convertColourValue(cv, Ogre::VertexElement::getBestColourVertexElementType());
               //EasyOgreExporterLog("Info: vertex %d color : %f %f %f %f\n", i, vertex.vColor.x, vertex.vColor.y, vertex.vColor.z, vertex.vColor.w);
             }
             break;
