@@ -127,6 +127,9 @@ namespace EasyOgreExporter
 		m_hasSpecularMap = false;
 		m_hasReflectionMap = false;
 		m_hasBumpMap = false;
+    m_AmbIsVertColor = false;
+    m_DiffIsVertColor = false;
+
 		texUnitId = 0;
 		m_textures.clear();
 	}
@@ -439,7 +442,15 @@ namespace EasyOgreExporter
 #else
 						const char* pName = className.data();
 #endif
-						if (!strcmp(pName, "Bitmap"))
+            EasyOgreExporterLog("Info : Texture class name: %s.\n", pName);
+            if (!strcmp(pName, "Vertex Color"))
+            {
+              if (type == ID_DI)
+                m_DiffIsVertColor = true;
+              else if (type == ID_AM)
+                m_AmbIsVertColor = true;
+            }
+						else if (!strcmp(pName, "Bitmap"))
 						{
 							BitmapTex* pBitmapTex = static_cast<BitmapTex*>(pTexmap);
 #ifdef UNICODE
@@ -582,7 +593,6 @@ namespace EasyOgreExporter
 			m_shininess = 255.0f * glossiness;
 		}
 
-		//TODO
 		float luminance = 0.0f;
 		IGameProperty* pLuminance = pCont->QueryProperty(_T("luminance"));
 		if(pLuminance)
@@ -793,7 +803,7 @@ namespace EasyOgreExporter
 #ifdef UNICODE
 			if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == L"Normal Bump")))
 #else
-			if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == "Normal Bump")))
+			if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == "Normal Bump")) || (texClass == "Vertex Color"))
 #endif
 			{
 #ifdef UNICODE
@@ -816,7 +826,7 @@ namespace EasyOgreExporter
             path = pGameTexture->GetBitmapFileName();
 				}
 				else
-					//normal map
+			  //normal map
 				{
 					IGameProperty* pNormalMap = pCont->QueryProperty(_T("normal_map"));
 					if(pNormalMap)
@@ -958,9 +968,16 @@ namespace EasyOgreExporter
 									tex.bHasAlphaChannel = bitmap->HasAlpha();
 
 								TheManager->DelBitmap(bitmap);
+                m_hasAmbientMap = true;
 							}
-
-							m_hasAmbientMap = true;
+#ifdef UNICODE
+			        else if (texClass == L"Vertex Color")
+#else
+              else if (texClass == "Vertex Color")
+#endif
+              {
+                m_AmbIsVertColor = true;
+              }
 						}
 
 						tex.type = ID_AM;
@@ -970,7 +987,6 @@ namespace EasyOgreExporter
 					{
 						EasyOgreExporterLog("Diffuse channel texture.\n");
 						tex.bCreateTextureUnit = bFoundTexture;
-						m_hasDiffuseMap = true;
 
 						if(bFoundTexture)
 						{
@@ -1008,7 +1024,16 @@ namespace EasyOgreExporter
 							}
 
 							TheManager->DelBitmap(bitmap);
+              m_hasDiffuseMap = true;
 						}
+#ifdef UNICODE
+			      else if (texClass == L"Vertex Color")
+#else
+            else if (texClass == "Vertex Color")
+#endif
+            {
+              m_DiffIsVertColor = true;
+            }
 
 						tex.fAmount *= m_opacity;
 						tex.type = ID_DI;
@@ -1321,7 +1346,10 @@ namespace EasyOgreExporter
 			m_ambient.y = 1.0f;
 			m_ambient.z = 1.0f;
 		}
-		outMaterial << "\t\t\tambient " << m_ambient.x << " " << m_ambient.y << " " << m_ambient.z << " " << m_ambient.w << "\n";
+    if(m_AmbIsVertColor || (m_ambientLocked && m_DiffIsVertColor))
+		  outMaterial << "\t\t\tambient vertexcolour\n";
+    else
+      outMaterial << "\t\t\tambient " << m_ambient.x << " " << m_ambient.y << " " << m_ambient.z << " " << m_ambient.w << "\n";
 
 		//diffuse colour
 		//Format: diffuse (<red> <green> <blue> [<alpha>]| vertexcolour)
@@ -1331,7 +1359,11 @@ namespace EasyOgreExporter
 			m_diffuse.y = 1.0f;
 			m_diffuse.z = 1.0f;
 		}
-		outMaterial << "\t\t\tdiffuse " << m_diffuse.x << " " << m_diffuse.y << " " << m_diffuse.z << " " << m_diffuse.w << "\n";
+
+    if(m_DiffIsVertColor)
+		  outMaterial << "\t\t\tdiffuse vertexcolour\n";
+    else
+		  outMaterial << "\t\t\tdiffuse " << m_diffuse.x << " " << m_diffuse.y << " " << m_diffuse.z << " " << m_diffuse.w << "\n";
 
 		//specular colour and shininess
 		if(m_hasSpecularMap && (lod <= 0))

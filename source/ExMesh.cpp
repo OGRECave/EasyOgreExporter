@@ -107,10 +107,10 @@ namespace EasyOgreExporter
 
         Point3 color(0, 0, 0);
         Point4 fullColor(0, 0, 0, 1);
-        if(haveVertexColor && m_GameMesh->GetColorVertex(face->vert[j], color))
+        if(haveVertexColor && m_GameMesh->GetColorVertex(face->color[j], color))
         {
           float alpha = 1.0f;
-          if(!m_GameMesh->GetAlphaVertex(face->vert[j], alpha))
+          if(!m_GameMesh->GetAlphaVertex(face->alpha[j], alpha))
             alpha = 1.0f;
           
           if((color.x == -1) && (color.x == -1) && (color.x == -1))
@@ -155,7 +155,7 @@ namespace EasyOgreExporter
         int m_vertices_size = m_vertices.size();
 
         const static float sensivity_multiplier = 1.0f/0.000001f; //sensivity taken from the ExVertex comparison code
-		long int key = (int)(vertex.vPos.x*sensivity_multiplier+0.5f) + (int)(vertex.vPos.y*sensivity_multiplier+0.5f) + (int)(vertex.vPos.z*sensivity_multiplier+0.5f); //Hashing function
+		    long int key = (int)(vertex.vPos.x*sensivity_multiplier+0.5f) + (int)(vertex.vPos.y*sensivity_multiplier+0.5f) + (int)(vertex.vPos.z*sensivity_multiplier+0.5f); //Hashing function
         if (hash_table.count(key))
         {
             std::multimap<long int, int>::iterator itr;
@@ -1589,7 +1589,7 @@ namespace EasyOgreExporter
             {
               elem.baseVertexPointerToElement(pVert, &pCol);
               Ogre::ColourValue cv(vertex.vColor.x, vertex.vColor.y, vertex.vColor.z, vertex.vColor.w);
-                            *pCol++ = Ogre::VertexElement::convertColourValue(cv, Ogre::VertexElement::getBestColourVertexElementType());
+                            *pCol = Ogre::VertexElement::convertColourValue(cv, Ogre::VertexElement::getBestColourVertexElementType());
               //EasyOgreExporterLog("Info: vertex %d color : %f %f %f %f\n", i, vertex.vColor.x, vertex.vColor.y, vertex.vColor.z, vertex.vColor.w);
             }
             break;

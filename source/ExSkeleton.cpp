@@ -164,6 +164,13 @@ namespace EasyOgreExporter
     }
 
     int numSkinnedVertices = m_pGameSkin->GetNumOfSkinnedVerts();
+
+    if (numSkinnedVertices > numVertices)
+    {
+      MessageBox(GetCOREInterface()->GetMAXHWnd(), _T("The Mesh informations is not up-to-date, perform a \"Reset X-form\" and retry."), _T("Warning"), MB_OK);
+      return false;
+    }
+
     EasyOgreExporterLog("Num. Skinned Vertices: %d\n", numSkinnedVertices);
     std::vector<std::string> lwarnings;
     for(int i = 0; i < numSkinnedVertices; ++i)

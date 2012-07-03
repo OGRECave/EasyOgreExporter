@@ -105,7 +105,10 @@ namespace EasyOgreExporter
     bool m_hasSpecularMap;
     bool m_hasReflectionMap;
     bool m_hasBumpMap;
-		std::vector<Texture> m_textures;
+		bool m_AmbIsVertColor;
+    bool m_DiffIsVertColor;
+
+    std::vector<Texture> m_textures;
   private:
     unsigned int texUnitId;
   protected:
