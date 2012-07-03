@@ -118,20 +118,23 @@ namespace EasyOgreExporter
         lBoneIndex.clear();
       }
 
-      bool cmpPointList(std::vector<Point3> l1, std::vector<Point3> l2, float sensivity)
+      bool cmpPointList(const std::vector<Point3>& l1, const std::vector<Point3>& l2, float sensivity)
       {
-        if (l1.size() != l2.size())
+	    int l1_size = l1.size();
+        if (l1_size != l2.size())
           return false;
 
         bool ret = true;
         int i = 0;
-        while(i < l1.size() && ret)
+        while(i < l1_size)
         {
           Point3 uv1 = l1[i];
           Point3 uv2 = l2[i];
           if(!(uv1.Equals(uv2, sensivity)))
+		  {
             ret = false;
-
+			break;
+		  }
           i++;
         }
 
@@ -140,8 +143,9 @@ namespace EasyOgreExporter
 
       bool operator==(ExVertex const& b)
       {
-        float sensivity = 0.000001f;
-        return (vPos.Equals(b.vPos, sensivity) && 
+        const static float sensivity = 0.000001f;
+
+		return (vPos.Equals(b.vPos, sensivity) && 
             vNorm.Equals(b.vNorm, sensivity) && 
             vColor.Equals(b.vColor, sensivity) &&
             /*(iMaxId == b.iMaxId) &&*/ cmpPointList(lTexCoords, b.lTexCoords, sensivity) && cmpPointList(lTangent, b.lTangent, sensivity) && cmpPointList(lBinormal, b.lBinormal, sensivity));
@@ -149,7 +153,7 @@ namespace EasyOgreExporter
 
       bool operator!=(ExVertex const& b)
       {
-        float sensivity = 0.000001f;
+        const static float sensivity = 0.000001f;
         return (!vPos.Equals(b.vPos, sensivity) ||
             !vNorm.Equals(b.vNorm, sensivity) || 
             !vColor.Equals(b.vColor, sensivity) ||

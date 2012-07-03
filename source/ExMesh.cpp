@@ -150,11 +150,13 @@ namespace EasyOgreExporter
 
         //look for a duplicated vertex
         int sameFound = -1;
-        for(int vi = 0; vi < m_vertices.size() && (sameFound == -1); vi ++)
+		int m_vertices_size = m_vertices.size();
+        for(int vi = 0; vi < m_vertices_size ; vi ++)
         {
           if (m_vertices[vi] == vertex)
           {
             sameFound = vi;
+			break;
           }
         }
 
@@ -162,7 +164,7 @@ namespace EasyOgreExporter
         if(sameFound == -1)
         {
           m_vertices.push_back(vertex);
-          m_faces[face->meshFaceIndex].vertices[j] = m_vertices.size() -1;
+          m_faces[face->meshFaceIndex].vertices[j] =  m_vertices_size; //  instead of (m_vertices.size() -1)
         }
         else
         {
