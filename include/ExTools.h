@@ -663,6 +663,9 @@ inline std::vector<int> GetAnimationsKeysTime(IGameNode* pGameNode, Interval ani
     }
   }
 
+  //add the first pos as a key
+  animKeys.push_back(animRange.Start());
+
   if(pGameControl->IsAnimated(IGAME_POS))
   {
     if(!GetAnimationsPosKeysTime(pGameControl, animRange, &animKeys))
@@ -671,7 +674,6 @@ inline std::vector<int> GetAnimationsKeysTime(IGameNode* pGameNode, Interval ani
       if(pGameControl->GetFullSampledKeys(poskeys, 1, IGameControlType(IGAME_TM), true))
       {
         AddKeyTabToVector(poskeys, animRange, &animKeys);
-        return animKeys;
       }
     }
   }
@@ -684,10 +686,6 @@ inline std::vector<int> GetAnimationsKeysTime(IGameNode* pGameNode, Interval ani
       if(pGameControl->GetFullSampledKeys(rotkeys, 1, IGameControlType(IGAME_TM), true))
       {
         AddKeyTabToVector(rotkeys, animRange, &animKeys);
-
-        std::sort(animKeys.begin(), animKeys.end());
-        animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
-        return animKeys;
       }
     }
   }
@@ -700,13 +698,12 @@ inline std::vector<int> GetAnimationsKeysTime(IGameNode* pGameNode, Interval ani
       if(pGameControl->GetFullSampledKeys(scalekeys, 1, IGameControlType(IGAME_TM), true))
       {
         AddKeyTabToVector(scalekeys, animRange, &animKeys);
-
-        std::sort(animKeys.begin(), animKeys.end());
-        animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
-        return animKeys;
       }
     }
   }
+
+  //add the last pos as a key
+  animKeys.push_back(animRange.End());
 
   //sort and remove duplicated entries
   if(animKeys.size() > 0)
@@ -736,6 +733,9 @@ inline std::vector<int> GetPointAnimationsKeysTime(IGameNode* pGameNode, Interva
     return animKeys;
   }
 
+  //add the first pos as a key
+  animKeys.push_back(animRange.Start());
+
   if(pGameControl->IsAnimated(IGAME_POINT3))
   {
     if(!GetAnimationsPointKeysTime(pGameControl, animRange, &animKeys))
@@ -743,13 +743,12 @@ inline std::vector<int> GetPointAnimationsKeysTime(IGameNode* pGameNode, Interva
       //add time steps
       for (int t = animRange.Start(); t < animRange.End(); t += animRate)
         animKeys.push_back(t);
-
-      //force the last key
-      animKeys.push_back(animRange.End());
-      animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
-      return animKeys;
     }
   }
+
+  //force the last key
+  animKeys.push_back(animRange.End());
+  animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
 
   //sort and remove duplicated entries
   if(animKeys.size() > 0)
