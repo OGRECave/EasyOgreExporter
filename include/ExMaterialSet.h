@@ -21,7 +21,6 @@
 #ifndef _EXMATERIALSET_H
 #define _EXMATERIALSET_H
 
-#include "ExMaterial.h"
 #include "ExShader.h"
 #include "ExTools.h"
 #include "ExPrerequisites.h"
@@ -34,18 +33,23 @@ namespace EasyOgreExporter
   public:
   private:
 		std::vector<ExMaterial*> m_materials;
+    std::vector<std::string> m_textures;
     std::vector<ExShader*> m_Shaders;
   protected:
 
 	public:
 		//constructor
-		ExMaterialSet();
+		ExMaterialSet(ExOgreConverter* converter);
 
 		//destructor
 		~ExMaterialSet();
 
 		//clear
 		void clear();
+
+    bool getTextureSameFileNameExist(std::string filepath, std::string name);
+
+    std::string getUniqueTextureName(std::string filepath);
 
     ExMaterial* getMaterialByName(std::string name);
 

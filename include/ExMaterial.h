@@ -22,7 +22,6 @@
 #define _MATERIAL_H
 
 #include "ExPrerequisites.h"
-#include "paramList.h"
 #include "ExShader.h"
 
 namespace EasyOgreExporter
@@ -83,7 +82,7 @@ namespace EasyOgreExporter
 	/***** Class ExMaterial *****/
 	class ExMaterial
 	{
-	public:		
+	public:
     IGameMaterial* m_GameMaterial;
 		std::string m_name;
 		MaterialType m_type;
@@ -110,12 +109,13 @@ namespace EasyOgreExporter
 
     std::vector<Texture> m_textures;
   private:
+    ExOgreConverter* m_converter;
     unsigned int texUnitId;
   protected:
 
   public:
 		//constructor
-		ExMaterial(IGameMaterial* pGameMaterial, std::string prefix);
+		ExMaterial(ExOgreConverter* converter, IGameMaterial* pGameMaterial, std::string prefix);
 
 		//destructor
 		~ExMaterial();
@@ -127,10 +127,10 @@ namespace EasyOgreExporter
 		void clear();
 
 		//load material data
-		bool load(ParamList& params);
+		bool load();
 
 		//write material data to Ogre material script
-		bool writeOgreScript(ParamList &params, std::ofstream &outMaterial, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader);
+		bool writeOgreScript(std::ofstream &outMaterial, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader);
 
     std::string getShaderName(ExShader::ShaderType type, std::string prefix);
   private:
@@ -139,8 +139,8 @@ namespace EasyOgreExporter
     void loadArchitectureMaterial(IGameMaterial* pGameMaterial);
     void loadArchAndDesignMaterial(IGameMaterial* pGameMaterial);
     void loadStandardMaterial(IGameMaterial* pGameMaterial);
-    void writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader);
-    void writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsShader, ExShader* fpShader, ExShader::ShaderPass pass);
+    void writeMaterialTechnique(std::ofstream &outMaterial, int lod, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader);
+    void writeMaterialPass(std::ofstream &outMaterial, int lod, ExShader* vsShader, ExShader* fpShader, ExShader::ShaderPass pass);
 		bool exportColor(Point4& color, IGameProperty* pGameProperty);
     bool exportSpecular(IGameMaterial* pGameMaterial);
     std::string getMaterialName(std::string prefix);

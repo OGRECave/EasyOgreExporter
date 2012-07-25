@@ -20,10 +20,11 @@
 namespace EasyOgreExporter
 {
 	// constructor
-	ExOgreConverter::ExOgreConverter(ParamList &params)
+	ExOgreConverter::ExOgreConverter(IGameScene* pIGameScene, ParamList params)
 	{
     mParams = params;
-    mMaterialSet = new ExMaterialSet();
+    pIGame = pIGameScene;
+    mMaterialSet = new ExMaterialSet(this);
 	}
 
 	// destructor
@@ -41,7 +42,12 @@ namespace EasyOgreExporter
     return mMaterialSet;
   }
 
-  bool ExOgreConverter::writeEntityData(IGameNode* pGameNode, IGameObject* pGameObject, IGameMesh* pGameMesh)
+  ParamList ExOgreConverter::getParams()
+  {
+    return mParams;
+  }
+
+  bool ExOgreConverter::writeEntityData(IGameNode* pGameNode, IGameObject* pGameObject, IGameMesh* pGameMesh, std::vector<ExMaterial*>& lmat)
   {
     bool ret = false;
 
@@ -55,7 +61,9 @@ namespace EasyOgreExporter
     meshName.append(pGameNode->GetName());
 #endif
     meshName = optimizeResourceName(meshName);
-    ExMesh* mesh = new ExMesh(this, mParams, pGameNode, pGameMesh, meshName);
+    ExMesh* mesh = new ExMesh(this, pGameNode, pGameMesh, meshName);
+    
+    lmat = mesh->getMaterials();
 
     if (mParams.exportMesh)
     {

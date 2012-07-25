@@ -29,17 +29,18 @@
 
 
 namespace EasyOgreExporter
-{  
-  ExSkeleton::ExSkeleton(IGameSkin* pGameSkin, std::string name, ParamList &params)
+{
+  ExSkeleton::ExSkeleton(IGameNode* node, IGameSkin* pGameSkin, Matrix3 offset, std::string name, ParamList &params)
 	{
 		m_joints.clear();
 		m_animations.clear();
 		m_restorePose = "";
     m_name = name;
+    m_pGameNode = node;
     m_pGameSkin = pGameSkin;
     m_params = params;
-    m_bipedControl = 0;
     m_isBiped = false;
+    offsetTM = offset;
 	}
 
 	ExSkeleton::~ExSkeleton()
@@ -68,13 +69,12 @@ namespace EasyOgreExporter
   }
 
   // Get vertex bone assignements
-  bool ExSkeleton::getVertexBoneWeights(IGameMesh* pGameMesh)
+  bool ExSkeleton::getVertexBoneWeights(int numVertices)
   {
     //NOTE don't use IGameNode here sometimes bones can be a mesh and GetBoneNode return null
     EasyOgreExporterLog("Info : Get vertex bone weight\n");
     
     //init list indices
-    int numVertices = pGameMesh->GetNumberOfVerts();
     m_weights.resize(numVertices);
     m_jointIds.resize(numVertices);
   
@@ -218,16 +218,16 @@ namespace EasyOgreExporter
               m_jointIds[i].push_back(boneIndex);
 
               if(m_weights[i].size() > 4)
-			  {
+			        {
 #ifdef UNICODE
-				std::wstring name_w = pBoneNode->GetName();
-				std::string name_s;
-				name_s.assign(name_w.begin(),name_w.end());
-				lwarnings.push_back(name_s);
+				        std::wstring name_w = pBoneNode->GetName();
+				        std::string name_s;
+				        name_s.assign(name_w.begin(),name_w.end());
+				        lwarnings.push_back(name_s);
 #else
-				lwarnings.push_back(pBoneNode->GetName());
+				        lwarnings.push_back(pBoneNode->GetName());
 #endif
-			  }
+			        }
             }
           }
         }
@@ -249,11 +249,11 @@ namespace EasyOgreExporter
         mess.append("skeleton " + m_name + " with bone " + lwarnings[i] + "\n");
 
       mess.append("This is not compatible with hardware skinning method.");
-      EasyOgreExporterLog("Warning : Vertex found with more than 4 weights on :\n%s", mess.c_str());
+      EasyOgreExporterLog(mess.c_str());
 #ifdef UNICODE
-	  std::wstring mess_w;
-	  mess_w.assign(mess.begin(),mess.end());
-	  MessageBox(GetCOREInterface()->GetMAXHWnd(), mess_w.data(), _T("Warning"), MB_OK);
+	    std::wstring mess_w;
+	    mess_w.assign(mess.begin(),mess.end());
+	    MessageBox(GetCOREInterface()->GetMAXHWnd(), mess_w.data(), _T("Warning"), MB_OK);
 #else
       MessageBox(GetCOREInterface()->GetMAXHWnd(), _T(mess.c_str()), _T("Warning"), MB_OK);
 #endif
@@ -283,8 +283,7 @@ namespace EasyOgreExporter
     int boneIndex = getJointIndex(pNode);
 
     // get parent index
-    INode* pNodeParent = pNode->GetParentNode();
-		int parentIdx = getJointIndex(pNodeParent);
+		int parentIdx = getJointIndex(pNode->GetParentNode());
 
     // test for supported bone type
     if((!IsPossibleBone(pNode)) || (IsBone(pNode) && (pNode->NumberOfChildren() == 0)))
@@ -292,8 +291,6 @@ namespace EasyOgreExporter
       EasyOgreExporterLog("Info : %s is not a bone.\n", pNode->GetName());
       return false;
     }
-
-    int firstFrame = GetCOREInterface()->GetAnimRange().Start();
 
     // initialise joint to avoid bad searchs
 		joint newJoint;
@@ -376,54 +373,17 @@ namespace EasyOgreExporter
 			}
 		}
 
-    // set the new bone index
-    m_joints[boneIndex].id = boneIndex;
-
-    // get the biped controller
-    if(!m_bipedControl)
-    {
-      Control* nodeControl = pNode->GetTMController();
-      if (nodeControl->ClassID() == BIPBODY_CONTROL_CLASS_ID)
-        m_bipedControl = nodeControl;
-    }
-
-    DWORD actMode = 0;
-    IBipMaster* bipMaster = 0;
-    if(m_bipedControl)
-    {
-      //Get the Biped master Interface from the controller
-      bipMaster = (IBipMaster*) m_bipedControl->GetInterface(I_BIPMASTER);
-      actMode = bipMaster->GetActiveModes();
-      bipMaster->EndModes(actMode, 0);
-      bipMaster->BeginModes(BMODE_FIGURE, 0);
-    }
-
     // Get mesh matrix at initial pose
+    /*
     Modifier* skinMod = m_pGameSkin->GetMaxModifier();
     ISkin* pskin = (ISkin*)skinMod->GetInterface(I_SKIN);
-    
-    GMatrix GSkinTM;
-    m_pGameSkin->GetInitSkinTM(GSkinTM);
-    Matrix3 SkinTM = GSkinTM.ExtractMatrix3();
+    Matrix3 skinTM;
+    skinTM.IdentityMatrix();
+    */
 
-		Matrix3 boneTM;
-		Matrix3 ParentTM;
-
-    if(!pskin || pskin->GetBoneInitTM(pNode, boneTM, false) == SKIN_INVALID_NODE_PTR)
-      boneTM = pNode->GetNodeTM(firstFrame);
-
-    if(!pskin || pskin->GetBoneInitTM(pNodeParent, ParentTM, false) == SKIN_INVALID_NODE_PTR)
-      ParentTM = pNodeParent->GetNodeTM(firstFrame);
-
-    Matrix3 localTM;
-		if(parentIdx >= 0)
-		{
-      localTM = GetRelativeUniformMatrix(boneTM, ParentTM, m_params.yUpAxis);
-		}
-    else // for root bone use the mesh
-    {
-      localTM = GetRelativeUniformMatrix(boneTM, ParentTM, m_params.yUpAxis) * Inverse(SkinTM);
-    }
+    // set the new bone index
+    m_joints[boneIndex].id = boneIndex;
+    Matrix3 localTM = GetLocalUniformMatrix(pNode, offsetTM, m_params.yUpAxis, GetFirstFrame());
 
     AffineParts ap;
 		decomp_affine(localTM, &ap);
@@ -447,15 +407,6 @@ namespace EasyOgreExporter
 		if (parentIdx < 0)
 			m_roots.push_back(m_joints.size() - 1);
 
-    //release max interface
-    if(bipMaster)
-    {
-      bipMaster->EndModes(BMODE_FIGURE, 0);
-      bipMaster->BeginModes(actMode, 0);
-
-      m_bipedControl->ReleaseInterface(I_BIPMASTER, bipMaster);
-    }
-
 		// Load child joints
     for (size_t i = 0; i < pNode->NumberOfChildren(); i++)
 		{
@@ -477,14 +428,9 @@ namespace EasyOgreExporter
 
     //load clips from mixer
     IMixer* mixer = 0;
-    IBipMaster* bipMaster = 0;
-    if(m_bipedControl)
-    {
-      //Get the Biped master Interface from the controller
-      bipMaster = (IBipMaster*) m_bipedControl->GetInterface(I_BIPMASTER);
-      if(bipMaster)
-        mixer = bipMaster->GetMixer();
-    }
+    IBipMaster* bipMaster = GetBipedMasterInterface(m_pGameSkin);
+    if(bipMaster)
+      mixer = bipMaster->GetMixer();
 
     bool useDefault = true;
     //we found a mixer try to load clips
@@ -547,8 +493,7 @@ namespace EasyOgreExporter
     }
 
     //release max interface
-    if(bipMaster)
-      m_bipedControl->ReleaseInterface(I_BIPMASTER, bipMaster);
+    ReleaseBipedMasterInterface(m_pGameSkin, bipMaster);
 
     //load main clip on actual timeline;
     if(useDefault)
@@ -618,7 +563,7 @@ namespace EasyOgreExporter
     //add time steps
     std::vector<int> times;
     times.clear();
-		for (float t = start; t < stop; t += rate)
+		for (int t = start; t < stop; t += rate)
 			times.push_back(t);
 
     //force the last key
@@ -716,19 +661,11 @@ namespace EasyOgreExporter
 	skeletonKeyframe ExSkeleton::loadKeyframe(joint& j, int time)
 	{
     INode* bone = j.pNode;
-    
-		// Get the bone local matrix for this key
-    Matrix3 boneTM = GetRelativeUniformMatrix(bone, time, m_params.yUpAxis);
 
-    GMatrix GSkinTM;
-    m_pGameSkin->GetInitSkinTM(GSkinTM);
-    Matrix3 SkinTM = GSkinTM.ExtractMatrix3();
+    //Get the local transformation matrices
+    Matrix3 boneTM = GetLocalUniformMatrix(bone, offsetTM, m_params.yUpAxis, time);
 
-    // for root bone use the mesh
-    if(j.parentIndex < 0)
-      boneTM = boneTM * Inverse(SkinTM);
-
-    Matrix3 relMat = boneTM * Inverse(j.bindMatrix);
+    Matrix3 relMat = GetRelativeMatrix(boneTM, j.bindMatrix);
 
     AffineParts ap;
 		decomp_affine(relMat, &ap);
@@ -742,29 +679,6 @@ namespace EasyOgreExporter
 		//create keyframe
 		skeletonKeyframe key;
 		key.time = 0;
-
-    // don't know why root translation are Z X reverted
-    // Damn is there another stupid cases ?
-    // what matrix should I use for translations ?
-    if(IsBipedRoot(bone))
-    {
-      key.trans.x = -trans.z;
-      key.trans.y = trans.y;
-      key.trans.z = trans.x;
-    }
-    else if(IsBipedRoot(bone->GetParentNode()))
-    {
-      key.trans.x = trans.x;
-      key.trans.y = -trans.z;
-      key.trans.z = trans.y;
-    }
-    else
-    {
-      // don't know why translation are reverted
-		  key.trans.x = trans.z;
-      key.trans.y = trans.x;
-      key.trans.z = trans.y;
-    }
 
 		key.rot = rot;
 		key.scale = scale;

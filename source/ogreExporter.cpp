@@ -884,11 +884,11 @@ bool OgreExporter::exportScene()
 
   Interval animInterval = GetCOREInterface()->GetAnimRange(); 
 
-  ogreConverter = new ExOgreConverter(m_params);
+  ogreConverter = new ExOgreConverter(pIGame, m_params);
 
   //Init Scene
   if(m_params.exportScene)
-    sceneData = new ExScene(ogreConverter, m_params);
+    sceneData = new ExScene(ogreConverter);
 
   // parse Max scene
   for(int node = 0; node < pIGame->GetTopLevelNodeCount(); ++node)
@@ -957,6 +957,9 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
     IGameObject* pGameObject = pGameNode->GetIGameObject();
     if(pGameObject)
     {
+      IGameObject::ObjectTypes gameType = pGameObject->GetIGameType();
+      IGameObject::MaxType maxType = pGameObject->GetMaxType();
+
       bool bShouldExport = true;
       INode* node = pGameNode->GetMaxNode();
       if(node)
@@ -971,9 +974,17 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
           bShouldExport = false;
         }
 
-        if (pGameObject->GetMaxType() == IGameObject::IGAME_MAX_UNKNOWN)
+        // Do not export bones
+        if(node->GetBoneNodeOnOff())
         {
-          EasyOgreExporterLog("Unsupported object type for : %s. Failed to export.\n", pGameNode->GetName());
+          bShouldExport = false;
+        }
+
+        if (maxType == IGameObject::IGAME_MAX_UNKNOWN || maxType == IGameObject::IGAME_MAX_BONE ||
+            gameType == IGameObject::IGAME_BONE || gameType == IGameObject::IGAME_IKCHAIN ||
+            gameType == IGameObject::IGAME_UNKNOWN)
+        {
+          EasyOgreExporterLog("Unsupported object type for : %s. Ignore on export.\n", pGameNode->GetName());
           bShouldExport = false;
         }
       }
@@ -983,7 +994,7 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
         GetCOREInterface()->ProgressUpdate((int)(((float)nodeCount / pIGame->GetTotalNodeCount()) * 90.0f), FALSE, pGameNode->GetName()); 
 
         EasyOgreExporterLog("Found node: %s\n", pGameNode->GetName());
-        switch(pGameObject->GetIGameType())
+        switch(gameType)
         {
           case IGameObject::IGAME_MESH:
           {
@@ -993,15 +1004,15 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
               if(pGameMesh->InitializeData())
               {
                 EasyOgreExporterLog("Found mesh node: %s\n", pGameNode->GetName());
-
+                std::vector<ExMaterial*> lmat;
                 if(ogreConverter)
-                  if (!ogreConverter->writeEntityData(pGameNode, pGameObject, pGameMesh))
+                  if (!ogreConverter->writeEntityData(pGameNode, pGameObject, pGameMesh, lmat))
                     EasyOgreExporterLog("Warning, mesh skipped\n");
 
                 if (sceneData)
                 {
                   parent = sceneData->writeNodeData(parent, pGameNode, IGameObject::IGAME_MESH);
-                  sceneData->writeEntityData(parent, pGameNode, pGameMesh);
+                  sceneData->writeEntityData(parent, pGameNode, pGameMesh, lmat);
                 }
               }
             }

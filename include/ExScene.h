@@ -16,7 +16,6 @@
 #define _EXSCENE_H
 
 
-#include "paramList.h"
 #include "ExOgreConverter.h"
 #include "tinyxml.h"
 
@@ -72,13 +71,13 @@ namespace EasyOgreExporter
 	{
 	  public:
 		  //constructor
-		  ExScene(ExOgreConverter* converter, ParamList &params);
+		  ExScene(ExOgreConverter* converter);
 
 		  //destructor
 		  ~ExScene();
 
       TiXmlElement* writeNodeData(TiXmlElement* parent, IGameNode* pGameNode, IGameObject::ObjectTypes type);
-      TiXmlElement* writeEntityData(TiXmlElement* parent, IGameNode* pGameNode, IGameMesh* pGameMesh);
+      TiXmlElement* writeEntityData(TiXmlElement* parent, IGameNode* pGameNode, IGameMesh* pGameMesh, std::vector<ExMaterial*> lmat);
       TiXmlElement* writeCameraData(TiXmlElement* parent, IGameCamera* pGameCamera);
       TiXmlElement* writeLightData(TiXmlElement* parent, IGameLight* pGameLight);
       
@@ -86,7 +85,6 @@ namespace EasyOgreExporter
 	  protected:
 		  int id_counter;
       ExOgreConverter* m_converter;
-      ParamList mParams;
       std::string scenePath;
       TiXmlDocument* xmlDoc;
       TiXmlElement *sceneElement;

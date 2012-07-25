@@ -13,32 +13,95 @@
 **********************************************************************************/
 
 #include "ExMesh.h"
+#include "ExMaterial.h"
 #include "EasyOgreExporterLog.h"
 #include "ExTools.h"
 #include "OgreProgressiveMesh.h"
 #include "IFrameTagManager.h"
 
-//TODO bounding on skleton
+//TODO bounding on skeleton
 
 namespace EasyOgreExporter
 {
-  ExMesh::ExMesh(ExOgreConverter* converter, ParamList &params, IGameNode* pGameNode, IGameMesh* pGameMesh, const std::string& name)
+  ExMesh::ExMesh(ExOgreConverter* converter, IGameNode* pGameNode, IGameMesh* pGameMesh, const std::string& name)
   {
     m_converter = converter;
-    m_params = params;
+    m_params = converter->getParams();
     m_name = name;
     m_GameMesh = pGameMesh;
     m_GameNode = pGameNode;
+    m_GameSkin = 0;
     m_Mesh = 0;
     m_pSkeleton = 0;
     m_pMorphR3 = 0;
     m_SphereRadius = 0;
+    m_numTextureChannel = 0;
+
     haveVertexColor = (pGameMesh->GetNumberOfColorVerts() > 0) ? true : false;
     haveVertexAlpha = (pGameMesh->GetNumberOfAlphaVerts() > 0) ? true : false;
     haveVertexIllum = (pGameMesh->GetNumberOfIllumVerts() > 0) ? true : false;
+    
+    std::vector<Modifier*> lModifiers;
+    INode* node = m_GameNode->GetMaxNode();
 
+    //get skin or morph modifier
     getModifiers();
-    buildVertices();
+    
+    //disable morpher modifier
+    if(m_pMorphR3)
+      static_cast<Modifier*>(m_pMorphR3)->DisableMod();
+
+    IBipMaster* bipMaster = 0;
+    DWORD prevBipMode = 0;
+
+    //set the skeleton to bind pos
+    if(m_GameSkin)
+    {
+      bipMaster = GetBipedMasterInterface(m_GameSkin);
+      SetBipedToBindPose(bipMaster, prevBipMode);
+    }
+
+    //get the mesh in the current state
+    bool delTri = false;
+    TriObject* triObj = getTriObjectFromNode(node, GetFirstFrame(), delTri);
+    Mesh* mMesh = &triObj->GetMesh();
+    
+    offsetTM = GetNodeOffsetMatrix(node, m_params.yUpAxis);
+
+    if (m_params.exportSkeleton && m_GameSkin)
+    {
+      // create the skeleton if it hasn't been created.
+      EasyOgreExporterLog("Creating skeleton ...\n");
+      if (!m_pSkeleton)
+      {
+        m_pSkeleton = new ExSkeleton(m_GameNode, m_GameSkin, GetGlobalNodeMatrix(node, m_params.yUpAxis, GetFirstFrame()), m_name, m_params);
+        m_pSkeleton->getVertexBoneWeights(mMesh->getNumVerts());
+      }
+    }
+
+    //update the mesh normals
+    mMesh->buildNormals();
+    prepareMesh(mMesh);
+
+    //free the tree object
+    if(delTri && triObj)
+    {
+      triObj->DeleteThis();
+      triObj = 0;
+      delTri = false;
+    }
+
+    //enable the morph modifiers again
+    if(m_pMorphR3)
+      static_cast<Modifier*>(m_pMorphR3)->EnableMod();
+
+    //reset the piped mode
+    if(m_GameSkin)
+    {
+      SetBipedToPreviousMode(bipMaster, prevBipMode);
+      ReleaseBipedMasterInterface(m_GameSkin, bipMaster);
+      bipMaster = 0;
+    }
   }
 
   ExMesh::~ExMesh()
@@ -67,60 +130,95 @@ namespace EasyOgreExporter
     m_SphereRadius = std::max(m_SphereRadius, pos.Length());
   }
 
-  void ExMesh::buildVertices()
+  std::vector<ExFace> ExMesh::GetFacesByMaterialId(int matId)
   {
-    int numFaces = m_GameMesh->GetNumberOfFaces();
-    Tab<int> mapChannels = m_GameMesh->GetActiveMapChannelNum();
-    
+    std::vector<ExFace> faces;
+    for (int i = 0; i < m_faces.size(); i++)
+    {
+      if (m_faces[i].iMaterialId == matId)
+        faces.push_back(m_faces[i]);
+    }
+
+    return faces;
+  }
+
+  void ExMesh::prepareMesh(Mesh* mMesh)
+  {
+    INode* node = m_GameNode->GetMaxNode();
+    int numFaces = mMesh->getNumFaces();
     int numVertices = numFaces * 3;
+    UVVert* vAlpha = mMesh->mapSupport(-VDATA_ALPHA) ? mMesh->mapVerts(-VDATA_ALPHA) : 0;
+    int numMapChannels = mMesh->getNumMaps();  
+    std::vector<int> matIds;    
+
+    //count texture channels
+    m_numTextureChannel = (mMesh->numTVerts > 0) ? 1 : 0;
+    for (size_t chan = 2; chan < numMapChannels; chan++)
+    {
+      if(mMesh->mapSupport(chan))
+        m_numTextureChannel++;
+    }
 
     // prepare faces table
     m_faces.resize(numFaces);
-
-    INode* node = m_GameNode->GetMaxNode();
-
-    // Compute the pivot TM
-		Matrix3 piv(1);
-    piv.SetTrans(node->GetObjOffsetPos());
-		PreRotateMatrix(piv, node->GetObjOffsetRot());
-		ApplyScaling(piv, node->GetObjOffsetScale());
-    
-    Matrix3 transMT = TransformMatrix(piv, m_params.yUpAxis);
     
     std::multimap<long int, int> hash_table; //For fast lookup of vertices
-
+    
     for (int i = 0; i < numFaces; ++i)
     {
-      FaceEx* face = m_GameMesh->GetFace(i);
+      Face face = mMesh->faces[i];
       m_faces[i].vertices.resize(3);
-      m_faces[i].iMaxId = face->meshFaceIndex;
-
+      m_faces[i].iMaxId = i;
+      m_faces[i].iMaterialId = mMesh->getFaceMtlIndex(i);
+      matIds.push_back(m_faces[i].iMaterialId);
+      
       for (size_t j = 0; j < 3; j++)
       {
-        ExVertex vertex(face->vert[j]);
-        Point3 pos = transMT * m_GameMesh->GetVertex(face->vert[j], true);
+        DWORD vIndex = face.getVert(j);
+        ExVertex vertex(vIndex);
+
+        Point3 pos = mMesh->getVert(vIndex);
+        if(m_params.yUpAxis)
+        {
+          float py = pos.y;
+          pos.y = pos.z;
+          pos.z = -py;
+        };
+        pos = offsetTM.PointTransform(pos);
 
         //apply scale
         pos *= m_params.lum;
 
-        Point3 normal = m_GameMesh->GetNormal(face->norm[j], true);
-
+        Point3 normal = GetVertexNormals(mMesh, i, j, vIndex);
+        if(m_params.yUpAxis)
+        {
+          float py = normal.y;
+          normal.y = normal.z;
+          normal.z = -py;
+        };
+        normal = offsetTM.VectorTransform(normal);
+        
         Point3 color(0, 0, 0);
         Point4 fullColor(0, 0, 0, 1);
-        if(haveVertexColor && m_GameMesh->GetColorVertex(face->color[j], color))
+        if(haveVertexColor && mMesh->vcFace)
         {
-          float alpha = 1.0f;
-          if(!m_GameMesh->GetAlphaVertex(face->alpha[j], alpha))
-            alpha = 1.0f;
+          TVFace& vcface = mMesh->vcFace[i];
+          const int VertexColorIndex = vcface.t[j];
+
+          float alpha = 1.0;
+          if(haveVertexAlpha && vAlpha)
+            alpha = vAlpha[vIndex].x;
           
+          color = mMesh->vertCol[VertexColorIndex];
+
           if((color.x == -1) && (color.x == -1) && (color.x == -1))
-            color.x = color.y = color.z = 0;
+            color.x = color.y = color.z = 1;
           
           fullColor = Point4(color.x, color.y, color.z, alpha);
         }
 
         vertex.vPos = pos;
-        vertex.vNorm = normal;
+        vertex.vNorm = normal.Normalize();
         vertex.vColor = fullColor;
 
         //update bounding box
@@ -129,25 +227,31 @@ namespace EasyOgreExporter
         if(getSkeleton())
         {
           // save vertex bone weight
-          vertex.lWeight = getSkeleton()->getWeightList(face->vert[j]);
+          vertex.lWeight = getSkeleton()->getWeightList(vIndex);
    
           // save joint ids
-          vertex.lBoneIndex = getSkeleton()->getJointList(face->vert[j]);
+          vertex.lBoneIndex = getSkeleton()->getJointList(vIndex);
+        }
+        
+        //default UV
+        if(mMesh->numTVerts > 0)
+        {
+          Point3 uv = (mMesh->numTVerts > vIndex) ? mMesh->tVerts[mMesh->tvFace[i].t[j]] : Point3(0.0f, 0.0f, 0.0f);
+          uv.y = 1.0f - uv.y;
+          vertex.lTexCoords.push_back(uv);
         }
 
-        //TODO Tangent and Binormal
-        for (size_t chan = 0; chan < mapChannels.Count(); chan++)
+        //extra textures channel
+        for (size_t chan = 2; chan < numMapChannels; chan++)
         {
-          //skip vertex color, alpha and illum channels
-          if(mapChannels[chan] > 0)
+          Point3 uv = Point3(0.0f, 0.0f, 0.0f);
+          if(mMesh->mapSupport(chan))
           {
-            Point3 uv(0, 0, 0);
-            if (m_GameMesh->GetMapVertex(mapChannels[chan], m_GameMesh->GetFaceTextureVertex(face->meshFaceIndex, j, mapChannels[chan]), uv))
-            {
-              uv.y = 1.0f - uv.y;
-            }
-            vertex.lTexCoords.push_back(uv);
+            Point3 uvv = mMesh->mapVerts(chan)[vIndex];
+            uv.x = uvv.x;
+            uv.y = 1.0f - uvv.y;
           }
+          vertex.lTexCoords.push_back(uv);
         }
 
         //look if the vertex is already added
@@ -173,43 +277,45 @@ namespace EasyOgreExporter
             }
         }
 
-		/* // This linear search was replaced by the hash_table lookup above above
-		for(int vi = 0; vi < m_vertices_size ; vi ++)
-        {
-          if (m_vertices[vi] == vertex)
-          {
-            sameFound = vi;
-            break;
-          }
-	    }
-		*/
-
         //add vertex
         if(sameFound == -1)
         {
-          hash_table.insert(std::pair<float, int>(key,m_vertices_size));
+          hash_table.insert(std::multimap<long int, int>::value_type(key, m_vertices_size));
           m_vertices.push_back(vertex);
-          m_faces[face->meshFaceIndex].vertices[j] =  m_vertices_size; //  instead of (m_vertices.size() -1)
+          m_faces[i].vertices[j] = m_vertices_size; //  instead of (m_vertices.size() -1)
         }
         else
         {
-          m_faces[face->meshFaceIndex].vertices[j] = sameFound;
+          m_faces[i].vertices[j] = sameFound;
         }
       }
     } // Loop faces.
 
     //sort submesh
-    Tab<int> materialIDs = m_GameMesh->GetActiveMatIDs();
-    for(int matid = 0; matid < materialIDs.Count(); matid++)
+    std::sort(matIds.begin(), matIds.end());
+    matIds.erase(std::unique(matIds.begin(), matIds.end()), matIds.end());
+
+    IGameMaterial* nodeMtl = m_GameNode->GetNodeMaterial();
+    for(int matid = 0; matid < matIds.size(); matid++)
     {
-      Tab<FaceEx*> faces = m_GameMesh->GetFacesFromMatID(materialIDs[matid]);
-      ExSubMesh submesh(matid);
+      std::vector<ExFace> faces = GetFacesByMaterialId(matIds[matid]);
+      
+      //get the material by matId
+      IGameMaterial* mat = nodeMtl;
+      if (nodeMtl && nodeMtl->IsSubObjType())
+        if (matIds[matid] < nodeMtl->GetSubMaterialCount())
+          mat = nodeMtl->GetSubMaterial(matIds[matid]);
+        else
+          mat = 0;
+
+      ExMaterial* pMaterial = loadMaterial(mat);
+      ExSubMesh submesh(matid, pMaterial);
 
       //construct a list of faces with the correct indices
-      for (int fi = 0; fi < faces.Count(); fi++)
+      for (int fi = 0; fi < faces.size(); fi++)
       {
         //get global face
-        ExFace face = m_faces[faces[fi]->meshFaceIndex];
+        ExFace face = faces[fi];
         
         ExFace sface;
         sface.iMaxId = face.iMaxId;
@@ -221,45 +327,10 @@ namespace EasyOgreExporter
           ExVertex vertex(m_vertices[face.vertices[j]]);
           ExVertex svertex(vertex);
           
-          //look for a duplicated vertex
-          /*
-          int sameFound = -1;
-          for(int vi = 0; vi < submesh.m_vertices.size() && (sameFound == -1); vi++)
-          {
-            if (submesh.m_vertices[vi] == vertex)
-            {
-              sameFound = vi;
-            }
-          }
-          
-          //add vertex
-          if(sameFound == -1)
-          {
-            submesh.m_vertices.push_back(vertex);
-            sface.vertices[j] = submesh.m_vertices.size() -1;
-          }
-          else
-          {
-            sface.vertices[j] = sameFound;
-          }*/
-          
           submesh.m_vertices.push_back(svertex);
           sface.vertices[j] = submesh.m_vertices.size() -1;
         }
 
-        /*
-        int sameFaceFound = -1;
-        for(int sfi = 0; sfi < submesh.m_faces.size() && (sameFaceFound == -1); sfi++)
-        {
-          if (submesh.m_faces[sfi] == sface)
-          {
-            sameFaceFound = sfi;
-          }
-        }
-        if(sameFaceFound == -1)
-        {
-          submesh.m_faces.push_back(sface);
-        }*/
         submesh.m_faces.push_back(sface);
       }
       m_subList.push_back(submesh);
@@ -283,23 +354,7 @@ namespace EasyOgreExporter
         {
           if(pGameModifier->IsSkin())
           {
-            IGameSkin* pGameSkin = static_cast<IGameSkin*>(pGameModifier);
-            if(pGameSkin)
-            {
-              //replace the current mesh with the initial mesh before skin modifications
-              m_GameMesh = pGameSkin->GetInitialPose();
-
-              if (m_params.exportSkeleton && pGameSkin)
-              {
-                // create the skeleton if it hasn't been created.
-                EasyOgreExporterLog("Creating skeleton ...\n");
-                if (!m_pSkeleton)
-                {
-                  m_pSkeleton = new ExSkeleton(pGameSkin, m_name, m_params);
-                  m_pSkeleton->getVertexBoneWeights(m_GameMesh);
-                }
-              }
-            }
+            m_GameSkin = static_cast<IGameSkin*>(pGameModifier);
           }
           /*
           else if(pGameModifier->IsMorpher())
@@ -320,33 +375,44 @@ namespace EasyOgreExporter
       // get the object reference of the node
       Object* pObject = 0;
       pObject = m_GameNode->GetMaxNode()->GetObjectRef();
-      if(pObject == 0)
-        return;
-
-      // loop through all derived objects
-      while(pObject->SuperClassID() == GEN_DERIVOB_CLASS_ID)
+      if(pObject != 0)
       {
-        IDerivedObject* pDerivedObject = static_cast<IDerivedObject*>(pObject);
-
-        // loop through all modifiers
-        int stackId;
-        for(stackId = 0; stackId < pDerivedObject->NumModifiers(); stackId++)
+        // loop through all derived objects
+        while(pObject->SuperClassID() == GEN_DERIVOB_CLASS_ID)
         {
-          // get the modifier
-          Modifier* pModifier = pDerivedObject->GetModifier(stackId);
+          IDerivedObject* pDerivedObject = static_cast<IDerivedObject*>(pObject);
 
-          // check if we found the morpher modifier
-          if(pModifier->ClassID() == MR3_CLASS_ID)
+          // loop through all modifiers
+          int stackId;
+          for(stackId = 0; stackId < pDerivedObject->NumModifiers(); stackId++)
           {
-            m_pMorphR3 = static_cast<MorphR3*>(pModifier);
-            return;
-          }
-        }
+            // get the modifier
+            Modifier* pModifier = pDerivedObject->GetModifier(stackId);
 
-        // continue with next derived object
-        pObject = pDerivedObject->GetObjRef();
+            // check if we found the morpher modifier
+            if(pModifier->ClassID() == MR3_CLASS_ID)
+            {                          
+              m_pMorphR3 = static_cast<MorphR3*>(pModifier);
+              break;
+            }
+          }
+
+          // continue with next derived object
+          pObject = pDerivedObject->GetObjRef();
+        }
       }
     }
+  }
+
+  // Get the subentities materials
+  std::vector<ExMaterial*> ExMesh::getMaterials()
+  {
+    std::vector<ExMaterial*> lmat;
+    for(int i = 0; i < m_subList.size(); i++)
+    {
+      lmat.push_back(m_subList[i].m_mat);
+    }
+    return lmat;
   }
 
   // Write to a OGRE binary mesh
@@ -395,25 +461,23 @@ namespace EasyOgreExporter
 
     //generate submesh
     EasyOgreExporterLog("Info: Create Ogre submeshs\n");
-    Tab<int> materialIDs = m_GameMesh->GetActiveMatIDs();
     for(int i=0; i < m_subList.size(); i++)
     {
+      ExSubMesh subMesh = m_subList[i];
       //Generate submesh name
       std::string subName;
       std::stringstream strName;
-      strName << materialIDs[i];
+      strName << subMesh.id;
       subName = strName.str();
 
-      Tab<FaceEx*> faces = m_GameMesh->GetFacesFromMatID(materialIDs[i]);
-      if (faces.Count() <= 0)
+      if (subMesh.m_faces.size() <= 0)
       {
-        EasyOgreExporterLog("Warning: No faces found in submesh %d\n", materialIDs[i]);
+        EasyOgreExporterLog("Warning: No faces found in submesh %d\n", subMesh.id);
         continue;
       }
 
-      ExMaterial* pMaterial = loadMaterial(m_GameMesh->GetMaterialFromFace(faces[0]));
       EasyOgreExporterLog("Info: create submesh : %s\n", subName.c_str());
-      Ogre::SubMesh* pSubmesh = createOgreSubmesh(pMaterial, m_subList[i]);
+      Ogre::SubMesh* pSubmesh = createOgreSubmesh(subMesh);
       m_Mesh->nameSubMesh(subName, i);
     }
 
@@ -652,12 +716,6 @@ namespace EasyOgreExporter
 
     // Compute the pivot TM
     INode* node = m_GameNode->GetMaxNode();
-      Matrix3 piv(1);
-    piv.SetTrans(node->GetObjOffsetPos());
-      PreRotateMatrix(piv, node->GetObjOffsetRot());
-      ApplyScaling(piv, node->GetObjOffsetScale());
-
-    Matrix3 transMT = TransformMatrix(piv, m_params.yUpAxis);
     std::vector<int> animKeys = GetPointAnimationsKeysTime(m_GameNode, animRange, m_params.resampleAnims);
     
     // Does a better way exist to get vertex position by time ?
@@ -672,7 +730,7 @@ namespace EasyOgreExporter
         GetCOREInterface()->SetTime(animKeys[i], 0);
         for(int v = 0; v < m_vertices.size() && !isAnimated; v++)
         {
-          Point3 pos = (transMT * m_GameMesh->GetVertex(m_vertices[v].iMaxId, true)) * m_params.lum;
+          Point3 pos = offsetTM.PointTransform(m_GameMesh->GetVertex(m_vertices[v].iMaxId, true)) * m_params.lum;
 
           if(m_vertices[v].vPos != pos)
             isAnimated = true;
@@ -710,7 +768,7 @@ namespace EasyOgreExporter
           // Fill the vertex buffer with vertex positions
           for(int v = 0; v < m_vertices.size(); v++)
           {
-            Point3 pos = (transMT * m_GameMesh->GetVertex(m_vertices[v].iMaxId, true)) * m_params.lum;
+            Point3 pos = offsetTM.PointTransform(m_GameMesh->GetVertex(m_vertices[v].iMaxId, true)) * m_params.lum;
             
             //update bounding box
             updateBounds(pos);
@@ -756,7 +814,7 @@ namespace EasyOgreExporter
             // Fill the vertex buffer with vertex positions
             for(int v = 0; v < lvert.size(); v++)
             {
-              Point3 pos = (transMT * m_GameMesh->GetVertex(lvert[v].iMaxId, true)) * m_params.lum;
+              Point3 pos = offsetTM.PointTransform(m_GameMesh->GetVertex(lvert[v].iMaxId, true)) * m_params.lum;
               
               //update bounding box
               updateBounds(pos);
@@ -1054,6 +1112,7 @@ namespace EasyOgreExporter
   void ExMesh::createPoses()
   {
     EasyOgreExporterLog("Loading poses and poses animations...\n");
+    INode* node = m_GameNode->GetMaxNode();
 
     // Disable all skin Modifiers.
     std::vector<Modifier*> disabledSkinModifiers;
@@ -1082,14 +1141,6 @@ namespace EasyOgreExporter
       }
     }
 
-    INode* node = m_GameNode->GetMaxNode();
-
-    // Compute the pivot TM
-        Matrix3 piv(1);
-    piv.SetTrans(node->GetObjOffsetPos());
-        PreRotateMatrix(piv, node->GetObjOffsetRot());
-        ApplyScaling(piv, node->GetObjOffsetScale());
-    
     std::vector<morphChannel*> validChan;
     for(int i = 0; i < m_pMorphR3->chanBank.size() && i < MR3_NUM_CHANNELS; ++i)
       {
@@ -1103,7 +1154,6 @@ namespace EasyOgreExporter
     poseIndexList.resize(m_subList.size());
     int poseIndex = 0;
 
-    Matrix3 transMT = TransformMatrix(piv, m_params.yUpAxis);
     for(int i = 0; i < validChan.size(); i++)
       {
       morphChannel* pMorphChannel = validChan[i];
@@ -1152,7 +1202,7 @@ namespace EasyOgreExporter
               pos.y = pos.z;
               pos.z = -vy;
             }
-            pos = transMT * pos;
+            pos = offsetTM.PointTransform(pos);
 
             // apply scale
             pos *= m_params.lum;
@@ -1187,7 +1237,7 @@ namespace EasyOgreExporter
                 pos.y = pos.z;
                 pos.z = -vy;
               }
-              pos = transMT * pos;
+              pos = offsetTM.PointTransform(pos);
 
               // apply scale
               pos *= m_params.lum;
@@ -1371,17 +1421,17 @@ namespace EasyOgreExporter
     return true;
   }
 
-  Ogre::SubMesh* ExMesh::createOgreSubmesh(ExMaterial* pMaterial, ExSubMesh submesh)
-    {
+  Ogre::SubMesh* ExMesh::createOgreSubmesh(ExSubMesh submesh)
+  {
     int numVertices = submesh.m_vertices.size();
 
     // Create a new submesh
-        Ogre::SubMesh* pSubmesh = m_Mesh->createSubMesh();
+    Ogre::SubMesh* pSubmesh = m_Mesh->createSubMesh();
     pSubmesh->operationType = Ogre::RenderOperation::OT_TRIANGLE_LIST;
 
     // Set material
-    if(pMaterial)
-      pSubmesh->setMaterialName(pMaterial->getName().c_str());
+    if(submesh.m_mat)
+      pSubmesh->setMaterialName(submesh.m_mat->getName().c_str());
     
     // Set use shared geometry flag
     pSubmesh->useSharedVertices = (m_Mesh->sharedVertexData) ? true : false;
@@ -1425,7 +1475,7 @@ namespace EasyOgreExporter
     }
 
     // Fill the index buffer with faces data
-      if (bUse32BitIndexes)
+    if (bUse32BitIndexes)
     {
           Ogre::uint32* pIdx = static_cast<Ogre::uint32*>(pSubmesh->indexData->indexBuffer->lock(Ogre::HardwareBuffer::HBL_DISCARD));
           for (int i = 0; i < facesIndex.size(); i++)
@@ -1521,16 +1571,12 @@ namespace EasyOgreExporter
 
     // Add texture coordinates
     //use VET_FLOAT2 to make ogre able to generate tangent ^^
-    Tab<int> mapChannels = m_GameMesh->GetActiveMapChannelNum();
     int countTex = 0;
-    for (size_t i = 0; i < mapChannels.Count(); i++)
+    for (size_t i = 0; i < m_numTextureChannel; i++)
     {
-      if(mapChannels[i] > 0)
-      {
-        decl->addElement(1, texSegmentSize, Ogre::VET_FLOAT2, Ogre::VES_TEXTURE_COORDINATES, countTex);
-        texSegmentSize += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT2);
-        countTex++;
-      }
+      decl->addElement(1, texSegmentSize, Ogre::VET_FLOAT2, Ogre::VES_TEXTURE_COORDINATES, countTex);
+      texSegmentSize += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT2);
+      countTex++;
     }
 
     // Now create the vertex buffers.
@@ -1629,22 +1675,22 @@ namespace EasyOgreExporter
   }
 
   ExMaterial* ExMesh::loadMaterial(IGameMaterial* pGameMaterial)
-    {
+  {
     ExMaterial* pMaterial = 0;
 
     //try to load the material if it has already been created
-        pMaterial = m_converter->getMaterialSet()->getMaterial(pGameMaterial);
+    pMaterial = m_converter->getMaterialSet()->getMaterial(pGameMaterial);
 
     //otherwise create the material
-        if (!pMaterial)
-        {
-      pMaterial = new ExMaterial(pGameMaterial, m_params.resPrefix);
-            m_converter->getMaterialSet()->addMaterial(pMaterial);
-      pMaterial->load(m_params);
-        }
-
-        //loading complete
-        return pMaterial;
+    if (!pMaterial)
+    {
+      pMaterial = new ExMaterial(m_converter, pGameMaterial, m_params.resPrefix);
+      m_converter->getMaterialSet()->addMaterial(pMaterial);
+      pMaterial->load();
     }
+
+    //loading complete
+    return pMaterial;
+  }
 
 }; //end of namespace

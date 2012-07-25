@@ -50,10 +50,11 @@ std::string EasyOgreExporterLogFile::GetPath(void)
 void EasyOgreExporterLogFile::Log(const char* format, ...)
 {
 	va_list	argList;
-	char buffer[1024];
-
+  //warning for long messages
+	char buffer[4096];
+  
 	va_start(argList, format);
-	vsprintf_s(buffer, 1024, format, argList);
+	vsprintf_s(buffer, 4096, format, argList);
 	va_end(argList);
 
 	if(_logPath.size() > 0)

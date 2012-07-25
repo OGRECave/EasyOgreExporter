@@ -12,9 +12,9 @@
 *   (at your option) any later version.                                          *
 *                                                                                *
 **********************************************************************************/
+#include "ExMaterial.h"
 #include "ExScene.h"
 #include "EasyOgreExporterLog.h"
-#include "ExMaterial.h"
 #include "ExTools.h"
 #include "decomp.h"
 #include "IFrameTagManager.h"
@@ -22,11 +22,11 @@
 namespace EasyOgreExporter
 {
 	// constructor
-	ExScene::ExScene(ExOgreConverter* converter, ParamList &params)
+	ExScene::ExScene(ExOgreConverter* converter)
 	{
 		id_counter = 0;
     m_converter = converter;
-    mParams = params;
+    ParamList mParams = converter->getParams();
 
     //TODO test directories ?
     scenePath = makeOutputPath(mParams.outputDir, "", mParams.sceneFilename, "scene");
@@ -43,6 +43,8 @@ namespace EasyOgreExporter
 
   void ExScene::initXmlDocument()
   {
+    ParamList mParams = m_converter->getParams();
+
     xmlDoc = new TiXmlDocument();
     sceneElement = new TiXmlElement("scene");
     xmlDoc->LinkEndChild(sceneElement);
@@ -101,22 +103,20 @@ namespace EasyOgreExporter
 
   bool ExScene::exportNodeAnimation(TiXmlElement* pAnimsElement, IGameNode* pGameNode, Interval animRange, std::string name, bool resample, IGameObject::ObjectTypes type)
   {
+    ParamList mParams = m_converter->getParams();
     std::vector<int> animKeys = GetAnimationsKeysTime(pGameNode, animRange, mParams.resampleAnims);
     INode* maxnode = pGameNode->GetMaxNode();
-    int firstFrame = GetCOREInterface()->GetAnimRange().Start();
+    int firstFrame = GetFirstFrame();
 
     if(animKeys.size() > 0)
     {
       //look if any key change something before export
       bool isAnimated = false;
-      Matrix3 prevKeyTM = GetRelativeMatrix(maxnode, firstFrame, mParams.yUpAxis);
+      Matrix3 prevKeyTM = GetLocalNodeMatrix(maxnode, mParams.yUpAxis, firstFrame);
       for(int i = 0; i < animKeys.size() && !isAnimated; i++)
-      {
-        if (maxnode->GetParentNode())
-          maxnode->GetParentNode()->EvalWorldState(0);
-        
+      {        
         // get the relative transform
-        Matrix3 keyTM = GetRelativeMatrix(maxnode, animKeys[i], mParams.yUpAxis);
+        Matrix3 keyTM = GetLocalNodeMatrix(maxnode, mParams.yUpAxis, animKeys[i]);
 
         if(keyTM.Equals(prevKeyTM) == 0)
           isAnimated = true;
@@ -141,18 +141,15 @@ namespace EasyOgreExporter
       pAnimsElement->LinkEndChild(pAnimElement);
       
       for(int i = 0; i < animKeys.size(); i++)
-      {
-        if (maxnode->GetParentNode())
-          maxnode->GetParentNode()->EvalWorldState(0);
-        
+      {        
         // get the relative transform
-        Matrix3 keyTM = GetRelativeMatrix(maxnode, animKeys[i], mParams.yUpAxis);
+        Matrix3 keyTM = GetLocalNodeMatrix(maxnode, mParams.yUpAxis, animKeys[i]);
 
         //remove only key if the next key is not different
         Matrix3 nextKeyTM;
         nextKeyTM.IdentityMatrix();
         if(i + 1 < animKeys.size())
-          nextKeyTM = GetRelativeMatrix(maxnode, animKeys[i + 1], mParams.yUpAxis);
+          nextKeyTM = GetLocalNodeMatrix(maxnode, mParams.yUpAxis, animKeys[i + 1]);
         
         //skip if the key is equal to the last one
         if(i > 0)
@@ -222,17 +219,15 @@ namespace EasyOgreExporter
 
 	TiXmlElement* ExScene::writeNodeData(TiXmlElement* parent, IGameNode* pGameNode, IGameObject::ObjectTypes type)
 	{
+    ParamList mParams = m_converter->getParams();
+
 		if(!parent)
       parent = nodesElement;
-
-    int firstFrame = GetCOREInterface()->GetAnimRange().Start();
-
+        
     INode* maxnode = pGameNode->GetMaxNode();
-    if (maxnode->GetParentNode())
-      maxnode->GetParentNode()->EvalWorldState(firstFrame);
     
     // get the relative transform
-    Matrix3 nodeTM = GetRelativeMatrix(maxnode, firstFrame, mParams.yUpAxis);
+    Matrix3 nodeTM = GetLocalNodeMatrix(maxnode, mParams.yUpAxis, GetFirstFrame());
 
     AffineParts ap;
     decomp_affine(nodeTM, &ap);
@@ -407,8 +402,10 @@ namespace EasyOgreExporter
 		return pNodeElement;
 	}
 
-	TiXmlElement* ExScene::writeEntityData(TiXmlElement* parent, IGameNode* pGameNode, IGameMesh* pGameMesh)
+	TiXmlElement* ExScene::writeEntityData(TiXmlElement* parent, IGameNode* pGameNode, IGameMesh* pGameMesh, std::vector<ExMaterial*> lmat)
 	{
+    ParamList mParams = m_converter->getParams();
+
 		if(!parent)
       return 0;
     
@@ -449,20 +446,12 @@ namespace EasyOgreExporter
     TiXmlElement* pSubEntities = new TiXmlElement("subentities");
     pEntityElement->LinkEndChild(pSubEntities);
 
-    Tab<int> subEntities = pGameMesh->GetActiveMatIDs();
-    for (int i = 0; i < subEntities.Count(); i++)
+    for (int i = 0; i < lmat.size(); i++)
     {
-      Tab<FaceEx*> faces = pGameMesh->GetFacesFromMatID(subEntities[i]);
-      if (faces.Count() > 0)
-      {
-        IGameMaterial* pGameMaterial = pGameMesh->GetMaterialFromFace(faces[0]);
-        ExMaterial* mat = m_converter->getMaterialSet()->getMaterial(pGameMaterial);
-
-        TiXmlElement* pSubElement = new TiXmlElement("subentity");
-        pSubElement->SetAttribute("index", i);
-        pSubElement->SetAttribute("materialName", mat->getName().c_str());
-        pSubEntities->LinkEndChild(pSubElement);
-      }
+      TiXmlElement* pSubElement = new TiXmlElement("subentity");
+      pSubElement->SetAttribute("index", i);
+      pSubElement->SetAttribute("materialName", lmat[i]->getName().c_str());
+      pSubEntities->LinkEndChild(pSubElement);
     }
 
     id_counter++;
@@ -471,6 +460,8 @@ namespace EasyOgreExporter
 
   TiXmlElement* ExScene::writeCameraData(TiXmlElement* parent, IGameCamera* pGameCamera)
   {
+    ParamList mParams = m_converter->getParams();
+
 		if(!parent)
       return 0;
 
@@ -521,6 +512,8 @@ namespace EasyOgreExporter
 
   TiXmlElement* ExScene::writeLightData(TiXmlElement* parent, IGameLight* pGameLight)
   {
+    ParamList mParams = m_converter->getParams();
+
 		if(!parent)
       return 0;
     

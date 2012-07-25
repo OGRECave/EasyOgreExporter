@@ -46,7 +46,7 @@ namespace EasyOgreExporter
 	{
 	public:
 		//constructor
-    ExSkeleton(IGameSkin* pGameSkin, std::string name, ParamList &params);
+    ExSkeleton(IGameNode* node, IGameSkin* pGameSkin, Matrix3 offset, std::string name, ParamList &params);
 		//destructor
 		~ExSkeleton();
 		//clear skeleton data
@@ -54,7 +54,7 @@ namespace EasyOgreExporter
 		//load skeleton data
 //		bool load(IGameNode* pGameNode, IGameObject* pGameObject, IGameSkin* pGameSkin);
 		
-    bool getVertexBoneWeights(IGameMesh* pGameMesh);
+    bool getVertexBoneWeights(int numVertices);
 
 		// returns the index of the bone in the skeleton.  -1 if it doesn't exist.
 		int getJointIndex(INode* pNode);
@@ -86,9 +86,9 @@ namespace EasyOgreExporter
     //load a joint
 		bool loadJoint(INode* pNode);
 
-    
+    Matrix3 offsetTM;
+    IGameNode* m_pGameNode;
     IGameSkin* m_pGameSkin;
-		Control* m_bipedControl;
     std::vector<joint> m_joints;
 		std::vector<ExAnimation> m_animations;
 		std::vector<int> m_roots;

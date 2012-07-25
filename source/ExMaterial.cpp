@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "ExMaterial.h"
+#include "ExOgreConverter.h"
 #include "ExTools.h"
 #include "EasyOgreExporterLog.h"
 #include <imtl.h>
@@ -83,8 +84,9 @@ namespace EasyOgreExporter
 
 
 	// Constructor
-	ExMaterial::ExMaterial(IGameMaterial* pGameMaterial, std::string prefix)
+	ExMaterial::ExMaterial(ExOgreConverter* converter, IGameMaterial* pGameMaterial, std::string prefix)
 	{
+    m_converter = converter;
 		m_GameMaterial = pGameMaterial;
 		m_name = getMaterialName(prefix);
 		clear();
@@ -518,16 +520,11 @@ namespace EasyOgreExporter
 							std::string textureName_s;
 							textureName_s.assign(textureName_w.begin(),textureName_w.end());
 							tex.absFilename = textureName_s;
-
-							std::wstring filename_w = textureName.StripToLeaf().GetCStr();
-							std::string filename;
-							filename.assign(filename_w.begin(),filename_w.end());
 #else
 							tex.uvsetName = pBitmapTex->GetName();
 							tex.absFilename = textureName.GetCStr();
-							std::string filename = textureName.StripToLeaf().GetCStr();
 #endif
-							tex.filename = optimizeFileName(filename);
+							tex.filename = optimizeFileName(m_converter->getMaterialSet()->getUniqueTextureName(tex.absFilename));
 							tex.fAmount = amount;
 
 							if(bFoundTexture)
@@ -878,7 +875,7 @@ namespace EasyOgreExporter
 #else
 				EasyOgreExporterLog("Texture Name: %s\n", texName.c_str());
 				MaxSDK::Util::Path textureName(path.c_str());
-        bFileExist = DoesFileExist(path.c_str());
+        bFileExist = (DoesFileExist(path.c_str()) == TRUE) ? true : false;
 #endif
         if(!bFileExist)
 				{
@@ -926,15 +923,10 @@ namespace EasyOgreExporter
 				std::string textureName_s;
 				textureName_s.assign(textureName_w.begin(),textureName_w.end());
 				tex.absFilename = textureName_s;
-
-				std::wstring filename_w = textureName.StripToLeaf().GetCStr();
-				std::string filename;
-				filename.assign(filename_w.begin(),filename_w.end());
 #else
 				tex.absFilename = textureName.GetCStr();
-				std::string filename = textureName.StripToLeaf().GetCStr();
 #endif
-				tex.filename = optimizeFileName(filename);
+				tex.filename = optimizeFileName(m_converter->getMaterialSet()->getUniqueTextureName(tex.absFilename));
 				//get the texture multiplier
 				tex.fAmount = smat->GetTexmapAmt(texSlot, 0);
 
@@ -965,7 +957,7 @@ namespace EasyOgreExporter
 								Bitmap* bitmap = TheManager->Create(&bi); 
 								bitmap = TheManager->Load(&bi, &status); 
 								if (status == BMMRES_SUCCESS)
-									tex.bHasAlphaChannel = bitmap->HasAlpha();
+                  tex.bHasAlphaChannel = (bitmap->HasAlpha() == 0) ? false : true;
 
 								TheManager->DelBitmap(bitmap);
                 m_hasAmbientMap = true;
@@ -1002,7 +994,7 @@ namespace EasyOgreExporter
 							Bitmap* bitmap = TheManager->Create(&bi); 
 							bitmap = TheManager->Load(&bi, &status); 
 							if (status == BMMRES_SUCCESS)
-								tex.bHasAlphaChannel = bitmap->HasAlpha();
+                tex.bHasAlphaChannel = (bitmap->HasAlpha() == 0) ? false : true;
 
               if(tex.bHasAlphaChannel)
               {
@@ -1110,8 +1102,9 @@ namespace EasyOgreExporter
 	}
 
 	// Load material data
-	bool ExMaterial::load(ParamList& params)
+	bool ExMaterial::load()
 	{
+    ParamList params = m_converter->getParams();
 		clear();
 		//check if we want to export with lighting off option
 		m_lightingOff = params.lightingOff;
@@ -1233,7 +1226,7 @@ namespace EasyOgreExporter
 	}
 
 	// Write material data to an Ogre material script file
-	bool ExMaterial::writeOgreScript(ParamList &params, std::ofstream &outMaterial, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader)
+	bool ExMaterial::writeOgreScript(std::ofstream &outMaterial, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader)
 	{
 		//Start material description
 		outMaterial << "material \"" << m_name.c_str() << "\"\n";
@@ -1249,7 +1242,7 @@ namespace EasyOgreExporter
 		}
 		else*/
 		{
-			writeMaterialTechnique(params, outMaterial, -1, vsAmbShader, fpAmbShader, vsLightShader, fpLightShader);
+			writeMaterialTechnique(outMaterial, -1, vsAmbShader, fpAmbShader, vsLightShader, fpLightShader);
 		}
 
 		//End material description
@@ -1258,7 +1251,7 @@ namespace EasyOgreExporter
 		return true;
 	}
 
-	void ExMaterial::writeMaterialTechnique(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader)
+	void ExMaterial::writeMaterialTechnique(std::ofstream &outMaterial, int lod, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader)
 	{
 		//Start technique description
 		outMaterial << "\ttechnique ";
@@ -1269,12 +1262,12 @@ namespace EasyOgreExporter
 
 		if(vsAmbShader && fpAmbShader)
 		{
-			writeMaterialPass(params, outMaterial, lod, vsAmbShader, fpAmbShader, ExShader::SP_AMBIENT);
-			writeMaterialPass(params, outMaterial, lod, vsLightShader, fpLightShader, ExShader::SP_LIGHT);
+			writeMaterialPass(outMaterial, lod, vsAmbShader, fpAmbShader, ExShader::SP_AMBIENT);
+			writeMaterialPass(outMaterial, lod, vsLightShader, fpLightShader, ExShader::SP_LIGHT);
 		}
 		else
 		{
-			writeMaterialPass(params, outMaterial, lod, vsLightShader, fpLightShader, ExShader::SP_NONE);
+			writeMaterialPass(outMaterial, lod, vsLightShader, fpLightShader, ExShader::SP_NONE);
 		}
 
 		//End technique description
@@ -1291,15 +1284,17 @@ namespace EasyOgreExporter
 				outMaterial << "\t\tlod_index "<< lod <<"\n";
 
 			outMaterial << "\tscheme basic_mat\n";
-			writeMaterialPass(params, outMaterial, lod, 0, 0, ExShader::SP_NOSUPPORT);
+			writeMaterialPass(outMaterial, lod, 0, 0, ExShader::SP_NOSUPPORT);
 
 			//End technique description
 			outMaterial << "\t}\n";
 		}
 	}
 
-	void ExMaterial::writeMaterialPass(ParamList &params, std::ofstream &outMaterial, int lod, ExShader* vsShader, ExShader* fpShader, ExShader::ShaderPass pass)
+	void ExMaterial::writeMaterialPass(std::ofstream &outMaterial, int lod, ExShader* vsShader, ExShader* fpShader, ExShader::ShaderPass pass)
 	{
+    ParamList params = m_converter->getParams();
+
 		//Start render pass description
 		outMaterial << "\t\tpass ";
 		outMaterial << m_name << "_";

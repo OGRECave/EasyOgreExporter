@@ -17,15 +17,16 @@
 // Start Date   : December 10th, 2007
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "ExMaterial.h"
 #include "ExMaterialSet.h"
 #include <nvtt/nvtt.h>
 
 namespace EasyOgreExporter
 {
-  ExMaterialSet::ExMaterialSet()
+  ExMaterialSet::ExMaterialSet(ExOgreConverter* converter)
   {
 		//create a default material
-		ExMaterial* defMat = new ExMaterial(0, "");
+		ExMaterial* defMat = new ExMaterial(converter, 0, "");
     m_materials.push_back(defMat);
 	};
 
@@ -45,7 +46,51 @@ namespace EasyOgreExporter
 		for (int i=0; i<m_Shaders.size(); i++)
 			delete m_Shaders[i];
 		m_Shaders.clear();
+
+    m_textures.clear();
 	};
+
+  bool ExMaterialSet::getTextureSameFileNameExist(std::string filepath, std::string name)
+  {
+		for (int i=0; i<m_textures.size(); i++)
+		{
+      if (m_textures[i] == filepath)
+      {
+        return false;
+      }
+      else if (FileWithoutExt(m_textures[i]) == name)
+      {
+        return true;
+      }
+		}
+
+    return false;
+  }
+
+  std::string ExMaterialSet::getUniqueTextureName(std::string filepath)
+  {
+    //be aware of duplicated textures names
+    std::string path = FilePath(filepath);
+    std::string name = FileWithoutExt(filepath);
+    std::string ext = FileExt(filepath);
+    std::string abspath = filepath;
+    int index = 1;
+
+    while(getTextureSameFileNameExist(abspath, name))
+    {
+      std::stringstream strIdx;
+      strIdx << index;
+      
+      name = FileWithoutExt(filepath) + "_" + strIdx.str();
+      abspath = path + name + ext;
+
+      index++;
+    }
+
+		m_textures.push_back(abspath);
+
+    return name + ext;
+  }
 
   ExMaterial* ExMaterialSet::getMaterialByName(std::string name)
   {
@@ -145,11 +190,11 @@ namespace EasyOgreExporter
 	//get material
 	ExMaterial* ExMaterialSet::getMaterial(IGameMaterial* pGameMaterial)
   {
-		for (int i=0; i<m_materials.size(); i++)
-		{
-			if (m_materials[i]->m_GameMaterial == pGameMaterial)
-				return m_materials[i];
-		}
+	  for (int i=0; i<m_materials.size(); i++)
+	  {
+		  if (m_materials[i]->m_GameMaterial == pGameMaterial)
+			  return m_materials[i];
+	  }
 		return NULL;
 	};
 	
@@ -184,7 +229,7 @@ namespace EasyOgreExporter
         fpLightShader = createShader(m_materials[i], ExShader::ST_FPLIGHT, params);
       }
       
-      m_materials[i]->writeOgreScript(params, outMaterial, vsAmbShader ,fpAmbShader, vsLightShader, fpLightShader);
+      m_materials[i]->writeOgreScript(outMaterial, vsAmbShader ,fpAmbShader, vsLightShader, fpLightShader);
 		}
     outMaterial.close();
 
@@ -270,7 +315,7 @@ namespace EasyOgreExporter
 #endif
               Bitmap* bitmap = TheManager->Create(&bi); 
               bitmap = TheManager->Load(&bi, &status);
-              if (status == BMMRES_SUCCESS) 
+              if (status == BMMRES_SUCCESS)
               {
                 unsigned int width = bitmap->Width();
                 unsigned int height = bitmap->Height();
@@ -280,83 +325,177 @@ namespace EasyOgreExporter
                 if(bitmap->Flags() & MAP_INVERTED)
                   EasyOgreExporterLog("Info texture file %s is inverted\n", tex.filename.c_str());
 
+                int bitmapType = bitmap->Storage()->Type();
                 int bpp = 4;
                 int bpl = width * bpp;
 
                 int atype;
                 int btype;
-                unsigned char* bBuff = (unsigned char*)bitmap->GetStoragePtr(&btype);
-                unsigned char* aBuff = (unsigned char*)bitmap->GetAlphaPtr(&atype); 
-                unsigned char* pBuff = (unsigned char*)malloc(width * height * bpp);
+                void* bdBuff = bitmap->GetStoragePtr(&btype);
+                void* adBuff = bitmap->GetAlphaPtr(&atype);
+                unsigned char* pBuff = (unsigned char*)malloc(bpl * height * sizeof(unsigned char));
 
-                if ((btype != BMM_NO_TYPE) && (bBuff != 0))
+                if ((btype != BMM_NO_TYPE) && (bdBuff != 0))
                 {
-                  if(bitmap->Storage()->Type() == BMM_GRAY_8)
+                  if(bitmapType == BMM_GRAY_16 || bitmapType == BMM_TRUE_48 || bitmapType == BMM_TRUE_64)
                   {
-                    //add alpha to buffer and convert to BGRA from grey
-                    for (int x = 0; x < width; x++)
-                    {
-                      for(int y = 0; y < height; y++) 
-                      {
-                        unsigned long destByte = (x * bpp) + (bpl * y);
-                        unsigned long srcByte = x + (width * y);
-                        unsigned long srcAlphaByte = x + (width * y);
+                    unsigned short* bBuff = (unsigned short*)bdBuff;
+                    unsigned short* aBuff = (unsigned short*)adBuff;
 
-                        pBuff[destByte] = bBuff[srcByte];
-                        pBuff[destByte+1] = bBuff[srcByte];
-                        pBuff[destByte+2] = bBuff[srcByte];
-                        pBuff[destByte+3] = (atype != BMM_NO_TYPE && aBuff != 0) ? aBuff[srcAlphaByte] : 0xff;
+                    if(bitmapType == BMM_GRAY_16)
+                    {
+                      //add alpha to buffer and convert to BGRA from grey
+                      for (int x = 0; x < width; x++)
+                      {
+                        for(int y = 0; y < height; y++) 
+                        {
+                          unsigned long destByte = (x * bpp) + (bpl * y);
+                          unsigned long srcByte = (x * 3) + (width * 3 * y);
+                          unsigned long srcAlphaByte = x + (width * y);
+
+                          pBuff[destByte] = (int)((bBuff[srcByte] / 65535.0f) * 255.0f);
+                          pBuff[destByte+1] = (int)((bBuff[srcByte] / 65535.0f) * 255.0f);
+                          pBuff[destByte+2] = (int)((bBuff[srcByte] / 65535.0f) * 255.0f);
+                          pBuff[destByte+3] = (atype != BMM_NO_TYPE && aBuff != 0) ? (int)((aBuff[srcAlphaByte] / 65535.0f) * 255.0f) : 0xff;
+                        }
+                      }
+                    }
+                    else
+                    {
+                      //add alpha to buffer
+                      for (int x = 0; x < width; x++)
+                      {
+                        for(int y = 0; y < height; y++) 
+                        {
+                          unsigned long destByte = (x * bpp) + (bpl * y);
+                          unsigned long srcByte = (x * 3) + (width * 3 * y);
+                          unsigned long srcAlphaByte = x + (width * y);
+
+                          pBuff[destByte] = (int)((bBuff[srcByte+2] / 65535.0f) * 255.0f);
+                          pBuff[destByte+1] = (int)((bBuff[srcByte+1] / 65535.0f) * 255.0f);
+                          pBuff[destByte+2] = (int)((bBuff[srcByte] / 65535.0f) * 255.0f);
+                          pBuff[destByte+3] = (atype != BMM_NO_TYPE && aBuff != 0) ? (int)((aBuff[srcAlphaByte] / 65535.0f) * 255.0f) : 0xff;
+                        }
                       }
                     }
                   }
-                  else
+                  else if(bitmapType == BMM_FLOAT_GRAY_32 || bitmapType == BMM_FLOAT_RGB_32 || bitmapType == BMM_FLOAT_RGBA_32)
                   {
-                    //add alpha to buffer and convert to BGRA
-                    for (int x = 0; x < width; x++)
-                    {
-                      for(int y = 0; y < height; y++) 
-                      {
-                        unsigned long destByte = (x * bpp) + (bpl * y);
-                        unsigned long srcByte = (x * 3) + (width * 3 * y);
-                        unsigned long srcAlphaByte = x + (width * y);
+                    float* bBuff = (float*)bdBuff;
+                    float* aBuff = (float*)adBuff;
 
-                        pBuff[destByte] = bBuff[srcByte+2];
-                        pBuff[destByte+1] = bBuff[srcByte+1];
-                        pBuff[destByte+2] = bBuff[srcByte];
-                        pBuff[destByte+3] = (atype != BMM_NO_TYPE && aBuff != 0) ? aBuff[srcAlphaByte] : 0xff;
+                    if(bitmapType == BMM_FLOAT_GRAY_32)
+                    {
+                      //add alpha to buffer and convert to BGRA from grey
+                      for (int x = 0; x < width; x++)
+                      {
+                        for(int y = 0; y < height; y++) 
+                        {
+                          unsigned long destByte = (x * bpp) + (bpl * y);
+                          unsigned long srcByte = (x * 3) + (width * 3 * y);
+                          unsigned long srcAlphaByte = x + (width * y);
+
+                          pBuff[destByte] = (int)(((double)bBuff[srcByte] / FLT_MAX) * 255.0);
+                          pBuff[destByte+1] = (int)(((double)bBuff[srcByte] / FLT_MAX) * 255.0);
+                          pBuff[destByte+2] = (int)(((double)bBuff[srcByte] / FLT_MAX) * 255.0);
+                          pBuff[destByte+3] = (atype != BMM_NO_TYPE && aBuff != 0) ? (int)(((double)aBuff[srcAlphaByte] / FLT_MAX) * 255.0) : 0xff;
+                        }
+                      }
+                    }
+                    else
+                    {
+                      //add alpha to buffer
+                      for (int x = 0; x < width; x++)
+                      {
+                        for(int y = 0; y < height; y++) 
+                        {
+                          unsigned long destByte = (x * bpp) + (bpl * y);
+                          unsigned long srcByte = (x * 3) + (width * 3 * y);
+                          unsigned long srcAlphaByte = x + (width * y);
+
+                          pBuff[destByte] = (int)(((double)bBuff[srcByte+2] / FLT_MAX) * 255.0);
+                          pBuff[destByte+1] = (int)(((double)bBuff[srcByte+1] / FLT_MAX) * 255.0);
+                          pBuff[destByte+2] = (int)(((double)bBuff[srcByte] / FLT_MAX) * 255.0);
+                          pBuff[destByte+3] = (atype != BMM_NO_TYPE && aBuff != 0) ? (int)(((double)aBuff[srcAlphaByte] / FLT_MAX) * 255.0) : 0xff;
+                        }
                       }
                     }
                   }
+                  else if(bitmapType == BMM_GRAY_8 || bitmapType == BMM_TRUE_24 || bitmapType == BMM_TRUE_32)
+                  {
+                    unsigned char* bBuff = (unsigned char*)bdBuff;
+                    unsigned char* aBuff = (unsigned char*)adBuff;
 
-                  nvtt::InputOptions inputOptions;
-                  inputOptions.setTextureLayout(nvtt::TextureType_2D, width, height);
-                  inputOptions.setMipmapData(pBuff, width, height);
-                  inputOptions.setFormat(nvtt::InputFormat_BGRA_8UB);
-                  //inputOptions.setAlphaMode(bitmap->HasAlpha() && bitmap->PreMultipliedAlpha() ? nvtt::AlphaMode_Premultiplied : bitmap->HasAlpha() ? nvtt::AlphaMode_Transparency : nvtt::AlphaMode_None);
-                  inputOptions.setAlphaMode(bitmap->HasAlpha() ? nvtt::AlphaMode_Premultiplied : nvtt::AlphaMode_None);
-                  inputOptions.setMaxExtents(params.maxTextureSize);
-                  inputOptions.setRoundMode(nvtt::RoundMode_ToNearestPowerOfTwo);
-                  inputOptions.setMipmapGeneration(true);
-                  inputOptions.setWrapMode(nvtt::WrapMode_Clamp);
-                  
-                  nvtt::OutputOptions outputOptions;
-                  outputOptions.setFileName(destFile.c_str());
+                    if(bitmapType == BMM_GRAY_16)
+                    {
+                      //add alpha to buffer and convert to BGRA from grey
+                      for (int x = 0; x < width; x++)
+                      {
+                        for(int y = 0; y < height; y++) 
+                        {
+                          unsigned long destByte = (x * bpp) + (bpl * y);
+                          unsigned long srcByte = (x * 3) + (width * 3 * y);
+                          unsigned long srcAlphaByte = x + (width * y);
 
-                  nvtt::CompressionOptions compressionOptions;
-                  compressionOptions.setQuality(nvtt::Quality_Production);
-                  compressionOptions.setFormat(bitmap->HasAlpha() ? nvtt::Format_DXT5 : nvtt::Format_DXT1);
-#if(NVTT_VERSION<200)
-                  compressionOptions.setTargetDecoder(nvtt::Decoder_D3D9);
-#endif                  
+                          pBuff[destByte] = bBuff[srcByte];
+                          pBuff[destByte+1] = bBuff[srcByte];
+                          pBuff[destByte+2] = bBuff[srcByte];
+                          pBuff[destByte+3] = (atype != BMM_NO_TYPE && aBuff != 0) ? aBuff[srcAlphaByte] : 0xff;
+                        }
+                      }
+                    }
+                    else
+                    {
+                      //add alpha to buffer and convert to BGRA
+                      for (int x = 0; x < width; x++)
+                      {
+                        for(int y = 0; y < height; y++) 
+                        {
+                          unsigned long destByte = (x * bpp) + (bpl * y);
+                          unsigned long srcByte = (x * 3) + (width * 3 * y);
+                          unsigned long srcAlphaByte = x + (width * y);
 
-#if(NVTT_VERSION<200)
-                  nvtt::Context context;
-                  ddsMode = context.process(inputOptions, compressionOptions, outputOptions);
-#else
-                  nvtt::Compressor compressor;
-                  ddsMode = compressor.process(inputOptions, compressionOptions, outputOptions);
-#endif                  
-                  free(pBuff);
+                          pBuff[destByte] = bBuff[srcByte+2];
+                          pBuff[destByte+1] = bBuff[srcByte+1];
+                          pBuff[destByte+2] = bBuff[srcByte];
+                          pBuff[destByte+3] = (atype != BMM_NO_TYPE && aBuff != 0) ? aBuff[srcAlphaByte] : 0xff;
+                        }
+                      }
+                    }
+                  }
+ 
+                  if(pBuff)
+                  {
+                    nvtt::InputOptions inputOptions;
+                    inputOptions.setTextureLayout(nvtt::TextureType_2D, width, height);
+                    inputOptions.setFormat(nvtt::InputFormat_BGRA_8UB);
+                    //inputOptions.setAlphaMode(bitmap->HasAlpha() && bitmap->PreMultipliedAlpha() ? nvtt::AlphaMode_Premultiplied : bitmap->HasAlpha() ? nvtt::AlphaMode_Transparency : nvtt::AlphaMode_None);
+                    inputOptions.setAlphaMode(bitmap->HasAlpha() ? nvtt::AlphaMode_Premultiplied : nvtt::AlphaMode_None);
+                    inputOptions.setMaxExtents(params.maxTextureSize);
+                    inputOptions.setRoundMode(nvtt::RoundMode_ToNearestPowerOfTwo);
+                    inputOptions.setMipmapGeneration(true);
+                    inputOptions.setWrapMode(nvtt::WrapMode_Clamp);
+                    inputOptions.setMipmapData(pBuff, width, height);
+                    
+                    nvtt::OutputOptions outputOptions;
+                    outputOptions.setFileName(destFile.c_str());
+
+                    nvtt::CompressionOptions compressionOptions;
+                    compressionOptions.setQuality(nvtt::Quality_Production);
+                    compressionOptions.setFormat(bitmap->HasAlpha() ? nvtt::Format_DXT5 : nvtt::Format_DXT1);
+  #if(NVTT_VERSION<200)
+                    compressionOptions.setTargetDecoder(nvtt::Decoder_D3D9);
+  #endif                  
+
+  #if(NVTT_VERSION<200)
+                    nvtt::Context context;
+                    ddsMode = context.process(inputOptions, compressionOptions, outputOptions);
+  #else
+                    nvtt::Compressor compressor;
+                    ddsMode = compressor.process(inputOptions, compressionOptions, outputOptions);
+  #endif                 
+                    free(pBuff);
+                  }
                 }
                 TheManager->DelBitmap(bitmap);
               }

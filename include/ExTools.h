@@ -21,6 +21,7 @@
 #include "iskin.h"
 #include "IMixer8.h"
 #include "iInstanceMgr.h"
+#include "MeshNormalSpec.h"
 
 inline void trim(std::string& str)
 {
@@ -44,6 +45,30 @@ inline std::string StripToTopParent(const std::string& filepath)
 	return filepath.substr(ri+1);
 }
 
+inline std::string FilePath(std::string file)
+{
+  int ri = file.find_last_of('\\');
+	int ri2 = file.find_last_of('/');
+	if(ri2 > ri)
+	{
+		ri = ri2;
+	}
+	return file.substr(0, ri+1);
+}
+
+inline std::string FileWithoutExt(std::string file)
+{
+  std::string name = StripToTopParent(file);
+	int ri = name.find_last_of('.');
+	return name.substr(0, ri);
+}
+
+inline std::string FileExt(std::string file)
+{
+	int ri = file.find_last_of('.');
+	return file.substr(ri);
+}
+
 inline std::string ToLowerCase(std::string str)
 {
   char* cstr = (char*)str.c_str();
@@ -58,23 +83,29 @@ inline std::string ToLowerCase(std::string str)
 inline std::string optimizeFileName(const std::string& filename)
 {
   std::string newFilename = filename;
+  if (isdigit(newFilename.c_str()[0]))
+    newFilename.insert(0, "_");
+
   std::replace(newFilename.begin(), newFilename.end(), ':', '_');
   std::replace(newFilename.begin(), newFilename.end(), ' ', '_');
   std::replace(newFilename.begin(), newFilename.end(), '\'', '_');
   std::replace(newFilename.begin(), newFilename.end(), '/', '_');
   std::replace(newFilename.begin(), newFilename.end(), '"', '_');
-	return newFilename;;
+	return newFilename;
 }
 
 // Helper function to replace special chars for resources
 inline std::string optimizeResourceName(const std::string& filename)
 {
   std::string newFilename = filename;
+  if (isdigit(newFilename.c_str()[0]))
+    newFilename.insert(0, "_");
+
   std::replace(newFilename.begin(), newFilename.end(), ':', '_');
   std::replace(newFilename.begin(), newFilename.end(), ' ', '_');
   std::replace(newFilename.begin(), newFilename.end(), '\'', '_');
   std::replace(newFilename.begin(), newFilename.end(), '"', '_');
-	return newFilename;;
+	return newFilename;
 }
 
 // Helper function to generate full filepath
@@ -134,12 +165,17 @@ inline std::string formatClipName(std::string fname, int id)
 }
 
 
+inline int GetFirstFrame()
+{
+  return GetCOREInterface()->GetAnimRange().Start();
+}
+
 inline bool IsBone(INode *pNode)
 {
   if(pNode == NULL)
     return false; 
 
-  ObjectState os = pNode->EvalWorldState(0); 
+  ObjectState os = pNode->EvalWorldState(GetFirstFrame()); 
   if (!os.obj)
     return false;
 
@@ -163,7 +199,7 @@ inline bool IsBiped(INode *pNode)
   if(pNode == NULL)
     return false; 
 
-  ObjectState os = pNode->EvalWorldState(0); 
+  ObjectState os = pNode->EvalWorldState(GetFirstFrame()); 
   if (!os.obj)
     return false;
 
@@ -173,25 +209,6 @@ inline bool IsBiped(INode *pNode)
           cont->ClassID() == BIPBODY_CONTROL_CLASS_ID ||   //biped root "Bip01"
           cont->ClassID() == SKELOBJ_CLASS_ID ||
           cont->ClassID() == BIPED_CLASS_ID)
-  {
-    return true;
-  }
-
-  return false;   
-}
-
-inline bool IsBipedRoot(INode *pNode)
-{
-  if(pNode == NULL)
-    return false; 
-
-  ObjectState os = pNode->EvalWorldState(0); 
-  if (!os.obj)
-    return false;
-
-  // bided
-  Control* cont = pNode->GetTMController();   
-  if(cont->ClassID() == BIPBODY_CONTROL_CLASS_ID)   //biped root "Bip01"
   {
     return true;
   }
@@ -213,23 +230,6 @@ inline bool IsPossibleBone(INode *pNode)
     return false;
 
   return true;   
-}
-
-inline bool IsRootBone(INode *pNode)
-{
-  if(pNode == NULL)
-    return false; 
-
-  ObjectState os = pNode->EvalWorldState(0); 
-  if (!os.obj) 
-    return false;
-
-  //
-  Control *cont = pNode->GetTMController();   
-  if(cont->ClassID() == BIPBODY_CONTROL_CLASS_ID)     //biped root "Bip01"     
-    return true;
-
-  return false;   
 }
 
 inline Matrix3 TransformMatrix(Matrix3 orig_cur_mat, bool yUp)
@@ -284,79 +284,128 @@ inline Matrix3 UniformMatrix(Matrix3 orig_cur_mat, bool yUp)
  return(mat);
 }
 
-inline Matrix3 GetRelativeUniformMatrix(Matrix3 mat1, Matrix3 mat2, bool yUp)
-{          
-  Matrix3 dest_mat;
-  
-  //Decompose each matrix
-  Matrix3 cur_mat = UniformMatrix(mat1, yUp);
-  Matrix3 par_mat = UniformMatrix(mat2, yUp);
- 
-  //then return relative matrix in coordinate space of parent
-  dest_mat = cur_mat * Inverse(par_mat);
-
-  return dest_mat;
-}
-
-inline Matrix3 GetRelativeUniformMatrix(INode *node, int t, bool yUp)
-{          
- /* Note: This function removes the non-uniform scaling 
- from MAX node transformations. before multiplying the 
- current node by  the inverse of its parent. The 
- removal  must be done on both nodes before the 
- multiplication and Inverse are applied. This is especially 
- useful for Biped export (which uses non-uniform scaling on 
- its body parts.) */
- 
-  INode *p_node = node->GetParentNode();
- 
-  Matrix3 orig_cur_mat;  // for current and parent 
-  Matrix3 orig_par_mat;  // original matrices 
- 
-  Matrix3 cur_mat;       // for current and parent
-  Matrix3 par_mat;       // decomposed matrices 
-
-  Matrix3 dest_mat;
-  
-  //Get transformation matrices
-  orig_cur_mat = node->GetNodeTM(t);
-  orig_par_mat = p_node->GetNodeTM(t); 
-  
-  //Decompose each matrix
-  cur_mat = UniformMatrix(orig_cur_mat, yUp);
-  par_mat = UniformMatrix(orig_par_mat, yUp);
- 
-  //then return relative matrix in coordinate space of parent
-  dest_mat = cur_mat * Inverse(par_mat);
-
-  return dest_mat;
-}
-
-inline Matrix3 GetRelativeMatrix(INode *node, int t, bool yUp)
+inline Matrix3 GetLocalUniformMatrix(INode *node, Matrix3 offsetMat, bool yUp, int t)
 {
-  INode *p_node = node->GetParentNode();
- 
-  Matrix3 orig_cur_mat;  // for current and parent 
-  Matrix3 orig_par_mat;  // original matrices 
- 
-  Matrix3 cur_mat;       // for current and parent
-  Matrix3 par_mat;       // decomposed matrices 
-
-  Matrix3 dest_mat;
-  
-  //Get transformation matrices
-  orig_cur_mat = node->GetNodeTM(t);
-  orig_par_mat = p_node->GetNodeTM(t); 
-  
   //Decompose each matrix
-  cur_mat = TransformMatrix(orig_cur_mat, yUp);
-  par_mat = TransformMatrix(orig_par_mat, yUp);
+  Matrix3 cur_mat = UniformMatrix(node->GetNodeTM(t), yUp) * Inverse(offsetMat);
  
-  //then return relative matrix in coordinate space of parent
-  dest_mat = cur_mat * Inverse(par_mat);
+  if (node->GetParentNode()->IsRootNode())
+    return cur_mat;
 
-  return dest_mat;
+  Matrix3 par_mat = UniformMatrix(node->GetParentNode()->GetNodeTM(t), yUp) * Inverse(offsetMat);
+  
+  //then return relative matrix in coordinate space of parent
+  return cur_mat * Inverse(par_mat);
 }
+
+inline Matrix3 GetRelativeMatrix(Matrix3 mat1, Matrix3 mat2)
+{
+  return mat1 * Inverse(mat2);
+}
+
+
+//Simple node transform
+inline Matrix3 GetNodeOffsetMatrix(INode* node, bool yUp)
+{
+  Matrix3 piv(1);
+  piv.PreTranslate(node->GetObjOffsetPos());
+	PreRotateMatrix(piv, node->GetObjOffsetRot());
+	ApplyScaling(piv, node->GetObjOffsetScale());
+  
+  return TransformMatrix(piv, yUp);
+}
+
+inline Matrix3 GetGlobalNodeMatrix(INode *node, bool yUp = false, int t = 0)
+{
+  return TransformMatrix(node->GetNodeTM(t), yUp);
+}
+
+inline Matrix3 GetLocalNodeMatrix(INode *node, bool yUp = false, int t = 0)
+{
+  Matrix3 nodeTM = TransformMatrix(node->GetNodeTM(t), yUp);
+  
+  if (node->GetParentNode()->IsRootNode())
+    return nodeTM;
+
+  Matrix3 parentTM = TransformMatrix(node->GetParentNode()->GetNodeTM(t), yUp);
+  return nodeTM * Inverse(parentTM);
+}
+
+inline Matrix3 GetLocalNodeMatrix(INode *node, Matrix3 offsetTM, bool yUp = false, int t = 0)
+{
+  /*if (node->GetParentNode())
+    node->GetParentNode()->EvalWorldState(t);
+  */
+  Matrix3 nodeTM = TransformMatrix(node->GetNodeTM(t), yUp) * Inverse(offsetTM);
+  
+  if (node->GetParentNode()->IsRootNode())
+    return nodeTM;
+
+  Matrix3 parentTM = TransformMatrix(node->GetParentNode()->GetNodeTM(t), yUp) * Inverse(offsetTM);
+  return nodeTM * Inverse(parentTM);
+}
+
+
+//Biped interface
+inline IBipMaster* GetBipedMasterInterface(IGameSkin* skin)
+{
+  if(!skin)
+    return 0;
+
+  IBipMaster* bipMaster = 0;
+  for (int i = 0; (i < skin->GetTotalBoneCount()) && (bipMaster == 0); i++)
+  {
+    INode* bone = skin->GetBone(i);
+    Control* boneControl = bone->GetTMController();
+    
+    if (boneControl)
+    {
+      //Get the Biped master Interface from the controller
+      bipMaster = (IBipMaster*) boneControl->GetInterface(I_BIPMASTER);
+    }
+  }
+  return bipMaster;
+}
+
+inline void ReleaseBipedMasterInterface(IGameSkin* skin, IBipMaster* bipMaster)
+{
+  if(!skin || !bipMaster)
+    return;
+
+  Control* bipedControl = 0;
+  for (int i = 0; (i < skin->GetTotalBoneCount()) && (bipedControl == 0) ; i++)
+  {
+    INode* bone = skin->GetBone(i);
+    Control* boneControl = bone->GetTMController();
+    if (boneControl->ClassID() == BIPBODY_CONTROL_CLASS_ID)
+      bipedControl = boneControl;
+  }
+
+  if (bipedControl)
+  {
+    bipedControl->ReleaseInterface(I_BIPMASTER, bipMaster);
+  }
+}
+
+inline void SetBipedToPreviousMode(IBipMaster* bipMaster, DWORD previousMode)
+{
+  if(!bipMaster)
+    return;
+
+  bipMaster->EndModes(BMODE_FIGURE, 0);
+  bipMaster->BeginModes(previousMode, 0);
+}
+
+inline void SetBipedToBindPose(IBipMaster* bipMaster, DWORD& previousMode)
+{
+  if(!bipMaster)
+    return;
+
+  previousMode = bipMaster->GetActiveModes();
+  bipMaster->EndModes(previousMode, 0);
+  bipMaster->BeginModes(BMODE_FIGURE, 0);
+}
+
 
 // Units conversion
 #define M2MM 0.001f
@@ -791,6 +840,90 @@ inline bool isFirstInstance(IGameNode* pGameNode)
     return true;
   
   return false;
+}
+
+inline TriObject* getTriObjectFromNode(INode *Node, TimeValue T, bool &Delete) 
+{
+	Delete = false;
+	Object* Obj = Node->EvalWorldState(T).obj;
+
+	if(Obj && Obj->CanConvertToType(Class_ID(TRIOBJ_CLASS_ID, 0))) 
+	{
+		TriObject* Tri = (TriObject*)Obj->ConvertToType(T, Class_ID(TRIOBJ_CLASS_ID, 0));
+		if(Obj != Tri)
+			Delete = true;
+
+		return(Tri);
+	}
+	else 
+	{
+		return(NULL);
+	}
+}
+
+
+/*
+  Normal computing
+*/
+
+inline Point3 getVertexNormal(Mesh* mesh, int faceNo, RVertex* rv)
+{
+	Face* f = &mesh->faces[faceNo];
+	DWORD smGroup = f->smGroup;
+	int numNormals = 0;
+	Point3 vertexNormal;
+	
+	// Is normal specified
+	// SPCIFIED is not currently used, but may be used in future versions.
+	if (rv->rFlags & SPECIFIED_NORMAL)
+  {
+		vertexNormal = rv->rn.getNormal();
+	}
+	// If normal is not specified it's only available if the face belongs
+	// to a smoothing group
+	else if ((numNormals = rv->rFlags & NORCT_MASK) != 0 && smGroup)
+  {
+		// If there is only one vertex is found in the rn member.
+		if (numNormals == 1)
+    {
+			vertexNormal = rv->rn.getNormal();
+		}
+		else
+    {
+			// If two or more vertices are there you need to step through them
+			// and find the vertex with the same smoothing group as the current face.
+			// You will find multiple normals in the ern member.
+			for (int i = 0; i < numNormals; i++)
+      {
+				if (rv->ern[i].getSmGroup() & smGroup)
+        {
+					vertexNormal = rv->ern[i].getNormal();
+				}
+			}
+		}
+	}
+	else
+  {
+		// Get the normal from the Face if no smoothing groups are there
+		vertexNormal = mesh->getFaceNormal(faceNo);
+	}
+	
+	return vertexNormal;
+}
+
+// Compute the face and vertex normals
+inline Point3 GetVertexNormals(Mesh *mesh, int fpos, int vpos, DWORD vId)
+{
+  MeshNormalSpec* nrm = mesh->GetSpecifiedNormals();
+  
+  if (nrm && nrm->GetNumNormals())
+  {
+    return nrm->GetNormal(fpos, vpos);
+  }
+  else
+  {
+    return getVertexNormal(mesh, fpos, mesh->getRVertPtr(vId));
+  }
 }
 
 #endif

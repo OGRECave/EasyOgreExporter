@@ -24,7 +24,6 @@
 #include "ExPrerequisites.h"
 #include "ExOgreConverter.h"
 #include "ExSkeleton.h"
-#include "paramList.h"
 
 namespace EasyOgreExporter
 {
@@ -78,6 +77,7 @@ namespace EasyOgreExporter
       std::vector<int> vertices;
 
       int iMaxId;
+      int iMaterialId;
   };
 
   class ExVertex
@@ -120,7 +120,7 @@ namespace EasyOgreExporter
 
       bool cmpPointList(const std::vector<Point3>& l1, const std::vector<Point3>& l2, float sensivity)
       {
-	    int l1_size = l1.size();
+	      int l1_size = l1.size();
         if (l1_size != l2.size())
           return false;
 
@@ -131,10 +131,10 @@ namespace EasyOgreExporter
           Point3 uv1 = l1[i];
           Point3 uv2 = l2[i];
           if(!(uv1.Equals(uv2, sensivity)))
-		  {
+          {
             ret = false;
-			break;
-		  }
+      			break;
+		      }
           i++;
         }
 
@@ -145,7 +145,7 @@ namespace EasyOgreExporter
       {
         const static float sensivity = 0.000001f;
 
-		return (vPos.Equals(b.vPos, sensivity) && 
+		    return (vPos.Equals(b.vPos, sensivity) && 
             vNorm.Equals(b.vNorm, sensivity) && 
             vColor.Equals(b.vColor, sensivity) &&
             /*(iMaxId == b.iMaxId) &&*/ cmpPointList(lTexCoords, b.lTexCoords, sensivity) && cmpPointList(lTangent, b.lTangent, sensivity) && cmpPointList(lBinormal, b.lBinormal, sensivity));
@@ -179,14 +179,16 @@ namespace EasyOgreExporter
     std::vector<ExVertex> m_vertices;
     std::vector<ExFace> m_faces;
     int id;
+    ExMaterial* m_mat;
   protected:
   private:
 
   public:
 		//constructor
-		ExSubMesh(int idx)
+    ExSubMesh(int idx, ExMaterial* mat)
     {
       id = idx;
+      m_mat = mat;
     };
 	  
     //destructor
@@ -209,35 +211,41 @@ namespace EasyOgreExporter
     ParamList m_params;
     IGameMesh* m_GameMesh;
     IGameNode* m_GameNode;
+    IGameSkin* m_GameSkin;
     Ogre::Mesh* m_Mesh;
     MorphR3* m_pMorphR3;
     Box3 m_Bounding;
     float m_SphereRadius;
     ExSkeleton* m_pSkeleton;
+    Matrix3 offsetTM;
 
     //faces with new vertices index
     std::vector<ExFace> m_faces;
     //cleaned and sorted vertices
     std::vector<ExVertex> m_vertices;
     std::vector<ExSubMesh> m_subList;
+    unsigned int m_numTextureChannel;
+
   private:
 
 	public:
 		//constructor
-		ExMesh(ExOgreConverter* converter, ParamList &params, IGameNode* pGameNode, IGameMesh* pGameMesh, const std::string& name = "");
+		ExMesh(ExOgreConverter* converter, IGameNode* pGameNode, IGameMesh* pGameMesh, const std::string& name = "");
 	  
     //destructor
 		~ExMesh();
 	
 		//write to a OGRE binary mesh
 		bool writeOgreBinary();
+    std::vector<ExMaterial*> getMaterials();
     
     // get pointer to linked skeleton
     ExSkeleton* getSkeleton();
 
   protected:
-    void buildVertices();
-    Ogre::SubMesh* createOgreSubmesh(ExMaterial* pMaterial, ExSubMesh submesh);
+    void prepareMesh(Mesh* mMesh);
+    std::vector<ExFace> GetFacesByMaterialId(int matId);
+    Ogre::SubMesh* createOgreSubmesh(ExSubMesh submesh);
     bool createOgreSharedGeometry();
     void buildOgreGeometry(Ogre::VertexData* vdata, std::vector<ExVertex> verticesList);
 		ExMaterial* loadMaterial(IGameMaterial* pGameMaterial);

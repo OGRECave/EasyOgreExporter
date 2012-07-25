@@ -24,15 +24,18 @@ namespace EasyOgreExporter
 	class ExOgreConverter
 	{
 	  public:
+      IGameScene* pIGame;
+
 		  //constructor
-		  ExOgreConverter(ParamList &params);
+		  ExOgreConverter(IGameScene* pIGameScene, ParamList params);
 
 		  //destructor
 		  ~ExOgreConverter();
 
-		  bool writeEntityData(IGameNode* pGameNode, IGameObject* pGameObject, IGameMesh* pGameMesh);
+		  bool writeEntityData(IGameNode* pGameNode, IGameObject* pGameObject, IGameMesh* pGameMesh, std::vector<ExMaterial*>& lmat);
       bool writeMaterialFile();
       ExMaterialSet* getMaterialSet();
+      ParamList getParams();
 
 	  protected:
       ParamList mParams;

@@ -92,4 +92,11 @@
 extern TCHAR* GetString(int id);
 extern HINSTANCE hInstance;
 
+namespace EasyOgreExporter
+{
+  class ExOgreConverter;
+  class ExMaterialSet;
+  class ExMaterial;
+}
+
 #endif
