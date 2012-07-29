@@ -288,11 +288,25 @@ inline Matrix3 GetLocalUniformMatrix(INode *node, Matrix3 offsetMat, bool yUp, i
 {
   //Decompose each matrix
   Matrix3 cur_mat = UniformMatrix(node->GetNodeTM(t), yUp) * Inverse(offsetMat);
- 
+
   if (node->GetParentNode()->IsRootNode())
     return cur_mat;
 
   Matrix3 par_mat = UniformMatrix(node->GetParentNode()->GetNodeTM(t), yUp) * Inverse(offsetMat);
+  
+  //then return relative matrix in coordinate space of parent
+  return cur_mat * Inverse(par_mat);
+}
+
+inline Matrix3 GetLocalUniformMatrix(INode *node, bool yUp, int t)
+{
+  //Decompose each matrix
+  Matrix3 cur_mat = UniformMatrix(node->GetNodeTM(t), yUp);
+ 
+  if (node->GetParentNode()->IsRootNode())
+    return cur_mat;
+
+  Matrix3 par_mat = UniformMatrix(node->GetParentNode()->GetNodeTM(t), yUp);
   
   //then return relative matrix in coordinate space of parent
   return cur_mat * Inverse(par_mat);
@@ -333,9 +347,6 @@ inline Matrix3 GetLocalNodeMatrix(INode *node, bool yUp = false, int t = 0)
 
 inline Matrix3 GetLocalNodeMatrix(INode *node, Matrix3 offsetTM, bool yUp = false, int t = 0)
 {
-  /*if (node->GetParentNode())
-    node->GetParentNode()->EvalWorldState(t);
-  */
   Matrix3 nodeTM = TransformMatrix(node->GetNodeTM(t), yUp) * Inverse(offsetTM);
   
   if (node->GetParentNode()->IsRootNode())
@@ -862,6 +873,11 @@ inline TriObject* getTriObjectFromNode(INode *Node, TimeValue T, bool &Delete)
 }
 
 
+inline bool useSpaceWarpModifier(INode* node)
+{
+  return (node->GetProperty(PROPID_HAS_WSM) != 0);
+}
+
 /*
   Normal computing
 */
@@ -924,6 +940,22 @@ inline Point3 GetVertexNormals(Mesh *mesh, int fpos, int vpos, DWORD vId)
   {
     return getVertexNormal(mesh, fpos, mesh->getRVertPtr(vId));
   }
+}
+
+
+inline bool GetVertexAnimState(Animatable* anim)
+{
+  if (anim->IsAnimated() && (anim->SuperClassID() == CTRL_FLOAT_CLASS_ID || anim->SuperClassID() == CTRL_POINT3_CLASS_ID || anim->SuperClassID() == CTRL_POINT4_CLASS_ID))
+    return true;
+
+  for (int i = 0; i < anim->NumSubs(); i++)
+  {
+    Animatable* sanim = anim->SubAnim(i);
+	  if (sanim && GetVertexAnimState(sanim))
+		  return true;
+  }
+
+  return false;
 }
 
 #endif

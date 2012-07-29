@@ -473,7 +473,7 @@ namespace EasyOgreExporter
                     inputOptions.setAlphaMode(bitmap->HasAlpha() ? nvtt::AlphaMode_Premultiplied : nvtt::AlphaMode_None);
                     inputOptions.setMaxExtents(params.maxTextureSize);
                     inputOptions.setRoundMode(nvtt::RoundMode_ToNearestPowerOfTwo);
-                    inputOptions.setMipmapGeneration(true);
+                    inputOptions.setMipmapGeneration(params.maxMipmaps != 0 ? true : false, params.maxMipmaps);
                     inputOptions.setWrapMode(nvtt::WrapMode_Clamp);
                     inputOptions.setMipmapData(pBuff, width, height);
                     

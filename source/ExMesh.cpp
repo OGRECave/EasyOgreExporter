@@ -36,6 +36,7 @@ namespace EasyOgreExporter
     m_pMorphR3 = 0;
     m_SphereRadius = 0;
     m_numTextureChannel = 0;
+    numOfVertices = 0;
 
     haveVertexColor = (pGameMesh->GetNumberOfColorVerts() > 0) ? true : false;
     haveVertexAlpha = (pGameMesh->GetNumberOfAlphaVerts() > 0) ? true : false;
@@ -65,30 +66,34 @@ namespace EasyOgreExporter
     bool delTri = false;
     TriObject* triObj = getTriObjectFromNode(node, GetFirstFrame(), delTri);
     Mesh* mMesh = &triObj->GetMesh();
-    
-    offsetTM = GetNodeOffsetMatrix(node, m_params.yUpAxis);
-
-    if (m_params.exportSkeleton && m_GameSkin)
+    if(mMesh)
     {
-      // create the skeleton if it hasn't been created.
-      EasyOgreExporterLog("Creating skeleton ...\n");
-      if (!m_pSkeleton)
+      numOfVertices = mMesh->getNumVerts();
+
+      offsetTM = GetNodeOffsetMatrix(node, m_params.yUpAxis);
+
+      if (m_params.exportSkeleton && m_GameSkin)
       {
-        m_pSkeleton = new ExSkeleton(m_GameNode, m_GameSkin, GetGlobalNodeMatrix(node, m_params.yUpAxis, GetFirstFrame()), m_name, m_params);
-        m_pSkeleton->getVertexBoneWeights(mMesh->getNumVerts());
+        // create the skeleton if it hasn't been created.
+        EasyOgreExporterLog("Creating skeleton ...\n");
+        if (!m_pSkeleton)
+        {
+          m_pSkeleton = new ExSkeleton(m_GameNode, m_GameSkin, GetGlobalNodeMatrix(node, m_params.yUpAxis, GetFirstFrame()), m_name, m_params);
+          m_pSkeleton->getVertexBoneWeights(mMesh->getNumVerts());
+        }
       }
-    }
 
-    //update the mesh normals
-    mMesh->buildNormals();
-    prepareMesh(mMesh);
+      //update the mesh normals
+      mMesh->buildNormals();
+      prepareMesh(mMesh);
 
-    //free the tree object
-    if(delTri && triObj)
-    {
-      triObj->DeleteThis();
-      triObj = 0;
-      delTri = false;
+      //free the tree object
+      if(delTri && triObj)
+      {
+        triObj->DeleteThis();
+        triObj = 0;
+        delTri = false;
+      }
     }
 
     //enable the morph modifiers again
@@ -718,8 +723,9 @@ namespace EasyOgreExporter
     INode* node = m_GameNode->GetMaxNode();
     std::vector<int> animKeys = GetPointAnimationsKeysTime(m_GameNode, animRange, m_params.resampleAnims);
     
-    // Does a better way exist to get vertex position by time ?
-    TimeValue initTime = GetCOREInterface()->GetTime();
+    bool delTri = false;
+    TriObject* triObj = 0;
+    Mesh* mesh = 0;
 
     if(animKeys.size() > 0)
     {
@@ -727,16 +733,37 @@ namespace EasyOgreExporter
       bool isAnimated = false;
       for (int i = 0; i < animKeys.size() && !isAnimated; i++)
       {
-        GetCOREInterface()->SetTime(animKeys[i], 0);
-        for(int v = 0; v < m_vertices.size() && !isAnimated; v++)
-        {
-          Point3 pos = offsetTM.PointTransform(m_GameMesh->GetVertex(m_vertices[v].iMaxId, true)) * m_params.lum;
+        //get the mesh in the current state
+        triObj = getTriObjectFromNode(node, animKeys[i], delTri);
+        if(triObj)
+          mesh = &triObj->GetMesh();
 
-          if(m_vertices[v].vPos != pos)
-            isAnimated = true;
+        if(mesh)
+        {
+          for(int v = 0; v < m_vertices.size() && !isAnimated; v++)
+          {
+            Point3 pos = mesh->getVert(m_vertices[v].iMaxId);
+            if(m_params.yUpAxis)
+            {
+              float py = pos.y;
+              pos.y = pos.z;
+              pos.z = -py;
+            };
+            pos = offsetTM.PointTransform(pos) * m_params.lum;
+            if(m_vertices[v].vPos != pos)
+              isAnimated = true;
+          }
+        }
+
+        //free the tree object
+        if(delTri && triObj)
+        {
+          triObj->DeleteThis();
+          triObj = 0;
+          delTri = false;
+          mesh = 0;
         }
       }
-      GetCOREInterface()->SetTime(initTime);
 
       if(!isAnimated)
         return false;
@@ -752,39 +779,61 @@ namespace EasyOgreExporter
         for (int i = 0; i < animKeys.size(); i++)
         {
           int kTime = animKeys[i];
-          GetCOREInterface()->SetTime(kTime, 0);
           float ogreTime = static_cast<float>((kTime - animRange.Start()) / static_cast<float>(animRate)) / GetFrameRate();
-          
-          //add key frame
-          Ogre::VertexMorphKeyFrame* pKeyframe = pTrack->createVertexMorphKeyFrame(ogreTime);
 
-          // Create vertex buffer for current keyframe
-          Ogre::HardwareVertexBufferSharedPtr pBuffer = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
-                                                          Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3),
-                                                          m_vertices.size(),
-                                                          Ogre::HardwareBuffer::HBU_STATIC, true);
-          float* pFloat = static_cast<float*>(pBuffer->lock(Ogre::HardwareBuffer::HBL_DISCARD));
+          //get the mesh in the current state
+          triObj = getTriObjectFromNode(node, animKeys[i], delTri);
+          if(triObj)
+            mesh = &triObj->GetMesh();
           
-          // Fill the vertex buffer with vertex positions
-          for(int v = 0; v < m_vertices.size(); v++)
+          if(mesh)
           {
-            Point3 pos = offsetTM.PointTransform(m_GameMesh->GetVertex(m_vertices[v].iMaxId, true)) * m_params.lum;
-            
-            //update bounding box
-            updateBounds(pos);
+            //add key frame
+            Ogre::VertexMorphKeyFrame* pKeyframe = pTrack->createVertexMorphKeyFrame(ogreTime);
 
-            *pFloat++ = static_cast<float>(pos.x);
-            *pFloat++ = static_cast<float>(pos.y);
-            *pFloat++ = static_cast<float>(pos.z);
+            // Create vertex buffer for current keyframe
+            Ogre::HardwareVertexBufferSharedPtr pBuffer = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
+                                                            Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3),
+                                                            m_vertices.size(),
+                                                            Ogre::HardwareBuffer::HBU_STATIC, true);
+            float* pFloat = static_cast<float*>(pBuffer->lock(Ogre::HardwareBuffer::HBL_DISCARD));
+            
+            // Fill the vertex buffer with vertex positions
+            for(int v = 0; v < m_vertices.size(); v++)
+            {
+              Point3 pos = mesh->getVert(m_vertices[v].iMaxId);
+              if(m_params.yUpAxis)
+              {
+                float py = pos.y;
+                pos.y = pos.z;
+                pos.z = -py;
+              };
+              pos = offsetTM.PointTransform(pos) * m_params.lum;
+
+              //update bounding box
+              updateBounds(pos);
+
+              *pFloat++ = static_cast<float>(pos.x);
+              *pFloat++ = static_cast<float>(pos.y);
+              *pFloat++ = static_cast<float>(pos.z);
+            }
+
+            // Unlock vertex buffer
+            pBuffer->unlock();
+
+            // Set vertex buffer for current keyframe
+            pKeyframe->setVertexBuffer(pBuffer);
           }
 
-          // Unlock vertex buffer
-          pBuffer->unlock();
-
-          // Set vertex buffer for current keyframe
-          pKeyframe->setVertexBuffer(pBuffer);
+          //free the tree object
+          if(delTri && triObj)
+          {
+            triObj->DeleteThis();
+            triObj = 0;
+            delTri = false;
+            mesh = 0;
+          }
         }
-        GetCOREInterface()->SetTime(initTime);
       }
       else
       {
@@ -798,40 +847,62 @@ namespace EasyOgreExporter
           for (int i = 0; i < animKeys.size(); i++)
           {
             int kTime = animKeys[i];
-            GetCOREInterface()->SetTime(kTime, 0);
             float ogreTime = static_cast<float>((kTime - animRange.Start()) / static_cast<float>(animRate)) / GetFrameRate();
             
-            //add key frame
-            Ogre::VertexMorphKeyFrame* pKeyframe = pTrack->createVertexMorphKeyFrame(ogreTime);
-
-            // Create vertex buffer for current keyframe
-            Ogre::HardwareVertexBufferSharedPtr pBuffer = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
-                                                            Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3),
-                                                            lvert.size(),
-                                                            Ogre::HardwareBuffer::HBU_STATIC, true);
-            float* pFloat = static_cast<float*>(pBuffer->lock(Ogre::HardwareBuffer::HBL_DISCARD));
+            //get the mesh in the current state
+            triObj = getTriObjectFromNode(node, animKeys[i], delTri);
+            if(triObj)
+              mesh = &triObj->GetMesh();
             
-            // Fill the vertex buffer with vertex positions
-            for(int v = 0; v < lvert.size(); v++)
+            if(mesh)
             {
-              Point3 pos = offsetTM.PointTransform(m_GameMesh->GetVertex(lvert[v].iMaxId, true)) * m_params.lum;
-              
-              //update bounding box
-              updateBounds(pos);
+              //add key frame
+              Ogre::VertexMorphKeyFrame* pKeyframe = pTrack->createVertexMorphKeyFrame(ogreTime);
 
-              *pFloat++ = pos.x;
-              *pFloat++ = pos.y;
-              *pFloat++ = pos.z;
+              // Create vertex buffer for current keyframe
+              Ogre::HardwareVertexBufferSharedPtr pBuffer = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
+                                                              Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3),
+                                                              lvert.size(),
+                                                              Ogre::HardwareBuffer::HBU_STATIC, true);
+              float* pFloat = static_cast<float*>(pBuffer->lock(Ogre::HardwareBuffer::HBL_DISCARD));
+              
+              // Fill the vertex buffer with vertex positions
+              for(int v = 0; v < lvert.size(); v++)
+              {
+                Point3 pos = mesh->getVert(lvert[v].iMaxId);
+                if(m_params.yUpAxis)
+                {
+                  float py = pos.y;
+                  pos.y = pos.z;
+                  pos.z = -py;
+                };
+                pos = offsetTM.PointTransform(pos) * m_params.lum;
+                
+                //update bounding box
+                updateBounds(pos);
+
+                *pFloat++ = pos.x;
+                *pFloat++ = pos.y;
+                *pFloat++ = pos.z;
+              }
+
+              // Unlock vertex buffer
+              pBuffer->unlock();
+
+              // Set vertex buffer for current keyframe
+              pKeyframe->setVertexBuffer(pBuffer);
             }
 
-            // Unlock vertex buffer
-            pBuffer->unlock();
-
-            // Set vertex buffer for current keyframe
-            pKeyframe->setVertexBuffer(pBuffer);
+            //free the tree object
+            if(delTri && triObj)
+            {
+              triObj->DeleteThis();
+              triObj = 0;
+              delTri = false;
+              mesh = 0;
+            }
           }
         }
-        GetCOREInterface()->SetTime(initTime);
       }
       animKeys.clear();
       return true;
@@ -841,16 +912,14 @@ namespace EasyOgreExporter
 
   void ExMesh::createMorphAnimations()
   {
-    IGameControl* nodeControl = m_GameNode->GetIGameControl();
+    INode* node = m_GameNode->GetMaxNode();
 
     //Vertex animations
-    if(!nodeControl->IsAnimated(IGAME_POINT3))
+    if(!GetVertexAnimState(node))
       return;
 
     EasyOgreExporterLog("Loading vertex animations...\n");
    
-    INode* node = m_GameNode->GetMaxNode();
-
     //try to get animations in motion mixer
     bool useDefault = true;
     IMixer8* mixer = TheMaxMixerManager.GetMaxMixer(node);
@@ -1093,10 +1162,10 @@ namespace EasyOgreExporter
               morphChannel* pMorphChannel = validChan[pose];
 
               //get weight value for this pose
-                  float weight;
-                  Interval junkInterval;
+              float weight;
+              Interval junkInterval;
               IParamBlock* paramBlock = pMorphChannel->cblock;
-                  paramBlock->GetValue(0, kTime, weight, junkInterval);
+              paramBlock->GetValue(0, kTime, weight, junkInterval);
 
               pKeyframe->addPoseReference(poseIndexList[sub][pose], weight / 100.0f);
             }
@@ -1170,22 +1239,22 @@ namespace EasyOgreExporter
       //poses can have spaces before or after the name
       trim(posename);
             
-      if(numMorphVertices != (m_GameMesh->GetNumberOfVerts()))
-          {
-              MessageBox(GetCOREInterface()->GetMAXHWnd(), _T("Morph targets have failed to export because the morph vertex count did not match the base mesh.  Collapse the modifier stack prior to export, as smoothing is not supported with morph target export."), _T("Morph Target Export Failed."), MB_OK);
-            break;
+      if(numMorphVertices != numOfVertices)
+      {
+        MessageBox(GetCOREInterface()->GetMAXHWnd(), _T("Morph targets have failed to export because the morph vertex count did not match the base mesh.  Collapse the modifier stack prior to export, as smoothing is not supported with morph target export."), _T("Morph Target Export Failed."), MB_OK);
+        break;
       }
-          else
-          {
-              EasyOgreExporterLog("Exporting Morph target: %s with %d vertices.\n", posename.c_str(), numMorphVertices);
+      else
+      {
+        EasyOgreExporterLog("Exporting Morph target: %s with %d vertices.\n", posename.c_str(), numMorphVertices);
 
-              size_t numPoints = pMorphChannel->mPoints.size();
-              std::vector<Point3> vmPoints;
-              vmPoints.reserve(numPoints);
-              for(size_t k = 0; k < numPoints; ++k)
-              {
-                  vmPoints.push_back(pMorphChannel->mPoints[k]);
-              }
+        size_t numPoints = pMorphChannel->mPoints.size();
+        std::vector<Point3> vmPoints;
+        vmPoints.reserve(numPoints);
+        for(size_t k = 0; k < numPoints; ++k)
+        {
+            vmPoints.push_back(pMorphChannel->mPoints[k]);
+        }
 
         if(m_params.useSharedGeom)
         {

@@ -258,6 +258,7 @@ namespace EasyOgreExporter
     bool haveVertexColor;
     bool haveVertexAlpha;
     bool haveVertexIllum;
+    int numOfVertices;
 
   private:
 	};

@@ -74,6 +74,8 @@ namespace EasyOgreExporter
 
     unsigned int maxTextureSize;
 
+    int maxMipmaps;
+
 		// constructor
 		ParamList()	{
 			lum = 1.0f;
@@ -95,6 +97,7 @@ namespace EasyOgreExporter
 
       convertToDDS = false;
       maxTextureSize = 2048;
+      maxMipmaps = -1;
       resampleAnims = false;
       generateLOD = false;
 
@@ -140,6 +143,7 @@ namespace EasyOgreExporter
 
       convertToDDS = source.convertToDDS;
       maxTextureSize = source.maxTextureSize;
+      maxMipmaps = source.maxMipmaps;
       resampleAnims = source.resampleAnims;
       generateLOD = source.generateLOD;
      

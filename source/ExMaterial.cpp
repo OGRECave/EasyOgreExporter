@@ -752,7 +752,7 @@ namespace EasyOgreExporter
 		if(!maxMat->GetSelfIllumColorOn())
 		{
 			IGameProperty* pGameProperty = pGameMaterial->GetEmissiveAmtData();
-			if (IGAME_FLOAT_PROP == pGameProperty->GetType())
+			if (pGameProperty && IGAME_FLOAT_PROP == pGameProperty->GetType())
 			{
 				float amount = 0.0f;
 				if(pGameProperty->GetPropertyValue(amount))
@@ -1154,7 +1154,7 @@ namespace EasyOgreExporter
 
 	bool ExMaterial::exportColor(Point4& color, IGameProperty* pGameProperty)
 	{
-		if(IGAME_POINT4_PROP == pGameProperty->GetType())
+		if(pGameProperty && IGAME_POINT4_PROP == pGameProperty->GetType())
 		{
 			Point4 matColor;
 			if(pGameProperty->GetPropertyValue(matColor))
@@ -1163,7 +1163,7 @@ namespace EasyOgreExporter
 				return true;
 			}
 		}
-		else if (IGAME_POINT3_PROP == pGameProperty->GetType())
+		else if (pGameProperty && IGAME_POINT3_PROP == pGameProperty->GetType())
 		{
 			Point3 color3;
 			if(pGameProperty->GetPropertyValue(color3))
@@ -1182,7 +1182,7 @@ namespace EasyOgreExporter
 	bool ExMaterial::exportSpecular(IGameMaterial* pGameMaterial)
 	{
 		IGameProperty* pGameProperty = pGameMaterial->GetSpecularData();
-		if(IGAME_POINT4_PROP == pGameProperty->GetType())
+		if(pGameProperty && IGAME_POINT4_PROP == pGameProperty->GetType())
 		{
 			Point4 matColor;
 			if(pGameProperty->GetPropertyValue(matColor))
@@ -1190,7 +1190,7 @@ namespace EasyOgreExporter
 				m_specular = matColor;
 			}
 		}
-		else if (IGAME_POINT3_PROP == pGameProperty->GetType())
+		else if (pGameProperty && IGAME_POINT3_PROP == pGameProperty->GetType())
 		{
 			Point3 color3;
 			if(pGameProperty->GetPropertyValue(color3))

@@ -52,15 +52,15 @@ END
 // Dialog
 //
 
-IDD_PANEL DIALOGEX 0, 0, 229, 358
+IDD_PANEL DIALOGEX 0, 0, 229, 370
 STYLE DS_SYSMODAL | DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CLIENTEDGE
 CAPTION "Easy Ogre Exporter"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,111,337,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,166,337,50,14
-    LTEXT           "Bastien Bourineau ©2012",IDC_STATIC,7,340,92,11
+    DEFPUSHBUTTON   "OK",IDOK,111,349,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,166,349,50,14
+    LTEXT           "Bastien Bourineau ©2012",IDC_STATIC,7,352,92,11
     GROUPBOX        "Basic configuration",IDC_SIMPLE,7,7,215,109
     LTEXT           "Ogre version",IDC_OGREV_LABEL,13,19,57,12
     LTEXT           "Resources prefix",IDC_RESPREFIX_LABEL,13,38,57,12
@@ -72,11 +72,11 @@ BEGIN
     LTEXT           "Mesh sub dir",IDC_MESHDIR_LABEL,13,86,57,12
     EDITTEXT        IDC_MESHDIR,82,85,100,12,ES_AUTOHSCROLL
     COMBOBOX        IDC_OGREVERSION,81,19,100,48,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
-    GROUPBOX        "Advanced configuration",IDC_STATIC,7,115,215,217
+    GROUPBOX        "Advanced configuration",IDC_STATIC,7,115,215,230
     GROUPBOX        "Meshs",IDC_STATIC,13,126,202,108
-    GROUPBOX        "Animations",IDC_STATIC,13,299,201,27
+    GROUPBOX        "Animations",IDC_STATIC,13,312,201,27
     CONTROL         "Resample animations (more accurate, but heavier)",IDC_RESAMPLE_ANIMS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,313,177,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,326,177,10
     CONTROL         "Use shared geometry (not supported by all cards)",IDC_SHAREDGEOM,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,140,193,10
     CONTROL         "Build edges list (used for stencil shadows)",IDC_EDGELIST,
@@ -86,7 +86,7 @@ BEGIN
     CONTROL         "Split rotated",IDC_SPLITROT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,206,55,10
     CONTROL         "Store parity in W",IDC_STOREPARITY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,219,70,10
     CONTROL         "Generate LOD (Level Of Detail)",IDC_GENLOD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,153,115,10
-    GROUPBOX        "Materials",IDC_STATIC,14,235,201,62
+    GROUPBOX        "Materials",IDC_STATIC,14,235,201,76
     LTEXT           "Pixel lighting (CG)",IDC_SHADERS_LABEL,19,248,57,12
     COMBOBOX        IDC_SHADERMODE,87,248,100,49,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Programs sub dir",IDC_PROGDIR_LABEL,13,102,57,12
@@ -94,6 +94,8 @@ BEGIN
     CONTROL         "Convert textures to DDS",IDC_CONVDDS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,264,95,10
     COMBOBOX        IDC_TEXSIZE,130,278,57,44,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Maximum texture size for DDS",IDC_TEXSIZE_LABEL,19,280,97,11
+    COMBOBOX        IDC_NUMMIPS,130,294,57,44,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Number of DDS Mipmaps",IDC_NUMMIPS_LABEL,20,296,97,11
 END
 
 
@@ -111,7 +113,7 @@ BEGIN
         RIGHTMARGIN, 222
         VERTGUIDE, 19
         TOPMARGIN, 7
-        BOTTOMMARGIN, 351
+        BOTTOMMARGIN, 363
     END
 END
 #endif    // APSTUDIO_INVOKED

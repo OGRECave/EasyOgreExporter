@@ -603,9 +603,6 @@ namespace EasyOgreExporter
 		for (size_t i = 0; i < times.size(); i++)
 		{
 			//int closestFrame = (int)(.5f + times[i]* GetFrameRate());
-		
-      //set time to wanted sample time
-			//GetCOREInterface()->SetTime(closestFrame * GetTicksPerFrame());
 
       //load a keyframe for every joint at current time
 			for (size_t j = 0; j < m_joints.size(); j++)
@@ -661,16 +658,16 @@ namespace EasyOgreExporter
 	skeletonKeyframe ExSkeleton::loadKeyframe(joint& j, int time)
 	{
     INode* bone = j.pNode;
-
     //Get the local transformation matrices
     Matrix3 boneTM = GetLocalUniformMatrix(bone, offsetTM, m_params.yUpAxis, time);
-
     Matrix3 relMat = GetRelativeMatrix(boneTM, j.bindMatrix);
+
+    AffineParts tap;
+		decomp_affine(boneTM, &tap);
+    Point3 trans = (tap.t * m_params.lum) - j.trans;
 
     AffineParts ap;
 		decomp_affine(relMat, &ap);
-
-    Point3 trans = ap.t * m_params.lum;
     Point3 scale = ap.k;
     Quat rot = ap.q;
     // Notice that in Max we flip the w-component of the quaternion;
@@ -679,9 +676,10 @@ namespace EasyOgreExporter
 		//create keyframe
 		skeletonKeyframe key;
 		key.time = 0;
-
+    key.trans = trans;
 		key.rot = rot;
 		key.scale = scale;
+
 		return key;
 	}
 

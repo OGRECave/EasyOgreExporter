@@ -33,6 +33,9 @@
 #define IDC_TEXSIZE                     1025
 #define IDC_TEX_SIZE_LABEL              1026
 #define IDC_TEXSIZE_LABEL               1026
+#define IDC_TEXSIZE2                    1027
+#define IDC_NUMMIPS                     1027
+#define IDC_NUMMIPS_LABEL               1028
 
 // Next default values for new objects
 // 

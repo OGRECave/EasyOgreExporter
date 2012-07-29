@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 0.998f;
+float EXVERSION = 0.999f;
 
 namespace EasyOgreExporter
 {
@@ -147,6 +147,17 @@ namespace EasyOgreExporter
         SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)L"1024");
         SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)L"2048");
         SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)L"4096");
+
+        //fill Mipmaps combo box
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_SETMINVISIBLE, 30, 0);
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_RESETCONTENT, 0, 0);
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_ADDSTRING, 0, (LPARAM)L"Max");
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_ADDSTRING, 0, (LPARAM)L"None");
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_ADDSTRING, 0, (LPARAM)L"2");
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_ADDSTRING, 0, (LPARAM)L"4");
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_ADDSTRING, 0, (LPARAM)L"8");
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_ADDSTRING, 0, (LPARAM)L"16");
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_ADDSTRING, 0, (LPARAM)L"32");
 #else
         //fill Shader mode combo box
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_SETMINVISIBLE, 30, 0);
@@ -167,7 +178,22 @@ namespace EasyOgreExporter
         SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)"1024");
         SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)"2048");
         SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_ADDSTRING, 0, (LPARAM)"4096");
+
+        //fill Max texture size combo box
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_SETMINVISIBLE, 30, 0);
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_RESETCONTENT, 0, 0);
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_ADDSTRING, 0, (LPARAM)"Max");
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_ADDSTRING, 0, (LPARAM)"None");
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_ADDSTRING, 0, (LPARAM)"2");
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_ADDSTRING, 0, (LPARAM)"4");
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_ADDSTRING, 0, (LPARAM)"8");
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_ADDSTRING, 0, (LPARAM)"16");
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_ADDSTRING, 0, (LPARAM)"32");
 #endif
+
+        // Enable or disable the DDS options
+        EnableWindow(GetDlgItem(hWnd, IDC_TEXSIZE), exp->convertToDDS ? TRUE : FALSE);
+        EnableWindow(GetDlgItem(hWnd, IDC_NUMMIPS), exp->convertToDDS ? TRUE : FALSE);
 
         int texSel = 0;
         if (exp->maxTextureSize == 128)
@@ -185,6 +211,24 @@ namespace EasyOgreExporter
 
         SendDlgItemMessage(hWnd, IDC_TEXSIZE, CB_SETCURSEL, texSel, 0);
 
+        int mipsSel = 0;
+        if (exp->maxMipmaps == -1)
+          texSel = 0;
+        else if (exp->maxMipmaps == 0)
+          texSel = 1;
+        else if (exp->maxMipmaps == 2)
+          texSel = 2;
+        else if (exp->maxMipmaps == 4)
+          texSel = 3;
+        else if (exp->maxMipmaps == 8)
+          texSel = 4;
+        else if (exp->maxMipmaps == 16)
+          texSel = 5;
+        else if (exp->maxMipmaps == 32)
+          texSel = 6;
+
+        SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_SETCURSEL, mipsSel, 0);
+
 		    //Versioning
 		    TCHAR Title [256];
         _stprintf(Title, _T("Easy Ogre Exporter version %.3f"), EXVERSION);
@@ -194,6 +238,14 @@ namespace EasyOgreExporter
 	    case WM_COMMAND:
 		    switch (LOWORD(wParam))
         {
+          case IDC_CONVDDS:
+          {
+            // Enable or disable the DDS options
+            exp->convertToDDS = IsDlgButtonChecked(hWnd, IDC_CONVDDS) ? true : false;
+            EnableWindow(GetDlgItem(hWnd, IDC_TEXSIZE), exp->convertToDDS ? TRUE : FALSE);
+            EnableWindow(GetDlgItem(hWnd, IDC_NUMMIPS), exp->convertToDDS ? TRUE : FALSE);
+          }
+          break;
 			    case IDOK:
             {
               int ogreVerIdx = SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_GETCURSEL, 0, 0);
@@ -336,6 +388,38 @@ namespace EasyOgreExporter
 
                   default:
                     exp->maxTextureSize = 2048;
+                }
+              }
+
+              int mipsIdx = SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_GETCURSEL, 0, 0);
+              if (mipsIdx != CB_ERR)
+              {
+                switch (mipsIdx)
+                {
+                  case 0:
+                    exp->maxMipmaps = -1;
+                    break;
+                  case 1:
+                    exp->maxMipmaps = 0;
+                    break;
+                  case 2:
+                    exp->maxMipmaps = 2;
+                    break;
+                  case 3:
+                    exp->maxMipmaps = 4;
+                    break;
+                  case 4:
+                    exp->maxMipmaps = 8;
+                    break;
+                  case 5:
+                    exp->maxMipmaps = 16;
+                    break;
+                  case 6:
+                    exp->maxMipmaps = 32;
+                    break;
+
+                  default:
+                    exp->maxMipmaps = -1;
                 }
               }
 
@@ -618,6 +702,10 @@ void OgreSceneExporter::loadExportConf(std::string path, ParamList &param)
     child = rootElem->FirstChildElement("IDC_TEXSIZE");
     if(child && child->GetText())
       param.maxTextureSize = atoi(child->GetText());
+
+    child = rootElem->FirstChildElement("IDC_NUMMIPS");
+    if(child && child->GetText())
+      param.maxMipmaps = atoi(child->GetText());
   }
 }
 
@@ -733,6 +821,13 @@ void OgreExporter::saveExportConf(std::string path)
   oTexVal << m_params.maxTextureSize;
   child = new TiXmlElement("IDC_TEXSIZE");
   childText = new TiXmlText(oTexVal.str().c_str());
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  std::stringstream oMipsVal;
+  oMipsVal << m_params.maxMipmaps;
+  child = new TiXmlElement("IDC_NUMMIPS");
+  childText = new TiXmlText(oMipsVal.str().c_str());
   child->LinkEndChild(childText);
   contProperties->LinkEndChild(child);
 
