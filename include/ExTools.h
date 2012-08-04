@@ -958,4 +958,26 @@ inline bool GetVertexAnimState(Animatable* anim)
   return false;
 }
 
+inline IGameMaterial* GetSubMaterialByID(IGameMaterial* mat, int matId)
+{
+  if (mat && mat->IsSubObjType())
+  {
+    IGameMaterial* nmat = 0;
+    for(int i = 0; i < mat->GetSubMaterialCount(); i++)
+    {
+      if (mat->GetMaterialID(i) == matId)
+      {
+        nmat = mat->GetSubMaterial(i);
+        break;
+      }
+    }
+    
+    return nmat;
+  }
+  else
+  {
+    return mat;
+  }
+}
+
 #endif

@@ -163,7 +163,8 @@ namespace EasyOgreExporter
       if(mMesh->mapSupport(chan))
         m_numTextureChannel++;
     }
-
+    EasyOgreExporterLog("Info: Number of map channel (UV) found in this mesh : %i\n", m_numTextureChannel);
+    
     // prepare faces table
     m_faces.resize(numFaces);
     
@@ -250,11 +251,11 @@ namespace EasyOgreExporter
         for (size_t chan = 2; chan < numMapChannels; chan++)
         {
           Point3 uv = Point3(0.0f, 0.0f, 0.0f);
-          if(mMesh->mapSupport(chan))
+          if(mMesh->mapSupport(chan) && mMesh->mapFaces(chan) != 0)
           {
-            Point3 uvv = mMesh->mapVerts(chan)[vIndex];
-            uv.x = uvv.x;
-            uv.y = 1.0f - uvv.y;
+            TVFace tvFace = mMesh->mapFaces(chan)[i];
+            uv = mMesh->mapVerts(chan)[tvFace.t[j]];
+            uv.y = 1.0f - uv.y;
           }
           vertex.lTexCoords.push_back(uv);
         }
@@ -306,12 +307,7 @@ namespace EasyOgreExporter
       std::vector<ExFace> faces = GetFacesByMaterialId(matIds[matid]);
       
       //get the material by matId
-      IGameMaterial* mat = nodeMtl;
-      if (nodeMtl && nodeMtl->IsSubObjType())
-        if (matIds[matid] < nodeMtl->GetSubMaterialCount())
-          mat = nodeMtl->GetSubMaterial(matIds[matid]);
-        else
-          mat = 0;
+      IGameMaterial* mat = GetSubMaterialByID(nodeMtl, matIds[matid]);
 
       ExMaterial* pMaterial = loadMaterial(mat);
       ExSubMesh submesh(matid, pMaterial);
