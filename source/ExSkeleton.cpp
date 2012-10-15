@@ -376,14 +376,20 @@ namespace EasyOgreExporter
     // Get mesh matrix at initial pose
     /*
     Modifier* skinMod = m_pGameSkin->GetMaxModifier();
-    ISkin* pskin = (ISkin*)skinMod->GetInterface(I_SKIN);
-    Matrix3 skinTM;
-    skinTM.IdentityMatrix();
+    ISkin* pskin = 0;
+    if(skinMod)
+      pskin = (ISkin*)skinMod->GetInterface(I_SKIN);
     */
 
     // set the new bone index
     m_joints[boneIndex].id = boneIndex;
-    Matrix3 localTM = GetLocalUniformMatrix(pNode, offsetTM, m_params.yUpAxis, GetFirstFrame());
+    Matrix3 localTM;
+    
+    // get the root bone matrix relative to the mesh
+    if (parentIdx == -1)
+      localTM = GetLocalUniformMatrix(pNode, m_pGameNode->GetMaxNode(), offsetTM, m_params.yUpAxis, GetFirstFrame());
+    else
+      localTM = GetLocalUniformMatrix(pNode, offsetTM, m_params.yUpAxis, GetFirstFrame());
 
     AffineParts ap;
 		decomp_affine(localTM, &ap);
@@ -391,6 +397,7 @@ namespace EasyOgreExporter
     Point3 trans = ap.t * m_params.lum;
     Point3 scale = ap.k;
     Quat rot = ap.q;
+
     // Notice that in Max we flip the w-component of the quaternion;
     rot.w = -rot.w;
 
@@ -414,6 +421,11 @@ namespace EasyOgreExporter
 			if(pChildNode)
 				loadJoint(pChildNode);
 		}
+    
+    /*
+    if(pskin != 0)
+      skinMod->ReleaseInterface(I_SKIN, (void*)pskin);
+    */
 
 		return true;
 	}
@@ -658,8 +670,14 @@ namespace EasyOgreExporter
 	skeletonKeyframe ExSkeleton::loadKeyframe(joint& j, int time)
 	{
     INode* bone = j.pNode;
-    //Get the local transformation matrices
-    Matrix3 boneTM = GetLocalUniformMatrix(bone, offsetTM, m_params.yUpAxis, time);
+    Matrix3 boneTM;
+
+    // get the root bone matrix relative to the mesh
+    if (j.parentIndex == -1)
+      boneTM = GetLocalUniformMatrix(bone, m_pGameNode->GetMaxNode(), offsetTM, m_params.yUpAxis, time);
+    else
+      boneTM = GetLocalUniformMatrix(bone, offsetTM, m_params.yUpAxis, time);
+
     Matrix3 relMat = GetRelativeMatrix(boneTM, j.bindMatrix);
 
     AffineParts tap;

@@ -312,6 +312,17 @@ inline Matrix3 GetLocalUniformMatrix(INode *node, bool yUp, int t)
   return cur_mat * Inverse(par_mat);
 }
 
+inline Matrix3 GetLocalUniformMatrix(INode *node, INode *parent, Matrix3 offsetMat, bool yUp, int t)
+{
+  //Decompose each matrix
+  Matrix3 cur_mat = UniformMatrix(node->GetNodeTM(t), yUp) * Inverse(offsetMat);
+
+  Matrix3 par_mat = TransformMatrix(parent->GetNodeTM(t), yUp) * Inverse(offsetMat);
+  
+  //then return relative matrix in coordinate space of parent
+  return cur_mat * Inverse(par_mat);
+}
+
 inline Matrix3 GetRelativeMatrix(Matrix3 mat1, Matrix3 mat2)
 {
   return mat1 * Inverse(mat2);
