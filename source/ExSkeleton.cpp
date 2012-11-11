@@ -212,9 +212,10 @@ namespace EasyOgreExporter
           if(pBoneNode && m_pGameSkin->GetBoneIndex(pBoneNode, false) > -1)
           {
             int boneIndex = getJointIndex(pBoneNode);
-            if(boneIndex >= 0)
+            float weight = m_pGameSkin->GetWeight(i, j);
+            if ((boneIndex >= 0) && (weight > 0.0f))
             {
-              m_weights[i].push_back(m_pGameSkin->GetWeight(i, j));
+              m_weights[i].push_back(weight);
               m_jointIds[i].push_back(boneIndex);
 
               if(m_weights[i].size() > 4)
@@ -248,7 +249,7 @@ namespace EasyOgreExporter
       for(int i = 0; i < lwarnings.size(); ++i)
         mess.append("skeleton " + m_name + " with bone " + lwarnings[i] + "\n");
 
-      mess.append("This is not compatible with hardware skinning method.");
+      mess.append("This is not compatible with hardware skinning method.\n");
       EasyOgreExporterLog(mess.c_str());
 #ifdef UNICODE
 	    std::wstring mess_w;
@@ -286,7 +287,7 @@ namespace EasyOgreExporter
 		int parentIdx = getJointIndex(pNode->GetParentNode());
 
     // test for supported bone type
-    if((!IsPossibleBone(pNode)) || (IsBone(pNode) && (pNode->NumberOfChildren() == 0)))
+    if (!IsPossibleBone(pNode))
     {
       EasyOgreExporterLog("Info : %s is not a bone.\n", pNode->GetName());
       return false;
