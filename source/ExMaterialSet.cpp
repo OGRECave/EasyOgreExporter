@@ -190,9 +190,11 @@ namespace EasyOgreExporter
 	//get material
 	ExMaterial* ExMaterialSet::getMaterial(IGameMaterial* pGameMaterial)
   {
+    Mtl* maxMat = pGameMaterial ? pGameMaterial->GetMaxMaterial() : 0;
 	  for (int i=0; i<m_materials.size(); i++)
 	  {
-		  if (m_materials[i]->m_GameMaterial == pGameMaterial)
+      Mtl* mMat = m_materials[i]->m_GameMaterial ? m_materials[i]->m_GameMaterial->GetMaxMaterial() : 0;
+		  if (mMat == maxMat)
 			  return m_materials[i];
 	  }
 		return NULL;
