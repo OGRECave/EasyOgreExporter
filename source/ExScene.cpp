@@ -411,7 +411,13 @@ namespace EasyOgreExporter
     
     if (!pGameMesh->IsEntitySupported())
     {
-      EasyOgreExporterLog("Unsupported mesh type. Failed to export.\n");
+      EasyOgreExporterLog("Unsupported mesh type. Failed to export %s.\n", parent->Attribute("name"));
+      return 0;
+    }
+
+    if (pGameMesh->GetNumberOfVerts() == 0)
+    {
+      EasyOgreExporterLog("Bad vertex count (0). Failed to export %s.\n", parent->Attribute("name"));
       return 0;
     }
 
