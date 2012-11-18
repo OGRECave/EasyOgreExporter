@@ -895,6 +895,8 @@ void OgreExporter::initIGameConf(std::string path)
 
 bool OgreExporter::exportScene()
 {
+  nodeCount = 0;
+
   //Init log files
   std::string logFileName = m_params.outputDir;
   logFileName.append("\\easyOgreExporter.log");
@@ -1045,7 +1047,7 @@ bool OgreExporter::exportScene()
 
 bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
 {
-  GetCOREInterface()->ProgressUpdate((int)(((float)nodeCount / pIGame->GetTotalNodeCount()) * 90.0f), TRUE); 
+  GetCOREInterface()->ProgressUpdate((int)(((float)nodeCount / (float)pIGame->GetTotalNodeCount()) * 90.0f), TRUE); 
 
   if(pGameNode)
   {
@@ -1059,7 +1061,8 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
       INode* node = pGameNode->GetMaxNode();
       if(node)
       {
-        if(node->IsObjectHidden())
+        ILayer* layer = (ILayer*)node->GetReference(NODE_LAYER_REF);
+        if(node->IsObjectHidden() || layer->IsHidden())
         {
           bShouldExport = false;
         }
@@ -1086,7 +1089,7 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
       
       if(bShouldExport)
       {
-        GetCOREInterface()->ProgressUpdate((int)(((float)nodeCount / pIGame->GetTotalNodeCount()) * 90.0f), FALSE, pGameNode->GetName()); 
+        GetCOREInterface()->ProgressUpdate((int)(((float)nodeCount / (float)pIGame->GetTotalNodeCount()) * 90.0f), FALSE, pGameNode->GetName()); 
 
         EasyOgreExporterLog("Found node: %s\n", pGameNode->GetName());
         switch(gameType)
