@@ -153,16 +153,21 @@ namespace EasyOgreExporter
     int numFaces = mMesh->getNumFaces();
     int numVertices = numFaces * 3;
     UVVert* vAlpha = mMesh->mapSupport(-VDATA_ALPHA) ? mMesh->mapVerts(-VDATA_ALPHA) : 0;
-    int numMapChannels = mMesh->getNumMaps();  
+    int numMapChannels = mMesh->getNumMaps();
     std::vector<int> matIds;    
 
+    // use the 3dsMax channel numbers so we keep the correct channel for material
+    m_numTextureChannel = numMapChannels -1;
+    
+    /*
     //count texture channels
-    m_numTextureChannel = (mMesh->numTVerts > 0) ? 1 : 0;
+    (mMesh->numTVerts > 0) ? 1 : 0;
     for (size_t chan = 2; chan < numMapChannels; chan++)
     {
       if(mMesh->mapSupport(chan))
         m_numTextureChannel++;
     }
+    */
     EasyOgreExporterLog("Info: Number of map channel (UV) found in this mesh : %i\n", m_numTextureChannel);
     
     // prepare faces table

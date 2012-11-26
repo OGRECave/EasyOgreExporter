@@ -58,6 +58,9 @@ inline std::string FilePath(std::string file)
 
 inline std::string FileWithoutExt(std::string file)
 {
+  if(file.empty())
+    return file;
+
   std::string name = StripToTopParent(file);
 	int ri = name.find_last_of('.');
 	return name.substr(0, ri);
@@ -65,12 +68,18 @@ inline std::string FileWithoutExt(std::string file)
 
 inline std::string FileExt(std::string file)
 {
+  if(file.empty())
+    return file;
+
 	int ri = file.find_last_of('.');
 	return file.substr(ri);
 }
 
 inline std::string ToLowerCase(std::string str)
 {
+  if(str.empty())
+    return str;
+
   char* cstr = (char*)str.c_str();
   for (int i = 0; i < str.length(); i++)
   {
@@ -971,6 +980,26 @@ inline bool GetVertexAnimState(Animatable* anim)
 
 inline IGameMaterial* GetSubMaterialByID(IGameMaterial* mat, int matId)
 {
+  if (mat && mat->IsMultiType() && mat->GetSubMaterialCount() > 0)
+  {
+    Mtl* maxmat = mat->GetMaxMaterial();
+    if (maxmat->ClassID() == Class_ID(BAKE_SHELL_CLASS_ID, 0))
+    {
+      // get the 2nd material (the bake one)
+      if (mat->GetSubMaterialCount() == 2)
+      {
+        mat = mat->GetSubMaterial(1);
+        // if the material is empty we try the first one
+        if(!mat)
+          mat = mat->GetSubMaterial(0);
+      }
+      else
+      {
+        mat = mat->GetSubMaterial(0);
+      }
+    }
+  }
+
   if (mat && mat->IsSubObjType())
   {
     IGameMaterial* nmat = 0;

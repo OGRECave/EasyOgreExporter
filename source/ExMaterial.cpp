@@ -1114,6 +1114,7 @@ namespace EasyOgreExporter
 		{
 			IGameMaterial* pGameMaterial = m_GameMaterial;
 
+      //TODO manage mix / composite materials
 			if(m_GameMaterial->IsMultiType() && (m_GameMaterial->GetSubMaterialCount() > 0))
 				pGameMaterial = m_GameMaterial->GetSubMaterial(0);
 
@@ -1506,7 +1507,7 @@ namespace EasyOgreExporter
 
 					//remove alpha from ambient (common ligth map)
 					if((m_textures[i].type == ID_AM) && (m_textures[i].bHasAlphaChannel))
-						outMaterial << "\t\t\t\talpha_op_ex source2 src_manual src_current 1\n";
+						outMaterial << "\t\t\t\talpha_op_ex source2 src_manual src_current " << (m_textures[i].fAmount * m_opacity) << "\n";
 
 					//write colour operation
 					/*
@@ -1532,9 +1533,12 @@ namespace EasyOgreExporter
 					*/
 
 					//write texture transforms
-					outMaterial << "\t\t\t\tscale " << m_textures[i].scale_u << " " << m_textures[i].scale_v << "\n";
-					outMaterial << "\t\t\t\tscroll " << m_textures[i].scroll_u << " " << m_textures[i].scroll_v << "\n";
-					outMaterial << "\t\t\t\trotate " << m_textures[i].rot << "\n";
+          if ((m_textures[i].scale_u != 1.0f) || (m_textures[i].scale_v != 1.0f))
+					  outMaterial << "\t\t\t\tscale " << m_textures[i].scale_u << " " << m_textures[i].scale_v << "\n";
+					if ((m_textures[i].scroll_u != 0.0f) || (m_textures[i].scroll_v != 0.0f))
+            outMaterial << "\t\t\t\tscroll " << m_textures[i].scroll_u << " " << m_textures[i].scroll_v << "\n";
+					if (m_textures[i].rot != 0.0f)
+            outMaterial << "\t\t\t\trotate " << m_textures[i].rot << "\n";
 
 					if(m_textures[i].bReflect)
 					{
