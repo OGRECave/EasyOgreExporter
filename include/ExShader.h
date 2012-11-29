@@ -119,7 +119,7 @@ namespace EasyOgreExporter
     
     public:
       ExVsLightShader(std::string name);
-		  ~ExVsLightShader();
+		  virtual ~ExVsLightShader();
 
       virtual void constructShader(ExMaterial* mat);
       virtual std::string& getUniformParams(ExMaterial* mat);

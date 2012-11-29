@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 1.3f;
+float EXVERSION = 1.4f;
 
 namespace EasyOgreExporter
 {
@@ -889,6 +889,30 @@ void OgreExporter::initIGameConf(std::string path)
   noLod->LinkEndChild(noLodType);
 
   igameUserData->LinkEndChild(noLod);
+
+  // userData
+  TiXmlElement* userData = new TiXmlElement("UserProperty");
+  TiXmlElement* userDataId = new TiXmlElement("id");
+  TiXmlText* userDataIdText = new TiXmlText("104");
+  userDataId->LinkEndChild(userDataIdText);
+  userData->LinkEndChild(userDataId);
+  
+  TiXmlElement* userDataSName = new TiXmlElement("simplename");
+  TiXmlText* userDataSNameText = new TiXmlText("userData");
+  userDataSName->LinkEndChild(userDataSNameText);
+  userData->LinkEndChild(userDataSName);
+
+  TiXmlElement* userDataName = new TiXmlElement("keyName");
+  TiXmlText* userDataNameText = new TiXmlText("userData");
+  userDataName->LinkEndChild(userDataNameText);
+  userData->LinkEndChild(userDataName);
+
+  TiXmlElement* userDataType = new TiXmlElement("type");
+  TiXmlText* userDataTypeText = new TiXmlText("string");
+  userDataType->LinkEndChild(userDataTypeText);
+  userData->LinkEndChild(userDataType);
+
+  igameUserData->LinkEndChild(userData);
 
   xmlDoc.SaveFile(path.c_str());
 }

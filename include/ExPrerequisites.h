@@ -41,12 +41,6 @@
 #include <IPathConfigMgr.h> 
 #include <ilayer.h>
 
-#ifdef PRE_MAX_2011
-#include "maxscrpt/maxscrpt.h"
-#else
-#include "maxscript/maxscript.h"
-#endif
-
 // This file is not included in the max SDK directly, but in the morpher sample.
 // It is required to get access to the Max Morpher. 
 #include "wm3.h"
@@ -56,10 +50,11 @@
 #pragma warning (disable : 4018)
 
 // These come from the resource file included with wm3.h.
-#define IDS_CLASS_NAME                  102
+/*#define IDS_CLASS_NAME                  102
 #define IDS_MORPHMTL                    39
 #define IDS_MTL_MAPNAME                 45
 #define IDS_MTL_BASENAME                46
+*/
 
 // OGRE API
 // Max defines PI and OgreMath.h fails to compile as a result.

@@ -35,6 +35,7 @@ namespace EasyOgreExporter
 		std::vector<ExMaterial*> m_materials;
     std::vector<std::string> m_textures;
     std::vector<ExShader*> m_Shaders;
+    ExMaterial* m_default;
   protected:
 
 	public:
@@ -54,7 +55,7 @@ namespace EasyOgreExporter
     ExMaterial* getMaterialByName(std::string name);
 
 		//add material
-		void addMaterial(ExMaterial* pMat);
+		void addMaterial(ExMaterial* pMat = 0);
 
 		//get material
 		ExMaterial* getMaterial(IGameMaterial* pGameMaterial);

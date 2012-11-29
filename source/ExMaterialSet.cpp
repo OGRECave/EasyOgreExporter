@@ -26,8 +26,7 @@ namespace EasyOgreExporter
   ExMaterialSet::ExMaterialSet(ExOgreConverter* converter)
   {
 		//create a default material
-		ExMaterial* defMat = new ExMaterial(converter, 0, "");
-    m_materials.push_back(defMat);
+		m_default = new ExMaterial(converter, 0, "");
 	};
 
 	//destructor
@@ -40,15 +39,21 @@ namespace EasyOgreExporter
 	void ExMaterialSet::clear()
   {
 		for (int i=0; i<m_materials.size(); i++)
-			delete m_materials[i];
-		m_materials.clear();
+    {
+			if (m_materials[i] != m_default)
+        delete m_materials[i];
+    }
+    m_materials.clear();
 
 		for (int i=0; i<m_Shaders.size(); i++)
 			delete m_Shaders[i];
 		m_Shaders.clear();
 
     m_textures.clear();
-	};
+
+    delete m_default;
+    m_default = 0;
+  };
 
   bool ExMaterialSet::getTextureSameFileNameExist(std::string filepath, std::string name)
   {
@@ -157,6 +162,10 @@ namespace EasyOgreExporter
 	//add material
 	void ExMaterialSet::addMaterial(ExMaterial* pMat)
   {
+    // if the material is not set we use the default material
+    if (!pMat)
+      pMat = m_default;
+
 		bool found = false;
 		for (int i=0; i<m_materials.size() && !found; i++)
 		{
@@ -235,7 +244,7 @@ namespace EasyOgreExporter
 		}
     outMaterial.close();
 
-    if(params.exportProgram != SHADER_NONE)
+    if(params.exportProgram != SHADER_NONE && (m_Shaders.size() > 0))
     {
       std::ofstream outShaderCG;
       std::ofstream outProgram;

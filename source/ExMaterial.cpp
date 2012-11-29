@@ -1533,11 +1533,11 @@ namespace EasyOgreExporter
 					*/
 
 					//write texture transforms
-          if ((m_textures[i].scale_u != 1.0f) || (m_textures[i].scale_v != 1.0f))
+          if ((m_textures[i].scale_u != 1.0) || (m_textures[i].scale_v != 1.0))
 					  outMaterial << "\t\t\t\tscale " << m_textures[i].scale_u << " " << m_textures[i].scale_v << "\n";
-					if ((m_textures[i].scroll_u != 0.0f) || (m_textures[i].scroll_v != 0.0f))
+					if ((m_textures[i].scroll_u != 0.0) || (m_textures[i].scroll_v != 0.0))
             outMaterial << "\t\t\t\tscroll " << m_textures[i].scroll_u << " " << m_textures[i].scroll_v << "\n";
-					if (m_textures[i].rot != 0.0f)
+					if (m_textures[i].rot != 0.0)
             outMaterial << "\t\t\t\trotate " << m_textures[i].rot << "\n";
 
 					if(m_textures[i].bReflect)

@@ -265,7 +265,7 @@ namespace EasyOgreExporter
 		pNodeElement->SetAttribute("id", id_counter);
 		pNodeElement->SetAttribute("isTarget", "false");
 		parent->LinkEndChild(pNodeElement);
-
+ 
 		TiXmlElement* pPositionElement = new TiXmlElement("position");
     pPositionElement->SetDoubleAttribute("x", trans.x);
 		pPositionElement->SetDoubleAttribute("y", trans.y);
@@ -448,6 +448,36 @@ namespace EasyOgreExporter
       pEntityElement->SetDoubleAttribute("renderingDistance", renderDistance);
 
     parent->LinkEndChild(pEntityElement);
+
+    // user Data
+    IPropertyContainer* upc = pGameMesh->GetIPropertyContainer();
+    IGameProperty* pUserData = upc->QueryProperty(_T("userData"));
+    if(pUserData)
+    {
+      TiXmlElement* pUserDataElement = new TiXmlElement("userData");
+      TiXmlText* pUserDataText = 0;
+
+#ifdef UNICODE
+      const MCHAR* userData = 0;
+      pUserData->GetPropertyValue(userData);
+      std::wstring userData_w = userData;
+
+      std::string userData_s;
+		  userData_s.assign(userData_w.begin(), userData_w.end());
+      pUserDataText = new TiXmlText(userData_s.c_str());
+#else
+      #ifdef PRE_MAX_2010
+      char* userData = 0;
+      #else
+      const char* userData = 0;
+      #endif
+      pUserData->GetPropertyValue(userData);
+      pUserDataText = new TiXmlText(userData);
+#endif
+
+      pUserDataElement->LinkEndChild(pUserDataText);
+      pEntityElement->LinkEndChild(pUserDataElement);
+    }
 
     TiXmlElement* pSubEntities = new TiXmlElement("subentities");
     pEntityElement->LinkEndChild(pSubEntities);

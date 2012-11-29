@@ -1752,7 +1752,13 @@ namespace EasyOgreExporter
     pMaterial = m_converter->getMaterialSet()->getMaterial(pGameMaterial);
 
     //otherwise create the material
-    if (!pMaterial)
+    if (!pMaterial && !pGameMaterial)
+    {
+      // add the default material
+      m_converter->getMaterialSet()->addMaterial();
+      pMaterial = m_converter->getMaterialSet()->getMaterial(0);
+    }
+    else if (!pMaterial)
     {
       pMaterial = new ExMaterial(m_converter, pGameMaterial, m_params.resPrefix);
       m_converter->getMaterialSet()->addMaterial(pMaterial);
