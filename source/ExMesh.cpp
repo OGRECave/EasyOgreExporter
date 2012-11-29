@@ -251,6 +251,11 @@ namespace EasyOgreExporter
           uv.y = 1.0f - uv.y;
           vertex.lTexCoords.push_back(uv);
         }
+        else if (numMapChannels > 1)
+        {
+          //add an empty uv to correspond to the max channel id
+          vertex.lTexCoords.push_back(Point3(0.0f, 0.0f, 0.0f));
+        }
 
         //extra textures channel
         for (size_t chan = 2; chan < numMapChannels; chan++)
