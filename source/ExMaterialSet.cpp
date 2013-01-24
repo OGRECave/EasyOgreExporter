@@ -509,6 +509,7 @@ namespace EasyOgreExporter
                   }
                 }
                 TheManager->DelBitmap(bitmap);
+                bitmap->DeleteThis();
               }
             }
 

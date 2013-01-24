@@ -83,7 +83,7 @@ namespace EasyOgreExporter
       EasyOgreExporterLog("Writing skeleton binary...\n");
       if(!mesh->getSkeleton()->writeOgreBinary())
       {
-        EasyOgreExporterLog("Error writing mesh binary file\n");
+        EasyOgreExporterLog("Error writing skeleton binary file\n");
       }
     }
 

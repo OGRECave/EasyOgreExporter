@@ -850,7 +850,7 @@ inline std::string getFirstInstanceName(IGameNode* pGameNode)
 
   std::string nodeName;
 #ifdef UNICODE
-	std::wstring pNodeName_w = nodeInstances[0]->GetName();
+	std::wstring pNodeName_w = nodeInstances[nodeInstances.Count() - 1]->GetName();
 	nodeName.assign(pNodeName_w.begin(), pNodeName_w.end());
 #else
 	nodeName = nodeInstances[nodeInstances.Count() - 1]->GetName();

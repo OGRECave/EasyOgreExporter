@@ -547,6 +547,7 @@ namespace EasyOgreExporter
 										m_bPreMultipliedAlpha = pBitmapTex->GetPremultAlpha(0) ? true : false;
 									}
 									TheManager->DelBitmap(bitmap);
+                  bitmap->DeleteThis();
 									tex.type = type;
 							}
 
@@ -960,6 +961,7 @@ namespace EasyOgreExporter
                   tex.bHasAlphaChannel = (bitmap->HasAlpha() == 0) ? false : true;
 
 								TheManager->DelBitmap(bitmap);
+                bitmap->DeleteThis();
                 m_hasAmbientMap = true;
 							}
 #ifdef UNICODE
@@ -1016,6 +1018,7 @@ namespace EasyOgreExporter
 							}
 
 							TheManager->DelBitmap(bitmap);
+              bitmap->DeleteThis();
               m_hasDiffuseMap = true;
 						}
 #ifdef UNICODE
