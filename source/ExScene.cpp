@@ -114,10 +114,10 @@ namespace EasyOgreExporter
       bool isAnimated = false;
       Matrix3 prevKeyTM = GetLocalNodeMatrix(maxnode, mParams.yUpAxis, firstFrame);
       for(int i = 0; i < animKeys.size() && !isAnimated; i++)
-      {        
+      {
         // get the relative transform
         Matrix3 keyTM = GetLocalNodeMatrix(maxnode, mParams.yUpAxis, animKeys[i]);
-
+        
         if(keyTM.Equals(prevKeyTM) == 0)
           isAnimated = true;
 
@@ -258,9 +258,9 @@ namespace EasyOgreExporter
 		std::wstring name_w = pGameNode->GetName();
 		std::string name_s;
 		name_s.assign(name_w.begin(),name_w.end());
-		pNodeElement->SetAttribute("name", name_s.c_str());
+		pNodeElement->SetAttribute("name", optimizeResourceName(name_s).c_str());
 #else
-		pNodeElement->SetAttribute("name", pGameNode->GetName());
+		pNodeElement->SetAttribute("name", optimizeResourceName(pGameNode->GetName()).c_str());
 #endif
 		pNodeElement->SetAttribute("id", id_counter);
 		pNodeElement->SetAttribute("isTarget", "false");
