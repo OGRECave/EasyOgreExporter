@@ -100,6 +100,17 @@ inline std::string optimizeFileName(const std::string& filename)
   std::replace(newFilename.begin(), newFilename.end(), '\'', '_');
   std::replace(newFilename.begin(), newFilename.end(), '/', '_');
   std::replace(newFilename.begin(), newFilename.end(), '"', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '%', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '+', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '#', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '&', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '^', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '(', '_');
+  std::replace(newFilename.begin(), newFilename.end(), ')', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '{', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '}', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '[', '_');
+  std::replace(newFilename.begin(), newFilename.end(), ']', '_');
 	return newFilename;
 }
 
@@ -114,6 +125,17 @@ inline std::string optimizeResourceName(const std::string& filename)
   std::replace(newFilename.begin(), newFilename.end(), ' ', '_');
   std::replace(newFilename.begin(), newFilename.end(), '\'', '_');
   std::replace(newFilename.begin(), newFilename.end(), '"', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '%', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '+', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '#', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '&', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '^', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '(', '_');
+  std::replace(newFilename.begin(), newFilename.end(), ')', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '{', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '}', '_');
+  std::replace(newFilename.begin(), newFilename.end(), '[', '_');
+  std::replace(newFilename.begin(), newFilename.end(), ']', '_');
 	return newFilename;
 }
 
