@@ -23,6 +23,11 @@
 #include "iInstanceMgr.h"
 #include "MeshNormalSpec.h"
 
+inline bool invalidChar(char c) 
+{ 
+  return !(c>=0 && ((c > 47 && c < 58) || (c > 64 && c < 91) || (c > 96 && c < 123))); 
+} 
+
 inline void trim(std::string& str)
 {
   size_t spos = str.find_first_not_of(" \f\n\r\t\v");
@@ -95,22 +100,7 @@ inline std::string optimizeFileName(const std::string& filename)
   if (isdigit(newFilename.c_str()[0]))
     newFilename.insert(0, "_");
 
-  std::replace(newFilename.begin(), newFilename.end(), ':', '_');
-  std::replace(newFilename.begin(), newFilename.end(), ' ', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '\'', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '/', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '"', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '%', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '+', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '#', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '&', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '^', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '(', '_');
-  std::replace(newFilename.begin(), newFilename.end(), ')', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '{', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '}', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '[', '_');
-  std::replace(newFilename.begin(), newFilename.end(), ']', '_');
+  std::replace_if(newFilename.begin(), newFilename.end(), invalidChar, '_');
 	return newFilename;
 }
 
@@ -121,21 +111,7 @@ inline std::string optimizeResourceName(const std::string& filename)
   if (isdigit(newFilename.c_str()[0]))
     newFilename.insert(0, "_");
 
-  std::replace(newFilename.begin(), newFilename.end(), ':', '_');
-  std::replace(newFilename.begin(), newFilename.end(), ' ', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '\'', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '"', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '%', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '+', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '#', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '&', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '^', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '(', '_');
-  std::replace(newFilename.begin(), newFilename.end(), ')', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '{', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '}', '_');
-  std::replace(newFilename.begin(), newFilename.end(), '[', '_');
-  std::replace(newFilename.begin(), newFilename.end(), ']', '_');
+  std::replace_if(newFilename.begin(), newFilename.end(), invalidChar, '_');
 	return newFilename;
 }
 

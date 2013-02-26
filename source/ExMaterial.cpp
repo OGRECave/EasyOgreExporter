@@ -780,6 +780,12 @@ namespace EasyOgreExporter
 		for(int i = 0; i < texCount; ++i)
 		{
 			IGameTextureMap* pGameTexture = pGameMaterial->GetIGameTextureMap(i);
+      int texSlot = pGameTexture->GetStdMapSlot();
+
+      //skip disabled texmap
+      if (texSlot < 0 || maxMat->SubTexmapOn(texSlot) == 0)
+        continue;
+      
 #ifdef UNICODE
 			std::wstring texClass = pGameTexture->GetClassName();
 #else
@@ -918,7 +924,6 @@ namespace EasyOgreExporter
 				}
 
 				Texture tex;
-				int texSlot = pGameTexture->GetStdMapSlot();
 #ifdef UNICODE
 				std::wstring textureName_w = textureName.GetCStr();
 				std::string textureName_s;
@@ -1055,9 +1060,48 @@ namespace EasyOgreExporter
 					break;
 				case ID_OP:
 					EasyOgreExporterLog("opacity channel texture.\n");
-					//do not create the texture unit
 					tex.bCreateTextureUnit = bFoundTexture;
-					m_hasAlpha = true;
+					
+          //only use the texture opacity properties, the alpha channel should be in the diffuse texture
+          if(bFoundTexture)
+					{
+						BMMRES status;
+#ifdef UNICODE
+						std::string absFilename_s = tex.absFilename.c_str();
+						std::wstring absFilename_w;
+						absFilename_w.assign(absFilename_s.begin(),absFilename_s.end());
+						BitmapInfo bi(absFilename_w.c_str());
+#else
+						BitmapInfo bi(tex.absFilename.c_str());
+#endif
+						Bitmap* bitmap = TheManager->Create(&bi); 
+						bitmap = TheManager->Load(&bi, &status); 
+						if (status == BMMRES_SUCCESS)
+              tex.bHasAlphaChannel = (bitmap->HasAlpha() == 0) ? false : true;
+
+            if(tex.bHasAlphaChannel)
+            {
+              int alphaSrc = 0;
+						  IGameProperty* pAlphaSrc = pCont->QueryProperty(_T("alphaSource"));
+						  if(pAlphaSrc)
+						  {
+							  pAlphaSrc->GetPropertyValue(alphaSrc);
+							  m_hasAlpha = ((alphaSrc + 1) == ALPHA_NONE) ? m_hasAlpha : true;
+						  }
+            }
+
+						int preMult = 0;
+						IGameProperty* pPreMult = pCont->QueryProperty(_T("preMultAlpha"));
+						if(pPreMult)
+						{
+							pPreMult->GetPropertyValue(preMult);
+							m_bPreMultipliedAlpha = preMult ? true : m_bPreMultipliedAlpha;
+						}
+
+						TheManager->DelBitmap(bitmap);
+            bitmap->DeleteThis();
+					}
+
 					tex.type = ID_OP;
 					break;
 				case ID_FI:
