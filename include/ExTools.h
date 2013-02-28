@@ -25,7 +25,7 @@
 
 inline bool invalidChar(char c) 
 { 
-  return !(c>=0 && ((c > 47 && c < 58) || (c > 64 && c < 91) || (c > 96 && c < 123))); 
+  return !(c>=0 && ((c > 44 && c < 47) || (c > 47 && c < 58) || (c > 64 && c < 91) || (c > 96 && c < 123))); 
 } 
 
 inline void trim(std::string& str)

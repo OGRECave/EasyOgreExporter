@@ -477,34 +477,39 @@ namespace EasyOgreExporter
  
                   if(pBuff)
                   {
-                    nvtt::InputOptions inputOptions;
-                    inputOptions.setTextureLayout(nvtt::TextureType_2D, width, height);
-                    inputOptions.setFormat(nvtt::InputFormat_BGRA_8UB);
+                    nvtt::InputOptions* inputOptions = new nvtt::InputOptions();
+                    inputOptions->setTextureLayout(nvtt::TextureType_2D, width, height);
+                    inputOptions->setFormat(nvtt::InputFormat_BGRA_8UB);
                     //inputOptions.setAlphaMode(bitmap->HasAlpha() && bitmap->PreMultipliedAlpha() ? nvtt::AlphaMode_Premultiplied : bitmap->HasAlpha() ? nvtt::AlphaMode_Transparency : nvtt::AlphaMode_None);
-                    inputOptions.setAlphaMode(bitmap->HasAlpha() ? nvtt::AlphaMode_Premultiplied : nvtt::AlphaMode_None);
-                    inputOptions.setMaxExtents(params.maxTextureSize);
-                    inputOptions.setRoundMode(nvtt::RoundMode_ToNearestPowerOfTwo);
-                    inputOptions.setMipmapGeneration(params.maxMipmaps != 0 ? true : false, params.maxMipmaps);
-                    inputOptions.setWrapMode(nvtt::WrapMode_Clamp);
-                    inputOptions.setMipmapData(pBuff, width, height);
+                    inputOptions->setAlphaMode(bitmap->HasAlpha() ? nvtt::AlphaMode_Premultiplied : nvtt::AlphaMode_None);
+                    inputOptions->setMaxExtents(params.maxTextureSize);
+                    inputOptions->setRoundMode(nvtt::RoundMode_ToNearestPowerOfTwo);
+                    inputOptions->setMipmapGeneration(params.maxMipmaps != 0 ? true : false, params.maxMipmaps);
+                    inputOptions->setWrapMode(nvtt::WrapMode_Clamp);
+                    inputOptions->setMipmapData(pBuff, width, height);
                     
-                    nvtt::OutputOptions outputOptions;
-                    outputOptions.setFileName(destFile.c_str());
+                    nvtt::OutputOptions* outputOptions = new nvtt::OutputOptions();
+                    outputOptions->setFileName(destFile.c_str());
 
-                    nvtt::CompressionOptions compressionOptions;
-                    compressionOptions.setQuality(nvtt::Quality_Production);
-                    compressionOptions.setFormat(bitmap->HasAlpha() ? nvtt::Format_DXT5 : nvtt::Format_DXT1);
+                    nvtt::CompressionOptions* compressionOptions = new nvtt::CompressionOptions();
+                    compressionOptions->setQuality(nvtt::Quality_Production);
+                    compressionOptions->setFormat(bitmap->HasAlpha() ? nvtt::Format_DXT5 : nvtt::Format_DXT1);
   #if(NVTT_VERSION<200)
-                    compressionOptions.setTargetDecoder(nvtt::Decoder_D3D9);
+                    compressionOptions->setTargetDecoder(nvtt::Decoder_D3D9);
   #endif                  
 
   #if(NVTT_VERSION<200)
                     nvtt::Context context;
                     ddsMode = context.process(inputOptions, compressionOptions, outputOptions);
   #else
-                    nvtt::Compressor compressor;
-                    ddsMode = compressor.process(inputOptions, compressionOptions, outputOptions);
-  #endif                 
+                    nvtt::Compressor* compressor = new nvtt::Compressor();
+                    ddsMode = compressor->process(*inputOptions, *compressionOptions, *outputOptions);
+  #endif            
+                    delete inputOptions;
+                    delete compressionOptions;
+                    delete outputOptions;
+                    delete compressor;
+
                     free(pBuff);
                   }
                 }

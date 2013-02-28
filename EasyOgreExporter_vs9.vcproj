@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\max9\include;.\ext\max9\include\CS;.\ext\max9\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\max9\include;.\ext\max9\include\CS;.\ext\max9\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -74,11 +74,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\max9\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.win32\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\max9\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdk\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="false"
 				SubSystem="2"
@@ -140,7 +140,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\max9\include;.\ext\max9\include\CS;.\ext\max9\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\max9\include;.\ext\max9\include\CS;.\ext\max9\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -169,11 +169,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\max9\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.x64\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\max9\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdkx64\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="false"
 				SubSystem="2"
@@ -234,7 +234,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\max9\include;.\ext\max9\include\CS;.\ext\max9\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\max9\include;.\ext\max9\include\CS;.\ext\max9\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -262,11 +262,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\max9\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.win32\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\max9\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdk\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -328,7 +328,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\max9\include;.\ext\max9\include\CS;.\ext\max9\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\max9\include;.\ext\max9\include\CS;.\ext\max9\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -356,11 +356,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\max9\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.x64\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\max9\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdkx64\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -421,7 +421,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\2008\include;.\ext\2008\include\CS;.\ext\2008\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2008\include;.\ext\2008\include\CS;.\ext\2008\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -449,11 +449,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2008\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.win32\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2008\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdk\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -515,7 +515,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\2008\include;.\ext\2008\include\CS;.\ext\2008\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2008\include;.\ext\2008\include\CS;.\ext\2008\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -543,11 +543,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2008\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.x64\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2008\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdkx64\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -608,7 +608,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\2008\include;.\ext\2008\include\CS;.\ext\2008\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2008\include;.\ext\2008\include\CS;.\ext\2008\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -637,11 +637,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2008\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.win32\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2008\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdk\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="false"
 				SubSystem="2"
@@ -703,7 +703,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\2008\include;.\ext\2008\include\CS;.\ext\2008\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2008\include;.\ext\2008\include\CS;.\ext\2008\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -732,11 +732,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2008\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.x64\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2008\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdkx64\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="false"
 				SubSystem="2"
@@ -797,7 +797,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\2009\include;.\ext\2009\include\CS;.\ext\2009\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2009\include;.\ext\2009\include\CS;.\ext\2009\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -826,11 +826,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2009\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.win32\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2009\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdk\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="false"
 				SubSystem="2"
@@ -892,7 +892,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\2009\include;.\ext\2009\include\CS;.\ext\2009\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2009\include;.\ext\2009\include\CS;.\ext\2009\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -921,11 +921,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2009\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.x64\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2009\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdkx64\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="false"
 				SubSystem="2"
@@ -986,7 +986,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\2009\include;.\ext\2009\include\CS;.\ext\2009\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2009\include;.\ext\2009\include\CS;.\ext\2009\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -1014,11 +1014,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2009\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.win32\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2009\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdk\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -1080,7 +1080,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\2009\include;.\ext\2009\include\CS;.\ext\2009\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2009\include;.\ext\2009\include\CS;.\ext\2009\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -1108,11 +1108,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2009\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.x64\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2009\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdkx64\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -1173,7 +1173,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\2010\include;.\ext\2010\include\CS;.\ext\2010\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2010\include;.\ext\2010\include\CS;.\ext\2010\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2011;"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -1202,11 +1202,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2010\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.win32\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2010\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdk\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="false"
 				SubSystem="2"
@@ -1268,7 +1268,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\2010\include;.\ext\2010\include\CS;.\ext\2010\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2010\include;.\ext\2010\include\CS;.\ext\2010\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2011;"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -1297,11 +1297,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2010\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.x64\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2010\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdkx64\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="false"
 				SubSystem="2"
@@ -1362,7 +1362,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\2010\include;.\ext\2010\include\CS;.\ext\2010\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2010\include;.\ext\2010\include\CS;.\ext\2010\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2011;"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -1390,11 +1390,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2010\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.win32\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2010\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdk\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -1456,7 +1456,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\2010\include;.\ext\2010\include\CS;.\ext\2010\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2010\include;.\ext\2010\include\CS;.\ext\2010\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2011;"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -1484,11 +1484,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2010\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.x64\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2010\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdkx64\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -1549,7 +1549,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2012;"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -1577,11 +1577,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2011\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.win32\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2011\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdk\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -1643,7 +1643,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2012;"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -1671,11 +1671,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2011\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;&quot;ext\nvdtx\project\vc9\Release.x64\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2011\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;&quot;ext\nvdtx\sdkx64\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -1737,7 +1737,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2012;"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -1766,11 +1766,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2011\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.win32\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2011\lib;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdk\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="false"
 				SubSystem="2"
@@ -1832,7 +1832,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;"
+				AdditionalIncludeDirectories=".\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2012;"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -1861,11 +1861,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2011\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\project\vc9\Release.x64\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2011\libx64;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release&quot;;&quot;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt&quot;;&quot;ext\nvdtx\sdkx64\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="false"
 				SubSystem="2"
@@ -1927,7 +1927,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9"
+				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -1955,11 +1955,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2012\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;&quot;ext\nvdtx\project\vc9\Release.Win32\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2012\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;&quot;ext\nvdtx\sdk\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -2021,7 +2021,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9"
+				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -2049,12 +2049,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				ShowProgress="1"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2012\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;&quot;ext\nvdtx\project\vc9\Debug.x64\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2012\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;&quot;ext\nvdtx\sdkx64\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -2116,7 +2116,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9"
+				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -2145,11 +2145,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories="ext\2012\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;&quot;ext\nvdtx\project\vc9\Release.Win32\lib&quot;"
+				AdditionalLibraryDirectories="ext\2012\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;&quot;ext\nvdtx\sdk\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="false"
 				SubSystem="2"
@@ -2211,7 +2211,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9"
+				AdditionalIncludeDirectories=".\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -2240,11 +2240,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2012\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;&quot;ext\nvdtx\project\vc9\Release.x64\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2012\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;&quot;ext\nvdtx\sdkx64\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="false"
 				SubSystem="2"
@@ -2306,7 +2306,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\2013\include;.\ext\2013\include\CS;.\ext\2013\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9"
+				AdditionalIncludeDirectories=".\Include;.\ext\2013\include;.\ext\2013\include\CS;.\ext\2013\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -2334,11 +2334,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2013\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;&quot;ext\nvdtx\project\vc9\Release.Win32\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2013\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;&quot;ext\nvdtx\sdk\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -2400,7 +2400,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Include;.\ext\2013\include;.\ext\2013\include\CS;.\ext\2013\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9"
+				AdditionalIncludeDirectories=".\Include;.\ext\2013\include;.\ext\2013\include\CS;.\ext\2013\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
 				StringPooling="false"
 				MinimalRebuild="true"
@@ -2428,11 +2428,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2013\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;&quot;ext\nvdtx\project\vc9\Debug.x64\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2013\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;&quot;ext\nvdtx\sdkx64\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -2494,7 +2494,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\2013\include;.\ext\2013\include\CS;.\ext\2013\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9"
+				AdditionalIncludeDirectories=".\Include;.\ext\2013\include;.\ext\2013\include\CS;.\ext\2013\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -2523,11 +2523,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib DataBridge.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib DataBridge.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories="ext\2013\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;&quot;ext\nvdtx\project\vc9\Release.Win32\lib&quot;"
+				AdditionalLibraryDirectories="ext\2013\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;&quot;ext\nvdtx\sdk\lib\static&quot;"
 				IgnoreDefaultLibraryNames=""
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="false"
@@ -2590,7 +2590,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\Include;.\ext\2013\include;.\ext\2013\include\CS;.\ext\2013\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\project\vc9"
+				AdditionalIncludeDirectories=".\Include;.\ext\2013\include;.\ext\2013\include\CS;.\ext\2013\include\IGame;&quot;$(SCOL_DEPENDENCIES_PATH)\tinyxml&quot;;&quot;$(SCOL_DEPENDENCIES_PATH)\Boost&quot;;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk"
 				PreprocessorDefinitions="_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;"
 				StringPooling="false"
 				MinimalRebuild="false"
@@ -2620,11 +2620,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib bc6h.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
+				AdditionalDependencies="OgreMainStatic.lib Plugin_CgProgramManagerStatic.lib Plugin_OctreeSceneManagerStatic.lib Plugin_ParticleFXStatic.lib RenderSystem_Direct3D9Static.lib RenderSystem_GLStatic.lib FreeImage.lib cg.lib freetype2311.lib zlib.lib zziplib.lib comctl32.lib core.lib geom.lib gfx.lib bmm.lib mesh.lib maxutil.lib maxscrpt.lib paramblk2.lib msxml2.lib igame.lib biped.lib Morpher.lib assetmanagement.lib nvtt.lib nvcore.lib nvimage.lib nvmath.lib nvthread.lib squish.lib"
 				OutputFile="$(OutDir)/EasyOgreExporter.dle"
 				LinkIncremental="2"
 				SuppressStartupBanner="false"
-				AdditionalLibraryDirectories=".\ext\2013\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;&quot;ext\nvdtx\project\vc9\Release.x64\lib&quot;"
+				AdditionalLibraryDirectories=".\ext\2013\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;&quot;ext\nvdtx\sdkx64\lib\static&quot;"
 				ModuleDefinitionFile=".\Include\EasyOgreExporter.def"
 				GenerateDebugInformation="false"
 				SubSystem="2"
