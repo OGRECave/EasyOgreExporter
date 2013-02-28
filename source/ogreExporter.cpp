@@ -213,19 +213,19 @@ namespace EasyOgreExporter
 
         int mipsSel = 0;
         if (exp->maxMipmaps == -1)
-          texSel = 0;
+          mipsSel = 0;
         else if (exp->maxMipmaps == 0)
-          texSel = 1;
+          mipsSel = 1;
         else if (exp->maxMipmaps == 2)
-          texSel = 2;
+          mipsSel = 2;
         else if (exp->maxMipmaps == 4)
-          texSel = 3;
+          mipsSel = 3;
         else if (exp->maxMipmaps == 8)
-          texSel = 4;
+          mipsSel = 4;
         else if (exp->maxMipmaps == 16)
-          texSel = 5;
+          mipsSel = 5;
         else if (exp->maxMipmaps == 32)
-          texSel = 6;
+          mipsSel = 6;
 
         SendDlgItemMessage(hWnd, IDC_NUMMIPS, CB_SETCURSEL, mipsSel, 0);
 
