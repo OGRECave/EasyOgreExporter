@@ -294,7 +294,7 @@ namespace EasyOgreExporter
           //Copy only each files once
           if(std::find(lTexDone.begin(), lTexDone.end(), tex.absFilename) == lTexDone.end())
           {
-            bool ddsMode = false;
+            int ddsMode = 0;
             
             std::string texName = params.resPrefix;
             texName.append(tex.filename);
@@ -312,6 +312,7 @@ namespace EasyOgreExporter
             if(params.convertToDDS && (texExt != "dds") && DoesFileExist(tex.absFilename.c_str()))
 #endif
             {
+              // DDS extension
               destFile = makeOutputPath(params.outputDir, params.texOutputDir, texName.substr(0, texName.find_last_of(".")), "DDS");
 
               //load bitmap
@@ -324,8 +325,8 @@ namespace EasyOgreExporter
 #else
 			BitmapInfo bi(tex.absFilename.c_str());
 #endif
-              Bitmap* bitmap = TheManager->Create(&bi); 
-              bitmap = TheManager->Load(&bi, &status);
+              //Bitmap* bitmap = TheManager->Create(&bi); 
+              Bitmap* bitmap = TheManager->Load(&bi, &status);
               if (status == BMMRES_SUCCESS)
               {
                 unsigned int width = bitmap->Width();
@@ -477,61 +478,72 @@ namespace EasyOgreExporter
  
                   if(pBuff)
                   {
-                    nvtt::InputOptions* inputOptions = new nvtt::InputOptions();
-                    inputOptions->setTextureLayout(nvtt::TextureType_2D, width, height);
-                    inputOptions->setFormat(nvtt::InputFormat_BGRA_8UB);
+                    nvtt::InputOptions inputOptions;
+                    inputOptions.setTextureLayout(nvtt::TextureType_2D, width, height);
+                    inputOptions.setFormat(nvtt::InputFormat_BGRA_8UB);
                     //inputOptions.setAlphaMode(bitmap->HasAlpha() && bitmap->PreMultipliedAlpha() ? nvtt::AlphaMode_Premultiplied : bitmap->HasAlpha() ? nvtt::AlphaMode_Transparency : nvtt::AlphaMode_None);
-                    inputOptions->setAlphaMode(bitmap->HasAlpha() ? nvtt::AlphaMode_Premultiplied : nvtt::AlphaMode_None);
-                    inputOptions->setMaxExtents(params.maxTextureSize);
-                    inputOptions->setRoundMode(nvtt::RoundMode_ToNearestPowerOfTwo);
-                    inputOptions->setMipmapGeneration(params.maxMipmaps != 0 ? true : false, params.maxMipmaps);
-                    inputOptions->setWrapMode(nvtt::WrapMode_Clamp);
-                    inputOptions->setMipmapData(pBuff, width, height);
+                    inputOptions.setAlphaMode(bitmap->HasAlpha() ? nvtt::AlphaMode_Premultiplied : nvtt::AlphaMode_None);
+                    inputOptions.setMaxExtents(params.maxTextureSize);
+                    inputOptions.setRoundMode(nvtt::RoundMode_ToNearestPowerOfTwo);
+                    inputOptions.setMipmapGeneration(params.maxMipmaps != 0 ? true : false, params.maxMipmaps);
+                    inputOptions.setWrapMode(nvtt::WrapMode_Clamp);
+                    inputOptions.setMipmapData(pBuff, width, height);
                     
-                    nvtt::OutputOptions* outputOptions = new nvtt::OutputOptions();
-                    outputOptions->setFileName(destFile.c_str());
+                    nvtt::OutputOptions outputOptions;
+                    outputOptions.setFileName(destFile.c_str());
 
-                    nvtt::CompressionOptions* compressionOptions = new nvtt::CompressionOptions();
-                    compressionOptions->setQuality(nvtt::Quality_Production);
-                    compressionOptions->setFormat(bitmap->HasAlpha() ? nvtt::Format_DXT5 : nvtt::Format_DXT1);
+                    nvtt::CompressionOptions compressionOptions;
+                    compressionOptions.setQuality(nvtt::Quality_Production);
+                    compressionOptions.setFormat(bitmap->HasAlpha() ? nvtt::Format_DXT5 : nvtt::Format_DXT1);
   #if(NVTT_VERSION<200)
                     compressionOptions->setTargetDecoder(nvtt::Decoder_D3D9);
   #endif                  
 
+                    if (bitmap)
+                    {
+                      TheManager->DelBitmap(bitmap);
+                      bitmap->DeleteThis();
+                      bitmap = 0;
+                    }
+
   #if(NVTT_VERSION<200)
                     nvtt::Context context;
-                    ddsMode = context.process(inputOptions, compressionOptions, outputOptions);
+                    ddsMode = context.process(inputOptions, compressionOptions, outputOptions) ? 1 : -1;
   #else
-                    nvtt::Compressor* compressor = new nvtt::Compressor();
-                    ddsMode = compressor->process(*inputOptions, *compressionOptions, *outputOptions);
+                    nvtt::Compressor compressor;
+                    ddsMode = compressor.process(inputOptions, compressionOptions, outputOptions) ? 1 : -1;
   #endif            
-                    delete inputOptions;
-                    delete compressionOptions;
-                    delete outputOptions;
-                    delete compressor;
-
-                    free(pBuff);
                   }
                 }
-                TheManager->DelBitmap(bitmap);
-                bitmap->DeleteThis();
+
+                if(pBuff)
+                  free(pBuff);
+
+                if (bitmap)
+                {
+                  TheManager->DelBitmap(bitmap);
+                  bitmap->DeleteThis();
+                }
               }
             }
 
-			if(!ddsMode)
-			{
-				// Copy file texture to output dir
+			      if(ddsMode <= 0)
+			      {
+              if (ddsMode == -1)
+                EasyOgreExporterLog("Error could not convert the texture file %s to DDS format, bad texture format or Max return an empty buffer.\n", tex.absFilename.c_str());
+
+				      // Copy file texture to output dir
 #ifdef UNICODE
-				std::wstring absFilename_w;
-				absFilename_w.assign(tex.absFilename.begin(),tex.absFilename.end());
-				std::wstring destFile_w;
-				destFile_w.assign(destFile.begin(),destFile.end());
-				if(!CopyFile(absFilename_w.data(), destFile_w.data(), false))
+				      std::wstring absFilename_w;
+				      absFilename_w.assign(tex.absFilename.begin(),tex.absFilename.end());
+				      std::wstring destFile_w;
+				      destFile_w.assign(destFile.begin(),destFile.end());
+				      if(!CopyFile(absFilename_w.data(), destFile_w.data(), false))
 #else
-				if(!CopyFile(tex.absFilename.c_str(), destFile.c_str(), false))
+				      if(!CopyFile(tex.absFilename.c_str(), destFile.c_str(), false))
 #endif
-					EasyOgreExporterLog("Error while copying texture file %s\n", tex.absFilename.c_str());
-			}
+					      EasyOgreExporterLog("Error while copying texture file %s to %s\n", tex.absFilename.c_str(), destFile.c_str());
+			      }
 
             lTexDone.push_back(tex.absFilename);
           }

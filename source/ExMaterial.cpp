@@ -538,8 +538,8 @@ namespace EasyOgreExporter
 #else
 								BitmapInfo bi(tex.absFilename.c_str());
 #endif
-								Bitmap* bitmap = TheManager->Create(&bi);
-								bitmap = TheManager->Load(&bi, &status);
+								//Bitmap* bitmap = TheManager->Create(&bi);
+								Bitmap* bitmap = TheManager->Load(&bi, &status);
 								if (status == BMMRES_SUCCESS)
 									if(bitmap->HasAlpha())
 									{
@@ -960,8 +960,8 @@ namespace EasyOgreExporter
 #else
 								BitmapInfo bi(tex.absFilename.c_str());
 #endif
-								Bitmap* bitmap = TheManager->Create(&bi); 
-								bitmap = TheManager->Load(&bi, &status); 
+								//Bitmap* bitmap = TheManager->Create(&bi); 
+								Bitmap* bitmap = TheManager->Load(&bi, &status); 
 								if (status == BMMRES_SUCCESS)
                   tex.bHasAlphaChannel = (bitmap->HasAlpha() == 0) ? false : true;
 
@@ -998,8 +998,8 @@ namespace EasyOgreExporter
 #else
 							BitmapInfo bi(tex.absFilename.c_str());
 #endif
-							Bitmap* bitmap = TheManager->Create(&bi); 
-							bitmap = TheManager->Load(&bi, &status); 
+							//Bitmap* bitmap = TheManager->Create(&bi); 
+							Bitmap* bitmap = TheManager->Load(&bi, &status); 
 							if (status == BMMRES_SUCCESS)
                 tex.bHasAlphaChannel = (bitmap->HasAlpha() == 0) ? false : true;
 
@@ -1074,8 +1074,8 @@ namespace EasyOgreExporter
 #else
 						BitmapInfo bi(tex.absFilename.c_str());
 #endif
-						Bitmap* bitmap = TheManager->Create(&bi); 
-						bitmap = TheManager->Load(&bi, &status); 
+						//Bitmap* bitmap = TheManager->Create(&bi); 
+						Bitmap* bitmap = TheManager->Load(&bi, &status); 
 						if (status == BMMRES_SUCCESS)
               tex.bHasAlphaChannel = (bitmap->HasAlpha() == 0) ? false : true;
 
