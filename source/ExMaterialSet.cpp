@@ -312,6 +312,7 @@ namespace EasyOgreExporter
             if(params.convertToDDS && (texExt != "dds") && DoesFileExist(tex.absFilename.c_str()))
 #endif
             {
+              ddsMode = -1;
               // DDS extension
               destFile = makeOutputPath(params.outputDir, params.texOutputDir, texName.substr(0, texName.find_last_of(".")), "DDS");
 
@@ -404,7 +405,7 @@ namespace EasyOgreExporter
                         for(int y = 0; y < height; y++) 
                         {
                           unsigned long destByte = (x * bpp) + (bpl * y);
-                          unsigned long srcByte = (x * 3) + (width * 3 * y);
+                          unsigned long srcByte = x + (width * y);
                           unsigned long srcAlphaByte = x + (width * y);
 
                           pBuff[destByte] = (int)(((double)bBuff[srcByte] / FLT_MAX) * 255.0);
@@ -438,7 +439,7 @@ namespace EasyOgreExporter
                     unsigned char* bBuff = (unsigned char*)bdBuff;
                     unsigned char* aBuff = (unsigned char*)adBuff;
 
-                    if(bitmapType == BMM_GRAY_16)
+                    if(bitmapType == BMM_GRAY_16 || bitmapType == BMM_GRAY_8)
                     {
                       //add alpha to buffer and convert to BGRA from grey
                       for (int x = 0; x < width; x++)
@@ -446,7 +447,7 @@ namespace EasyOgreExporter
                         for(int y = 0; y < height; y++) 
                         {
                           unsigned long destByte = (x * bpp) + (bpl * y);
-                          unsigned long srcByte = (x * 3) + (width * 3 * y);
+                          unsigned long srcByte = x + (width * y);
                           unsigned long srcAlphaByte = x + (width * y);
 
                           pBuff[destByte] = bBuff[srcByte];
