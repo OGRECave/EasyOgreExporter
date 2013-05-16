@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="EasyOgreExporter"
 	ProjectGUID="{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}"
 	RootNamespace="EasyOgreExporter"
@@ -2656,7 +2656,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy &quot;$(OutDir)\EasyOgreExporter.dle&quot; &quot;$(ADSK_3DSMAX_x64_2013)Plugins&quot;"
+				CommandLine="copy &quot;$(OutDir)/EasyOgreExporter.dle&quot; &quot;$(ADSK_3DSMAX_x64_2013)Plugins&quot;"
 			/>
 		</Configuration>
 	</Configurations>

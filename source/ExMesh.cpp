@@ -1218,7 +1218,7 @@ namespace EasyOgreExporter
 
     std::vector<morphChannel*> validChan;
     for(int i = 0; i < m_pMorphR3->chanBank.size() && i < MR3_NUM_CHANNELS; ++i)
-      {
+    {
       morphChannel &pMorphChannel = m_pMorphR3->chanBank[i];
       if(pMorphChannel.mActive)
         validChan.push_back(&pMorphChannel);
@@ -1230,18 +1230,18 @@ namespace EasyOgreExporter
     int poseIndex = 0;
 
     for(int i = 0; i < validChan.size(); i++)
-      {
+    {
       morphChannel* pMorphChannel = validChan[i];
-          pMorphChannel->rebuildChannel();
+      pMorphChannel->rebuildChannel();
 
 #ifdef UNICODE
-          std::wstring posename_w = pMorphChannel->mName;
-          std::string posename;
-          posename.assign(posename_w.begin(),posename_w .end());
+      std::wstring posename_w = pMorphChannel->mName;
+      std::string posename;
+      posename.assign(posename_w.begin(), posename_w.end());
 #else
-          std::string posename = pMorphChannel->mName;
+      std::string posename = pMorphChannel->mName;
 #endif
-          int numMorphVertices = pMorphChannel->mNumPoints;
+      int numMorphVertices = pMorphChannel->mNumPoints;
       //poses can have spaces before or after the name
       trim(posename);
             
@@ -1363,14 +1363,14 @@ namespace EasyOgreExporter
                 int start;
                 int stop;
                 #ifdef PRE_MAX_2010
-                  std::string clipName = formatClipName(std::string(clip->GetFilename()), clipId);
+                std::string clipName = formatClipName(std::string(clip->GetFilename()), clipId);
                 #else
                 MaxSDK::AssetManagement::AssetUser &clipFile = const_cast<MaxSDK::AssetManagement::AssetUser&>(clip->GetFile());
 
 #ifdef UNICODE
                 std::wstring clipFileName_w = clipFile.GetFileName();
                 std::string clipFileName_s;
-                clipFileName_s.assign(clipFileName_w.begin(),clipFileName_w.end());
+                clipFileName_s.assign(clipFileName_w.begin(), clipFileName_w.end());
                 std::string clipName = formatClipName(clipFileName_s, clipId);
 #else
                 std::string clipName = formatClipName(std::string(clipFile.GetFileName()), clipId);
@@ -1379,7 +1379,6 @@ namespace EasyOgreExporter
                 #endif
                 
                 clipName.append("_poses");
-
                 clip->GetGlobalBounds(&start, &stop);
                 animRange.SetStart(start);
                 animRange.SetEnd(stop);

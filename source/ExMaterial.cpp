@@ -805,7 +805,7 @@ namespace EasyOgreExporter
 
 			EasyOgreExporterLog("Exporting %d texture from %s...\n", i, texClass.c_str());
 #ifdef UNICODE
-			if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == L"Normal Bump")))
+			if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == L"Normal Bump")) || (texClass == L"Vertex Color"))
 #else
 			if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == "Normal Bump")) || (texClass == "Vertex Color"))
 #endif
@@ -856,7 +856,7 @@ namespace EasyOgreExporter
 									pTexmap->GetClassName(className);
 #ifdef UNICODE
 									const wchar_t* pName = className.data();
-									if (pName == L"Bitmap")
+									if (!wcscmp(pName, L"Bitmap"))
 #else
 									const char* pName = className.data();
 									if (!strcmp(pName, "Bitmap"))
