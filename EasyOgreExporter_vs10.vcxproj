@@ -1,0 +1,2000 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Hybrid Max 2008|Win32">
+      <Configuration>Hybrid Max 2008</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 2008|x64">
+      <Configuration>Hybrid Max 2008</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 2009|Win32">
+      <Configuration>Hybrid Max 2009</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 2009|x64">
+      <Configuration>Hybrid Max 2009</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 2010|Win32">
+      <Configuration>Hybrid Max 2010</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 2010|x64">
+      <Configuration>Hybrid Max 2010</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 2011|Win32">
+      <Configuration>Hybrid Max 2011</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 2011|x64">
+      <Configuration>Hybrid Max 2011</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 2012|Win32">
+      <Configuration>Hybrid Max 2012</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 2012|x64">
+      <Configuration>Hybrid Max 2012</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 2013|Win32">
+      <Configuration>Hybrid Max 2013</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 2013|x64">
+      <Configuration>Hybrid Max 2013</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 2014|Win32">
+      <Configuration>Hybrid Max 2014</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 2014|x64">
+      <Configuration>Hybrid Max 2014</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 9|Win32">
+      <Configuration>Hybrid Max 9</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 9|x64">
+      <Configuration>Hybrid Max 9</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 2008|Win32">
+      <Configuration>Release Max 2008</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 2008|x64">
+      <Configuration>Release Max 2008</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 2009|Win32">
+      <Configuration>Release Max 2009</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 2009|x64">
+      <Configuration>Release Max 2009</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 2010|Win32">
+      <Configuration>Release Max 2010</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 2010|x64">
+      <Configuration>Release Max 2010</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 2011|Win32">
+      <Configuration>Release Max 2011</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 2011|x64">
+      <Configuration>Release Max 2011</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 2012|Win32">
+      <Configuration>Release Max 2012</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 2012|x64">
+      <Configuration>Release Max 2012</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 2013|Win32">
+      <Configuration>Release Max 2013</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 2013|x64">
+      <Configuration>Release Max 2013</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 2014|Win32">
+      <Configuration>Release Max 2014</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 2014|x64">
+      <Configuration>Release Max 2014</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 9|Win32">
+      <Configuration>Release Max 9</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Max 9|x64">
+      <Configuration>Release Max 9</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>EasyOgreExporter</ProjectName>
+    <ProjectGuid>{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}</ProjectGuid>
+    <RootNamespace>EasyOgreExporter</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2014|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2014|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2013|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2013|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2011|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2011|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2010|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2010|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2009|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2009|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2008|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2008|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 9|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 9|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2014|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2014|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2013|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2013|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2011|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2011|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2010|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2010|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2009|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2009|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2008|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2008|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 9|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 9|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2014|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2014|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2013|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2013|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2011|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2011|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2010|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2010|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2009|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2009|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2008|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2008|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 9|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 9|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2014|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2014|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2013|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2013|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2011|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2011|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2010|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2010|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2009|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2009|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2008|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2008|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 9|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 9|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 9|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 9|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 9|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 9|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 9|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 9|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 9|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 9|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 9|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 9|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 9|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 9|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2008|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2008|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2008|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2008|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2008|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2008|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2008|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2008|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 2008|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2008|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2008|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 2008|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2009|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2009|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 2009|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2009|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2009|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 2009|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2009|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2009|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2009|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2009|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2009|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2009|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2010|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2010|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 2010|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2010|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2010|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 2010|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2010|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2010|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2010|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2010|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2010|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2010|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2011|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2011|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2011|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2011|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2011|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2011|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2011|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2011|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 2011|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2011|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2011|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 2011|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2013|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2013|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2013|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2013|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2013|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2013|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2013|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2013|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 2013|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2013|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2013|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 2013|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2014|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2014|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2014|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2014|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2014|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2014|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2014|Win32'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2014|Win32'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 2014|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2014|x64'">./output/$(Platform)/vs9/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2014|x64'">./intermediate/$(Platform)/vs9/$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 2014|x64'">true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 9|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\max9\include;.\ext\max9\include\CS;.\ext\max9\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\max9\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 9|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\max9\include;.\ext\max9\include\CS;.\ext\max9\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\max9\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 9|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\max9\include;.\ext\max9\include\CS;.\ext\max9\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\max9\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 9|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\max9\include;.\ext\max9\include\CS;.\ext\max9\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\max9\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2008|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2008\include;.\ext\2008\include\CS;.\ext\2008\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2008\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2008|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2008\include;.\ext\2008\include\CS;.\ext\2008\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2008\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2008|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2008\include;.\ext\2008\include\CS;.\ext\2008\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2008\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2008|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2008\include;.\ext\2008\include\CS;.\ext\2008\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2008\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2009|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2009\include;.\ext\2009\include\CS;.\ext\2009\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2009\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2009|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2009\include;.\ext\2009\include\CS;.\ext\2009\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2009\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2009|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2009\include;.\ext\2009\include\CS;.\ext\2009\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2009\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2009|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2009\include;.\ext\2009\include\CS;.\ext\2009\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2010;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2009\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2010|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2010\include;.\ext\2010\include\CS;.\ext\2010\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2010\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2010|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2010\include;.\ext\2010\include\CS;.\ext\2010\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2010\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2010|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2010\include;.\ext\2010\include\CS;.\ext\2010\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2010\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2010|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2010\include;.\ext\2010\include\CS;.\ext\2010\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2011;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2010\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2011|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2012;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2011\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2011|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2012;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2011\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(3DSMAX_2011x64_PATH)Plugins"
+copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2011|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2012;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2011\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2011|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2011\include;.\ext\2011\include\CS;.\ext\2011\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;PRE_MAX_2012;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2011\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(3DSMAX_2011x64_PATH)Plugins"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2012\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2012\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2012)Plugins"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>ext\2012\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2012\include;.\ext\2012\include\CS;.\ext\2012\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2012\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2012)Plugins"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2013|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2013\include;.\ext\2013\include\CS;.\ext\2013\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2013\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2013|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2013\include;.\ext\2013\include\CS;.\ext\2013\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2013\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2013)Plugins"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2013|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2013\include;.\ext\2013\include\CS;.\ext\2013\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;DataBridge.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>ext\2013\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2013|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2013\include;.\ext\2013\include\CS;.\ext\2013\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2013\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2013)Plugins"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2014|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2014\include;.\ext\2014\include\CS;.\ext\2014\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2014\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2014|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2014\include;.\ext\2014\include\CS;.\ext\2014\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2014\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2014)Plugins"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2014|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2014\include;.\ext\2014\include\CS;.\ext\2014\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;DataBridge.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>ext\2014\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2014|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.\Include;.\ext\2014\include;.\ext\2014\include\CS;.\ext\2014\include\IGame;$(SCOL_DEPENDENCIES_PATH)\tinyxml;$(SCOL_DEPENDENCIES_PATH)\Boost;ext\ogre3d_secure_scl\sdk\static\include;ext\ogre3d_secure_scl\sdk\static\include\OGRE;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\ParticleFX;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\CgProgramManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\Plugins\OctreeSceneManager;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\Direct3D9;ext\ogre3d_secure_scl\sdk\static\include\OGRE\RenderSystems\GL;ext\nvdtx\src;ext\nvdtx\extern\poshlib;ext\nvdtx\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;_USRDLL;EasyOgreExporter_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\ext\2014\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2014)Plugins"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="include\EasyOgreExporter.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\EasyOgreExporterLog.h" />
+    <ClInclude Include="include\ExAnimation.h" />
+    <ClInclude Include="include\ExData.h" />
+    <ClInclude Include="include\ExMaterial.h" />
+    <ClInclude Include="include\ExMaterialSet.h" />
+    <ClInclude Include="include\ExMesh.h" />
+    <ClInclude Include="include\ExOgreConverter.h" />
+    <ClInclude Include="include\ExPrerequisites.h" />
+    <ClInclude Include="include\ExScene.h" />
+    <ClInclude Include="include\ExShader.h" />
+    <ClInclude Include="include\ExSkeleton.h" />
+    <ClInclude Include="include\ExTools.h" />
+    <ClInclude Include="include\ogreExporter.h" />
+    <ClInclude Include="include\paramlist.h" />
+    <ClInclude Include="include\resourceOverride.h" />
+    <ClInclude Include="..\..\..\dependencies\tinyxml\tinystr.h" />
+    <ClInclude Include="..\..\..\dependencies\tinyxml\tinyxml.h" />
+    <ClInclude Include="resources\resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\dependencies\tinyxml\tinystr.cpp" />
+    <ClCompile Include="..\..\..\dependencies\tinyxml\tinyxml.cpp" />
+    <ClCompile Include="..\..\..\dependencies\tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\..\dependencies\tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\..\dependencies\tinyxml\xmltest.cpp" />
+    <ClCompile Include="source\DllEntry.cpp" />
+    <ClCompile Include="source\EasyOgreExporterLog.cpp" />
+    <ClCompile Include="source\ExData.cpp" />
+    <ClCompile Include="source\ExMaterial.cpp" />
+    <ClCompile Include="source\ExMaterialSet.cpp" />
+    <ClCompile Include="source\ExMesh.cpp" />
+    <ClCompile Include="source\ExOgreConverter.cpp" />
+    <ClCompile Include="source\ExScene.cpp" />
+    <ClCompile Include="source\ExShader.cpp" />
+    <ClCompile Include="source\ExSkeleton.cpp" />
+    <ClCompile Include="source\ogreExporter.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\EasyOgreExporter.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

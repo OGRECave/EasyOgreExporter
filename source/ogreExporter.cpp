@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 1.6f;
+float EXVERSION = 1.7f;
 
 namespace EasyOgreExporter
 {
@@ -60,6 +60,7 @@ namespace EasyOgreExporter
 #ifdef UNICODE
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETMINVISIBLE, 30, 0);
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_RESETCONTENT, 0, 0);
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)L"Ogre Latest");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)L"Ogre 1.8");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)L"Ogre 1.7");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)L"Ogre 1.4");
@@ -93,6 +94,7 @@ namespace EasyOgreExporter
 #else
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETMINVISIBLE, 30, 0);
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_RESETCONTENT, 0, 0);
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre Latest");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.8");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.7");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.4");
@@ -116,6 +118,7 @@ namespace EasyOgreExporter
 #endif
 
         //advanced config
+        CheckDlgButton(hWnd, IDC_YUPAXIS, exp->yUpAxis);
 		    CheckDlgButton(hWnd, IDC_SHAREDGEOM, exp->useSharedGeom);
         CheckDlgButton(hWnd, IDC_GENLOD, exp->generateLOD);
         CheckDlgButton(hWnd, IDC_EDGELIST, exp->buildEdges);
@@ -254,15 +257,18 @@ namespace EasyOgreExporter
                 switch (ogreVerIdx)
                 {
                   case 0:
-                    exp->meshVersion = TOGRE_1_8;
+                    exp->meshVersion = TOGRE_LASTEST;
                     break;
                   case 1:
-                    exp->meshVersion = TOGRE_1_7;
+                    exp->meshVersion = TOGRE_1_8;
                     break;
                   case 2:
-                    exp->meshVersion = TOGRE_1_4;
+                    exp->meshVersion = TOGRE_1_7;
                     break;
                   case 3:
+                    exp->meshVersion = TOGRE_1_4;
+                    break;
+                  case 4:
                     exp->meshVersion = TOGRE_1_0;
                     break;
 
@@ -329,6 +335,7 @@ namespace EasyOgreExporter
               exp->programOutputDir = temp;
 #endif
 
+              exp->yUpAxis = IsDlgButtonChecked(hWnd, IDC_YUPAXIS) ? true : false;
               exp->useSharedGeom = IsDlgButtonChecked(hWnd, IDC_SHAREDGEOM) ? true : false;
               exp->generateLOD = IsDlgButtonChecked(hWnd, IDC_GENLOD) ? true : false;
               exp->buildEdges = IsDlgButtonChecked(hWnd, IDC_EDGELIST) ? true : false;
@@ -608,15 +615,18 @@ void OgreSceneExporter::loadExportConf(std::string path, ParamList &param)
         switch (atoi(child->GetText()))
         {
           case 0:
-            param.meshVersion = TOGRE_1_8;
+            param.meshVersion = TOGRE_LASTEST;
             break;
           case 1:
-            param.meshVersion = TOGRE_1_7;
+            param.meshVersion = TOGRE_1_8;
             break;
           case 2:
-            param.meshVersion = TOGRE_1_4;
+            param.meshVersion = TOGRE_1_7;
             break;
           case 3:
+            param.meshVersion = TOGRE_1_4;
+            break;
+          case 4:
             param.meshVersion = TOGRE_1_0;
             break;
         }
@@ -642,6 +652,10 @@ void OgreSceneExporter::loadExportConf(std::string path, ParamList &param)
     child = rootElem->FirstChildElement("IDC_PROGDIR");
     if(child)
       param.programOutputDir = child->GetText() ? child->GetText() : "";
+
+    child = rootElem->FirstChildElement("IDC_YUPAXIS");
+    if(child)
+      param.yUpAxis = (child->GetText() && (atoi(child->GetText()) == 1)) ? true : false;
 
     child = rootElem->FirstChildElement("IDC_SHAREDGEOM");
     if(child)
@@ -762,6 +776,11 @@ void OgreExporter::saveExportConf(std::string path)
 
   child = new TiXmlElement("IDC_PROGDIR");
   childText = new TiXmlText(m_params.programOutputDir.c_str());
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  child = new TiXmlElement("IDC_YUPAXIS");
+  childText = new TiXmlText(m_params.yUpAxis ? "1" : "0");
   child->LinkEndChild(childText);
   contProperties->LinkEndChild(child);
 

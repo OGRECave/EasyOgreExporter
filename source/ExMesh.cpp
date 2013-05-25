@@ -16,7 +16,8 @@
 #include "ExMaterial.h"
 #include "EasyOgreExporterLog.h"
 #include "ExTools.h"
-#include "OgreProgressiveMesh.h"
+#include "OgreProgressiveMeshGenerator.h"
+#include "OgreDistanceLodStrategy.h"
 #include "IFrameTagManager.h"
 
 //TODO bounding on skeleton
@@ -540,12 +541,14 @@ namespace EasyOgreExporter
       EasyOgreExporterLog("Info: Generate mesh LOD\n");
       try
       {
-        Ogre::ProgressiveMesh::VertexReductionQuota quota = Ogre::ProgressiveMesh::VRQ_PROPORTIONAL;
+        Ogre::LodConfig lodConfig;
+        lodConfig.levels.clear();
+		    lodConfig.mesh = m_Mesh->clone(m_Mesh->getName());
+		    lodConfig.strategy = Ogre::DistanceLodStrategy::getSingletonPtr();
 
         // Percentage -> parametric
         //TODO from param
         Ogre::Real reduction = 0.15f;
-        Ogre::Mesh::LodValueList valueList;
 
         //TODO nb level in param
         //On distance
@@ -555,30 +558,17 @@ namespace EasyOgreExporter
           leveldist = (m_SphereRadius * 2.0f) * ((nLevel + 1) * (nLevel + 1));
           //leveldist = leveldist * (nLevel + 1);
 
-          valueList.push_back(leveldist);
+          Ogre::LodLevel lodLevel;
+          lodLevel.reductionMethod = Ogre::LodLevel::VRM_PROPORTIONAL;
+          lodLevel.reductionValue = reduction;
+          lodLevel.distance = leveldist;
+          lodConfig.levels.push_back(lodLevel);
+
           EasyOgreExporterLog("Info: Generate mesh LOD Level : %f\n", leveldist);
         }
         
-        m_Mesh->setLodStrategy(Ogre::LodStrategyManager::getSingleton().getStrategy("Distance"));
-
-        //On pixel, don't seems to work on mesh
-        /*
-        int leveldist = 256;
-        for(int nLevel = 0; nLevel < 4; nLevel++)
-        {
-          leveldist = 256 / ((nLevel + 1) * (nLevel + 1));
-          valueList.push_back(leveldist * leveldist);
-          EasyOgreExporterLog("Info: Generate mesh LOD Level : %d\n", leveldist * leveldist);
-        }
-        
-        m_Mesh->setLodStrategy(Ogre::LodStrategyManager::getSingleton().getStrategy("PixelCount"));
-        */
-
-        if(!(Ogre::ProgressiveMesh::generateLodLevels(m_Mesh, valueList, quota, reduction)))
-        {
-          m_Mesh->removeLodLevels();
-          EasyOgreExporterLog("Error: Generating Mesh LOD levels\n");
-        }
+        Ogre::ProgressiveMeshGenerator pm;
+        pm.generateLodLevels(lodConfig);
       }
       catch(Ogre::Exception &e)
       {

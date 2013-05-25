@@ -1111,7 +1111,7 @@ namespace EasyOgreExporter
 				case ID_BU:
 					EasyOgreExporterLog("Bump channel texture.\n");
 					tex.bCreateTextureUnit = bFoundTexture;
-					m_hasBumpMap = true;
+					m_hasBumpMap = bFoundTexture;
 					m_normalMul = smat->GetTexmapAmt(texSlot, 0);
 					tex.type = ID_BU;
 					break;
@@ -1119,7 +1119,7 @@ namespace EasyOgreExporter
 					EasyOgreExporterLog("Reflection channel texture.\n");
 					tex.type = ID_RL;
 					tex.bCreateTextureUnit = bFoundTexture;
-					tex.bReflect = true;
+					tex.bReflect = bFoundTexture;
 					m_reflectivity = smat->GetTexmapAmt(texSlot, 0);
 					m_hasReflectionMap = true;
 					break; 

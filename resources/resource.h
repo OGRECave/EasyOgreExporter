@@ -33,9 +33,10 @@
 #define IDC_TEXSIZE                     1025
 #define IDC_TEX_SIZE_LABEL              1026
 #define IDC_TEXSIZE_LABEL               1026
-#define IDC_TEXSIZE2                    1027
 #define IDC_NUMMIPS                     1027
 #define IDC_NUMMIPS_LABEL               1028
+#define IDC_CHECK2                      1029
+#define IDC_YUPAXIS                     1029
 
 // Next default values for new objects
 // 
@@ -43,7 +44,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        103
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1023
+#define _APS_NEXT_CONTROL_VALUE         1030
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
 #endif
