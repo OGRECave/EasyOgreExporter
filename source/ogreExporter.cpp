@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 1.7f;
+float EXVERSION = 1.71f;
 
 namespace EasyOgreExporter
 {
@@ -1125,7 +1125,13 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
             gameType == IGameObject::IGAME_BONE || gameType == IGameObject::IGAME_IKCHAIN ||
             gameType == IGameObject::IGAME_UNKNOWN)
         {
-          EasyOgreExporterLog("Unsupported object type for : %s. Ignore on export.\n", pGameNode->GetName());
+          #ifdef UNICODE
+            MSTR nodeName = pGameNode->GetName();
+            EasyOgreExporterLog("Unsupported object type for : %ls. Ignore on export.\n", nodeName.data());
+          #else
+            EasyOgreExporterLog("Unsupported object type for : %s. Ignore on export.\n", pGameNode->GetName());
+          #endif
+          
           bShouldExport = false;
         }
       }
@@ -1134,7 +1140,13 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
       {
         GetCOREInterface()->ProgressUpdate((int)(((float)nodeCount / (float)pIGame->GetTotalNodeCount()) * 90.0f), FALSE, pGameNode->GetName()); 
 
-        EasyOgreExporterLog("Found node: %s\n", pGameNode->GetName());
+        #ifdef UNICODE
+          MSTR nodeName = pGameNode->GetName();
+          EasyOgreExporterLog("Found node: %ls\n", nodeName.data());
+        #else
+          EasyOgreExporterLog("Found node: %s\n", pGameNode->GetName());
+        #endif
+        
         switch(gameType)
         {
           case IGameObject::IGAME_MESH:
@@ -1144,7 +1156,13 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
             {
               if(pGameMesh->InitializeData())
               {
-                EasyOgreExporterLog("Found mesh node: %s\n", pGameNode->GetName());
+                #ifdef UNICODE
+                  MSTR nodeName = pGameNode->GetName();
+                  EasyOgreExporterLog("Found mesh node: %ls\n", nodeName.data());
+                #else
+                  EasyOgreExporterLog("Found mesh node: %s\n", pGameNode->GetName());
+                #endif
+
                 std::vector<ExMaterial*> lmat;
                 if(ogreConverter)
                   if (!ogreConverter->writeEntityData(pGameNode, pGameObject, pGameMesh, lmat))
@@ -1166,7 +1184,12 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
               IGameLight* pGameLight = static_cast<IGameLight*>(pGameObject);
               if(pGameLight)
               {
-                EasyOgreExporterLog("Found light: %s\n", pGameNode->GetName());
+                #ifdef UNICODE
+                  MSTR nodeName = pGameNode->GetName();
+                  EasyOgreExporterLog("Found light: %ls\n", nodeName.data());
+                #else
+                  EasyOgreExporterLog("Found light: %s\n", pGameNode->GetName());
+                #endif
                 if (sceneData)
                 {
                   parent = sceneData->writeNodeData(parent, pGameNode, IGameObject::IGAME_LIGHT);
@@ -1183,7 +1206,13 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
               IGameCamera* pGameCamera = static_cast<IGameCamera*>(pGameObject);
               if(pGameCamera)
               {
-                EasyOgreExporterLog("Found camera: %s\n", pGameNode->GetName());
+                #ifdef UNICODE
+                  MSTR nodeName = pGameNode->GetName();
+                  EasyOgreExporterLog("Found camera: %ls\n", nodeName.data());
+                #else
+                  EasyOgreExporterLog("Found camera: %s\n", pGameNode->GetName());
+                #endif
+
                 if (sceneData)
                 {
                   parent = sceneData->writeNodeData(parent, pGameNode, IGameObject::IGAME_CAMERA);

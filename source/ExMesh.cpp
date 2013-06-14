@@ -534,6 +534,7 @@ namespace EasyOgreExporter
     m_faces.clear();
     m_subList.clear();
 
+    
     //create LOD levels
     //don't do it on small meshs
     if((numVertices > 64) && m_params.generateLOD && !ignoreLOD)
@@ -543,12 +544,12 @@ namespace EasyOgreExporter
       {
         Ogre::LodConfig lodConfig;
         lodConfig.levels.clear();
-		    lodConfig.mesh = m_Mesh->clone(m_Mesh->getName());
+        lodConfig.mesh = pMesh;
 		    lodConfig.strategy = Ogre::DistanceLodStrategy::getSingletonPtr();
 
         // Percentage -> parametric
         //TODO from param
-        Ogre::Real reduction = 0.15f;
+        Ogre::Real reduction = 0.1f;
 
         //TODO nb level in param
         //On distance
@@ -560,7 +561,7 @@ namespace EasyOgreExporter
 
           Ogre::LodLevel lodLevel;
           lodLevel.reductionMethod = Ogre::LodLevel::VRM_PROPORTIONAL;
-          lodLevel.reductionValue = reduction;
+          lodLevel.reductionValue = reduction * ((nLevel + 1) + (nLevel + 1));
           lodLevel.distance = leveldist;
           lodConfig.levels.push_back(lodLevel);
 
@@ -569,6 +570,9 @@ namespace EasyOgreExporter
         
         Ogre::ProgressiveMeshGenerator pm;
         pm.generateLodLevels(lodConfig);
+
+        //Ogre::ProgressiveMeshGenerator pm;
+        //pm.generateAutoconfiguredLodLevels(pMesh);
       }
       catch(Ogre::Exception &e)
       {
@@ -630,7 +634,7 @@ namespace EasyOgreExporter
     }
 
     // Make sure animation types are up to date first
-        m_Mesh->_determineAnimationTypes();
+    m_Mesh->_determineAnimationTypes();
 
     // reorganize mesh buffers
     // Shared geometry
@@ -1177,6 +1181,7 @@ namespace EasyOgreExporter
   void ExMesh::createPoses()
   {
     EasyOgreExporterLog("Loading poses and poses animations...\n");
+    bool poseError = false;
     INode* node = m_GameNode->GetMaxNode();
 
     // Disable all skin Modifiers.
@@ -1237,7 +1242,10 @@ namespace EasyOgreExporter
             
       if(numMorphVertices != numOfVertices)
       {
-        MessageBox(GetCOREInterface()->GetMAXHWnd(), _T("Morph targets have failed to export because the morph vertex count did not match the base mesh.  Collapse the modifier stack prior to export, as smoothing is not supported with morph target export."), _T("Morph Target Export Failed."), MB_OK);
+        if (!poseError)
+          MessageBox(GetCOREInterface()->GetMAXHWnd(), _T("Morph targets have failed to export because the morph vertex count did not match the base mesh.  Collapse the modifier stack prior to export, as smoothing is not supported with morph target export."), _T("Morph Target Export Failed."), MB_OK);
+        
+        poseError = true;
         break;
       }
       else
@@ -1322,7 +1330,7 @@ namespace EasyOgreExporter
     }
     
     //Poses animations
-    if(m_pMorphR3->IsAnimated())
+    if(m_pMorphR3->IsAnimated() && !poseError)
     {
       //try to get animations in motion mixer
       bool useDefault = true;

@@ -67,7 +67,13 @@ namespace EasyOgreExporter
 
     if (mParams.exportMesh)
     {
-      EasyOgreExporterLog("Writing %s mesh binary...\n", pGameNode->GetName());
+      #ifdef UNICODE
+        MSTR nodeName = pGameNode->GetName();
+        EasyOgreExporterLog("Writing %ls mesh binary...\n", nodeName.data());
+      #else
+        EasyOgreExporterLog("Writing %s mesh binary...\n", pGameNode->GetName());
+      #endif
+      
       if (!(ret = mesh->writeOgreBinary()))
       {
         EasyOgreExporterLog("Error writing mesh binary file\n");
