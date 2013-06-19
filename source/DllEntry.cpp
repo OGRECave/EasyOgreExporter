@@ -23,6 +23,9 @@ HINSTANCE hInstance;
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, ULONG fdwReason, LPVOID lpvReserved)
 {
+   //needed for xml format
+   setlocale(LC_ALL, "English");
+
    if(fdwReason == DLL_PROCESS_ATTACH)
    {
 	   // Hang on to this DLL's instance handle.

@@ -405,7 +405,7 @@ namespace EasyOgreExporter
 	TiXmlElement* ExScene::writeEntityData(TiXmlElement* parent, IGameNode* pGameNode, IGameMesh* pGameMesh, std::vector<ExMaterial*> lmat)
 	{
     ParamList mParams = m_converter->getParams();
-
+    
 		if(!parent)
       return 0;
     
