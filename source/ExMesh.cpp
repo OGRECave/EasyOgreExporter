@@ -248,7 +248,9 @@ namespace EasyOgreExporter
         //default UV
         if(mMesh->numTVerts > 0)
         {
-          Point3 uv = (mMesh->numTVerts > vIndex) ? mMesh->tVerts[mMesh->tvFace[i].t[j]] : Point3(0.0f, 0.0f, 0.0f);
+          //bad test
+          //Point3 uv = (mMesh->numTVerts > vIndex) ? mMesh->tVerts[mMesh->tvFace[i].t[j]] : Point3(0.0f, 0.0f, 0.0f);
+          Point3 uv = mMesh->tVerts[mMesh->tvFace[i].t[j]];
           uv.y = 1.0f - uv.y;
           vertex.lTexCoords.push_back(uv);
         }
@@ -1512,14 +1514,14 @@ namespace EasyOgreExporter
     pSubmesh->vertexData->vertexCount = numVertices;
 
     bool bUse32BitIndexes = ((numVertices > 65535) || (m_Mesh->sharedVertexData)) ? true : false;
-        
-        // Create a new index buffer
+    
+     // Create a new index buffer
     pSubmesh->indexData->indexCount = numVertices;
     pSubmesh->indexData->indexBuffer = Ogre::HardwareBufferManager::getSingleton().createIndexBuffer(
                                                bUse32BitIndexes ? Ogre::HardwareIndexBuffer::IT_32BIT : Ogre::HardwareIndexBuffer::IT_16BIT,
                                                pSubmesh->indexData->indexCount,
                                                Ogre::HardwareBuffer::HBU_STATIC_WRITE_ONLY);
-        
+     
     std::vector<std::vector<int>> facesIndex;
     facesIndex.resize(submesh.m_faces.size());
     if (!m_Mesh->sharedVertexData)
