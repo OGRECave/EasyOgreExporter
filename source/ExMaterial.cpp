@@ -430,8 +430,8 @@ namespace EasyOgreExporter
 #endif
 
 					IParamBlock2* pBlock = prop->GetMaxParamBlock2();
-					ParamID id = pBlock->IndextoID (index);
-					Texmap* pTexmap = pBlock->GetTexmap (id);
+					ParamID id = pBlock->IndextoID(index);
+					Texmap* pTexmap = pBlock->GetTexmap(id);
 					if (pTexmap)
 					{
 						MSTR className;
@@ -455,100 +455,67 @@ namespace EasyOgreExporter
 						else if (!strcmp(pName, "Bitmap"))
 						{
 							BitmapTex* pBitmapTex = static_cast<BitmapTex*>(pTexmap);
-#ifdef UNICODE
-							std::wstring path_w = pBitmapTex->GetMapName();
-							std::string path;
-							path.assign(path_w.begin(),path_w.end());
-#else
-							std::string path = pBitmapTex->GetMapName();
-#endif
-							EasyOgreExporterLog("Texture Name: %s\n", path.c_str());
 
-							bool bFoundTexture = false;
 #ifdef UNICODE
-							MaxSDK::Util::Path textureName(path_w.c_str());
-							if(!DoesFileExist(path_w.c_str()))
+              MSTR texName = pBitmapTex->GetMapName();
+              EasyOgreExporterLog("Texture Name: %ls\n", texName.data());
 #else
-							MaxSDK::Util::Path textureName(path.c_str());
-							if(!DoesFileExist(path.c_str()))
+              std::string texName = pBitmapTex->GetMapName();
+              EasyOgreExporterLog("Texture Name: %s\n", texName.c_str());
 #endif
+
+              //absolute texture path
+              std::string absPath;
+							bool bFoundTexture = GetMaxFilePath(texName, absPath);
+
+							if(bFoundTexture == true)
 							{
-#ifdef PRE_MAX_2010
-								if(IPathConfigMgr::GetPathConfigMgr()->SearchForXRefs(textureName))
-								{
-									bFoundTexture = true;
-								}
-#else
-								IFileResolutionManager* pIFileResolutionManager = IFileResolutionManager::GetInstance();
-								if(pIFileResolutionManager)
-								{
-									if(pIFileResolutionManager->GetFullFilePath(textureName, MaxSDK::AssetManagement::kXRefAsset))
-									{
-										bFoundTexture = true;
-									}
-									else if(pIFileResolutionManager->GetFullFilePath(textureName, MaxSDK::AssetManagement::kBitmapAsset))
-									{
-										bFoundTexture = true;
-									}
-								}
-#endif // PRE_MAX_2010
-								if(true == bFoundTexture)
-								{
-									EasyOgreExporterLog("Updated texture location: %s.\n", textureName.GetCStr());
-								}
-								else
-								{
-									EasyOgreExporterLog("Warning: Couldn't locate texture: %s.\n", path);
-								}
+                EasyOgreExporterLog("Updated texture location: %s.\n", absPath.c_str());
 							}
-              else
-              {
-                bFoundTexture = true;
-              }
+							else
+							{
+#ifdef UNICODE
+					      EasyOgreExporterLog("Warning: Couldn't locate texture: %ls.\n", texName.data());
+#else
+					      EasyOgreExporterLog("Warning: Couldn't locate texture: %s.\n", texName.c_str());
+#endif
+							}
 
 							Texture tex;
 							tex.bCreateTextureUnit = true;
 							tex.uvsetIndex = 0;
 							tex.uvsetIndex = pBitmapTex->GetMapChannel() - 1;
-#ifdef UNICODE
-							std::wstring pBitmapTexName_w = pBitmapTex->GetName();
-							std::string pBitmapTexName;
-							pBitmapTexName.assign(pBitmapTexName_w.begin(),pBitmapTexName_w.end());
-							tex.uvsetName = pBitmapTexName;
 
-							std::wstring textureName_w = textureName.GetCStr();
-							std::string textureName_s;
-							textureName_s.assign(textureName_w.begin(),textureName_w.end());
-							tex.absFilename = textureName_s;
-#else
-							tex.uvsetName = pBitmapTex->GetName();
-							tex.absFilename = textureName.GetCStr();
-#endif
-							tex.filename = optimizeFileName(m_converter->getMaterialSet()->getUniqueTextureName(tex.absFilename));
+							tex.absFilename.push_back(absPath);
+              tex.filename.push_back(optimizeFileName(m_converter->getMaterialSet()->getUniqueTextureName(absPath)));
 							tex.fAmount = amount;
 
 							if(bFoundTexture)
 							{
 								BMMRES status;
 #ifdef UNICODE
-								std::string absFilename_s = tex.absFilename.c_str();
+								std::string absFilename_s = tex.absFilename[0].c_str();
 								std::wstring absFilename_w;
 								absFilename_w.assign(absFilename_s.begin(),absFilename_s.end());
 								BitmapInfo bi(absFilename_w.c_str());
 #else
-								BitmapInfo bi(tex.absFilename.c_str());
+								BitmapInfo bi(tex.absFilename[0].c_str());
 #endif
 								//Bitmap* bitmap = TheManager->Create(&bi);
 								Bitmap* bitmap = TheManager->Load(&bi, &status);
 								if (status == BMMRES_SUCCESS)
+                {
 									if(bitmap->HasAlpha())
 									{
 										m_hasAlpha = (pBitmapTex->GetAlphaSource() == ALPHA_NONE) ? false : true;
 										m_bPreMultipliedAlpha = pBitmapTex->GetPremultAlpha(0) ? true : false;
 									}
+
 									TheManager->DelBitmap(bitmap);
                   bitmap->DeleteThis();
-									tex.type = type;
+                }
+
+								tex.type = type;
 							}
 
 							//retrieve the IGameTextureMap
@@ -872,69 +839,76 @@ namespace EasyOgreExporter
 					}
 				}
         
+        //absolute texture path
+        std::string absPath;
+
 				EasyOgreExporterLog("Texture Index: %d\n", i);
-				bool bFoundTexture = false;
-        bool bFileExist = false;
 #ifdef UNICODE
 				EasyOgreExporterLog("Texture Name: %ls\n", texName.data());
-				MaxSDK::Util::Path textureName(path);
-        bFileExist = DoesFileExist(path);
 #else
 				EasyOgreExporterLog("Texture Name: %s\n", texName.c_str());
-				MaxSDK::Util::Path textureName(path.c_str());
-        bFileExist = (DoesFileExist(path.c_str()) == TRUE) ? true : false;
 #endif
-        if(!bFileExist)
+        bool bFoundTexture = GetMaxFilePath(path, absPath);
+
+				if(bFoundTexture == true)
 				{
-#ifdef PRE_MAX_2010
-					if(IPathConfigMgr::GetPathConfigMgr()->SearchForXRefs(textureName))
-					{
-						bFoundTexture = true;
-					}
-#else
-					IFileResolutionManager* pIFileResolutionManager = IFileResolutionManager::GetInstance();
-					if(pIFileResolutionManager)
-					{
-						if(pIFileResolutionManager->GetFullFilePath(textureName, MaxSDK::AssetManagement::kXRefAsset))
-						{
-							bFoundTexture = true;
-						}
-						else if(pIFileResolutionManager->GetFullFilePath(textureName, MaxSDK::AssetManagement::kBitmapAsset))
-						{
-							bFoundTexture = true;
-						}
-					}
-#endif // PRE_MAX_2010
-					if(true == bFoundTexture)
-					{
-						EasyOgreExporterLog("Updated texture location: %s.\n", textureName.GetCStr());
-					}
-					else
-					{
-#ifdef UNICODE
-						EasyOgreExporterLog("Warning: Couldn't locate texture: %ls.\n", texName.data());
-#else
-						EasyOgreExporterLog("Warning: Couldn't locate texture: %s.\n", texName.c_str());
-#endif
-					}				
+          EasyOgreExporterLog("Updated texture location: %s.\n", absPath.c_str());
 				}
 				else
 				{
-					bFoundTexture = true;
-				}
+#ifdef UNICODE
+					EasyOgreExporterLog("Warning: Couldn't locate texture: %ls.\n", texName.data());
+#else
+					EasyOgreExporterLog("Warning: Couldn't locate texture: %s.\n", texName.c_str());
+#endif
+				}				
 
 				Texture tex;
-#ifdef UNICODE
-				std::wstring textureName_w = textureName.GetCStr();
-				std::string textureName_s;
-				textureName_s.assign(textureName_w.begin(),textureName_w.end());
-				tex.absFilename = textureName_s;
-#else
-				tex.absFilename = textureName.GetCStr();
-#endif
-				tex.filename = optimizeFileName(m_converter->getMaterialSet()->getUniqueTextureName(tex.absFilename));
-				//get the texture multiplier
+        // set texture paths
+        std::string abslower = absPath;
+        std::transform(abslower.begin(), abslower.end(), abslower.begin(), ::tolower);
+        if (FileExt(abslower) != ".ifl")
+        {
+          tex.absFilename.push_back(absPath);
+          tex.filename.push_back(optimizeFileName(m_converter->getMaterialSet()->getUniqueTextureName(absPath)));
+        }
+        else
+        {
+          bFoundTexture = false;
+          std::vector<std::string> iflPaths = ReadIFL(absPath);
+          for (unsigned int k = 0; k < iflPaths.size(); k++)
+          {
+            std::string gpath;
+            bFoundTexture = GetMaxFilePath(iflPaths[k], gpath);
+            tex.absFilename.push_back(gpath);
+            tex.filename.push_back(optimizeFileName(m_converter->getMaterialSet()->getUniqueTextureName(gpath)));
+          }
+        }
+
+        //get the texture multiplier
 				tex.fAmount = smat->GetTexmapAmt(texSlot, 0);
+
+        if (bFoundTexture)
+        {
+          BMMRES status; 
+  #ifdef UNICODE
+				  std::string absFilename_s = tex.absFilename[0].c_str();
+				  std::wstring absFilename_w;
+				  absFilename_w.assign(absFilename_s.begin(),absFilename_s.end());
+				  BitmapInfo bi(absFilename_w.c_str());
+  #else
+				  BitmapInfo bi(tex.absFilename[0].c_str());
+  #endif
+
+				  Bitmap* bitmap = TheManager->Load(&bi, &status); 
+				  if (status == BMMRES_SUCCESS)
+          {
+            tex.bHasAlphaChannel = (bitmap->HasAlpha() == 0) ? false : true;
+
+				    TheManager->DelBitmap(bitmap);
+            bitmap->DeleteThis();
+          }
+        }
 
 				switch(texSlot)
 				{
@@ -951,23 +925,7 @@ namespace EasyOgreExporter
 							tex.bCreateTextureUnit = bFoundTexture;
 							if(bFoundTexture)
 							{
-								BMMRES status; 
-#ifdef UNICODE
-								std::string absFilename_s = tex.absFilename.c_str();
-								std::wstring absFilename_w;
-								absFilename_w.assign(absFilename_s.begin(),absFilename_s.end());
-								BitmapInfo bi(absFilename_w.c_str());
-#else
-								BitmapInfo bi(tex.absFilename.c_str());
-#endif
-								//Bitmap* bitmap = TheManager->Create(&bi); 
-								Bitmap* bitmap = TheManager->Load(&bi, &status); 
-								if (status == BMMRES_SUCCESS)
-                  tex.bHasAlphaChannel = (bitmap->HasAlpha() == 0) ? false : true;
-
-								TheManager->DelBitmap(bitmap);
-                bitmap->DeleteThis();
-                m_hasAmbientMap = true;
+                m_hasAmbientMap = bFoundTexture;
 							}
 #ifdef UNICODE
 			        else if (texClass == L"Vertex Color")
@@ -989,20 +947,6 @@ namespace EasyOgreExporter
 
 						if(bFoundTexture)
 						{
-							BMMRES status; 
-#ifdef UNICODE
-							std::string absFilename_s = tex.absFilename.c_str();
-							std::wstring absFilename_w;
-							absFilename_w.assign(absFilename_s.begin(),absFilename_s.end());
-							BitmapInfo bi(absFilename_w.c_str());
-#else
-							BitmapInfo bi(tex.absFilename.c_str());
-#endif
-							//Bitmap* bitmap = TheManager->Create(&bi); 
-							Bitmap* bitmap = TheManager->Load(&bi, &status); 
-							if (status == BMMRES_SUCCESS)
-                tex.bHasAlphaChannel = (bitmap->HasAlpha() == 0) ? false : true;
-
               if(tex.bHasAlphaChannel)
               {
                 int alphaSrc = 0;
@@ -1022,8 +966,6 @@ namespace EasyOgreExporter
 								m_bPreMultipliedAlpha = preMult ? true : false;
 							}
 
-							TheManager->DelBitmap(bitmap);
-              bitmap->DeleteThis();
               m_hasDiffuseMap = true;
 						}
 #ifdef UNICODE
@@ -1065,20 +1007,6 @@ namespace EasyOgreExporter
           //only use the texture opacity properties, the alpha channel should be in the diffuse texture
           if(bFoundTexture)
 					{
-						BMMRES status;
-#ifdef UNICODE
-						std::string absFilename_s = tex.absFilename.c_str();
-						std::wstring absFilename_w;
-						absFilename_w.assign(absFilename_s.begin(),absFilename_s.end());
-						BitmapInfo bi(absFilename_w.c_str());
-#else
-						BitmapInfo bi(tex.absFilename.c_str());
-#endif
-						//Bitmap* bitmap = TheManager->Create(&bi); 
-						Bitmap* bitmap = TheManager->Load(&bi, &status); 
-						if (status == BMMRES_SUCCESS)
-              tex.bHasAlphaChannel = (bitmap->HasAlpha() == 0) ? false : true;
-
             if(tex.bHasAlphaChannel)
             {
               int alphaSrc = 0;
@@ -1097,9 +1025,6 @@ namespace EasyOgreExporter
 							pPreMult->GetPropertyValue(preMult);
 							m_bPreMultipliedAlpha = preMult ? true : m_bPreMultipliedAlpha;
 						}
-
-						TheManager->DelBitmap(bitmap);
-            bitmap->DeleteThis();
 					}
 
 					tex.type = ID_OP;
@@ -1133,13 +1058,6 @@ namespace EasyOgreExporter
 					break;
 				}
 
-#ifdef UNICODE
-				textureName_w = pGameTexture->GetTextureName();
-				textureName_s.assign(textureName_w.begin(),textureName_w.end());
-				tex.uvsetName = textureName_s;
-#else
-				tex.uvsetName = pGameTexture->GetTextureName();
-#endif
 				tex.uvsetIndex = pGameTexture->GetMapChannel() - 1;
 
 				loadTextureUV(pGameTexture, tex);
@@ -1505,32 +1423,61 @@ namespace EasyOgreExporter
 					outMaterial << "\t\t\t{\n";
 
 					//write texture name
-					std::string texName = params.resPrefix;
-					texName.append(m_textures[i].filename);
-					texName = optimizeFileName(texName);
+          bool isCubic = false;
 
-					//DDS conversion
-					if(params.convertToDDS)
-					{
-						texName = texName.substr(0, texName.find_last_of("."));
-						texName.append(".DDS");
-					}
+          if (m_textures[i].filename.size() > 1)
+          {
+            outMaterial << "\t\t\t\tanim_texture ";
 
-					outMaterial << "\t\t\t\ttexture " << texName.c_str();
+            for (unsigned int k = 0; k < m_textures[i].filename.size(); k++)
+            {
+              std::string texName = params.resPrefix;
+              texName.append(m_textures[i].filename[k]);
+					    texName = optimizeFileName(texName);
 
-					bool isCubic = false;
-					std::string texExt = ToLowerCase(m_textures[i].filename.substr(m_textures[i].filename.find_last_of(".") + 1));
-					if(texExt == "dds")
-					{
-						//detect if the texture is a cubemap
-						nv::DirectDrawSurface ddsMap(m_textures[i].absFilename.c_str());
-						if(ddsMap.isValid() && ddsMap.isTextureCube())
-							isCubic = true;
-					}
-					if(isCubic)
-						outMaterial << " cubic\n";
-					else
-						outMaterial << "\n";
+					    //DDS conversion
+					    if(params.convertToDDS)
+					    {
+						    texName = texName.substr(0, texName.find_last_of("."));
+						    texName.append(".DDS");
+					    }
+
+              outMaterial << texName.c_str() << " ";
+            }
+            //duration
+            float duration = (float)m_textures[i].filename.size() / (float)GetFrameRate();
+            outMaterial << duration;
+
+            outMaterial << "\n";
+          }
+          else
+          {
+            std::string texName = params.resPrefix;
+					  texName.append(m_textures[i].filename[0]);
+					  texName = optimizeFileName(texName);
+
+					  //DDS conversion
+					  if(params.convertToDDS)
+					  {
+						  texName = texName.substr(0, texName.find_last_of("."));
+						  texName.append(".DDS");
+					  }
+
+					  outMaterial << "\t\t\t\ttexture " << texName.c_str();
+
+					  std::string texExt = ToLowerCase(m_textures[i].filename[0].substr(m_textures[i].filename[0].find_last_of(".") + 1));
+					  if(texExt == "dds")
+					  {
+						  //detect if the texture is a cubemap
+						  nv::DirectDrawSurface ddsMap(m_textures[i].absFilename[0].c_str());
+						  if(ddsMap.isValid() && ddsMap.isTextureCube())
+							  isCubic = true;
+					  }
+					  if(isCubic)
+						  outMaterial << " cubic\n";
+					  else
+						  outMaterial << "\n";
+          }
 
 					//write texture coordinate index
 					outMaterial << "\t\t\t\ttex_coord_set " << m_textures[i].uvsetIndex << "\n";

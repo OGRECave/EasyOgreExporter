@@ -294,7 +294,7 @@ namespace EasyOgreExporter
     }
 
     // initialise joint to avoid bad searchs
-		joint newJoint;
+		ExBone newJoint;
 		newJoint.pNode = pNode;
 #ifdef UNICODE
 		std::wstring name_w = pNode->GetName();
@@ -655,6 +655,7 @@ namespace EasyOgreExporter
 		// add created tracks to current clip
 		for (size_t i = 0; i < animTracks.size(); i++)
 		{
+      animTracks[i].optimize();
 			m_animations[animIdx].addTrack(animTracks[i]);
 		}
 
@@ -668,7 +669,7 @@ namespace EasyOgreExporter
 	}
 
 	// Load a keyframe for a given joint at current time
-	skeletonKeyframe ExSkeleton::loadKeyframe(joint& j, int time)
+	skeletonKeyframe ExSkeleton::loadKeyframe(ExBone& j, int time)
 	{
     INode* bone = j.pNode;
     Matrix3 boneTM;
@@ -709,7 +710,7 @@ namespace EasyOgreExporter
 	}
 
 	// Get joint list
-	std::vector<joint>& ExSkeleton::getJoints()
+	std::vector<ExBone>& ExSkeleton::getJoints()
 	{
 		return m_joints;
 	}
@@ -776,19 +777,19 @@ namespace EasyOgreExporter
 		// Create the bones
 		for (size_t i = 0; i < m_joints.size(); i++)
 		{
-			joint* j = &m_joints[i];
+			ExBone j = m_joints[i];
 			// Create a new bone
 			Ogre::Bone* pBone = pSkeleton->createBone(m_joints[i].name.c_str(), m_joints[i].id);
 
 			// Set bone position (relative to it's parent)
-      pBone->setPosition(j->trans.x, j->trans.y, j->trans.z);
+      pBone->setPosition(j.trans.x, j.trans.y, j.trans.z);
 
 			// Set bone orientation (relative to it's parent)
-      Ogre::Quaternion orient(j->rot.w, j->rot.x, j->rot.y, j->rot.z);
+      Ogre::Quaternion orient(j.rot.w, j.rot.x, j.rot.y, j.rot.z);
 			pBone->setOrientation(orient);
 
 			// Set bone scale (relative to it's parent
-			pBone->setScale(j->scale.x, j->scale.y, j->scale.z);
+			pBone->setScale(j.scale.x, j.scale.y, j.scale.z);
 		}
 
 		// Create the hierarchy

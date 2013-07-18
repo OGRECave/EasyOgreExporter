@@ -69,6 +69,34 @@ namespace EasyOgreExporter
 			m_skeletonKeyframes.push_back(k);
 		}
 
+    void optimize()
+    {
+      if (m_skeletonKeyframes.size() > 2)
+      {
+        skeletonKeyframe prevKey;
+        skeletonKeyframe nextKey;
+        skeletonKeyframe key;
+        for (int i = 0; i < m_skeletonKeyframes.size(); i++)
+        {
+          if (m_skeletonKeyframes.size() > i + 2)
+          {
+            prevKey = m_skeletonKeyframes[i];
+            nextKey = m_skeletonKeyframes[i + 1];
+            key = m_skeletonKeyframes[i + 2];
+
+            if(key.rot.Equals(prevKey.rot) != 0 && key.rot.Equals(nextKey.rot) != 0 &&
+               key.trans.Equals(prevKey.trans) != 0 && key.trans.Equals(nextKey.trans) != 0 &&
+               key.scale.Equals(prevKey.scale) != 0 && key.scale.Equals(nextKey.scale) != 0)
+            {
+              //remove the key
+              m_skeletonKeyframes.erase(m_skeletonKeyframes.begin() + (i + 1));
+              i--;
+            }
+          }
+        }
+      }
+    }
+
 		//public members
 		trackType m_type;
 		int m_index;

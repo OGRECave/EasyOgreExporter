@@ -93,6 +93,8 @@ namespace EasyOgreExporter
   class ExOgreConverter;
   class ExMaterialSet;
   class ExMaterial;
+  class ExBone;
+  class ExVertex;
 }
 
 #endif

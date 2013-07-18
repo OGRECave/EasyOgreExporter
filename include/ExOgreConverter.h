@@ -37,9 +37,14 @@ namespace EasyOgreExporter
       ExMaterialSet* getMaterialSet();
       ParamList getParams();
 
+      // for skeleton unicity
+      void addExportedRootBone(ExBone bone);
+      bool isExportedRootBone(ExBone bone);
+
 	  protected:
       ParamList mParams;
       ExMaterialSet* mMaterialSet;
+      std::vector<ExBone> mExportedRootBones;
 	};
 
 }; // end of namespace

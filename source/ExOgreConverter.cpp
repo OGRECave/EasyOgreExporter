@@ -113,4 +113,19 @@ namespace EasyOgreExporter
     return ret;
   }
 
+  void ExOgreConverter::addExportedRootBone(ExBone bone)
+  {
+    mExportedRootBones.push_back(bone);
+  }
+
+  bool ExOgreConverter::isExportedRootBone(ExBone bone)
+  {
+    for (size_t i = 0; i < mExportedRootBones.size(); i++)
+    {
+      if (bone.nodeID == mExportedRootBones[i].nodeID)
+        return true;
+    }
+
+    return false;
+  }
 }; //end of namespace

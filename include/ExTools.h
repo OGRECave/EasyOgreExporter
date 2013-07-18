@@ -22,6 +22,13 @@
 #include "IMixer8.h"
 #include "iInstanceMgr.h"
 #include "MeshNormalSpec.h"
+#include <iostream>
+
+#ifdef PRE_MAX_2010
+#include "IPathConfigMgr.h"
+#else
+#include "IFileResolutionManager.h"
+#endif	//PRE_MAX_2010 
 
 inline bool invalidChar(char c) 
 { 
@@ -58,6 +65,10 @@ inline std::string FilePath(std::string file)
 	{
 		ri = ri2;
 	}
+
+  if (ri == file.npos)
+    return file;
+
 	return file.substr(0, ri+1);
 }
 
@@ -68,6 +79,9 @@ inline std::string FileWithoutExt(std::string file)
 
   std::string name = StripToTopParent(file);
 	int ri = name.find_last_of('.');
+  if (ri == name.npos)
+    return name;
+
 	return name.substr(0, ri);
 }
 
@@ -77,6 +91,9 @@ inline std::string FileExt(std::string file)
     return file;
 
 	int ri = file.find_last_of('.');
+  if (ri == file.npos)
+    return file;
+
 	return file.substr(ri);
 }
 
@@ -793,6 +810,130 @@ inline std::vector<int> GetAnimationsKeysTime(IGameNode* pGameNode, Interval ani
   return animKeys;
 }
 
+inline void OptimizeNodeAnimation(INode* maxNode, std::vector<int> &animKeys)
+{
+  if (animKeys.size() > 2)
+  {
+    Matrix3 prevKeyTM;
+    Matrix3 nextKeyTM;
+    Matrix3 keyTM;
+    for (int i = 0; i < animKeys.size(); i++)
+    {
+      if (animKeys.size() > i + 2)
+      {
+        prevKeyTM = GetLocalNodeMatrix(maxNode, false, animKeys[i]);
+        keyTM = GetLocalNodeMatrix(maxNode, false, animKeys[i + 1]);
+        nextKeyTM = GetLocalNodeMatrix(maxNode, false, animKeys[i + 2]);
+
+        if(keyTM.Equals(prevKeyTM) != 0 && keyTM.Equals(nextKeyTM) != 0)
+        {
+          //remove the key
+          animKeys.erase(animKeys.begin() + (i + 1));
+          i--;
+        }
+      }
+    }
+  }
+}
+
+inline TriObject* getTriObjectFromNode(INode *Node, TimeValue T, bool &Delete) 
+{
+	Delete = false;
+	Object* Obj = Node->EvalWorldState(T).obj;
+
+	if(Obj && Obj->CanConvertToType(Class_ID(TRIOBJ_CLASS_ID, 0))) 
+	{
+		TriObject* Tri = (TriObject*)Obj->ConvertToType(T, Class_ID(TRIOBJ_CLASS_ID, 0));
+		if(Obj != Tri)
+			Delete = true;
+
+		return(Tri);
+	}
+	else 
+	{
+		return(NULL);
+	}
+}
+
+inline bool IsMorphKeyEqual(const std::vector<int> vertices, Mesh firstMesh, Mesh secondMesh)
+{
+  bool equal = true;
+  Point3 pos1;
+  Point3 pos2;
+  for(int v = 0; v < vertices.size() && equal; v++)
+  {
+    pos1 = firstMesh.getVert(vertices[v]);
+    pos2 = secondMesh.getVert(vertices[v]);
+    if(pos1.Equals(pos2) == 0)
+      equal = false;
+  }
+  return equal;
+}
+
+inline void OptimizeMeshAnimation(INode* maxNode, std::vector<int> &animKeys, const std::vector<int> vertices)
+{
+  if (animKeys.size() > 2)
+  {
+    bool delPrevTri = false;
+    bool delKeyTri = false;
+    bool delNextTri = false;
+    TriObject* prevTriObj = 0;
+    TriObject* keyTriObj = 0;
+    TriObject* nextTriObj = 0;
+    Mesh prevMesh;
+    Mesh keyMesh;
+    Mesh nextMesh;
+
+    for (int i = 0; i < animKeys.size(); i++)
+    {
+      if (animKeys.size() > i + 2)
+      {
+        //get the mesh in the current state
+        prevTriObj = getTriObjectFromNode(maxNode, animKeys[i], delPrevTri);
+        if(prevTriObj)
+          prevMesh = prevTriObj->GetMesh();
+
+        keyTriObj = getTriObjectFromNode(maxNode, animKeys[i + 1], delKeyTri);
+        if(keyTriObj)
+          keyMesh = keyTriObj->GetMesh();
+
+        nextTriObj = getTriObjectFromNode(maxNode, animKeys[i + 2], delNextTri);
+        if(nextTriObj)
+          nextMesh = nextTriObj->GetMesh();
+
+        if(IsMorphKeyEqual(vertices, keyMesh, prevMesh) && IsMorphKeyEqual(vertices, keyMesh, nextMesh))
+        {
+          //remove the key
+          animKeys.erase(animKeys.begin() + (i + 1));
+          i--;
+        }
+
+        //free the tree object
+        if(delPrevTri && prevTriObj)
+        {
+          prevTriObj->DeleteThis();
+          prevTriObj = 0;
+          delPrevTri = false;
+        }
+
+        if(delKeyTri && keyTriObj)
+        {
+          keyTriObj->DeleteThis();
+          keyTriObj = 0;
+          delKeyTri = false;
+        }
+
+        if(delNextTri && nextTriObj)
+        {
+          nextTriObj->DeleteThis();
+          nextTriObj = 0;
+          delNextTri = false;
+        }
+      }
+    }
+  }
+}
+
 inline std::vector<int> GetPointAnimationsKeysTime(IGameNode* pGameNode, Interval animRange, bool resample)
 {
   std::vector<int> animKeys;
@@ -870,26 +1011,6 @@ inline bool isFirstInstance(IGameNode* pGameNode)
   
   return false;
 }
-
-inline TriObject* getTriObjectFromNode(INode *Node, TimeValue T, bool &Delete) 
-{
-	Delete = false;
-	Object* Obj = Node->EvalWorldState(T).obj;
-
-	if(Obj && Obj->CanConvertToType(Class_ID(TRIOBJ_CLASS_ID, 0))) 
-	{
-		TriObject* Tri = (TriObject*)Obj->ConvertToType(T, Class_ID(TRIOBJ_CLASS_ID, 0));
-		if(Obj != Tri)
-			Delete = true;
-
-		return(Tri);
-	}
-	else 
-	{
-		return(NULL);
-	}
-}
-
 
 inline bool useSpaceWarpModifier(INode* node)
 {
@@ -1016,6 +1137,115 @@ inline IGameMaterial* GetSubMaterialByID(IGameMaterial* mat, int matId)
   {
     return mat;
   }
+}
+
+inline bool GetMaxFilePath(MSTR file, std::string &fullPath)
+{
+  bool bFileExist = false;
+	MaxSDK::Util::Path fileName(file);
+  bFileExist = (DoesFileExist(file) == TRUE) ? true : false;
+
+  if(!bFileExist)
+	{
+#ifdef PRE_MAX_2010
+		if(IPathConfigMgr::GetPathConfigMgr()->SearchForXRefs(fileName))
+		{
+			bFileExist = true;
+		}
+#else
+		IFileResolutionManager* pIFileResolutionManager = IFileResolutionManager::GetInstance();
+		if(pIFileResolutionManager)
+		{
+			if(pIFileResolutionManager->GetFullFilePath(fileName, MaxSDK::AssetManagement::kXRefAsset))
+			{
+				bFileExist = true;
+			}
+			else if(pIFileResolutionManager->GetFullFilePath(fileName, MaxSDK::AssetManagement::kBitmapAsset))
+			{
+				bFileExist = true;
+			}
+		}		
+#endif
+	}
+
+#ifdef UNICODE
+	std::wstring fileName_w = fileName.GetCStr();
+	std::string fileName_s;
+	fileName_s.assign(fileName_w.begin(), fileName_w.end());
+  fullPath = fileName_s;
+#else
+	fullPath = fileName.GetCStr();
+#endif
+
+  return bFileExist;
+}
+
+inline bool GetMaxFilePath(std::string file, std::string &fullPath)
+{
+  bool bFileExist = false;
+#ifdef UNICODE
+  std::string file_s = file.c_str();
+	std::wstring file_w;
+	file_w.assign(file_s.begin(), file_s.end());
+
+  MaxSDK::Util::Path fileName(file_w.c_str());
+  bFileExist = (DoesFileExist(file_w.c_str()) == TRUE) ? true : false;
+#else
+	MaxSDK::Util::Path fileName(file.c_str());
+  bFileExist = (DoesFileExist(file.c_str()) == TRUE) ? true : false;
+#endif
+  if(!bFileExist)
+	{
+#ifdef PRE_MAX_2010
+		if(IPathConfigMgr::GetPathConfigMgr()->SearchForXRefs(fileName))
+		{
+			bFileExist = true;
+		}
+#else
+		IFileResolutionManager* pIFileResolutionManager = IFileResolutionManager::GetInstance();
+		if(pIFileResolutionManager)
+		{
+			if(pIFileResolutionManager->GetFullFilePath(fileName, MaxSDK::AssetManagement::kXRefAsset))
+			{
+				bFileExist = true;
+			}
+			else if(pIFileResolutionManager->GetFullFilePath(fileName, MaxSDK::AssetManagement::kBitmapAsset))
+			{
+				bFileExist = true;
+			}
+		}		
+#endif
+	}
+
+#ifdef UNICODE
+	std::wstring fileName_w = fileName.GetCStr();
+	std::string fileName_s;
+	fileName_s.assign(fileName_w.begin(), fileName_w.end());
+  fullPath = fileName_s;
+#else
+	fullPath = fileName.GetCStr();
+#endif
+
+  return bFileExist;
+}
+
+inline std::vector<std::string> ReadIFL(std::string path)
+{
+  std::string basePath = FilePath(path);
+  std::vector<std::string> out;
+  std::ifstream input(path);
+  for(std::string line; getline(input, line);)
+  {
+    std::string ilfpath;
+    input >> ilfpath;
+    if (!ilfpath.empty())
+    {
+      ilfpath = basePath + ilfpath;
+      out.push_back(ilfpath);
+    }
+  }
+
+  return out;
 }
 
 #endif

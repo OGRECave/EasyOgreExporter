@@ -27,9 +27,21 @@
 
 namespace EasyOgreExporter
 {
-	/***** structure to hold joint info *****/
-	typedef struct jointTag
+	class ExBone
 	{
+  public:
+    ExBone()
+    {
+      id = 0;
+      pNode = 0;
+      nodeID = 0;
+      parentIndex = 0;
+    };
+
+    ~ExBone()
+    {
+    };
+
 		std::string name;
 		int id;
 		ULONG nodeID; //Unique Max INode ID ;
@@ -39,7 +51,7 @@ namespace EasyOgreExporter
 		Point3 trans;
     Point3 scale;
 		Quat rot;
-	} joint;
+	};
 
 
 	class ExSkeleton
@@ -62,7 +74,7 @@ namespace EasyOgreExporter
 		//load skeletal animations
 		bool loadAnims(IGameNode* pGameNode);
 		//get joints
-		std::vector<joint>& getJoints();
+		std::vector<ExBone>& getJoints();
 		//get animations
 		std::vector<ExAnimation>& getAnimations();
 		//restore skeleton pose
@@ -78,7 +90,7 @@ namespace EasyOgreExporter
 		//load a clip
 		bool loadClip(std::string clipName, int start, int stop, int rate);
 		//load a keyframe for a particular joint at current time
-		skeletonKeyframe loadKeyframe(joint& j, int time);
+		skeletonKeyframe loadKeyframe(ExBone& j, int time);
 		//write joints to an Ogre skeleton
 		bool createOgreBones(Ogre::SkeletonPtr pSkeleton);
 		// write skeleton animations to an Ogre skeleton
@@ -89,7 +101,7 @@ namespace EasyOgreExporter
     Matrix3 offsetTM;
     IGameNode* m_pGameNode;
     IGameSkin* m_pGameSkin;
-    std::vector<joint> m_joints;
+    std::vector<ExBone> m_joints;
 		std::vector<ExAnimation> m_animations;
 		std::vector<int> m_roots;
     std::vector< std::vector<float> > m_weights;

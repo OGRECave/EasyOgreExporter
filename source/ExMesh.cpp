@@ -729,6 +729,14 @@ namespace EasyOgreExporter
     TriObject* triObj = 0;
     Mesh* mesh = 0;
 
+    std::vector<int> vertexIds;
+    for(int v = 0; v < m_vertices.size(); v++)
+    {
+      vertexIds.push_back(m_vertices[v].iMaxId);
+    }
+
+    OptimizeMeshAnimation(node, animKeys, vertexIds);
+
     if(animKeys.size() > 0)
     {
       //look if any key change something before export
@@ -744,7 +752,7 @@ namespace EasyOgreExporter
         {
           for(int v = 0; v < m_vertices.size() && !isAnimated; v++)
           {
-            Point3 pos = mesh->getVert(m_vertices[v].iMaxId);
+            Point3 pos = mesh->getVert(vertexIds[v]);
             if(m_params.yUpAxis)
             {
               float py = pos.y;

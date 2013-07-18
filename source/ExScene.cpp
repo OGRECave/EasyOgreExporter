@@ -104,9 +104,12 @@ namespace EasyOgreExporter
   bool ExScene::exportNodeAnimation(TiXmlElement* pAnimsElement, IGameNode* pGameNode, Interval animRange, std::string name, bool resample, IGameObject::ObjectTypes type)
   {
     ParamList mParams = m_converter->getParams();
-    std::vector<int> animKeys = GetAnimationsKeysTime(pGameNode, animRange, mParams.resampleAnims);
+    std::vector<int> animKeys = GetAnimationsKeysTime(pGameNode, animRange, resample);
     INode* maxnode = pGameNode->GetMaxNode();
     int firstFrame = GetFirstFrame();
+
+    //optimize the animation
+    OptimizeNodeAnimation(maxnode, animKeys);
 
     if(animKeys.size() > 0)
     {

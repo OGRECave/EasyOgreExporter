@@ -62,10 +62,9 @@ namespace EasyOgreExporter
 		~Texture(){};
 	
 		//public members
-		std::string filename;
-		std::string absFilename;
+		std::vector<std::string> filename;
+		std::vector<std::string> absFilename;
 		TexOpType opType;
-		std::string uvsetName;
 		int uvsetIndex;
 		bool bCreateTextureUnit;
     bool bReflect;
