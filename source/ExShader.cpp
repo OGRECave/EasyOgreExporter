@@ -566,6 +566,9 @@ namespace EasyOgreExporter
       out << "\tfloat2 uv" << texUnits[i] << " : TEXCOORD" << texCoord++ << ",\n";
     }
 
+    if (bAmbient)
+      out << "\t\tuniform float3 ambient,\n";
+
     out << "\tuniform float3 lightDif0,\n";
     out << "\tuniform float4 lightPos0,\n";
     out << "\tuniform float4 lightAtt0,\n";
@@ -685,7 +688,8 @@ namespace EasyOgreExporter
     out << "\tfloat3 diffuseContrib = diffuse * lightDif0 * matDif.rgb;\n";
     
     if(bAmbient)
-      out << "\tdiffuseContrib *= ambTex.rgb;\n";
+      out << "\tdiffuseContrib += ambTex.rgb * ambient;\n";
+      //out << "\tdiffuseContrib *= ambTex.rgb;\n";
 
     if(bDiffuse)
       out << "\tdiffuseContrib *= diffuseTex.rgb;\n";
@@ -701,8 +705,10 @@ namespace EasyOgreExporter
     out << "\tfloat3 light0C = (diffuseContrib + specularContrib) * la * spot;\n";
     
     out << "\tfloat alpha = matDif.a;\n";
-    if(mat->m_hasDiffuseMap)
+    if(bDiffuse)
       out << "\talpha *= diffuseTex.a;\n";
+    else if(bAmbient)
+      out << "\talpha *= ambTex.a;\n";
 
     if(bRef)
     {
@@ -759,6 +765,10 @@ namespace EasyOgreExporter
 
     out << "\tdefault_params\n";
     out << "\t{\n";
+    
+    if (bAmbient)
+      out << "\t\tparam_named_auto ambient ambient_light_colour\n";
+
     out << "\t\tparam_named_auto lightDif0 light_diffuse_colour 0\n";
     out << "\t\tparam_named_auto lightSpec0 light_specular_colour 0\n";
     out << "\t\tparam_named_auto camPos camera_position\n";
