@@ -55,7 +55,7 @@ namespace EasyOgreExporter
 #ifdef UNICODE
 	std::wstring name_w = pGameNode->GetName();
 	std::string name_s;
-	name_s.assign(name_w.begin(),name_w.end());
+	name_s.assign(name_w.begin(), name_w.end());
     meshName.append(name_s);
 #else
     meshName.append(pGameNode->GetName());
@@ -128,4 +128,48 @@ namespace EasyOgreExporter
 
     return false;
   }
+
+  void ExOgreConverter::addSkinModifier(IGameSkin* skinmod)
+  {
+    mSkinList.push_back(skinmod->GetMaxModifier());
+    IBipMaster* bipMaster = GetBipedMasterInterface(skinmod);
+    DWORD prevBipMode = bipMaster ? bipMaster->GetActiveModes() : 0;
+    mSkinLastStateList.push_back(prevBipMode);
+    ReleaseBipedMasterInterface(skinmod, bipMaster);
+  }
+
+  void ExOgreConverter::setAllSkinToBindPos()
+  {
+    for (unsigned int i = 0; i < mSkinList.size(); i++)
+    {
+      Modifier* skinmod = mSkinList[i];
+      IBipMaster* bipMaster = GetBipedMasterInterface(skinmod);
+      DWORD prevBipMode = bipMaster ? bipMaster->GetActiveModes() : 0;
+
+      if (bipMaster)
+      {
+        bipMaster->EndModes(prevBipMode, 0);
+        bipMaster->BeginModes(BMODE_FIGURE, 0);
+        ReleaseBipedMasterInterface(skinmod, bipMaster);
+      }
+    }
+  }
+
+  void ExOgreConverter::restoreAllSkin()
+  {
+    for (unsigned int i = 0; i < mSkinList.size(); i++)
+    {
+      Modifier* skinmod = mSkinList[i];
+      IBipMaster* bipMaster = GetBipedMasterInterface(skinmod);
+      DWORD prevBipMode = bipMaster ? bipMaster->GetActiveModes() : 0;
+
+      if (bipMaster)
+      {
+        bipMaster->EndModes(prevBipMode, 0);
+        bipMaster->BeginModes(mSkinLastStateList[i], 0);
+        ReleaseBipedMasterInterface(skinmod, bipMaster);
+      }
+    }
+  }
+
 }; //end of namespace

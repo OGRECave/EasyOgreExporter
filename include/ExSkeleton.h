@@ -22,7 +22,7 @@
 #define _EXSKELETON_H
 
 #include "ExPrerequisites.h"
-#include "paramList.h"
+#include "ExOgreConverter.h"
 #include "ExAnimation.h"
 
 namespace EasyOgreExporter
@@ -58,7 +58,7 @@ namespace EasyOgreExporter
 	{
 	public:
 		//constructor
-    ExSkeleton(IGameNode* node, IGameSkin* pGameSkin, Matrix3 offset, std::string name, ParamList &params);
+    ExSkeleton(IGameNode* node, IGameSkin* pGameSkin, Matrix3 offset, std::string name, ExOgreConverter* converter);
 		//destructor
 		~ExSkeleton();
 		//clear skeleton data
@@ -85,7 +85,7 @@ namespace EasyOgreExporter
     const std::vector<float> getWeightList(int index);
     const std::vector<int> getJointList(int index);
 
-	protected:
+	private:
 
 		//load a clip
 		bool loadClip(std::string clipName, int start, int stop, int rate);
@@ -109,6 +109,7 @@ namespace EasyOgreExporter
 		std::string m_restorePose;
     std::string m_name;
     ParamList m_params;
+    ExOgreConverter* m_converter;
     bool m_isBiped;
 	};
 

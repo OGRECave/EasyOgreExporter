@@ -66,11 +66,15 @@ private:
   ExOgreConverter* ogreConverter;
 	TimeValue m_curTime;
 	IGameScene* pIGame;
+  std::vector<INode*> lFoundBones;
   int nodeCount;
 
   void initIGameConf(std::string path);
   void saveExportConf(std::string path);
   bool exportNode(IGameNode* pGameNode, TiXmlElement* parent);
+  void LoadSkinBones(IGameNode* pGameNode);
+  bool IsSkinnedBone(IGameNode* pGameNode);
+  bool IsNodeToExport(IGameNode* pGameNode);
 };
 
 }	//end namespace

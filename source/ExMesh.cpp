@@ -53,15 +53,8 @@ namespace EasyOgreExporter
     if(m_pMorphR3)
       static_cast<Modifier*>(m_pMorphR3)->DisableMod();
 
-    IBipMaster* bipMaster = 0;
-    DWORD prevBipMode = 0;
-
-    //set the skeleton to bind pos
-    if(m_GameSkin)
-    {
-      bipMaster = GetBipedMasterInterface(m_GameSkin);
-      SetBipedToBindPose(bipMaster, prevBipMode);
-    }
+    //force all skinned object to bind pos
+    converter->setAllSkinToBindPos();
 
     //get the mesh in the current state
     bool delTri = false;
@@ -79,7 +72,7 @@ namespace EasyOgreExporter
         EasyOgreExporterLog("Creating skeleton ...\n");
         if (!m_pSkeleton)
         {
-          m_pSkeleton = new ExSkeleton(m_GameNode, m_GameSkin, GetGlobalNodeMatrix(node, m_params.yUpAxis, GetFirstFrame()), m_name, m_params);
+          m_pSkeleton = new ExSkeleton(m_GameNode, m_GameSkin, GetGlobalNodeMatrix(node, m_params.yUpAxis, GetFirstFrame()), m_name, m_converter);
           m_pSkeleton->getVertexBoneWeights(mMesh->getNumVerts());
         }
       }
@@ -101,13 +94,8 @@ namespace EasyOgreExporter
     if(m_pMorphR3)
       static_cast<Modifier*>(m_pMorphR3)->EnableMod();
 
-    //reset the piped mode
-    if(m_GameSkin)
-    {
-      SetBipedToPreviousMode(bipMaster, prevBipMode);
-      ReleaseBipedMasterInterface(m_GameSkin, bipMaster);
-      bipMaster = 0;
-    }
+    //force all skinned object to bind pos
+    converter->restoreAllSkin();
   }
 
   ExMesh::~ExMesh()
@@ -940,7 +928,12 @@ namespace EasyOgreExporter
       for (size_t j = 0; j < numGroups; j++)
       {
         IMXtrackgroup* group = mixer->GetTrackgroup(j);
-        EasyOgreExporterLog("Info : mixer track found %s\n", group->GetName());
+
+        #ifdef UNICODE
+          EasyOgreExporterLog("Info : mixer track found %ls\n", group->GetName());
+        #else
+          EasyOgreExporterLog("Info : mixer track found %s\n", group->GetName());
+        #endif
 
         int numTracks = group->NumTracks();
         for (size_t k = 0; k < numTracks; k++)
@@ -1352,7 +1345,12 @@ namespace EasyOgreExporter
         for (size_t j = 0; j < numGroups; j++)
         {
           IMXtrackgroup* group = mixer->GetTrackgroup(j);
-          EasyOgreExporterLog("Info : mixer track found %s\n", group->GetName());
+
+          #ifdef UNICODE
+            EasyOgreExporterLog("Info : mixer track found %ls\n", group->GetName());
+          #else
+            EasyOgreExporterLog("Info : mixer track found %s\n", group->GetName());
+          #endif
 
           int numTracks = group->NumTracks();
           for (size_t k = 0; k < numTracks; k++)

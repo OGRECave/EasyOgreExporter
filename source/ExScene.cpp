@@ -308,7 +308,12 @@ namespace EasyOgreExporter
         for (size_t j = 0; j < numGroups; j++)
         {
           IMXtrackgroup* group = mixer->GetTrackgroup(j);
-          EasyOgreExporterLog("Info : mixer track found %s\n", group->GetName());
+          
+          #ifdef UNICODE
+            EasyOgreExporterLog("Info : mixer track found %ls\n", group->GetName());
+          #else
+            EasyOgreExporterLog("Info : mixer track found %s\n", group->GetName());
+          #endif
 
           int numTracks = group->NumTracks();
           for (size_t k = 0; k < numTracks; k++)
@@ -418,11 +423,11 @@ namespace EasyOgreExporter
       return 0;
     }
 
-    if (pGameMesh->GetNumberOfVerts() == 0)
+    /*if (pGameMesh->GetNumberOfVerts() == 0)
     {
       EasyOgreExporterLog("Bad vertex count (0). Failed to export %s.\n", parent->Attribute("name"));
       return 0;
-    }
+    }*/
 
     //object user params
     float renderDistance = 0.0f;

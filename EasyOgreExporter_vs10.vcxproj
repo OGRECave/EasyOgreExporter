@@ -1435,6 +1435,9 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x32_2012)Plugins"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|x64'">
     <Midl>
@@ -1527,6 +1530,9 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x32_2012)Plugins"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|x64'">
     <Midl>

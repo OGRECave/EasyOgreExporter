@@ -393,6 +393,48 @@ inline Matrix3 GetLocalNodeMatrix(INode *node, Matrix3 offsetTM, bool yUp = fals
 
 
 //Biped interface
+inline IBipMaster* GetBipedMasterInterface(Modifier* skinmod)
+{
+  if(!skinmod)
+    return 0;
+
+  IBipMaster* bipMaster = 0;
+  ISkin* skin = (ISkin*)skinmod->GetInterface(I_SKIN);
+  for (int i = 0; (i < skin->GetNumBones()) && (bipMaster == 0); i++)
+  {
+    INode* bone = skin->GetBone(i);
+    Control* boneControl = bone->GetTMController();
+    
+    if (boneControl)
+    {
+      //Get the Biped master Interface from the controller
+      bipMaster = (IBipMaster*) boneControl->GetInterface(I_BIPMASTER);
+    }
+  }
+  return bipMaster;
+}
+
+inline void ReleaseBipedMasterInterface(Modifier* skinmod, IBipMaster* bipMaster)
+{
+  if(!skinmod || !bipMaster)
+    return;
+
+  Control* bipedControl = 0;
+  ISkin* skin = (ISkin*)skinmod->GetInterface(I_SKIN);
+  for (int i = 0; (i < skin->GetNumBones()) && (bipedControl == 0) ; i++)
+  {
+    INode* bone = skin->GetBone(i);
+    Control* boneControl = bone->GetTMController();
+    if (boneControl->ClassID() == BIPBODY_CONTROL_CLASS_ID)
+      bipedControl = boneControl;
+  }
+
+  if (bipedControl)
+  {
+    bipedControl->ReleaseInterface(I_BIPMASTER, bipMaster);
+  }
+}
+
 inline IBipMaster* GetBipedMasterInterface(IGameSkin* skin)
 {
   if(!skin)

@@ -78,7 +78,11 @@ namespace EasyOgreExporter
 
 	bool MatProc::Proc(IGameProperty * prop)
 	{
-		EasyOgreExporterLog("Debug: Material properties : %s\n", prop->GetName());
+    #ifdef UNICODE
+      EasyOgreExporterLog("Debug: Material properties : %ls\n", prop->GetName());
+    #else
+      EasyOgreExporterLog("Debug: Material properties : %s\n", prop->GetName());
+    #endif
 		return false;//lets keep going
 	}
 

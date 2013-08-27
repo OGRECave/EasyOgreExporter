@@ -30,7 +30,7 @@
 
 namespace EasyOgreExporter
 {
-  ExSkeleton::ExSkeleton(IGameNode* node, IGameSkin* pGameSkin, Matrix3 offset, std::string name, ParamList &params)
+  ExSkeleton::ExSkeleton(IGameNode* node, IGameSkin* pGameSkin, Matrix3 offset, std::string name, ExOgreConverter* converter)
 	{
 		m_joints.clear();
 		m_animations.clear();
@@ -38,7 +38,8 @@ namespace EasyOgreExporter
     m_name = name;
     m_pGameNode = node;
     m_pGameSkin = pGameSkin;
-    m_params = params;
+    m_converter = converter;
+    m_params = converter->getParams();
     m_isBiped = false;
     offsetTM = offset;
 	}
@@ -98,8 +99,8 @@ namespace EasyOgreExporter
     {
       for(int i = 0; i < m_pGameSkin->GetTotalBoneCount(); ++i)
       {
-        // pass true to only get bones used by vertices
-        INode* rootbone = m_pGameSkin->GetBone(i, false);
+        // pass false to only get bones used by vertices
+        INode* rootbone = m_pGameSkin->GetBone(i, true);
         if(rootbone)
         {
           while(m_pGameSkin->GetBoneIndex(rootbone->GetParentNode(), false) > -1)
@@ -119,7 +120,11 @@ namespace EasyOgreExporter
 
           if(bNewRootBone)
           {
-            EasyOgreExporterLog("Info : Found a root bone : %s\n", rootbone->GetName());
+            #ifdef UNICODE
+              EasyOgreExporterLog("Info : Found a root bone : %ls\n", rootbone->GetName());
+            #else
+              EasyOgreExporterLog("Info : Found a root bone : %s\n", rootbone->GetName());
+            #endif
             rootbones.push_back(rootbone);
           }
         }
@@ -129,8 +134,8 @@ namespace EasyOgreExporter
     {
       for(int i = 0; i < m_pGameSkin->GetTotalBoneCount(); ++i)
       {
-        // pass true to only get bones used by vertices
-        INode* rootbone = m_pGameSkin->GetBone(i, false);
+        // pass false to only get bones used by vertices
+        INode* rootbone = m_pGameSkin->GetBone(i, true);
         if(rootbone)
         {
           while(rootbone->GetParentNode() != GetCOREInterface()->GetRootNode())
@@ -150,7 +155,11 @@ namespace EasyOgreExporter
 
           if(bNewRootBone)
           {
-            EasyOgreExporterLog("Info : Found a root bone : %s\n", rootbone->GetName());
+            #ifdef UNICODE
+              EasyOgreExporterLog("Info : Found a root bone : %ls\n", rootbone->GetName());
+            #else
+              EasyOgreExporterLog("Info : Found a root bone : %s\n", rootbone->GetName());
+            #endif
             rootbones.push_back(rootbone);
           }
         }
@@ -159,7 +168,11 @@ namespace EasyOgreExporter
 
     for(int i = 0; i <rootbones.size(); ++i)
     {
-      EasyOgreExporterLog("Exporting root bone: %s\n", rootbones[i]->GetName());
+      #ifdef UNICODE
+        EasyOgreExporterLog("Exporting root bone : %ls\n", rootbones[i]->GetName());
+      #else
+        EasyOgreExporterLog("Exporting root bone : %s\n", rootbones[i]->GetName());
+      #endif
       loadJoint(rootbones[i]);
     }
 
@@ -289,7 +302,11 @@ namespace EasyOgreExporter
     // test for supported bone type
     if (!IsPossibleBone(pNode))
     {
-      EasyOgreExporterLog("Info : %s is not a bone.\n", pNode->GetName());
+      #ifdef UNICODE
+        EasyOgreExporterLog("Info : %ls is not a bone.\n", pNode->GetName());
+      #else
+        EasyOgreExporterLog("Info : %s is not a bone.\n", pNode->GetName());
+      #endif
       return false;
     }
 
@@ -458,7 +475,11 @@ namespace EasyOgreExporter
       for (size_t j = 0; j < numGroups; j++)
       {
         IMXtrackgroup* group = mixer->GetTrackgroup(j);
-        EasyOgreExporterLog("Info : mixer track found %s\n", group->GetName());
+        #ifdef UNICODE
+          EasyOgreExporterLog("Info : mixer track found %ls\n", group->GetName());
+        #else
+          EasyOgreExporterLog("Info : mixer track found %s\n", group->GetName());
+        #endif
 
         int numTracks = group->NumTracks();
         for (size_t k = 0; k < numTracks; k++)
@@ -730,8 +751,12 @@ namespace EasyOgreExporter
     // Create skeleton bones
 		if (!createOgreBones(pSkeleton))
 		{
-			EasyOgreExporterLog("Error writing skeleton binary file\n");
+			EasyOgreExporterLog("Error on bone creation\n");
 		}
+
+    // skeleton empty
+    if (pSkeleton->getNumBones() == 0)
+      return false;
 
     pSkeleton->setBindingPose();
 
@@ -778,18 +803,23 @@ namespace EasyOgreExporter
 		for (size_t i = 0; i < m_joints.size(); i++)
 		{
 			ExBone j = m_joints[i];
-			// Create a new bone
-			Ogre::Bone* pBone = pSkeleton->createBone(m_joints[i].name.c_str(), m_joints[i].id);
+      if (!m_converter->isExportedRootBone(j))
+      {
+        m_converter->addExportedRootBone(j);
 
-			// Set bone position (relative to it's parent)
-      pBone->setPosition(j.trans.x, j.trans.y, j.trans.z);
+			  // Create a new bone
+			  Ogre::Bone* pBone = pSkeleton->createBone(m_joints[i].name.c_str(), m_joints[i].id);
 
-			// Set bone orientation (relative to it's parent)
-      Ogre::Quaternion orient(j.rot.w, j.rot.x, j.rot.y, j.rot.z);
-			pBone->setOrientation(orient);
+			  // Set bone position (relative to it's parent)
+        pBone->setPosition(j.trans.x, j.trans.y, j.trans.z);
 
-			// Set bone scale (relative to it's parent
-			pBone->setScale(j.scale.x, j.scale.y, j.scale.z);
+			  // Set bone orientation (relative to it's parent)
+        Ogre::Quaternion orient(j.rot.w, j.rot.x, j.rot.y, j.rot.z);
+			  pBone->setOrientation(orient);
+
+			  // Set bone scale (relative to it's parent
+			  pBone->setScale(j.scale.x, j.scale.y, j.scale.z);
+      }
 		}
 
 		// Create the hierarchy
@@ -803,7 +833,8 @@ namespace EasyOgreExporter
 				// Get current joint from skeleton
 				Ogre::Bone* pBone = pSkeleton->getBone(m_joints[i].id);
 				// Place current bone in the parent's child list
-				pParent->addChild(pBone);
+        if (pParent && pBone)
+				  pParent->addChild(pBone);
 			}
 		}
 		return true;
