@@ -443,13 +443,24 @@ inline IBipMaster* GetBipedMasterInterface(IGameSkin* skin)
   IBipMaster* bipMaster = 0;
   for (int i = 0; (i < skin->GetTotalBoneCount()) && (bipMaster == 0); i++)
   {
-    INode* bone = skin->GetBone(i);
+    INode* bone = skin->GetBone(i, true);
     Control* boneControl = bone->GetTMController();
     
     if (boneControl)
     {
       //Get the Biped master Interface from the controller
       bipMaster = (IBipMaster*) boneControl->GetInterface(I_BIPMASTER);
+    }
+
+    while(bone->GetParentNode() != GetCOREInterface()->GetRootNode() && !bipMaster)
+    {
+      bone = bone->GetParentNode();
+      Control* pnodeControl = bone->GetTMController();
+      if (pnodeControl)
+      {
+        //Get the Biped master Interface from the controller
+        bipMaster = (IBipMaster*) pnodeControl->GetInterface(I_BIPMASTER);
+      }
     }
   }
   return bipMaster;
@@ -463,10 +474,18 @@ inline void ReleaseBipedMasterInterface(IGameSkin* skin, IBipMaster* bipMaster)
   Control* bipedControl = 0;
   for (int i = 0; (i < skin->GetTotalBoneCount()) && (bipedControl == 0) ; i++)
   {
-    INode* bone = skin->GetBone(i);
+    INode* bone = skin->GetBone(i, true);
     Control* boneControl = bone->GetTMController();
-    if (boneControl->ClassID() == BIPBODY_CONTROL_CLASS_ID)
+    if (boneControl && boneControl->ClassID() == BIPBODY_CONTROL_CLASS_ID)
       bipedControl = boneControl;
+
+    while(bone->GetParentNode() != GetCOREInterface()->GetRootNode() && !bipedControl)
+    {
+      bone = bone->GetParentNode();
+      Control* pnodeControl = bone->GetTMController();
+      if (pnodeControl && pnodeControl->ClassID() == BIPBODY_CONTROL_CLASS_ID)
+        bipedControl = pnodeControl;
+    }
   }
 
   if (bipedControl)

@@ -1093,6 +1093,7 @@ bool OgreExporter::exportScene()
 
   //close the progress bar
   GetCOREInterface()->ProgressEnd();
+  lFoundBones.clear();
 
   MessageBox(GetCOREInterface()->GetMAXHWnd(), _T("Export done successfully."), _T("Info"), MB_OK);
   return true;

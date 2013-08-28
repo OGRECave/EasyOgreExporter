@@ -88,11 +88,26 @@ namespace EasyOgreExporter
       return false;
     }
 
-    IBipedExport* BipIface = 0;
-    Control* nodeControl = m_pGameSkin->GetBone(0, false)->GetTMController();
-    if ((nodeControl->ClassID() == BIPSLAVE_CONTROL_CLASS_ID) || (nodeControl->ClassID() == BIPBODY_CONTROL_CLASS_ID))
+    for(int i = 0; i < m_pGameSkin->GetTotalBoneCount() && !m_isBiped; ++i)
     {
-      m_isBiped = true;
+      INode* nbone = m_pGameSkin->GetBone(i, true);
+      Control* nodeControl = nbone->GetTMController();
+      if ((nodeControl->ClassID() == BIPSLAVE_CONTROL_CLASS_ID) || (nodeControl->ClassID() == BIPBODY_CONTROL_CLASS_ID))
+      {
+        m_isBiped = true;
+      }
+      else
+      {
+        while(nbone->GetParentNode() != GetCOREInterface()->GetRootNode() && !m_isBiped)
+        {
+          nbone = nbone->GetParentNode();
+          Control* pnodeControl = nbone->GetTMController();
+          if ((pnodeControl->ClassID() == BIPSLAVE_CONTROL_CLASS_ID) || (pnodeControl->ClassID() == BIPBODY_CONTROL_CLASS_ID))
+          {
+            m_isBiped = true;
+          }
+        }
+      }
     }
 
     if(m_isBiped)
@@ -100,7 +115,7 @@ namespace EasyOgreExporter
       for(int i = 0; i < m_pGameSkin->GetTotalBoneCount(); ++i)
       {
         // pass false to only get bones used by vertices
-        INode* rootbone = m_pGameSkin->GetBone(i, true);
+        INode* rootbone = m_pGameSkin->GetBone(i, false);
         if(rootbone)
         {
           while(m_pGameSkin->GetBoneIndex(rootbone->GetParentNode(), false) > -1)
@@ -135,14 +150,14 @@ namespace EasyOgreExporter
       for(int i = 0; i < m_pGameSkin->GetTotalBoneCount(); ++i)
       {
         // pass false to only get bones used by vertices
-        INode* rootbone = m_pGameSkin->GetBone(i, true);
+        INode* rootbone = m_pGameSkin->GetBone(i, false);
         if(rootbone)
         {
           while(rootbone->GetParentNode() != GetCOREInterface()->GetRootNode())
           {
             rootbone = rootbone->GetParentNode();
           }
-
+          
           bool bNewRootBone = true;
           for(int j = 0; j < rootbones.size(); ++j)
           {
@@ -803,9 +818,9 @@ namespace EasyOgreExporter
 		for (size_t i = 0; i < m_joints.size(); i++)
 		{
 			ExBone j = m_joints[i];
-      if (!m_converter->isExportedRootBone(j))
-      {
-        m_converter->addExportedRootBone(j);
+      //if (!m_converter->isExportedRootBone(j))
+      //{
+       //m_converter->addExportedRootBone(j);
 
 			  // Create a new bone
 			  Ogre::Bone* pBone = pSkeleton->createBone(m_joints[i].name.c_str(), m_joints[i].id);
@@ -819,7 +834,7 @@ namespace EasyOgreExporter
 
 			  // Set bone scale (relative to it's parent
 			  pBone->setScale(j.scale.x, j.scale.y, j.scale.z);
-      }
+      //}
 		}
 
 		// Create the hierarchy
@@ -828,10 +843,19 @@ namespace EasyOgreExporter
 			int parentIdx = m_joints[i].parentIndex;
 			if (parentIdx >= 0)
 			{
-				// Get the parent joint
-				Ogre::Bone* pParent = pSkeleton->getBone(m_joints[parentIdx].id);
 				// Get current joint from skeleton
-				Ogre::Bone* pBone = pSkeleton->getBone(m_joints[i].id);
+        Ogre::Bone* pParent = 0;
+        Ogre::Bone* pBone = 0;
+        try
+        {
+          pParent = pSkeleton->getBone(m_joints[parentIdx].id);
+          pBone = pSkeleton->getBone(m_joints[i].id);
+        }
+        catch (Ogre::Exception &)
+        {
+          0;
+        }
+
 				// Place current bone in the parent's child list
         if (pParent && pBone)
 				  pParent->addChild(pBone);
@@ -856,7 +880,11 @@ namespace EasyOgreExporter
 				ExTrack* t = &m_animations[i].m_tracks[j];
 				
         // Create a new track
-				Ogre::NodeAnimationTrack* pTrack = pAnimation->createNodeTrack(j,	pSkeleton->getBone(t->m_bone.c_str()));
+        Ogre::Bone* oBone = pSkeleton->getBone(t->m_bone.c_str());
+        if (!oBone)
+          continue;
+
+				Ogre::NodeAnimationTrack* pTrack = pAnimation->createNodeTrack(j,	oBone);
 
 				// Create keyframes for current track
 				for (size_t k = 0; k < t->m_skeletonKeyframes.size(); k++)

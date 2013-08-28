@@ -774,10 +774,11 @@ namespace EasyOgreExporter
 			}
 			*/
 
-			EasyOgreExporterLog("Exporting %d texture from %s...\n", i, texClass.c_str());
 #ifdef UNICODE
+      EasyOgreExporterLog("Exporting %d texture from %ls...\n", i, texClass.data());
 			if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == L"Normal Bump")) || (texClass == L"Vertex Color"))
 #else
+      EasyOgreExporterLog("Exporting %d texture from %s...\n", i, texClass.c_str());
 			if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == "Normal Bump")) || (texClass == "Vertex Color"))
 #endif
 			{
