@@ -1507,7 +1507,7 @@ namespace EasyOgreExporter
 					//remove alpha from ambient (common ligth map)
 					if((m_textures[i].type == ID_AM) && (m_textures[i].bHasAlphaChannel))
 						outMaterial << "\t\t\t\talpha_op_ex source2 src_manual src_current " << (m_textures[i].fAmount * m_opacity) << "\n";
-
+          
 					//write colour operation
 					/*
 					switch (m_textures[i].opType)
