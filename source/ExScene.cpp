@@ -633,9 +633,9 @@ namespace EasyOgreExporter
 		pSpecColourElement->SetDoubleAttribute("b", lightColor.z);
 		pLightElement->LinkEndChild(pSpecColourElement);
 		
-		if(lightType == OGRE_LIGHT_POINT)
+		if(lightType == OGRE_LIGHT_POINT || lightType == OGRE_LIGHT_SPOT)
 		{
-      float attRange = 10.0f;
+      float attRange = 100.0f;
       float attConst = 1.0f;
       float attLinear = 0.0f;
       float attQuad = 0.0f;
@@ -646,7 +646,9 @@ namespace EasyOgreExporter
       pGameProperty = pGameLight->GetLightAttenEnd();
       if(pGameProperty)
       {
-        pGameProperty->GetPropertyValue(attRange);	
+        pGameProperty->GetPropertyValue(attRange);
+        if (attRange == 0.0f)
+          attRange = 100.0f;
       }
       attRange = attRange * mParams.lum;
 
