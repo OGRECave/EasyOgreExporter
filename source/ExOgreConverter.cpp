@@ -65,18 +65,26 @@ namespace EasyOgreExporter
     
     lmat = mesh->getMaterials();
 
-    if (mParams.exportMesh)
+    if (!isFirstInstance(pGameNode))
     {
-      #ifdef UNICODE
-        MSTR nodeName = pGameNode->GetName();
-        EasyOgreExporterLog("Writing %ls mesh binary...\n", nodeName.data());
-      #else
-        EasyOgreExporterLog("Writing %s mesh binary...\n", pGameNode->GetName());
-      #endif
-      
-      if (!(ret = mesh->writeOgreBinary()))
+      EasyOgreExporterLog("Info: Ignore instanciated mesh\n");
+      ret = true;
+    }
+    else
+    {
+      if (mParams.exportMesh)
       {
-        EasyOgreExporterLog("Error writing mesh binary file\n");
+        #ifdef UNICODE
+          MSTR nodeName = pGameNode->GetName();
+          EasyOgreExporterLog("Writing %ls mesh binary...\n", nodeName.data());
+        #else
+          EasyOgreExporterLog("Writing %s mesh binary...\n", pGameNode->GetName());
+        #endif
+      
+        if (!(ret = mesh->writeOgreBinary()))
+        {
+          EasyOgreExporterLog("Warning : Mesh skipped, see previous log to know why.\n");
+        }
       }
     }
 
