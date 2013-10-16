@@ -452,6 +452,7 @@ namespace EasyOgreExporter
     }
 
     out << "\tuniform float4x4 wMat,\n";
+    out << "\tuniform float4x4 witMat,\n";
     out << "\tuniform float4x4 wvpMat,\n";
     out << "\tuniform float4 spotlightDir";
     
@@ -460,7 +461,7 @@ namespace EasyOgreExporter
 
     out << "\toWp = mul(wMat, position);\n";
     out << "\toPos = mul(wvpMat, position);\n";
-    out << "\toNorm = normal;\n";
+    out << "\toNorm = normalize(mul((float3x3)witMat, normal));\n";
 
 
     texCoord = lastAvailableTexCoord;
@@ -504,6 +505,7 @@ namespace EasyOgreExporter
     out << "\tdefault_params\n";
     out << "\t{\n";
     out << "\t\tparam_named_auto wMat world_matrix\n";
+    out << "\t\tparam_named_auto witMat inverse_transpose_world_matrix\n";
     out << "\t\tparam_named_auto wvpMat worldviewproj_matrix\n";
     out << "\t\tparam_named_auto spotlightDir light_direction_object_space 0\n";
 
