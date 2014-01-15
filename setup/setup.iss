@@ -60,14 +60,18 @@ Filename: "{tmp}\vc2010\vcredist_x64.exe"; Parameters: "/q"; Flags: 64bit; Statu
 [CustomMessages]
 
 [Components]
-Name: "Max2011x32"; Description: "Install for 3dsMax 2011 32bit"; Types: custom full compact
-Name: "Max2011x64"; Description: "Install for 3dsMax 2011 64bit"; Types: custom full compact; Check: IsWin64
-Name: "Max2012x32"; Description: "Install for 3dsMax 2012 32bit"; Types: custom full compact
-Name: "Max2012x64"; Description: "Install for 3dsMax 2012 64bit"; Types: custom full compact; Check: IsWin64
-Name: "Max2013x32"; Description: "Install for 3dsMax 2013 32bit"; Types: custom full compact
-Name: "Max2013x64"; Description: "Install for 3dsMax 2013 64bit"; Types: custom full compact; Check: IsWin64
-Name: "Max2014x64"; Description: "Install for 3dsMax 2014 64bit"; Types: custom full compact; Check: IsWin64
+Name: "Max2011x32"; Description: "Install for 3dsMax 2011 32bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%3DSMAX_2011_PATH}'), False);
+Name: "Max2011x64"; Description: "Install for 3dsMax 2011 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%3DSMAX_2011x64_PATH}'), True);
+Name: "Max2012x32"; Description: "Install for 3dsMax 2012 32bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_3DSMAX_x32_2012}'), False);
+Name: "Max2012x64"; Description: "Install for 3dsMax 2012 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_3DSMAX_x64_2012}'), True);
+Name: "Max2013x32"; Description: "Install for 3dsMax 2013 32bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_3DSMAX_x32_2013}'), False);
+Name: "Max2013x64"; Description: "Install for 3dsMax 2013 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_3DSMAX_x64_2013}'), True);
+Name: "Max2014x64"; Description: "Install for 3dsMax 2014 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_3DSMAX_x64_2014}'), True);
 
 [Code]
 
+function dirCheck(DirName: String; w64 : Boolean): Boolean;
+begin
+  Result := (((NOT VarIsNull(DirName)) AND DirExists(DirName)) AND ((IsWin64 AND w64) OR NOT w64));
+end;
 
