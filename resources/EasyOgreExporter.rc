@@ -73,8 +73,8 @@ BEGIN
     GROUPBOX        "Advanced configuration",IDC_STATIC,7,115,215,230
     GROUPBOX        "Meshs",IDC_STATIC,13,149,202,104
     GROUPBOX        "Animations",IDC_STATIC,13,331,201,27
-    CONTROL         "Resample animations (more accurate, but heavier)",IDC_RESAMPLE_ANIMS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,345,177,10
+    CONTROL         "Resample animations with frame step",IDC_RESAMPLE_ANIMS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,347,132,10
     CONTROL         "Use shared geometry (not supported by all cards)",IDC_SHAREDGEOM,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,160,193,10
     CONTROL         "Build edges list (used for stencil shadows)",IDC_EDGELIST,
@@ -96,6 +96,7 @@ BEGIN
     LTEXT           "Number of DDS Mipmaps",IDC_NUMMIPS_LABEL,20,315,97,11
     GROUPBOX        "System",IDC_STATIC,13,124,201,24
     CONTROL         "Y up axis",IDC_YUPAXIS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,135,111,10
+    EDITTEXT        IDC_RESAMPLE_STEP,155,346,33,12,ES_AUTOHSCROLL | ES_NUMBER
 END
 
 

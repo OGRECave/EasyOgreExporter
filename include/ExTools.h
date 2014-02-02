@@ -804,17 +804,34 @@ inline bool GetAnimationsPointKeysTime(IGameControl* pGameControl, Interval anim
   return false;
 }
 
-inline std::vector<int> GetAnimationsKeysTime(IGameNode* pGameNode, Interval animRange, bool resample)
+inline std::vector<int> GetAnimationsKeysTime(IGameNode* pGameNode, Interval animRange, bool resample, int framestep)
 {
   std::vector<int> animKeys;
   IGameControl* pGameControl = pGameNode->GetIGameControl();
 
   if(resample)
   {
+    if (framestep <= 0)
+      framestep = 1;
+
     IGameKeyTab tkeys;
-    if(pGameControl->GetFullSampledKeys(tkeys, 1, IGameControlType(IGAME_TM), true))
+    if(pGameControl->GetFullSampledKeys(tkeys, framestep, IGameControlType(IGAME_TM), true))
     {
+      //add the first pos as a key
+      animKeys.push_back(animRange.Start());
+
       AddKeyTabToVector(tkeys, animRange, &animKeys);
+
+      //add the last pos as a key
+      animKeys.push_back(animRange.End());
+
+      //sort and remove duplicated entries
+      if(animKeys.size() > 0)
+      {
+        std::sort(animKeys.begin(), animKeys.end());
+        animKeys.erase(std::unique(animKeys.begin(), animKeys.end()), animKeys.end());
+      }
+
       return animKeys;
     }
   }
@@ -995,7 +1012,7 @@ inline void OptimizeMeshAnimation(INode* maxNode, std::vector<int> &animKeys, co
   }
 }
 
-inline std::vector<int> GetPointAnimationsKeysTime(IGameNode* pGameNode, Interval animRange, bool resample)
+inline std::vector<int> GetPointAnimationsKeysTime(IGameNode* pGameNode, Interval animRange, bool resample, int framestep)
 {
   std::vector<int> animKeys;
   IGameControl* pGameControl = pGameNode->GetIGameControl();
@@ -1003,8 +1020,14 @@ inline std::vector<int> GetPointAnimationsKeysTime(IGameNode* pGameNode, Interva
 
   if(resample)
   {
+    if (framestep <= 0)
+      framestep = 1;
+
+    //add the first pos as a key
+    animKeys.push_back(animRange.Start());
+
     //add time steps
-    for (int t = animRange.Start(); t < animRange.End(); t += animRate)
+    for (int t = animRange.Start(); t < animRange.End(); t += animRate * framestep)
 		  animKeys.push_back(t);
 
     //force the last key

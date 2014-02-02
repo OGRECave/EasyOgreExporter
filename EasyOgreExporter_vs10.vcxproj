@@ -521,7 +521,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\max9\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -568,7 +568,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\max9\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -610,7 +610,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\max9\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -655,7 +655,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\max9\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -697,7 +697,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2008\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -742,7 +742,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2008\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -786,7 +786,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2008\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -833,7 +833,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2008\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -877,7 +877,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2009\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -924,7 +924,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2009\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -966,7 +966,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2009\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1011,7 +1011,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2009\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1055,7 +1055,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2010\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1102,7 +1102,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2010\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1144,7 +1144,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2010\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1189,7 +1189,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2010\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1231,7 +1231,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2011\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1276,7 +1276,7 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2011\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1325,7 +1325,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2011\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1372,7 +1372,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2011\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1417,7 +1417,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2012\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1465,7 +1465,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2012\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1512,7 +1512,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>ext\2012\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1562,7 +1562,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2012\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1607,7 +1607,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2013\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1652,7 +1652,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2013\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1699,7 +1699,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;DataBridge.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;DataBridge.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>ext\2013\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1748,7 +1748,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2013\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1793,7 +1793,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2014\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1838,7 +1838,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2014\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1885,7 +1885,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;DataBridge.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;DataBridge.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>ext\2014\lib;ext\ogre3d_secure_scl\sdk\static\lib\Release;ext\ogre3d_secure_scl\sdk\static\lib\Release\opt;ext\nvdtx\sdk\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1934,7 +1934,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;Plugin_CgProgramManagerStatic.lib;Plugin_OctreeSceneManagerStatic.lib;Plugin_ParticleFXStatic.lib;RenderSystem_Direct3D9Static.lib;RenderSystem_GLStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;FreeImage.lib;cg.lib;freetype2311.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\ext\2014\libx64;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release;ext\ogre3d_secure_scl\sdk_x64\static\lib\Release\opt;ext\nvdtx\sdkx64\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

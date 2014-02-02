@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 1.9f;
+float EXVERSION = 1.95f;
 
 namespace EasyOgreExporter
 {
@@ -91,6 +91,13 @@ namespace EasyOgreExporter
 		    std::wstring programOutputDir_w;
 		    programOutputDir_w.assign(exp->programOutputDir.begin(),exp->programOutputDir.end());
 		    SendDlgItemMessage(hWnd, IDC_PROGDIR, WM_SETTEXT, 0, (LPARAM)programOutputDir_w.data());
+
+        char tmpstep[10] = {0};
+        sprintf(tmpstep, "%d", exp->resampleStep);
+        std::string stmpstep = tmpstep;
+		    std::wstring resample_w;
+        resample_w.assign(stmpstep.begin(), stmpstep.end());
+		    SendDlgItemMessage(hWnd, IDC_RESAMPLE_STEP, WM_SETTEXT, 0, (LPARAM)resample_w.data());
 #else
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETMINVISIBLE, 30, 0);
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_RESETCONTENT, 0, 0);
@@ -115,6 +122,10 @@ namespace EasyOgreExporter
 
         //fill prog subdir
         SendDlgItemMessage(hWnd, IDC_PROGDIR, WM_SETTEXT, 0, (LPARAM)(char*)exp->programOutputDir.c_str());
+
+        char tmpstep[10] = {0};
+        sprintf(tmpstep, "%d", exp->resampleStep);
+		    SendDlgItemMessage(hWnd, IDC_RESAMPLE_STEP, WM_SETTEXT, 0, (LPARAM)tmpstep);
 #endif
 
         //advanced config
@@ -234,7 +245,7 @@ namespace EasyOgreExporter
 
 		    //Versioning
 		    TCHAR Title [256];
-        _stprintf(Title, _T("Easy Ogre Exporter version %.1f"), EXVERSION);
+        _stprintf(Title, _T("Easy Ogre Exporter version %.2f"), EXVERSION);
 		    SetWindowText(hWnd, Title);
 		    return TRUE;
       }
@@ -333,6 +344,17 @@ namespace EasyOgreExporter
               exp->programOutputDir = temp_s;
 #else
               exp->programOutputDir = temp;
+#endif
+
+              len = SendDlgItemMessage(hWnd, IDC_RESAMPLE_STEP, WM_GETTEXTLENGTH, 0, 0);
+              temp.Resize(len+1);
+              SendDlgItemMessage(hWnd, IDC_RESAMPLE_STEP, WM_GETTEXT, len+1, (LPARAM)temp.data());
+#ifdef UNICODE
+			        temp_w = temp.data();
+			        temp_s.assign(temp_w.begin(),temp_w.end());
+              exp->resampleStep = atoi(temp_s.c_str());
+#else
+              exp->resampleStep = atoi(temp);
 #endif
 
               exp->yUpAxis = IsDlgButtonChecked(hWnd, IDC_YUPAXIS) ? true : false;
@@ -693,6 +715,10 @@ void OgreSceneExporter::loadExportConf(std::string path, ParamList &param)
     if(child)
       param.resampleAnims = (child->GetText() && (atoi(child->GetText()) == 1)) ? true : false;
 
+    child = rootElem->FirstChildElement("IDC_RESAMPLE_STEP");
+    if(child)
+      param.resampleStep = (child->GetText()) ? atoi(child->GetText()) : 1;
+
     child = rootElem->FirstChildElement("IDC_SHADERMODE");
     if(child)
     {
@@ -821,6 +847,13 @@ void OgreExporter::saveExportConf(std::string path)
 
   child = new TiXmlElement("IDC_RESAMPLE_ANIMS");
   childText = new TiXmlText(m_params.resampleAnims ? "1" : "0");
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
+  child = new TiXmlElement("IDC_RESAMPLE_STEP");
+  char tmpbuf[10] = {0};
+  sprintf(tmpbuf, "%d", m_params.resampleStep);
+  childText = new TiXmlText(tmpbuf);
   child->LinkEndChild(childText);
   contProperties->LinkEndChild(child);
 

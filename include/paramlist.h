@@ -76,6 +76,7 @@ namespace EasyOgreExporter
     unsigned int maxTextureSize;
 
     int maxMipmaps;
+    int resampleStep;
 
 		// constructor
 		ParamList()	{
@@ -100,6 +101,7 @@ namespace EasyOgreExporter
       maxTextureSize = 2048;
       maxMipmaps = -1;
       resampleAnims = false;
+      resampleStep = 1;
       generateLOD = false;
 
       outputDir = "";
@@ -146,6 +148,7 @@ namespace EasyOgreExporter
       maxTextureSize = source.maxTextureSize;
       maxMipmaps = source.maxMipmaps;
       resampleAnims = source.resampleAnims;
+      resampleStep = source.resampleStep;
       generateLOD = source.generateLOD;
      
       outputDir = source.outputDir;

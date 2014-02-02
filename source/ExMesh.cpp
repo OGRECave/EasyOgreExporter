@@ -535,7 +535,7 @@ namespace EasyOgreExporter
         Ogre::LodConfig lodConfig;
         lodConfig.levels.clear();
         lodConfig.mesh = pMesh;
-		    lodConfig.strategy = Ogre::DistanceLodStrategy::getSingletonPtr();
+		    lodConfig.strategy = Ogre::DistanceLodSphereStrategy::getSingletonPtr();
 
         // Percentage -> parametric
         //TODO from param
@@ -711,7 +711,7 @@ namespace EasyOgreExporter
 
     // Compute the pivot TM
     INode* node = m_GameNode->GetMaxNode();
-    std::vector<int> animKeys = GetPointAnimationsKeysTime(m_GameNode, animRange, m_params.resampleAnims);
+    std::vector<int> animKeys = GetPointAnimationsKeysTime(m_GameNode, animRange, m_params.resampleAnims, m_params.resampleStep);
     
     bool delTri = false;
     TriObject* triObj = 0;
@@ -1048,7 +1048,7 @@ namespace EasyOgreExporter
         {
           for (int ik = 0; ik < ikeys->GetNumKeys(); ik++)
           {
-            IKey nkey;
+            IBezFloatKey nkey;
             ikeys->GetKey(ik, &nkey);
 
             if((nkey.time >= animRange.Start()) && (nkey.time <= animRange.End()))

@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{7EA7B4BC-CE4C-4DC8-95AB-AAACC58FB34C}
 AppName=Easy Ogre Exporter
-AppVersion=Easy Ogre Exporter 1.9
+AppVersion=Easy Ogre Exporter 1.95
 AppPublisher=Bastien Bourineau
 AppPublisherURL=http://www.openspace3d.com
 AppSupportURL=http://www.openspace3d.com
@@ -23,13 +23,13 @@ InternalCompressLevel=max
 VersionInfoVersion=1.0
 VersionInfoCompany=Bastien Bourineau
 VersionInfoDescription=Easy Ogre Exporter
-VersionInfoCopyright=Bastien Bourineau 2013
+VersionInfoCopyright=Bastien Bourineau 2014
 MinVersion=0,5.01.2600sp2
-AppCopyright=Bastien Bourineau 2013
+AppCopyright=Bastien Bourineau 2014
 DisableProgramGroupPage=yes
 UsePreviousAppDir=false
 DisableDirPage=yes
-AppVerName=Easy Ogre Exporter 1.9
+AppVerName=Easy Ogre Exporter 1.95
 FlatComponentsList=False
 
 [Languages]
