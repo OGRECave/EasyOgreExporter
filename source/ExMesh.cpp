@@ -42,7 +42,7 @@ namespace EasyOgreExporter
     haveVertexColor = (pGameMesh->GetNumberOfColorVerts() > 0) ? true : false;
     haveVertexAlpha = (pGameMesh->GetNumberOfAlphaVerts() > 0) ? true : false;
     haveVertexIllum = (pGameMesh->GetNumberOfIllumVerts() > 0) ? true : false;
-    
+
     std::vector<Modifier*> lModifiers;
     INode* node = m_GameNode->GetMaxNode();
 
@@ -498,7 +498,7 @@ namespace EasyOgreExporter
       createPoses();
 
     // Create poses
-    if (m_params.exportVertAnims)
+    if (m_params.exportVertAnims && !m_pMorphR3)
       createMorphAnimations();
 
     // Create a bounding box for the mesh
@@ -624,7 +624,14 @@ namespace EasyOgreExporter
     }
 
     // Make sure animation types are up to date first
-    m_Mesh->_determineAnimationTypes();
+    try
+    {
+      m_Mesh->_determineAnimationTypes();
+    }
+    catch (Ogre::Exception &e)
+    {
+      EasyOgreExporterLog("Error on Mesh animations : %s\n", e.what());
+    }
 
     // reorganize mesh buffers
     // Shared geometry
@@ -912,10 +919,25 @@ namespace EasyOgreExporter
   {
     INode* node = m_GameNode->GetMaxNode();
 
+    //force all skinned object to bind pos
+    m_converter->setAllSkinToBindPos();
+
+    //disable morpher modifier
+    if(m_pMorphR3)
+      static_cast<Modifier*>(m_pMorphR3)->DisableMod();
+
     //Vertex animations
     if(!GetVertexAnimState(node))
-      return;
+    {
+      //enable the morph modifiers again
+      if(m_pMorphR3)
+        static_cast<Modifier*>(m_pMorphR3)->EnableMod();
 
+      //force all skinned object to bind pos
+      m_converter->restoreAllSkin();
+
+      return;
+    }
     EasyOgreExporterLog("Loading vertex animations...\n");
    
     //try to get animations in motion mixer
@@ -1026,6 +1048,13 @@ namespace EasyOgreExporter
         }
       }
     }
+
+    //enable the morph modifiers again
+    if(m_pMorphR3)
+      static_cast<Modifier*>(m_pMorphR3)->EnableMod();
+
+    //force all skinned object to bind pos
+      m_converter->restoreAllSkin();
   }
 
   bool ExMesh::exportPosesAnimation(Interval animRange, std::string name, std::vector<morphChannel*> validChan, std::vector<std::vector<int>> poseIndexList, bool bDefault)
