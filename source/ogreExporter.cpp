@@ -1255,7 +1255,7 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
         case IGameObject::IGAME_MESH:
           {
             IGameMesh* pGameMesh = static_cast<IGameMesh*>(pGameObject);
-            if(pGameMesh)
+            if(pGameMesh && (pGameMesh->GetNumberOfFaces() > 0))
             {
               if(pGameMesh->InitializeData())
               {
@@ -1280,6 +1280,15 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
                   }
                 }
               }
+            }
+            else
+            {
+              #ifdef UNICODE
+                MSTR nodeName = pGameNode->GetName();
+                EasyOgreExporterLog("Warning, Mesh : %ls skipped, no faces found\n", nodeName.data());
+              #else
+                EasyOgreExporterLog("Warning, Mesh node: %s skipped, no faces found\n", pGameNode->GetName());
+              #endif
             }
           }
           break;
