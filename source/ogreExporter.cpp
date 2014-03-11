@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 1.96f;
+float EXVERSION = 1.97f;
 
 namespace EasyOgreExporter
 {
@@ -1254,8 +1254,26 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
       {
         case IGameObject::IGAME_MESH:
           {
+            bool delTri = false;
+            INode* node = pGameNode->GetMaxNode();
+            TriObject* triObj = getTriObjectFromNode(node, GetFirstFrame(), delTri);
+            Mesh* mMesh = &triObj->GetMesh();
+            int numFaces = 0;
+            if(mMesh)
+            {
+              numFaces = mMesh->getNumFaces();
+
+              //free the tree object
+              if(delTri && triObj)
+              {
+                triObj->DeleteThis();
+                triObj = 0;
+                delTri = false;
+              }
+            }
+
             IGameMesh* pGameMesh = static_cast<IGameMesh*>(pGameObject);
-            if(pGameMesh && (pGameMesh->GetNumberOfFaces() > 0))
+            if(pGameMesh && (numFaces > 0))
             {
               if(pGameMesh->InitializeData())
               {

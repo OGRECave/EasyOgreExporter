@@ -1484,10 +1484,9 @@ namespace EasyOgreExporter
 
   bool ExMesh::createOgreSharedGeometry()
   {
-    int facesCount = m_GameMesh->GetNumberOfFaces();
-    if (facesCount <= 0)
+    if (numOfVertices <= 0)
     {
-      EasyOgreExporterLog("Warning: No faces found in mesh\n");
+      EasyOgreExporterLog("Warning: No vertices found in mesh\n");
       return false;
     }
 
