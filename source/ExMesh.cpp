@@ -59,7 +59,10 @@ namespace EasyOgreExporter
     //get the mesh in the current state
     bool delTri = false;
     TriObject* triObj = getTriObjectFromNode(node, GetFirstFrame(), delTri);
-    Mesh* mMesh = &triObj->GetMesh();
+    Mesh* mMesh = 0;
+    if (triObj)
+      mMesh = &triObj->GetMesh();
+
     if(mMesh)
     {
       numOfVertices = mMesh->getNumVerts();

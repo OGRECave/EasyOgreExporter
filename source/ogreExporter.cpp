@@ -1255,9 +1255,13 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
         case IGameObject::IGAME_MESH:
           {
             bool delTri = false;
+            Mesh* mMesh = 0;
             INode* node = pGameNode->GetMaxNode();
             TriObject* triObj = getTriObjectFromNode(node, GetFirstFrame(), delTri);
-            Mesh* mMesh = &triObj->GetMesh();
+
+            if (triObj)
+              mMesh = &triObj->GetMesh();
+
             int numFaces = 0;
             if(mMesh)
             {
