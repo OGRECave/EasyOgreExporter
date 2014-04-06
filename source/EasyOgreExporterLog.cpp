@@ -35,9 +35,13 @@ std::string EasyOgreExporterLogFile::_logPath;
 void EasyOgreExporterLogFile::SetPath(const std::string& logPath)
 {
 	_logPath = logPath;
+
 	// Erase the contents of the log file.
-	std::ofstream output(_logPath.c_str());
-	EasyOgreExporterLog("Logging to file %s\n", _logPath.c_str());
+  if (_logPath.size() > 0)
+  {
+    std::ofstream output(_logPath.c_str());
+    EasyOgreExporterLog("Logging to file %s\n", _logPath.c_str());
+  }
 }
 
 // Returns the full path to the log file.

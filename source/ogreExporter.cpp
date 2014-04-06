@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 1.97f;
+float EXVERSION = 2.0f;
 
 namespace EasyOgreExporter
 {
@@ -47,6 +47,7 @@ namespace EasyOgreExporter
   INT_PTR CALLBACK IGameExporterOptionsDlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
   {
     ParamList* exp = DLGetWindowLongPtr<ParamList*>(hWnd); 
+    ISpinnerControl* spin;
 
     switch(message)
     {
@@ -91,13 +92,6 @@ namespace EasyOgreExporter
 		    std::wstring programOutputDir_w;
 		    programOutputDir_w.assign(exp->programOutputDir.begin(),exp->programOutputDir.end());
 		    SendDlgItemMessage(hWnd, IDC_PROGDIR, WM_SETTEXT, 0, (LPARAM)programOutputDir_w.data());
-
-        char tmpstep[10] = {0};
-        sprintf(tmpstep, "%d", exp->resampleStep);
-        std::string stmpstep = tmpstep;
-		    std::wstring resample_w;
-        resample_w.assign(stmpstep.begin(), stmpstep.end());
-		    SendDlgItemMessage(hWnd, IDC_RESAMPLE_STEP, WM_SETTEXT, 0, (LPARAM)resample_w.data());
 #else
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETMINVISIBLE, 30, 0);
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_RESETCONTENT, 0, 0);
@@ -122,11 +116,13 @@ namespace EasyOgreExporter
 
         //fill prog subdir
         SendDlgItemMessage(hWnd, IDC_PROGDIR, WM_SETTEXT, 0, (LPARAM)(char*)exp->programOutputDir.c_str());
-
-        char tmpstep[10] = {0};
-        sprintf(tmpstep, "%d", exp->resampleStep);
-		    SendDlgItemMessage(hWnd, IDC_RESAMPLE_STEP, WM_SETTEXT, 0, (LPARAM)tmpstep);
 #endif
+        spin = GetISpinner(GetDlgItem(hWnd, IDC_RESAMPLE_SPIN));
+        spin->LinkToEdit(GetDlgItem(hWnd, IDC_RESAMPLE_STEP), EDITTYPE_INT);
+        spin->SetLimits(1, 100, TRUE);
+        spin->SetScale(1.0f);
+        spin->SetValue(exp->resampleStep, FALSE);
+        ReleaseISpinner(spin);
 
         //advanced config
         CheckDlgButton(hWnd, IDC_YUPAXIS, exp->yUpAxis);
@@ -140,6 +136,7 @@ namespace EasyOgreExporter
 
         CheckDlgButton(hWnd, IDC_CONVDDS, exp->convertToDDS);
         CheckDlgButton(hWnd, IDC_RESAMPLE_ANIMS, exp->resampleAnims);
+        CheckDlgButton(hWnd, IDC_LOGS, exp->enableLogs);
     		
 #ifdef UNICODE
         //fill Shader mode combo box
@@ -346,16 +343,9 @@ namespace EasyOgreExporter
               exp->programOutputDir = temp;
 #endif
 
-              len = SendDlgItemMessage(hWnd, IDC_RESAMPLE_STEP, WM_GETTEXTLENGTH, 0, 0);
-              temp.Resize(len+1);
-              SendDlgItemMessage(hWnd, IDC_RESAMPLE_STEP, WM_GETTEXT, len+1, (LPARAM)temp.data());
-#ifdef UNICODE
-			        temp_w = temp.data();
-			        temp_s.assign(temp_w.begin(),temp_w.end());
-              exp->resampleStep = atoi(temp_s.c_str());
-#else
-              exp->resampleStep = atoi(temp);
-#endif
+              spin = GetISpinner(GetDlgItem(hWnd, IDC_RESAMPLE_SPIN));
+              exp->resampleStep = spin->GetIVal();
+              ReleaseISpinner(spin);
 
               exp->yUpAxis = IsDlgButtonChecked(hWnd, IDC_YUPAXIS) ? true : false;
               exp->useSharedGeom = IsDlgButtonChecked(hWnd, IDC_SHAREDGEOM) ? true : false;
@@ -367,6 +357,7 @@ namespace EasyOgreExporter
               exp->tangentsUseParity = IsDlgButtonChecked(hWnd, IDC_STOREPARITY) ? true : false;
               exp->convertToDDS = IsDlgButtonChecked(hWnd, IDC_CONVDDS) ? true : false;
               exp->resampleAnims = IsDlgButtonChecked(hWnd, IDC_RESAMPLE_ANIMS) ? true : false;
+              exp->enableLogs = IsDlgButtonChecked(hWnd, IDC_LOGS) ? true : false;
 
               int shaderIdx = SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_GETCURSEL, 0, 0);
               if (shaderIdx != CB_ERR)
@@ -719,6 +710,10 @@ void OgreSceneExporter::loadExportConf(std::string path, ParamList &param)
     if(child)
       param.resampleStep = (child->GetText()) ? atoi(child->GetText()) : 1;
 
+    child = rootElem->FirstChildElement("IDC_LOGS");
+    if (child)
+      param.enableLogs = (child->GetText() && (atoi(child->GetText()) == 1)) ? true : false;
+
     child = rootElem->FirstChildElement("IDC_SHADERMODE");
     if(child)
     {
@@ -857,6 +852,11 @@ void OgreExporter::saveExportConf(std::string path)
   child->LinkEndChild(childText);
   contProperties->LinkEndChild(child);
 
+  child = new TiXmlElement("IDC_LOGS");
+  childText = new TiXmlText(m_params.enableLogs ? "1" : "0");
+  child->LinkEndChild(childText);
+  contProperties->LinkEndChild(child);
+
   child = new TiXmlElement("IDC_CONVDDS");
   childText = new TiXmlText(m_params.convertToDDS ? "1" : "0");
   child->LinkEndChild(childText);
@@ -974,9 +974,18 @@ bool OgreExporter::exportScene()
   nodeCount = 0;
 
   //Init log files
-  std::string logFileName = m_params.outputDir;
-  logFileName.append("\\easyOgreExporter.log");
-  EasyOgreExporter::EasyOgreExporterLogFile::SetPath(logFileName.data());
+  std::string logFileName = "";
+  if (m_params.enableLogs)
+  {
+    logFileName = m_params.outputDir;
+    logFileName.append("\\easyOgreExporter.log");
+    EasyOgreExporter::EasyOgreExporterLogFile::SetPath(logFileName.data());
+  }
+  else
+  {
+    EasyOgreExporter::EasyOgreExporterLogFile::SetPath(logFileName.data());
+  }
+
 
 #if defined(WIN32)
   if(m_params.exportMaterial)

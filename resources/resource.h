@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by EasyOgreExporter.rc
+// Fichier Include généré de Microsoft Visual C++.
+// Utilisé par EasyOgreExporter.rc
 //
 #define IDD_PANEL                       101
 #define IDC_OGREVERSION                 1001
@@ -36,8 +36,10 @@
 #define IDC_NUMMIPS                     1027
 #define IDC_NUMMIPS_LABEL               1028
 #define IDC_YUPAXIS                     1029
-#define IDC_EDIT1                       1030
 #define IDC_RESAMPLE_STEP               1030
+#define IDC_RESAMPLE_SPIN               1031
+#define IDC_RESAMPLE_ANIMS2             1032
+#define IDC_LOGS                        1032
 
 // Next default values for new objects
 // 

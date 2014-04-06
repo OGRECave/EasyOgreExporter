@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{7EA7B4BC-CE4C-4DC8-95AB-AAACC58FB34C}
 AppName=Easy Ogre Exporter
-AppVersion=Easy Ogre Exporter 1.97
+AppVersion=Easy Ogre Exporter 2.0
 AppPublisher=Bastien Bourineau
 AppPublisherURL=http://www.openspace3d.com
 AppSupportURL=http://www.openspace3d.com
@@ -20,7 +20,7 @@ Compression=lzma
 SolidCompression=true
 UninstallDisplayIcon=
 InternalCompressLevel=max
-VersionInfoVersion=1.96
+VersionInfoVersion=2.0
 VersionInfoCompany=Bastien Bourineau
 VersionInfoDescription=Easy Ogre Exporter
 VersionInfoCopyright=Bastien Bourineau 2014
@@ -29,7 +29,7 @@ AppCopyright=Bastien Bourineau 2014
 DisableProgramGroupPage=yes
 UsePreviousAppDir=false
 DisableDirPage=yes
-AppVerName=Easy Ogre Exporter 1.96
+AppVerName=Easy Ogre Exporter 2.0
 FlatComponentsList=False
 
 [Languages]
@@ -41,26 +41,29 @@ Name: french; MessagesFile: compiler:Languages\French.isl
 [Files]
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "redist\vc2010\*"; DestDir: "{tmp}\vc2010"; Flags: ignoreversion
-Source: "..\output\Win32\vs9\Release Max 2011\EasyOgreExporter.dle"; DestDir: "{%3DSMAX_2011_PATH}\plugins"; Flags: ignoreversion replacesameversion; Components: Max2011x32
-Source: "..\output\Win32\vs9\Release Max 2012\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x32_2012}\plugins"; Flags: ignoreversion replacesameversion; Components: Max2012x32
-Source: "..\output\Win32\vs9\Release Max 2013\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x32_2013}\plugins"; Flags: ignoreversion replacesameversion; Components: Max2013x32
-Source: "..\output\x64\vs9\Release Max 2011\EasyOgreExporter.dle"; DestDir: "{%3DSMAX_2011x64_PATH}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: Max2011x64
-Source: "..\output\x64\vs9\Release Max 2012\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x64_2012}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: Max2012x64
-Source: "..\output\x64\vs9\Release Max 2013\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x64_2013}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: Max2013x64
-Source: "..\output\x64\vs9\Release Max 2014\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x64_2014}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: Max2014x64
+Source: "redist\vc2012\*"; DestDir: "{tmp}\vc2012"; Flags: ignoreversion
+Source: "..\output\Win32\vs12\Release Max 2011\EasyOgreExporter.dle"; DestDir: "{%3DSMAX_2011_PATH}\plugins"; Flags: ignoreversion replacesameversion; Components: Max2011x32
+Source: "..\output\Win32\vs12\Release Max 2012\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x32_2012}\plugins"; Flags: ignoreversion replacesameversion; Components: Max2012x32
+Source: "..\output\Win32\vs12\Release Max 2013\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x32_2013}\plugins"; Flags: ignoreversion replacesameversion; Components: Max2013x32
+Source: "..\output\x64\vs12\Release Max 2011\EasyOgreExporter.dle"; DestDir: "{%3DSMAX_2011x64_PATH}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: Max2011x64
+Source: "..\output\x64\vs12\Release Max 2012\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x64_2012}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: Max2012x64
+Source: "..\output\x64\vs12\Release Max 2013\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x64_2013}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: Max2013x64
+Source: "..\output\x64\vs12\Release Max 2014\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x64_2014}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: Max2014x64
+Source: "..\output\x64\vs12\Release Max 2015\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x64_2015}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: Max2015x64
 
-Source: "..\output\Win32\vs9\Release Max 2012\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x32_2012}\plugins"; Flags: ignoreversion replacesameversion; Components: MaxDes2012x32
-Source: "..\output\Win32\vs9\Release Max 2013\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x32_2013}\plugins"; Flags: ignoreversion replacesameversion; Components: MaxDes2013x32
-Source: "..\output\x64\vs9\Release Max 2012\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x64_2012}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: MaxDes2012x64
-Source: "..\output\x64\vs9\Release Max 2013\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x64_2013}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: MaxDes2013x64
-Source: "..\output\x64\vs9\Release Max 2014\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x64_2014}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: MaxDes2014x64
+Source: "..\output\Win32\vs12\Release Max 2012\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x32_2012}\plugins"; Flags: ignoreversion replacesameversion; Components: MaxDes2012x32
+Source: "..\output\Win32\vs12\Release Max 2013\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x32_2013}\plugins"; Flags: ignoreversion replacesameversion; Components: MaxDes2013x32
+Source: "..\output\x64\vs12\Release Max 2012\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x64_2012}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: MaxDes2012x64
+Source: "..\output\x64\vs12\Release Max 2013\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x64_2013}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: MaxDes2013x64
+Source: "..\output\x64\vs12\Release Max 2014\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x64_2014}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: MaxDes2014x64
+Source: "..\output\x64\vs12\Release Max 2015\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x64_2015}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: MaxDes2015x64
 
 [Icons]
 
 [Run]
 Filename: "{tmp}\vc2010\vcredist_x86.exe"; Parameters: "/q"; StatusMsg: "Installing MS Visual 2010 x86 C++ redist..."
 Filename: "{tmp}\vc2010\vcredist_x64.exe"; Parameters: "/q"; Flags: 64bit; StatusMsg: "Installing MS Visual 2010 x64 C++ redist..."; Check: IsWin64
-
+Filename: "{tmp}\vc2012\vcredist_x64.exe"; Parameters: "/q"; Flags: 64bit; StatusMsg: "Installing MS Visual 2012 x64 C++ redist..."; Check: IsWin64
 [Registry]
 
 [CustomMessages]
@@ -73,12 +76,14 @@ Name: "Max2012x64"; Description: "Install for 3dsMax 2012 64bit"; Types: custom 
 Name: "Max2013x32"; Description: "Install for 3dsMax 2013 32bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_3DSMAX_x32_2013}'), False);
 Name: "Max2013x64"; Description: "Install for 3dsMax 2013 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_3DSMAX_x64_2013}'), True);
 Name: "Max2014x64"; Description: "Install for 3dsMax 2014 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_3DSMAX_x64_2014}'), True);
+Name: "Max2015x64"; Description: "Install for 3dsMax 2015 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_3DSMAX_x64_2015}'), True);
 
 Name: "MaxDes2012x32"; Description: "Install for 3dsMax Design 2012 32bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_MAXDES_x32_2012}'), False);
 Name: "MaxDes2012x64"; Description: "Install for 3dsMax Design 2012 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_MAXDES_x64_2012}'), True);
 Name: "MaxDes2013x32"; Description: "Install for 3dsMax Design 2013 32bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_MAXDES_x32_2013}'), False);
 Name: "MaxDes2013x64"; Description: "Install for 3dsMax Design 2013 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_MAXDES_x64_2013}'), True);
 Name: "MaxDes2014x64"; Description: "Install for 3dsMax Design 2014 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_MAXDES_x64_2014}'), True);
+Name: "MaxDes2015x64"; Description: "Install for 3dsMax Design 2015 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_MAXDES_x64_2015}'), True);
 [Code]
 
 function dirCheck(DirName: String; w64 : Boolean): Boolean;
