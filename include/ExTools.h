@@ -1168,7 +1168,7 @@ inline Point3 GetVertexNormals(Mesh *mesh, int fpos, int vpos, DWORD vId)
 
 inline bool GetVertexAnimState(Animatable* anim)
 {
-  if (anim->IsAnimated() && (anim->SuperClassID() == CTRL_FLOAT_CLASS_ID || anim->SuperClassID() == CTRL_POINT3_CLASS_ID || anim->SuperClassID() == CTRL_POINT4_CLASS_ID))
+  if (anim->IsAnimated() && (anim->SuperClassID() == CTRL_FLOAT_CLASS_ID || anim->SuperClassID() == CTRL_POINT3_CLASS_ID || anim->SuperClassID() == CTRL_POINT4_CLASS_ID) || anim->SuperClassID() == WSM_CLASS_ID)
     return true;
 
   for (int i = 0; i < anim->NumSubs(); i++)

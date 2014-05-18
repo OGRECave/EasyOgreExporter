@@ -398,7 +398,7 @@ namespace EasyOgreExporter
             if(pModifier->ClassID() == MR3_CLASS_ID)
             {                          
               m_pMorphR3 = static_cast<MorphR3*>(pModifier);
-              break;
+              //break;
             }
           }
 
@@ -777,7 +777,16 @@ namespace EasyOgreExporter
         return false;
 
       // Create a new animation for each clip
-      Ogre::Animation* pAnimation = m_Mesh->createAnimation(name.c_str(), ogreLenght);
+      Ogre::Animation* pAnimation = 0;
+      try
+      {
+        pAnimation = m_Mesh->createAnimation(name.c_str(), ogreLenght);
+      }
+      catch (Ogre::Exception &)
+      {
+        EasyOgreExporterLog("Error : Morph animation already set %s, check for duplicated label names\n", name.c_str());
+        return false;
+      }
 
       if(m_params.useSharedGeom)
       {
@@ -930,7 +939,7 @@ namespace EasyOgreExporter
       static_cast<Modifier*>(m_pMorphR3)->DisableMod();
 
     //Vertex animations
-    if(!GetVertexAnimState(node))
+    if (!GetVertexAnimState(node))
     {
       //enable the morph modifiers again
       if(m_pMorphR3)
@@ -1147,7 +1156,17 @@ namespace EasyOgreExporter
         return false;
 
       // Create a new animation for each clip
-      Ogre::Animation* pAnimation = m_Mesh->createAnimation(name.c_str(), ogreLenght);
+      Ogre::Animation* pAnimation = 0;
+      
+      try
+      {
+        pAnimation = m_Mesh->createAnimation(name.c_str(), ogreLenght);
+      }
+      catch (Ogre::Exception &)
+      {
+        EasyOgreExporterLog("Error : Pose animation already set %s, check for duplicated label names\n", name.c_str());
+        return false;
+      }
 
       if(m_params.useSharedGeom)
       {
