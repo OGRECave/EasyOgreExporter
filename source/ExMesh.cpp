@@ -143,7 +143,6 @@ namespace EasyOgreExporter
   {
     INode* node = m_GameNode->GetMaxNode();
     int numFaces = mMesh->getNumFaces();
-    int numVertices = numFaces * 3;
     UVVert* vAlpha = mMesh->mapSupport(-VDATA_ALPHA) ? mMesh->mapVerts(-VDATA_ALPHA) : 0;
     int numMapChannels = mMesh->getNumMaps();
     std::vector<int> matIds;    
