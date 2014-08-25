@@ -136,7 +136,7 @@ namespace EasyOgreExporter
 
       TiXmlElement* pAnimElement = new TiXmlElement("animation");
       pAnimElement->SetAttribute("name", name.c_str());
-      pAnimElement->SetAttribute("enable", "true");
+      pAnimElement->SetAttribute("enable", "false");
       pAnimElement->SetAttribute("loop", "false");
       pAnimElement->SetAttribute("interpolationMode", "linear");
       pAnimElement->SetAttribute("rotationInterpolationMode", "linear");
@@ -259,11 +259,13 @@ namespace EasyOgreExporter
 		TiXmlElement* pNodeElement = new TiXmlElement("node");
 #ifdef UNICODE
 		std::wstring name_w = pGameNode->GetName();
-		std::string name_s;
-		name_s.assign(name_w.begin(),name_w.end());
+		std::string name_s = mParams.resPrefix;
+		name_s.append(name_w.begin(),name_w.end());
 		pNodeElement->SetAttribute("name", optimizeResourceName(name_s).c_str());
 #else
-		pNodeElement->SetAttribute("name", optimizeResourceName(pGameNode->GetName()).c_str());
+		std::string name = mParams.resPrefix;
+		name.append(pGameNode->GetName());
+		pNodeElement->SetAttribute("name", optimizeResourceName(name).c_str());
 #endif
 		pNodeElement->SetAttribute("id", id_counter);
 		pNodeElement->SetAttribute("isTarget", "false");
@@ -436,13 +438,11 @@ namespace EasyOgreExporter
     if(pRenderDistance)
       pRenderDistance->GetPropertyValue(renderDistance);
 
-    std::string meshName = mParams.resPrefix;
-    meshName.append(parent->Attribute("name"));
-    meshName = optimizeResourceName(meshName);
+    std::string entityName = optimizeResourceName(parent->Attribute("name"));
 
-		TiXmlElement* pEntityElement = new TiXmlElement("entity");
-    pEntityElement->SetAttribute("name", meshName.c_str());
-		pEntityElement->SetAttribute("id", id_counter);
+    TiXmlElement* pEntityElement = new TiXmlElement("entity");
+    pEntityElement->SetAttribute("name", entityName.c_str());
+    pEntityElement->SetAttribute("id", id_counter);
 
     std::string instName = mParams.resPrefix;
     instName.append(getFirstInstanceName(pGameNode));
