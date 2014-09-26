@@ -655,7 +655,7 @@ namespace EasyOgreExporter
     out << "\tfloat3 ld0 = normalize(lightPos0.xyz - (lightPos0.w * wp.xyz));\n";
     
     out << "\t// attenuation\n";
-    out << "\thalf lightDist = length(lightPos0.xyz - wp.xyz) / lightAtt0.r;\n";
+    out << "\thalf lightDist = length(lightPos0.xyz - wp.xyz) / (lightAtt0.r / lightAtt0.r);\n";
     out << "\thalf la = 1;\n";
     out << "\tif(lightAtt0.a > 0.0)\n";
     out << "\t{\n";
@@ -677,11 +677,11 @@ namespace EasyOgreExporter
       out << "\tfloat3 normal = normalize(norm);\n";
     }
 
-    out << "\tfloat3 diffuse = max(dot(ld0, normal), 0);\n";
+    out << "\tfloat3 diffuse = max(dot(normal, ld0), 0);\n";
 
     out << "\t// calculate the spotlight effect\n";
     out << "\tfloat spot = (spotlightParams.x == 1 && spotlightParams.y == 0 && spotlightParams.z == 0 && spotlightParams.w == 1 ? 1 : // if so, then it's not a spot light\n";
-    out << "\t   saturate((dot(ld0, normalize(-spDir)) - spotlightParams.y) / (spotlightParams.x - spotlightParams.y)));\n";
+    out << "\t   saturate((dot(normalize(-spDir), ld0) - spotlightParams.y) / (spotlightParams.x - spotlightParams.y)));\n";
 
     out << "\tfloat3 camDir = normalize(camPos - wp.xyz);\n";
     out << "\tfloat3 halfVec = normalize(ld0 + camDir);\n";
