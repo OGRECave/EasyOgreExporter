@@ -18,6 +18,7 @@
 #include "ExTools.h"
 #include "OgreProgressiveMeshGenerator.h"
 #include "OgreDistanceLodStrategy.h"
+#include "OgrePixelCountLodStrategy.h"
 #include "IFrameTagManager.h"
 
 //TODO bounding on skeleton
@@ -537,26 +538,44 @@ namespace EasyOgreExporter
         Ogre::LodConfig lodConfig;
         lodConfig.levels.clear();
         lodConfig.mesh = pMesh;
-		    lodConfig.strategy = Ogre::DistanceLodSphereStrategy::getSingletonPtr();
+        lodConfig.strategy = 0;
+        if (m_params.getOgreVersion() == Ogre::MESH_VERSION_LATEST)
+          lodConfig.strategy = Ogre::ScreenRatioPixelCountLodStrategy::getSingletonPtr();
+        else
+          lodConfig.strategy = Ogre::DistanceLodSphereStrategy::getSingletonPtr();
 
         // Percentage -> parametric
         //TODO from param
-        Ogre::Real reduction = 0.1f;
+        int nbLevels = 4;
 
         //TODO nb level in param
         //On distance
         float leveldist = m_SphereRadius * 2.0f;
-        for(int nLevel = 0; nLevel < 4; nLevel++)
+
+        Ogre::Real reduction = 0.4f / (float)nbLevels;
+        Ogre::Real steps = 0.8f / (float)nbLevels;
+
+        for (int nLevel = 0; nLevel < nbLevels; nLevel++)
         {
-          leveldist = (m_SphereRadius * 2.0f) * ((nLevel + 1) * (nLevel + 1));
-          //leveldist = leveldist * (nLevel + 1);
+          if (m_params.getOgreVersion() == Ogre::MESH_VERSION_LATEST)
+          {
+            Ogre::LodLevel lodLevel;
+            lodLevel.reductionMethod = Ogre::LodLevel::VRM_PROPORTIONAL;
+            lodLevel.reductionValue = reduction * (nLevel + 1);
+            lodLevel.distance = 1.0f - (steps * (nLevel + 1));
+            lodConfig.levels.push_back(lodLevel);
+          }
+          else
+          {
+            leveldist = (m_SphereRadius * 2.0f) * ((nLevel + 1) * nLevel);
+            //leveldist = leveldist * (nLevel + 1);
 
-          Ogre::LodLevel lodLevel;
-          lodLevel.reductionMethod = Ogre::LodLevel::VRM_PROPORTIONAL;
-          lodLevel.reductionValue = reduction * ((nLevel + 1) + (nLevel + 1));
-          lodLevel.distance = leveldist;
-          lodConfig.levels.push_back(lodLevel);
-
+            Ogre::LodLevel lodLevel;
+            lodLevel.reductionMethod = Ogre::LodLevel::VRM_PROPORTIONAL;
+            lodLevel.reductionValue = reduction * ((nLevel + 1) + (nLevel + 1));
+            lodLevel.distance = leveldist;
+            lodConfig.levels.push_back(lodLevel);
+          }
           EasyOgreExporterLog("Info: Generate mesh LOD Level : %f\n", leveldist);
         }
         

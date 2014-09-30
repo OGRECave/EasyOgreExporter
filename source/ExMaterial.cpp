@@ -1199,19 +1199,19 @@ namespace EasyOgreExporter
 	// Write material data to an Ogre material script file
 	bool ExMaterial::writeOgreScript(std::ofstream &outMaterial, ExShader* vsAmbShader, ExShader* fpAmbShader, ExShader* vsLightShader, ExShader* fpLightShader)
 	{
+    ParamList params = m_converter->getParams();
+
 		//Start material description
 		outMaterial << "material \"" << m_name.c_str() << "\"\n";
 		outMaterial << "{\n";
 
-		/*if(params.generateLOD)
+    if (params.generateLOD)
 		{
-		outMaterial << "\tlod_strategy PixelCount\n";
-		outMaterial << "\tlod_values 65000 8000 2000\n";
-
-		for(int i = 0; i < 3; i++)
-		writeMaterialTechnique(params, outMaterial, i);
+		  outMaterial << "\tlod_strategy screen_ratio_pixel_count\n";
+      outMaterial << "\tlod_values 0.1\n";
+      writeMaterialTechnique(outMaterial, 0, vsAmbShader, fpAmbShader, vsLightShader, fpLightShader);
 		}
-		else*/
+		else
 		{
 			writeMaterialTechnique(outMaterial, -1, vsAmbShader, fpAmbShader, vsLightShader, fpLightShader);
 		}
@@ -1244,22 +1244,34 @@ namespace EasyOgreExporter
 		//End technique description
 		outMaterial << "\t}\n";
 
-		// if we got a shader we write a default technique for non supported hardware
-		if(vsAmbShader || fpAmbShader || vsLightShader || fpLightShader)
+		// if we got a shader we write a LOD technique without scheme
+    if ((lod != -1) && (vsAmbShader || fpAmbShader || vsLightShader || fpLightShader))
 		{
 			//Start technique description
 			outMaterial << "\ttechnique ";
 			outMaterial << m_name << "_basic_technique" << "\n";
 			outMaterial << "\t{\n";
-			if(lod != -1)
-				outMaterial << "\t\tlod_index "<< lod <<"\n";
 
-			outMaterial << "\tscheme basic_mat\n";
 			writeMaterialPass(outMaterial, lod, 0, 0, ExShader::SP_NOSUPPORT);
 
 			//End technique description
 			outMaterial << "\t}\n";
 		}
+
+    if (vsAmbShader || fpAmbShader || vsLightShader || fpLightShader)
+    {
+      //Start technique description
+      outMaterial << "\ttechnique ";
+      outMaterial << m_name << "_basic_technique" << "\n";
+      outMaterial << "\t{\n";
+      if (lod != -1)
+        outMaterial << "\t\tlod_index " << lod + 1 << "\n";
+
+      writeMaterialPass(outMaterial, lod, 0, 0, ExShader::SP_NOSUPPORT);
+
+      //End technique description
+      outMaterial << "\t}\n";
+    }
 	}
 
 	void ExMaterial::writeMaterialPass(std::ofstream &outMaterial, int lod, ExShader* vsShader, ExShader* fpShader, ExShader::ShaderPass pass)
