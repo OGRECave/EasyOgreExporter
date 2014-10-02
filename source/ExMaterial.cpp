@@ -1244,13 +1244,14 @@ namespace EasyOgreExporter
 		//End technique description
 		outMaterial << "\t}\n";
 
-		// if we got a shader we write a LOD technique without scheme
-    if ((lod != -1) && (vsAmbShader || fpAmbShader || vsLightShader || fpLightShader))
+    // if we got a shader we write a default technique without shader
+    if (vsAmbShader || fpAmbShader || vsLightShader || fpLightShader)
 		{
 			//Start technique description
 			outMaterial << "\ttechnique ";
 			outMaterial << m_name << "_basic_technique" << "\n";
 			outMaterial << "\t{\n";
+      outMaterial << "\tscheme basic_mat\n";
 
 			writeMaterialPass(outMaterial, lod, 0, 0, ExShader::SP_NOSUPPORT);
 
@@ -1258,11 +1259,12 @@ namespace EasyOgreExporter
 			outMaterial << "\t}\n";
 		}
 
-    if (vsAmbShader || fpAmbShader || vsLightShader || fpLightShader)
+    // if we got a shader we write a LOD technique without scheme
+    if ((lod != -1) && (vsAmbShader || fpAmbShader || vsLightShader || fpLightShader))
     {
       //Start technique description
       outMaterial << "\ttechnique ";
-      outMaterial << m_name << "_basic_technique" << "\n";
+      outMaterial << m_name << "_lod_technique" << "\n";
       outMaterial << "\t{\n";
       if (lod != -1)
         outMaterial << "\t\tlod_index " << lod + 1 << "\n";

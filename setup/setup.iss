@@ -20,7 +20,7 @@ Compression=lzma
 SolidCompression=true
 UninstallDisplayIcon=
 InternalCompressLevel=max
-VersionInfoVersion=2.0
+VersionInfoVersion=2.16
 VersionInfoCompany=Bastien Bourineau
 VersionInfoDescription=Easy Ogre Exporter
 VersionInfoCopyright=Bastien Bourineau 2014
@@ -29,7 +29,7 @@ AppCopyright=Bastien Bourineau 2014
 DisableProgramGroupPage=yes
 UsePreviousAppDir=false
 DisableDirPage=yes
-AppVerName=Easy Ogre Exporter 2.15
+AppVerName=Easy Ogre Exporter 2.16
 FlatComponentsList=False
 
 [Languages]
