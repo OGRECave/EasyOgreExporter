@@ -764,22 +764,12 @@ namespace EasyOgreExporter
 #endif
 			IPropertyContainer* pCont = pGameTexture->GetIPropertyContainer();
 
-			//prop list
-			/*int numProps = pCont->GetNumberOfProperties();
-			for (int propIndex = 0; propIndex < numProps; ++propIndex)
-			{
-			  IGameProperty* pProp = pCont->GetProperty(propIndex);
-			  std::string pPropName = pProp->GetName();
-			  EasyOgreExporterLog("Info : texture properties %s\n", pPropName.c_str());
-			}
-			*/
-
 #ifdef UNICODE
       EasyOgreExporterLog("Exporting %d texture from %ls...\n", i, texClass.data());
-			if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == L"Normal Bump")) || (texClass == L"Vertex Color"))
+      if (pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == L"Composite") || (texClass == L"Normal Bump")) || (texClass == L"Vertex Color"))
 #else
       EasyOgreExporterLog("Exporting %d texture from %s...\n", i, texClass.c_str());
-			if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == "Normal Bump")) || (texClass == "Vertex Color"))
+      if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == "Composite") || (texClass == "Normal Bump")) || (texClass == "Vertex Color"))
 #endif
 			{
 #ifdef UNICODE
@@ -802,6 +792,11 @@ namespace EasyOgreExporter
             path = pGameTexture->GetBitmapFileName();
 				}
 				else
+#ifdef UNICODE
+        if ((texClass == L"Normal Bump") || (texClass == L"Vertex Color"))
+#else
+        if ((texClass == "Normal Bump") || (texClass == "Vertex Color"))
+#endif
 			  //normal map
 				{
 					IGameProperty* pNormalMap = pCont->QueryProperty(_T("normal_map"));
@@ -843,6 +838,65 @@ namespace EasyOgreExporter
 						}
 					}
 				}
+        else
+#ifdef UNICODE
+        if ((texClass == L"Composite"))
+#else
+        if ((texClass == "Composite"))
+#endif
+        {
+          IGameProperty* pMapList = pCont->QueryProperty(_T("mapList"));
+          if (pMapList)
+          {
+            if (pMapList->IsParamBlock())
+            {
+              if (pMapList->IsPBlock2())
+              {
+#ifdef PRE_MAX_2012
+                int index = pMapList->GetParamBlockIndex();
+#elif PRE_MAX_2011
+                int index = pMapList->GetParamBlockIndex();
+#else
+                int index = pMapList->GetParamIndex();
+#endif
+
+                IParamBlock2* pBlock = pMapList->GetMaxParamBlock2();
+                ParamID id = pBlock->IndextoID(index);
+                Texmap* pTexmap = pBlock->GetTexmap(id);
+                if (pTexmap)
+                {
+                  MSTR className;
+                  pTexmap->GetClassName(className);
+#ifdef UNICODE
+                  const wchar_t* pName = className.data();
+                  if (!wcscmp(pName, L"Bitmap"))
+#else
+                  const char* pName = className.data();
+                  if (!strcmp(pName, "Bitmap"))
+#endif
+                  {
+                    BitmapTex* pBitmapTex = static_cast<BitmapTex*>(pTexmap);
+                    path = pBitmapTex->GetMapName();
+                    texName = pBitmapTex->GetName();
+                  }
+                }
+              }
+            }
+          }
+        }
+        else
+        {
+#ifdef UNICODE
+          EasyOgreExporterLog("Warning: Non supported texture : %ls... enumerate properties\n", texClass.data());
+#else
+          EasyOgreExporterLog("Warning: Non supported texture : %s... enumerate properties\n", texClass.c_str());
+#endif
+          //enumerate material properties
+          MatProc* proccy = new MatProc();
+          PropertyEnum* prope = static_cast<PropertyEnum*>(proccy);
+          IPropertyContainer* pCont = pGameTexture->GetIPropertyContainer();
+          pCont->EnumerateProperties(*prope);
+        }
         
         //absolute texture path
         std::string absPath;
@@ -1068,6 +1122,30 @@ namespace EasyOgreExporter
 				loadTextureUV(pGameTexture, tex);
 				m_textures.push_back(tex);
 			}
+      else
+      {
+        //prop list
+        int numProps = pCont->GetNumberOfProperties();
+        for (int propIndex = 0; propIndex < numProps; ++propIndex)
+        {
+#ifdef UNICODE
+          EasyOgreExporterLog("Info : not managed texture properties : %ls\n", texClass.data());
+#else
+          EasyOgreExporterLog("Info : not managed texture properties : %s\n", texClass.c_str());
+#endif
+          /*
+          IGameProperty* pProp = pCont->GetProperty(propIndex);
+          if (pProp)
+          {
+#ifdef UNICODE
+            EasyOgreExporterLog("Info : not managed texture properties : %ls\n", pProp->GetName());
+#else
+            EasyOgreExporterLog("Info : not managed texture properties : %s\n", pProp->GetName());
+#endif
+          }
+          */
+        }
+      }
 		}
 	}
 
