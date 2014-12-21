@@ -277,6 +277,10 @@ namespace EasyOgreExporter
 							texUnits.push_back(m_textures[i].uvsetIndex);
 							break;
 
+            case ID_SI:
+              texUnits.push_back(m_textures[i].uvsetIndex);
+              break;
+
 						case ID_RL:
 							break;
 						}
@@ -295,6 +299,93 @@ namespace EasyOgreExporter
 		case ExShader::ST_FPLIGHT:
 			{
 				out << "fpLightGEN";
+
+				for (int i=0; i<m_textures.size(); i++)
+				{
+					if(m_textures[i].bCreateTextureUnit == true)
+					{
+						switch (m_textures[i].type)
+						{
+						case ID_AM:
+							out << "AMB";
+							out << m_textures[i].uvsetIndex;
+							break;
+
+						case ID_DI:
+							out << "DIFF";
+							out << m_textures[i].uvsetIndex;
+							break;
+
+						case ID_SP:
+							out << "SPEC";
+							out << m_textures[i].uvsetIndex;
+							break;
+
+            case ID_SI:
+              out << "EMI";
+              out << m_textures[i].uvsetIndex;
+              break;
+
+						case ID_BU:
+							out << "NORM";
+							out << m_textures[i].uvsetIndex;
+							break;
+
+						case ID_RL:
+							out << "REF";
+							break;
+						}
+					}
+				}
+				break;
+			}
+
+		case ExShader::ST_VSLIGHT_MULTI :
+			{
+				out << "vsLightMultiGEN";
+
+				std::vector<int> texUnits;
+				for (int i=0; i<m_textures.size(); i++)
+				{
+					if(m_textures[i].bCreateTextureUnit == true)
+					{
+						switch (m_textures[i].type)
+						{
+						case ID_AM:
+							texUnits.push_back(m_textures[i].uvsetIndex);
+							break;
+
+						case ID_DI:
+							texUnits.push_back(m_textures[i].uvsetIndex);
+							break;
+
+						case ID_SP:
+							texUnits.push_back(m_textures[i].uvsetIndex);
+							break;
+
+						case ID_BU:
+							out << "NORM";
+							texUnits.push_back(m_textures[i].uvsetIndex);
+							break;
+
+						case ID_RL:
+							break;
+						}
+					}
+				}
+				std::sort(texUnits.begin(), texUnits.end());
+				texUnits.erase(std::unique(texUnits.begin(), texUnits.end()), texUnits.end());
+
+				for (int i=0; i<texUnits.size(); i++)
+				{
+					out << texUnits[i];
+				}
+				break;
+			}
+
+		case ExShader::ST_FPLIGHT_MULTI:
+			{
+				out << "fpLightMultiGEN";
 
 				for (int i=0; i<m_textures.size(); i++)
 				{
@@ -1309,10 +1400,17 @@ namespace EasyOgreExporter
 		if(lod != -1)
 			outMaterial << "\t\tlod_index "<< lod <<"\n";
 
-		if(vsAmbShader && fpAmbShader)
+		if(vsAmbShader || fpAmbShader)
 		{
-			writeMaterialPass(outMaterial, lod, vsAmbShader, fpAmbShader, ExShader::SP_AMBIENT);
-			writeMaterialPass(outMaterial, lod, vsLightShader, fpLightShader, ExShader::SP_LIGHT);
+      if (vsAmbShader)
+      {
+        writeMaterialPass(outMaterial, lod, vsAmbShader, fpAmbShader, ExShader::SP_AMBIENT);
+        writeMaterialPass(outMaterial, lod, vsLightShader, fpLightShader, ExShader::SP_LIGHT_MULTI);
+      }
+      else
+      {
+        writeMaterialPass(outMaterial, lod, vsLightShader, fpLightShader, ExShader::SP_LIGHT);
+      }
 		}
 		else
 		{
@@ -1365,6 +1463,8 @@ namespace EasyOgreExporter
 			outMaterial << "Ambient\n";
 		else if(pass == ExShader::SP_LIGHT)
 			outMaterial << "Light\n";
+    else if (pass == ExShader::SP_LIGHT_MULTI)
+      outMaterial << "LightMulti\n";
 		else if(pass == ExShader::SP_DECAL)
 			outMaterial << "Decal\n";
 		else
@@ -1437,7 +1537,7 @@ namespace EasyOgreExporter
 
 		if(pass == ExShader::SP_AMBIENT)
 			outMaterial << "\n\t\t\tillumination_stage ambient\n";
-		else if(pass == ExShader::SP_LIGHT)
+		else if(pass == ExShader::SP_LIGHT_MULTI)
 		{
 			if(m_hasAlpha)
         outMaterial << "\n\t\t\tseparate_scene_blend src_alpha one src_alpha one_minus_src_alpha \n";
@@ -1483,7 +1583,7 @@ namespace EasyOgreExporter
 						continue;
 
 					// do not use this textures for light pass
-					if((pass == ExShader::SP_LIGHT) && (m_textures[i].type == ID_SI))
+					if((pass == ExShader::SP_LIGHT_MULTI) && (m_textures[i].type == ID_SI))
 						continue;
 
 					// don't export normal and specular maps for non supported technique

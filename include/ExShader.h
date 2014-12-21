@@ -35,7 +35,11 @@ namespace EasyOgreExporter
 			  // lighting vertex shader
 			  ST_VSLIGHT,
 			  // lighting pixel shader
-			  ST_FPLIGHT
+			  ST_FPLIGHT,
+        // lighting vertex shader multipass
+        ST_VSLIGHT_MULTI,
+        // lighting pixel shader multipass
+        ST_FPLIGHT_MULTI
 		  };
 
       enum ShaderPass
@@ -45,7 +49,9 @@ namespace EasyOgreExporter
 			  SP_AMBIENT,
 			  // lighting pass
 			  SP_LIGHT,
-			  // decal pass
+			  // lighting multi pass
+        SP_LIGHT_MULTI,
+        // decal pass
 			  SP_DECAL,
         // non supported
         SP_NOSUPPORT
@@ -144,6 +150,40 @@ namespace EasyOgreExporter
     protected:
     private:
 	};
+
+  class ExVsLightShaderMulti : public ExShader
+  {
+  public:
+  protected:
+  private:
+
+  public:
+    ExVsLightShaderMulti(std::string name);
+    virtual ~ExVsLightShaderMulti();
+
+    virtual void constructShader(ExMaterial* mat);
+    virtual std::string& getUniformParams(ExMaterial* mat);
+    virtual std::string& getProgram(std::string baseName);
+  protected:
+  private:
+  };
+
+  class ExFpLightShaderMulti : public ExShader
+  {
+  public:
+  protected:
+  private:
+
+  public:
+    ExFpLightShaderMulti(std::string name);
+    ~ExFpLightShaderMulti();
+
+    virtual void constructShader(ExMaterial* mat);
+    virtual std::string& getUniformParams(ExMaterial* mat);
+    virtual std::string& getProgram(std::string baseName);
+  protected:
+  private:
+  };
 };
 
 #endif

@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 2.17f;
+float EXVERSION = 2.2f;
 
 namespace EasyOgreExporter
 {
@@ -144,7 +144,8 @@ namespace EasyOgreExporter
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_RESETCONTENT, 0, 0);
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)L"None");
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)L"Only for Normal/Specular");
-        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)L"All materials");
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)L"All materials (3 lights)");
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)L"All materials (multi pass)");
         
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_SETCURSEL, (int)exp->exportProgram, 0);
 
@@ -372,6 +373,9 @@ namespace EasyOgreExporter
                     break;
                   case 2:
                     exp->exportProgram = SHADER_ALL;
+                    break;
+                  case 3:
+                    exp->exportProgram = SHADER_ALL_MULTI;
                     break;
 
                   default:
@@ -729,6 +733,9 @@ void OgreSceneExporter::loadExportConf(std::string path, ParamList &param)
             break;
           case 2:
             param.exportProgram = SHADER_ALL;
+            break;
+          case 3:
+            param.exportProgram = SHADER_ALL_MULTI;
             break;
         }
       }
