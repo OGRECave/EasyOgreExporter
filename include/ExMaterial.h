@@ -26,7 +26,7 @@
 
 namespace EasyOgreExporter
 {
-	typedef enum {MT_SURFACE_SHADER, MT_LAMBERT, MT_PHONG, MT_BLINN, MT_CGFX,MT_FACETED} MaterialType;
+  typedef enum {MT_SURFACE_SHADER, MT_LAMBERT, MT_PHONG, MT_BLINN, MT_CGFX, MT_FACETED, MT_METAL} MaterialType;
 	typedef enum {TOT_REPLACE, TOT_MODULATE, TOT_ADD, TOT_ALPHABLEND, TOT_MANUALBLEND} TexOpType;
 	typedef enum {TAM_CLAMP, TAM_BORDER, TAM_WRAP, TAM_MIRROR} TexAddressMode;
 

@@ -57,11 +57,13 @@ namespace EasyOgreExporter
         SP_NOSUPPORT
 		  };
     protected:
+      bool bFresnel;
       bool bRef;
       bool bNormal;
       bool bAmbient;
       bool bDiffuse;
       bool bSpecular;
+      bool bNeedHighProfile;
       ShaderType m_type;
 
       std::string m_name;

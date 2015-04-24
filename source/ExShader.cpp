@@ -24,6 +24,7 @@ namespace EasyOgreExporter
 	{
     m_name = name;
     m_type = ST_NONE;
+    bNeedHighProfile = false;
   }
 
 	ExShader::~ExShader()
@@ -68,6 +69,7 @@ namespace EasyOgreExporter
   void ExVsAmbShader::constructShader(ExMaterial* mat)
   {
     // get the material config
+    bFresnel = (mat->m_type == MT_METAL) ? false : true;
     bRef = mat->m_hasReflectionMap;
     bNormal = mat->m_hasBumpMap;
     bDiffuse = mat->m_hasDiffuseMap;
@@ -118,10 +120,13 @@ namespace EasyOgreExporter
     }
 
     int lastAvailableTexCoord = texCoord;
-    for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
+    for (int i=0; i < texUnits.size() && (texCoord < 16); i++)
     {
       out << "\tout float2 oUv" << texUnits[i] << " : TEXCOORD" << texCoord++ << ",\n";
     }
+
+    if (texCoord > 8)
+      bNeedHighProfile = true;
 
     if(bRef)
     {
@@ -142,11 +147,14 @@ namespace EasyOgreExporter
     }
 
     texCoord = lastAvailableTexCoord;
-    for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
+    for (int i=0; i < texUnits.size() && (texCoord < 16); i++)
     {
       out << "\toUv" << texUnits[i] << " = uv" << texUnits[i] << ";\n";
       texCoord++;
     }
+
+    if (texCoord > 8)
+      bNeedHighProfile = true;
 
     out << "}\n";
     m_content = out.str();
@@ -169,7 +177,10 @@ namespace EasyOgreExporter
     out << "{\n";
     
     out << "\tsource " << baseName << ".cg\n";
-    out << "\tprofiles vs_4_0 vs_1_1 arbvp1\n";
+    if (bNeedHighProfile)
+      out << "\tprofiles vs_4_0 arbvp2\n";
+    else
+      out << "\tprofiles vs_1_1 arbvp1\n";
     out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
     out << "\tdefault_params\n";
@@ -202,6 +213,7 @@ namespace EasyOgreExporter
   void ExFpAmbShader::constructShader(ExMaterial* mat)
   {
     // get the material config
+    bFresnel = (mat->m_type == MT_METAL) ? false : true;
     bRef = mat->m_hasReflectionMap;
     bNormal = mat->m_hasBumpMap;
     bDiffuse = mat->m_hasDiffuseMap;
@@ -246,10 +258,13 @@ namespace EasyOgreExporter
       out << "\tfloat4 wp : TEXCOORD" << texCoord++ << ",\n";
     }
 
-    for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
+    for (int i=0; i < texUnits.size() && (texCoord < 16); i++)
     {
       out << "\tfloat2 uv" << texUnits[i] << " : TEXCOORD" << texCoord++ << ",\n";
     }
+
+    if (texCoord > 8)
+      bNeedHighProfile = true;
 
     out << "\tuniform float3 ambient,\n";
     out << "\tuniform float4 matAmb,\n";
@@ -259,8 +274,12 @@ namespace EasyOgreExporter
     {
       out << ",\n\tuniform float3 camPos";
       out << ",\n\tuniform float reflectivity";
-      out << ",\n\tuniform float fresnelMul";
-      out << ",\n\tuniform float fresnelPow";
+
+      if (bFresnel)
+      {
+        out << ",\n\tuniform float fresnelMul";
+        out << ",\n\tuniform float fresnelPow";
+      }
     }
 
     int samplerId = 0;
@@ -329,8 +348,17 @@ namespace EasyOgreExporter
       out << "\tfloat3 refVec = -reflect(camDir, normal);\n";
       out << "\trefVec.z = -refVec.z;\n";
       out << "\tfloat4 reflecTex = texCUBE(reflectMap, refVec);\n";
-      out << "\tfloat fresnel = fresnelMul * reflectivity * pow(1 + dot(-camDir, normal), fresnelPow - (reflectivity * fresnelMul));\n";
-      out << "\tfloat4 reflecVal = reflecTex * fresnel;\n";
+
+      if (bFresnel)
+      {
+        out << "\tfloat fresnel = fresnelMul * reflectivity * pow(1 + dot(-camDir, normal), fresnelPow - (reflectivity * fresnelMul));\n";
+        out << "\tfloat4 reflecVal = reflecTex * fresnel;\n";
+      }
+      else
+      {
+        out << "\tfloat4 reflecVal = reflecTex * reflectivity;\n";
+      }
+
       out << "\tretColor += float4(ambient, 1) * matAmb * reflecVal;\n";
     }
 
@@ -349,8 +377,11 @@ namespace EasyOgreExporter
     if(bRef)
     {
       out << "\t\t\t\tparam_named reflectivity float " << mat->m_reflectivity << "\n";
-      out << "\t\t\t\tparam_named fresnelMul float 4.0\n";
-      out << "\t\t\t\tparam_named fresnelPow float 5.0\n";
+      if (bFresnel)
+      {
+        out << "\t\t\t\tparam_named fresnelMul float 4.0\n";
+        out << "\t\t\t\tparam_named fresnelPow float 5.0\n";
+      }
     }
 
 		out << "\t\t\t}\n";
@@ -365,7 +396,10 @@ namespace EasyOgreExporter
     out << "{\n";
     
     out << "\tsource " << baseName << ".cg\n";
-    out << "\tprofiles ps_4_0 ps_3_0 arbfp1\n";
+    if (bNeedHighProfile)
+      out << "\tprofiles ps_3_x arbfp1\n";
+    else
+      out << "\tprofiles ps_3_0 arbfp1\n";
     out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
     out << "\tdefault_params\n";
@@ -378,8 +412,12 @@ namespace EasyOgreExporter
     {
       out << "\t\tparam_named_auto camPos camera_position\n";
       out << "\t\tparam_named reflectivity float 1.0\n";
-      out << "\t\tparam_named fresnelMul float 4.0\n";
-      out << "\t\tparam_named fresnelPow float 5.0\n";
+
+      if (bFresnel)
+      {
+        out << "\t\tparam_named fresnelMul float 4.0\n";
+        out << "\t\tparam_named fresnelPow float 5.0\n";
+      }
     }
 
     out << "\t}\n";
@@ -403,6 +441,7 @@ namespace EasyOgreExporter
   void ExVsLightShader::constructShader(ExMaterial* mat)
   {
     // get the material config
+    bFresnel = (mat->m_type == MT_METAL) ? false : true;
     bRef = mat->m_hasReflectionMap;
     bNormal = mat->m_hasBumpMap;
     bDiffuse = mat->m_hasDiffuseMap;
@@ -448,10 +487,14 @@ namespace EasyOgreExporter
     out << "\tout float4 oWp : TEXCOORD" << texCoord++ << ",\n";
 
     int lastAvailableTexCoord = texCoord;
-    for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
+    for (int i=0; i < texUnits.size() && (texCoord < 16); i++)
     {
-      out << "\tout float2 oUv" << texUnits[i] << " : TEXCOORD" << texCoord++ << ",\n";
+      if (!(i % 2))
+        out << "\tout float4 oUv" << texUnits[i] << " : TEXCOORD" << texCoord++ << ",\n";
     }
+
+    if (texCoord > 8)
+      bNeedHighProfile = true;
 
     out << "\tuniform float4x4 wMat,\n";
 
@@ -470,11 +513,21 @@ namespace EasyOgreExporter
     out << "\toPos = mul(wvpMat, position);\n";
 
     texCoord = lastAvailableTexCoord;
-    for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
+    for (int i=0; i < texUnits.size() && (texCoord < 16); i++)
     {
-      out << "\toUv" << texUnits[i] << " = uv" << texUnits[i] << ";\n";
-      texCoord++;
+      if (!(i % 2))
+      {
+        out << "\toUv" << texUnits[i] << ".xy = uv" << texUnits[i] << ";\n";
+        texCoord++;
+      }
+      else
+      {
+        out << "\toUv" << texUnits[i] - 1 << ".zw = uv" << texUnits[i] << ";\n";
+      }
     }
+
+    if (texCoord > 8)
+      bNeedHighProfile = true;
 
     if(bNormal)
     {
@@ -511,7 +564,10 @@ namespace EasyOgreExporter
     out << "{\n";
     
     out << "\tsource " << baseName << ".cg\n";
-    out << "\tprofiles vs_4_0 vs_1_1 arbvp1\n";
+    if (bNeedHighProfile)
+      out << "\tprofiles vs_4_0 arbvp2\n";
+    else
+      out << "\tprofiles vs_1_1 arbvp1\n";
     out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
     out << "\tdefault_params\n";
@@ -547,6 +603,7 @@ namespace EasyOgreExporter
   void ExFpLightShader::constructShader(ExMaterial* mat)
   {
     // get the material config
+    bFresnel = (mat->m_type == MT_METAL) ? false : true;
     bRef = mat->m_hasReflectionMap;
     bNormal = mat->m_hasBumpMap;
     bDiffuse = mat->m_hasDiffuseMap;
@@ -583,10 +640,14 @@ namespace EasyOgreExporter
     out << "\tfloat3 spDir2 : TEXCOORD" << texCoord++ << ",\n";
     out << "\tfloat4 wp : TEXCOORD" << texCoord++ << ",\n";
 
-    for (int i=0; i < texUnits.size() && (texCoord < 8); i++)
+    for (int i=0; i < texUnits.size() && (texCoord < 16); i++)
     {
-      out << "\tfloat2 uv" << texUnits[i] << " : TEXCOORD" << texCoord++ << ",\n";
+      if (!(i % 2))
+        out << "\tfloat4 uv" << texUnits[i] << " : TEXCOORD" << texCoord++ << ",\n";
     }
+
+    if (texCoord > 8)
+      bNeedHighProfile = true;
 
     out << "\tuniform float3 ambient,\n";
     out << "\tuniform float3 lightDif0,\n";
@@ -620,8 +681,12 @@ namespace EasyOgreExporter
     if(bRef)
     {
       out << ",\n\tuniform float reflectivity";
-      out << ",\n\tuniform float fresnelMul";
-      out << ",\n\tuniform float fresnelPow";
+
+      if (bFresnel)
+      {
+        out << ",\n\tuniform float fresnelMul";
+        out << ",\n\tuniform float fresnelPow";
+      }
     }
 
     int samplerId = 0;
@@ -682,7 +747,12 @@ namespace EasyOgreExporter
 
     if (bNormal)
     {
-      out << "\tfloat3 normalTex = tex2D(normalMap, uv" << normUv << ").rgb;\n";
+      out << "\tfloat3 normalTex = tex2D(normalMap, uv";
+      if (!(normUv % 2))
+        out << normUv << ".xy" << ").rgb;\n";
+      else
+        out << normUv - 1 << ".zw" << ").rgb;\n";
+
       out << "\ttangent *= normalMul;\n";
       out << "\tbinormal *= normalMul;\n";
       out << "\tfloat3x3 tbn = float3x3(tangent, binormal, norm);\n";
@@ -750,24 +820,37 @@ namespace EasyOgreExporter
     out << "\tfloat3 diffuseLight = (diffuse0 * spot0 * la0) + (diffuse1 * spot1 * la1) + (diffuse2 * spot2 * la2);\n";
     out << "\tfloat3 ambientColor = max(matEmissive.rgb, ambient * matAmb.rgb);\n";
 
-    out << "\tfloat3 diffuseContrib = diffuseLight * matDif.rgb;\n";
+    out << "\tfloat3 diffuseContrib = matDif.rgb;\n";
 
     if (bDiffuse)
     {
-      out << "\tfloat4 diffuseTex = tex2D(diffuseMap, uv" << diffUv << ");\n";
+      out << "\tfloat4 diffuseTex = tex2D(diffuseMap, uv";
+      if (!(diffUv % 2))
+        out << diffUv << ".xy" << ");\n";
+      else
+        out << diffUv - 1 << ".zw" << ");\n";
+
       out << "\tambientColor *= diffuseTex.rgb;\n";
       out << "\tdiffuseContrib *= diffuseTex.rgb;\n";
     }
 
     if (bAmbient)
     {
-      out << "\tfloat3 ambTex = tex2D(ambMap, uv" << ambUv << ").rgb;\n";
+      out << "\tfloat3 ambTex = tex2D(ambMap, uv";
+      if (!(ambUv % 2))
+        out << ambUv << ".xy" << ").rgb;\n";
+      else
+        out << ambUv - 1 << ".zw" << ").rgb;\n";
       out << "\tambientColor *= ambTex;\n";
     }
     
     if (bIllum)
     {
-      out << "\tfloat4 illTex = tex2D(illMap, uv" << illUv << ");\n";
+      out << "\tfloat4 illTex = tex2D(illMap, uv";
+      if (!(illUv % 2))
+        out << illUv << ".xy" << ").rgb;\n";
+      else
+        out << illUv - 1 << ".zw" << ").rgb;\n";
       out << "\tambientColor = max(ambientColor, illTex.rgb);\n";
     }
 
@@ -775,14 +858,18 @@ namespace EasyOgreExporter
 
     if (bSpecular)
     {
-      out << "\tfloat4 specTex = tex2D(specMap, uv" << specUv << ");\n";
+      out << "\tfloat4 specTex = tex2D(specMap, uv";
+      if (!(specUv % 2))
+        out << specUv << ".xy" << ");\n";
+      else
+        out << specUv - 1 << ".zw" << ");\n";
       out << "\tspecularContrib *= specTex.rgb;\n";
     }      
 
     //if(bAmbient)
       //out << "\tspecularContrib *= ambTex.rgb;\n";
 
-    out << "\tfloat3 light0C = ambientColor + diffuseContrib + specularContrib;\n";
+    out << "\tfloat3 light0C = ambientColor + (diffuseLight * diffuseContrib) + specularContrib;\n";
 
     out << "\tfloat alpha = matDif.a;\n";
     if(bDiffuse)
@@ -795,16 +882,22 @@ namespace EasyOgreExporter
       out << "\tfloat3 refVec = -reflect(camDir, normal);\n";
       out << "\trefVec.z = -refVec.z;\n";
       out << "\tfloat4 reflecTex = texCUBE(reflectMap, refVec);\n";
-      out << "\tfloat fresnel = fresnelMul * reflectivity * pow(1 + dot(-camDir, normal), fresnelPow - (reflectivity * fresnelMul));\n";
-      out << "\tfloat4 reflecVal = reflecTex * fresnel;\n";
 
-      out << "\tfloat3 reflectColor = (reflecVal.rgb * diffuseContrib) + (reflecVal.rbg * specularContrib);\n";
+      if (bFresnel)
+      {
+        out << "\tfloat fresnel = fresnelMul * reflectivity * pow(1 + dot(-camDir, normal), fresnelPow - (reflectivity * fresnelMul));\n";
+        out << "\tfloat4 reflecVal = reflecTex * fresnel;\n";
+        out << "\tfloat3 reflectColor = reflecVal.rgb * (1.0 - light0C);\n";
+      }
+      else //metal style
+      {
+        out << "\tfloat3 reflectColor = reflecTex.rgb * reflectivity * light0C;\n";
+      }
+      
       out << "\treturn float4(light0C + reflectColor, alpha);\n";
     }
-    else
-    {
-      out << "\treturn float4(light0C, alpha);\n";
-    }
+
+    out << "\treturn float4(light0C, alpha);\n";
 
     out << "}\n";
     m_content = out.str();
@@ -824,8 +917,11 @@ namespace EasyOgreExporter
     if(bRef)
     {
       out << "\t\t\t\tparam_named reflectivity float " << mat->m_reflectivity << "\n";
-      out << "\t\t\t\tparam_named fresnelMul float 4.0\n";
-      out << "\t\t\t\tparam_named fresnelPow float 5.0\n";
+      if (bFresnel)
+      {
+        out << "\t\t\t\tparam_named fresnelMul float 4.0\n";
+        out << "\t\t\t\tparam_named fresnelPow float 5.0\n";
+      }
     }
 
 		out << "\t\t\t}\n";
@@ -840,7 +936,10 @@ namespace EasyOgreExporter
     out << "{\n";
     
     out << "\tsource " << baseName << ".cg\n";
-    out << "\tprofiles ps_4_0 ps_3_0 arbfp1\n";
+    if (bNeedHighProfile)
+      out << "\tprofiles ps_3_x arbfp1\n";
+    else
+      out << "\tprofiles ps_3_0 arbfp1\n";
     out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
     out << "\tdefault_params\n";
@@ -878,8 +977,12 @@ namespace EasyOgreExporter
     if(bRef)
     {
       out << "\t\tparam_named reflectivity float 1.0\n";
-      out << "\t\tparam_named fresnelMul float 4.0\n";
-      out << "\t\tparam_named fresnelPow float 5.0\n";
+
+      if (bFresnel)
+      {
+        out << "\t\tparam_named fresnelMul float 4.0\n";
+        out << "\t\tparam_named fresnelPow float 5.0\n";
+      }
     }
 
     out << "\t}\n";
@@ -902,6 +1005,7 @@ ExVsLightShaderMulti::~ExVsLightShaderMulti()
 void ExVsLightShaderMulti::constructShader(ExMaterial* mat)
 {
   // get the material config
+  bFresnel = (mat->m_type == MT_METAL) ? false : true;
   bRef = mat->m_hasReflectionMap;
   bNormal = mat->m_hasBumpMap;
   bDiffuse = mat->m_hasDiffuseMap;
@@ -945,10 +1049,13 @@ void ExVsLightShaderMulti::constructShader(ExMaterial* mat)
   out << "\tout float4 oWp : TEXCOORD" << texCoord++ << ",\n";
 
   int lastAvailableTexCoord = texCoord;
-  for (int i = 0; i < texUnits.size() && (texCoord < 8); i++)
+  for (int i = 0; i < texUnits.size() && (texCoord < 16); i++)
   {
     out << "\tout float2 oUv" << texUnits[i] << " : TEXCOORD" << texCoord++ << ",\n";
   }
+
+  if (texCoord > 8)
+    bNeedHighProfile = true;
 
   out << "\tuniform float4x4 wMat,\n";
 
@@ -965,11 +1072,14 @@ void ExVsLightShaderMulti::constructShader(ExMaterial* mat)
   out << "\toPos = mul(wvpMat, position);\n";
 
   texCoord = lastAvailableTexCoord;
-  for (int i = 0; i < texUnits.size() && (texCoord < 8); i++)
+  for (int i = 0; i < texUnits.size() && (texCoord < 16); i++)
   {
     out << "\toUv" << texUnits[i] << " = uv" << texUnits[i] << ";\n";
     texCoord++;
   }
+
+  if (texCoord > 8)
+    bNeedHighProfile = true;
 
   if (bNormal)
   {
@@ -1004,7 +1114,10 @@ std::string& ExVsLightShaderMulti::getProgram(std::string baseName)
   out << "{\n";
 
   out << "\tsource " << baseName << ".cg\n";
-  out << "\tprofiles vs_4_0 vs_1_1 arbvp1\n";
+  if (bNeedHighProfile)
+    out << "\tprofiles vs_4_0 arbvp2\n";
+  else
+    out << "\tprofiles vs_1_1 arbvp1\n";
   out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
   out << "\tdefault_params\n";
@@ -1038,6 +1151,7 @@ ExFpLightShaderMulti::~ExFpLightShaderMulti()
 void ExFpLightShaderMulti::constructShader(ExMaterial* mat)
 {
   // get the material config
+  bFresnel = (mat->m_type == MT_METAL) ? false : true;
   bRef = mat->m_hasReflectionMap;
   bNormal = mat->m_hasBumpMap;
   bDiffuse = mat->m_hasDiffuseMap;
@@ -1071,10 +1185,13 @@ void ExFpLightShaderMulti::constructShader(ExMaterial* mat)
   out << "\tfloat3 spDir : TEXCOORD" << texCoord++ << ",\n";
   out << "\tfloat4 wp : TEXCOORD" << texCoord++ << ",\n";
 
-  for (int i = 0; i < texUnits.size() && (texCoord < 8); i++)
+  for (int i = 0; i < texUnits.size() && (texCoord < 16); i++)
   {
     out << "\tfloat2 uv" << texUnits[i] << " : TEXCOORD" << texCoord++ << ",\n";
   }
+
+  if (texCoord > 8)
+    bNeedHighProfile = true;
 
   if (bAmbient)
     out << "\tuniform float3 ambient,\n";
@@ -1098,8 +1215,12 @@ void ExFpLightShaderMulti::constructShader(ExMaterial* mat)
   if (bRef)
   {
     out << ",\n\tuniform float reflectivity";
-    out << ",\n\tuniform float fresnelMul";
-    out << ",\n\tuniform float fresnelPow";
+
+    if (bFresnel)
+    {
+      out << ",\n\tuniform float fresnelMul";
+      out << ",\n\tuniform float fresnelPow";
+    }
   }
 
   int samplerId = 0;
@@ -1225,10 +1346,19 @@ void ExFpLightShaderMulti::constructShader(ExMaterial* mat)
     out << "\tfloat3 refVec = -reflect(camDir, normal);\n";
     out << "\trefVec.z = -refVec.z;\n";
     out << "\tfloat4 reflecTex = texCUBE(reflectMap, refVec);\n";
-    out << "\tfloat fresnel = fresnelMul * reflectivity * pow(1 + dot(-camDir, normal), fresnelPow - (reflectivity * fresnelMul));\n";
-    out << "\tfloat4 reflecVal = reflecTex * fresnel;\n";
 
-    out << "\tfloat3 reflectColor = (reflecVal.rgb * diffuseContrib) + (reflecVal.rbg * specularContrib);\n";
+    if (bFresnel)
+    {
+      out << "\tfloat fresnel = fresnelMul * reflectivity * pow(1 + dot(-camDir, normal), fresnelPow - (reflectivity * fresnelMul));\n";
+      out << "\tfloat4 reflecVal = reflecTex * fresnel;\n";
+      out << "\tfloat3 reflectColor = reflecVal.rgb * (1.0f - diffuseContrib) + (reflecVal.rgb * specularContrib);\n";
+    }
+    else
+    {
+      out << "\tfloat4 reflecVal = reflecTex * reflectivity;\n";
+      out << "\tfloat3 reflectColor = reflecVal.rgb * (1.0f - diffuseContrib) + (reflecVal.rgb * specularContrib);\n";
+    }
+
     out << "\treturn float4(light0C + reflectColor, alpha);\n";
   }
   else
@@ -1254,8 +1384,12 @@ std::string& ExFpLightShaderMulti::getUniformParams(ExMaterial* mat)
   if (bRef)
   {
     out << "\t\t\t\tparam_named reflectivity float " << mat->m_reflectivity << "\n";
-    out << "\t\t\t\tparam_named fresnelMul float 4.0\n";
-    out << "\t\t\t\tparam_named fresnelPow float 5.0\n";
+
+    if (bFresnel)
+    {
+      out << "\t\t\t\tparam_named fresnelMul float 4.0\n";
+      out << "\t\t\t\tparam_named fresnelPow float 5.0\n";
+    }
   }
 
   out << "\t\t\t}\n";
@@ -1270,7 +1404,10 @@ std::string& ExFpLightShaderMulti::getProgram(std::string baseName)
   out << "{\n";
 
   out << "\tsource " << baseName << ".cg\n";
-  out << "\tprofiles ps_4_0 ps_3_0 arbfp1\n";
+  if (bNeedHighProfile)
+    out << "\tprofiles ps_3_x arbfp1\n";
+  else
+    out << "\tprofiles ps_3_0 arbfp1\n";
   out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
   out << "\tdefault_params\n";
@@ -1298,8 +1435,12 @@ std::string& ExFpLightShaderMulti::getProgram(std::string baseName)
   if (bRef)
   {
     out << "\t\tparam_named reflectivity float 1.0\n";
-    out << "\t\tparam_named fresnelMul float 4.0\n";
-    out << "\t\tparam_named fresnelPow float 5.0\n";
+
+    if (bFresnel)
+    {
+      out << "\t\tparam_named fresnelMul float 4.0\n";
+      out << "\t\tparam_named fresnelPow float 5.0\n";
+    }
   }
 
   out << "\t}\n";

@@ -200,7 +200,9 @@ namespace EasyOgreExporter
 							break;
 
 						case ID_RL:
-							out << "REF";
+              if (m_type != MT_METAL)
+                out << "Fresnel";
+              out << "REF";
 							break;
 						}
 					}
@@ -241,7 +243,9 @@ namespace EasyOgreExporter
 							break;
 
 						case ID_RL:
-							out << "REF";
+              if (m_type != MT_METAL)
+                out << "Fresnel";
+              out << "REF";
 							break;
 						}
 					}
@@ -332,7 +336,9 @@ namespace EasyOgreExporter
 							break;
 
 						case ID_RL:
-							out << "REF";
+              if (m_type != MT_METAL)
+                out << "Fresnel";
+              out << "REF";
 							break;
 						}
 					}
@@ -414,6 +420,8 @@ namespace EasyOgreExporter
 							break;
 
 						case ID_RL:
+              if (m_type != MT_METAL)
+                out << "Fresnel";
 							out << "REF";
 							break;
 						}
@@ -789,7 +797,8 @@ namespace EasyOgreExporter
 	{
 		Mtl* maxMat = pGameMaterial->GetMaxMaterial();
 		StdMat2* smat = 0;
-		if(maxMat->ClassID() == Class_ID(DMTL_CLASS_ID, 0))
+
+    if(maxMat->ClassID() == Class_ID(DMTL_CLASS_ID, 0))
 		{
 			smat = static_cast<StdMat2*>(maxMat);
 		}
@@ -808,8 +817,10 @@ namespace EasyOgreExporter
 		}
 		else
 		{
-			if(smat->GetShading() == SHADE_PHONG)
-				m_type = MT_PHONG;
+      if (smat->GetShading() == SHADE_PHONG)
+        m_type = MT_PHONG;
+      else if (smat->GetShading() == SHADE_METAL)
+        m_type = MT_METAL;
 		}
 
 		if(!maxMat->GetSelfIllumColorOn())
@@ -841,6 +852,7 @@ namespace EasyOgreExporter
 		EasyOgreExporterLog("Exporting %d textures...\n", texCount);
 		for(int i = 0; i < texCount; ++i)
 		{
+      int tmpTexChannel = -1;
 			IGameTextureMap* pGameTexture = pGameMaterial->GetIGameTextureMap(i);
       int texSlot = pGameTexture->GetStdMapSlot();
 
@@ -923,6 +935,7 @@ namespace EasyOgreExporter
 										BitmapTex* pBitmapTex = static_cast<BitmapTex*>(pTexmap);
 										path = pBitmapTex->GetMapName();
 										texName = pBitmapTex->GetName();
+                    tmpTexChannel = pBitmapTex->GetMapChannel();
 									}
 								}
 							}
@@ -969,6 +982,7 @@ namespace EasyOgreExporter
                     BitmapTex* pBitmapTex = static_cast<BitmapTex*>(pTexmap);
                     path = pBitmapTex->GetMapName();
                     texName = pBitmapTex->GetName();
+                    tmpTexChannel = pBitmapTex->GetMapChannel();
                   }
                 }
               }
@@ -1208,7 +1222,7 @@ namespace EasyOgreExporter
 					break;
 				}
 
-				tex.uvsetIndex = pGameTexture->GetMapChannel() - 1;
+        tex.uvsetIndex = (tmpTexChannel >= 1) ? tmpTexChannel -1 : pGameTexture->GetMapChannel() - 1;
 
 				loadTextureUV(pGameTexture, tex);
 				m_textures.push_back(tex);
