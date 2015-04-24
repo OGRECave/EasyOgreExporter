@@ -121,6 +121,7 @@ namespace EasyOgreExporter
 		m_emissive = Point4(0,0,0,1);
 		m_opacity = 1.0f;
 		m_shininess = 0.0f;
+    m_softness = 0.1f;
 		m_reflectivity = 0.0f;
 		m_normalMul = 1.0f;
 		m_isTwoSided = false;
@@ -1375,6 +1376,15 @@ namespace EasyOgreExporter
 			pGameMaterial->GetGlossinessData()->GetPropertyValue(glossiness);
 			m_shininess = 255.0f * glossiness;
 		}
+
+    IPropertyContainer* pCont = pGameMaterial->GetIPropertyContainer();
+    float softness = 0.0f;
+    IGameProperty* pSoften = pCont->QueryProperty(_T("soften"));
+    if (pSoften)
+    {
+      pSoften->GetPropertyValue(softness);
+      m_softness = softness;
+    }
 
 		return true;
 	}

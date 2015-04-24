@@ -87,6 +87,7 @@ namespace EasyOgreExporter
 		MaterialType m_type;
 		Point4 m_ambient, m_diffuse, m_specular, m_emissive;
     float m_shininess;
+    float m_softness;
     float m_opacity;
     float m_reflectivity;
     float m_normalMul;
