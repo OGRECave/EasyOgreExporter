@@ -80,7 +80,7 @@ namespace EasyOgreExporter
       std::string& getName();
       std::string& getContent();
       virtual std::string& getUniformParams(ExMaterial* mat);
-      virtual std::string& getProgram(ExMaterial* mat, std::string baseName);
+      virtual std::string& getProgram(std::string baseName);
     protected:
     private:
 	};
@@ -97,7 +97,7 @@ namespace EasyOgreExporter
 
       virtual void constructShader(ExMaterial* mat);
       virtual std::string& getUniformParams(ExMaterial* mat);
-      virtual std::string& getProgram(ExMaterial* mat, std::string baseName);
+      virtual std::string& getProgram(std::string baseName);
     protected:
     private:
 	};
@@ -114,7 +114,7 @@ namespace EasyOgreExporter
 
       virtual void constructShader(ExMaterial* mat);
       virtual std::string& getUniformParams(ExMaterial* mat);
-      virtual std::string& getProgram(ExMaterial* mat, std::string baseName);
+      virtual std::string& getProgram(std::string baseName);
     protected:
     private:
 	};
@@ -131,7 +131,7 @@ namespace EasyOgreExporter
 
       virtual void constructShader(ExMaterial* mat);
       virtual std::string& getUniformParams(ExMaterial* mat);
-      virtual std::string& getProgram(ExMaterial* mat, std::string baseName);
+      virtual std::string& getProgram(std::string baseName);
     protected:
     private:
 	};
@@ -148,7 +148,7 @@ namespace EasyOgreExporter
 
       virtual void constructShader(ExMaterial* mat);
       virtual std::string& getUniformParams(ExMaterial* mat);
-      virtual std::string& getProgram(ExMaterial* mat, std::string baseName);
+      virtual std::string& getProgram(std::string baseName);
     protected:
     private:
 	};
@@ -165,7 +165,7 @@ namespace EasyOgreExporter
 
     virtual void constructShader(ExMaterial* mat);
     virtual std::string& getUniformParams(ExMaterial* mat);
-    virtual std::string& getProgram(ExMaterial* mat, std::string baseName);
+    virtual std::string& getProgram(std::string baseName);
   protected:
   private:
   };
@@ -182,7 +182,7 @@ namespace EasyOgreExporter
 
     virtual void constructShader(ExMaterial* mat);
     virtual std::string& getUniformParams(ExMaterial* mat);
-    virtual std::string& getProgram(ExMaterial* mat, std::string baseName);
+    virtual std::string& getProgram(std::string baseName);
   protected:
   private:
   };

@@ -50,7 +50,7 @@ namespace EasyOgreExporter
     return m_params;
   }
 
-  std::string& ExShader::getProgram(ExMaterial* mat, std::string baseName)
+  std::string& ExShader::getProgram(std::string baseName)
   {
     return m_program;
   }
@@ -170,7 +170,7 @@ namespace EasyOgreExporter
     return m_params;
   }
 
-  std::string& ExVsAmbShader::getProgram(ExMaterial* mat, std::string baseName)
+  std::string& ExVsAmbShader::getProgram(std::string baseName)
   {
     std::stringstream out;
     out << "vertex_program " << m_name << " cg\n";
@@ -389,7 +389,7 @@ namespace EasyOgreExporter
     return m_params;
   }
 
-  std::string& ExFpAmbShader::getProgram(ExMaterial* mat, std::string baseName)
+  std::string& ExFpAmbShader::getProgram(std::string baseName)
   {
     std::stringstream out;
     out << "fragment_program " << m_name << " cg\n";
@@ -415,8 +415,8 @@ namespace EasyOgreExporter
 
       if (bFresnel)
       {
-        out << "\t\tparam_named fresnelMul float " << mat->m_reflectivity << "\n";
-        out << "\t\tparam_named fresnelPow float " << (mat->m_softness * 4.0f) << "\n";
+        out << "\t\tparam_named fresnelMul float 1.0\n";
+        out << "\t\tparam_named fresnelPow float 1.0\n";
       }
     }
 
@@ -557,7 +557,7 @@ namespace EasyOgreExporter
     return m_params;
   }
 
-  std::string& ExVsLightShader::getProgram(ExMaterial* mat, std::string baseName)
+  std::string& ExVsLightShader::getProgram(std::string baseName)
   {
     std::stringstream out;
     out << "vertex_program " << m_name << " cg\n";
@@ -891,13 +891,13 @@ namespace EasyOgreExporter
       }
       else //metal style
       {
-        out << "\tfloat3 reflectColor = reflecTex.rgb * reflectivity * light0C;\n";
+        out << "\tfloat3 reflectColor = reflecTex.rgb * reflectivity;\n";
       }
       
       out << "\treturn float4(light0C + reflectColor, alpha);\n";
     }
-
-    out << "\treturn float4(light0C, alpha);\n";
+    else
+      out << "\treturn float4(light0C, alpha);\n";
 
     out << "}\n";
     m_content = out.str();
@@ -929,7 +929,7 @@ namespace EasyOgreExporter
     return m_params;
   }
 
-  std::string& ExFpLightShader::getProgram(ExMaterial* mat, std::string baseName)
+  std::string& ExFpLightShader::getProgram(std::string baseName)
   {
     std::stringstream out;
     out << "fragment_program " << m_name << " cg\n";
@@ -980,8 +980,8 @@ namespace EasyOgreExporter
 
       if (bFresnel)
       {
-        out << "\t\tparam_named fresnelMul float " << mat->m_reflectivity << "\n";
-        out << "\t\tparam_named fresnelPow float " << (mat->m_softness * 4.0f) << "\n";
+        out << "\t\tparam_named fresnelMul float 1.0\n";
+        out << "\t\tparam_named fresnelPow float 1.0\n";
       }
     }
 
@@ -1107,7 +1107,7 @@ std::string& ExVsLightShaderMulti::getUniformParams(ExMaterial* mat)
   return m_params;
 }
 
-std::string& ExVsLightShaderMulti::getProgram(ExMaterial* mat, std::string baseName)
+std::string& ExVsLightShaderMulti::getProgram(std::string baseName)
 {
   std::stringstream out;
   out << "vertex_program " << m_name << " cg\n";
@@ -1397,7 +1397,7 @@ std::string& ExFpLightShaderMulti::getUniformParams(ExMaterial* mat)
   return m_params;
 }
 
-std::string& ExFpLightShaderMulti::getProgram(ExMaterial* mat, std::string baseName)
+std::string& ExFpLightShaderMulti::getProgram(std::string baseName)
 {
   std::stringstream out;
   out << "fragment_program " << m_name << " cg\n";
@@ -1438,8 +1438,8 @@ std::string& ExFpLightShaderMulti::getProgram(ExMaterial* mat, std::string baseN
 
     if (bFresnel)
     {
-      out << "\t\tparam_named fresnelMul float " << mat->m_reflectivity << "\n";
-      out << "\t\tparam_named fresnelPow float " << (mat->m_softness * 4.0f) << "\n";
+      out << "\t\tparam_named fresnelMul float 1.0\n";
+      out << "\t\tparam_named fresnelPow float 1.0\n";
     }
   }
 

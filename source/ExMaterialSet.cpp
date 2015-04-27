@@ -286,7 +286,7 @@ namespace EasyOgreExporter
         outShaderCG << m_Shaders[i]->getContent();
         outShaderCG << "\n";
 
-        outProgram << m_Shaders[i]->getProgram(m_materials[i], optimizeFileName(params.sceneFilename));
+        outProgram << m_Shaders[i]->getProgram(optimizeFileName(params.sceneFilename));
         outProgram << "\n";
       }
 
