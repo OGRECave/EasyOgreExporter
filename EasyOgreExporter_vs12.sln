@@ -23,6 +23,8 @@ Global
 		Hybrid Max 2014|x64 = Hybrid Max 2014|x64
 		Hybrid Max 2015|Win32 = Hybrid Max 2015|Win32
 		Hybrid Max 2015|x64 = Hybrid Max 2015|x64
+		Hybrid Max 2016|Win32 = Hybrid Max 2016|Win32
+		Hybrid Max 2016|x64 = Hybrid Max 2016|x64
 		Hybrid Max 9|Win32 = Hybrid Max 9|Win32
 		Hybrid Max 9|x64 = Hybrid Max 9|x64
 		Release Max 2008|Win32 = Release Max 2008|Win32
@@ -41,6 +43,8 @@ Global
 		Release Max 2014|x64 = Release Max 2014|x64
 		Release Max 2015|Win32 = Release Max 2015|Win32
 		Release Max 2015|x64 = Release Max 2015|x64
+		Release Max 2016|Win32 = Release Max 2016|Win32
+		Release Max 2016|x64 = Release Max 2016|x64
 		Release Max 9|Win32 = Release Max 9|Win32
 		Release Max 9|x64 = Release Max 9|x64
 	EndGlobalSection
@@ -77,6 +81,9 @@ Global
 		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Hybrid Max 2015|Win32.Build.0 = Hybrid Max 2015|Win32
 		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Hybrid Max 2015|x64.ActiveCfg = Hybrid Max 2015|x64
 		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Hybrid Max 2015|x64.Build.0 = Hybrid Max 2015|x64
+		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Hybrid Max 2016|Win32.ActiveCfg = Hybrid Max 2016|x64
+		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Hybrid Max 2016|x64.ActiveCfg = Hybrid Max 2016|x64
+		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Hybrid Max 2016|x64.Build.0 = Hybrid Max 2016|x64
 		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Hybrid Max 9|Win32.ActiveCfg = Hybrid Max 9|Win32
 		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Hybrid Max 9|Win32.Build.0 = Hybrid Max 9|Win32
 		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Hybrid Max 9|x64.ActiveCfg = Hybrid Max 9|x64
@@ -113,6 +120,8 @@ Global
 		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Release Max 2015|Win32.Build.0 = Release Max 2015|Win32
 		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Release Max 2015|x64.ActiveCfg = Release Max 2015|x64
 		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Release Max 2015|x64.Build.0 = Release Max 2015|x64
+		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Release Max 2016|Win32.ActiveCfg = Release Max 2016|x64
+		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Release Max 2016|x64.ActiveCfg = Release Max 2016|x64
 		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Release Max 9|Win32.ActiveCfg = Release Max 9|Win32
 		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Release Max 9|Win32.Build.0 = Release Max 9|Win32
 		{D8BC5EC5-4B3A-4BE7-9825-A41F153FA211}.Release Max 9|x64.ActiveCfg = Release Max 9|x64
