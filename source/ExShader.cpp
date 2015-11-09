@@ -487,10 +487,21 @@ namespace EasyOgreExporter
     out << "\tout float4 oWp : TEXCOORD" << texCoord++ << ",\n";
 
     int lastAvailableTexCoord = texCoord;
+    int lastUvIndex = -1;
+
     for (int i=0; i < texUnits.size() && (texCoord < 16); i++)
     {
-      if (!(i % 2))
+      if (!(texUnits[i] % 2))
+      {
         out << "\tout float4 oUv" << texUnits[i] << " : TEXCOORD" << texCoord++ << ",\n";
+        lastUvIndex = texUnits[i];
+      }
+      else
+      {
+        if (lastUvIndex != texUnits[i] - 1)
+          out << "\tout float4 oUv" << texUnits[i] - 1 << " : TEXCOORD" << texCoord++ << ",\n";
+        lastUvIndex = texUnits[i] - 1;
+      }
     }
 
     if (texCoord > 8)
@@ -513,16 +524,28 @@ namespace EasyOgreExporter
     out << "\toPos = mul(wvpMat, position);\n";
 
     texCoord = lastAvailableTexCoord;
+    lastUvIndex = -1;
     for (int i=0; i < texUnits.size() && (texCoord < 16); i++)
     {
-      if (!(i % 2))
+      if (!(texUnits[i] % 2))
       {
         out << "\toUv" << texUnits[i] << ".xy = uv" << texUnits[i] << ";\n";
+        lastUvIndex = texUnits[i];
         texCoord++;
       }
       else
       {
-        out << "\toUv" << texUnits[i] - 1 << ".zw = uv" << texUnits[i] << ";\n";
+        if ((texUnits[i] - 1) == lastUvIndex)
+        {
+          out << "\toUv" << texUnits[i] - 1 << ".zw = uv" << texUnits[i] << ";\n";
+        }
+        else
+        {
+          out << "\toUv" << texUnits[i] - 1 << " = float4(0.0, 0.0, uv" << texUnits[i] << ");\n";
+          texCoord++;
+        }
+
+        lastUvIndex = texUnits[i] - 1;
       }
     }
 
@@ -640,10 +663,22 @@ namespace EasyOgreExporter
     out << "\tfloat3 spDir2 : TEXCOORD" << texCoord++ << ",\n";
     out << "\tfloat4 wp : TEXCOORD" << texCoord++ << ",\n";
 
+    int lastUvIndex = -1;
     for (int i=0; i < texUnits.size() && (texCoord < 16); i++)
     {
-      if (!(i % 2))
+      if (!(texUnits[i] % 2))
+      {
         out << "\tfloat4 uv" << texUnits[i] << " : TEXCOORD" << texCoord++ << ",\n";
+        lastUvIndex = texUnits[i];
+      }
+      else
+      {
+        // only if not added yet
+        if (lastUvIndex != texUnits[i] - 1)
+          out << "\tfloat4 uv" << texUnits[i] - 1 << " : TEXCOORD" << texCoord++ << ",\n";
+
+        lastUvIndex = texUnits[i] - 1;
+      }
     }
 
     if (texCoord > 8)
