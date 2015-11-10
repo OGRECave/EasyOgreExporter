@@ -29,7 +29,7 @@ AppCopyright=Bastien Bourineau 2015
 DisableProgramGroupPage=yes
 UsePreviousAppDir=false
 DisableDirPage=yes
-AppVerName=Easy Ogre Exporter 2.3.2
+AppVerName=Easy Ogre Exporter 2.3.3
 FlatComponentsList=False
 
 [Languages]

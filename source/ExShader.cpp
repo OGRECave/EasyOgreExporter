@@ -35,7 +35,7 @@ namespace EasyOgreExporter
   {
   }
 
-  void constructShaderGles(ExMaterial* mat)
+  void ExShader::constructShaderGles(ExMaterial* mat)
   {
   }
 
