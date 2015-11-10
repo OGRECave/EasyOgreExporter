@@ -290,8 +290,8 @@ namespace EasyOgreExporter
         {
           std::ofstream outShaderGles;
           std::string glesFilePath = makeOutputPath(params.outputDir, params.programOutputDir, optimizeFileName(m_Shaders[i]->getName()) + ((m_Shaders[i]->getType() == ExShader::ShaderType::ST_VSLIGHT) ? "VP" : "FP"), "glsles");
-          outShaderCG.open(glesFilePath.c_str());
-          if (!outShaderCG)
+          outShaderGles.open(glesFilePath.c_str());
+          if (!outShaderGles)
           {
             EasyOgreExporterLog("Error opening file: %s\n", glesFilePath.c_str());
           }
