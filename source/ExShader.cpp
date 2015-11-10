@@ -1071,12 +1071,12 @@ namespace EasyOgreExporter
     
     if (bIllum)
     {
-      out << "\tfloat4 illTex = tex2D(illMap, uv";
+      out << "\tfloat3 illTex = tex2D(illMap, uv";
       if (!(illUv % 2))
         out << illUv << ".xy" << ").rgb;\n";
       else
         out << illUv - 1 << ".zw" << ").rgb;\n";
-      out << "\tambientColor = max(ambientColor, illTex.rgb);\n";
+      out << "\tambientColor = max(ambientColor, illTex);\n";
     }
 
     out << "\tfloat3 specularContrib = specularLight * matSpec.rgb;\n";
@@ -1427,12 +1427,12 @@ namespace EasyOgreExporter
 
     if (bIllum)
     {
-      out << "\tvec4 illTex = texture2D(illMap, uv";
+      out << "\tvec3 illTex = texture2D(illMap, uv";
       if (!(illUv % 2))
         out << illUv << ".xy" << ").xyz;\n";
       else
         out << illUv - 1 << ".zw" << ").xyz;\n";
-      out << "\tambientColor = max(ambientColor, illTex.xyz);\n";
+      out << "\tambientColor = max(ambientColor, illTex);\n";
     }
 
     out << "\tvec3 specularContrib = specularLight * matSpec.xyz;\n";
