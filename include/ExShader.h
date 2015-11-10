@@ -68,6 +68,7 @@ namespace EasyOgreExporter
 
       std::string m_name;
       std::string m_content;
+      std::string m_contentGles;
       std::string m_program;
       std::string m_params;
     private:
@@ -77,8 +78,11 @@ namespace EasyOgreExporter
 		  ~ExShader();
 
       virtual void constructShader(ExMaterial* mat);
+      virtual void constructShaderGles(ExMaterial* mat);
       std::string& getName();
+      ShaderType getType();
       std::string& getContent();
+      std::string& getContentGles();
       virtual std::string& getUniformParams(ExMaterial* mat);
       virtual std::string& getProgram(std::string baseName);
     protected:
@@ -130,6 +134,7 @@ namespace EasyOgreExporter
 		  virtual ~ExVsLightShader();
 
       virtual void constructShader(ExMaterial* mat);
+      virtual void constructShaderGles(ExMaterial* mat);
       virtual std::string& getUniformParams(ExMaterial* mat);
       virtual std::string& getProgram(std::string baseName);
     protected:
@@ -147,6 +152,7 @@ namespace EasyOgreExporter
 		  ~ExFpLightShader();
 
       virtual void constructShader(ExMaterial* mat);
+      virtual void constructShaderGles(ExMaterial* mat);
       virtual std::string& getUniformParams(ExMaterial* mat);
       virtual std::string& getProgram(std::string baseName);
     protected:

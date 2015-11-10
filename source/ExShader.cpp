@@ -35,15 +35,29 @@ namespace EasyOgreExporter
   {
   }
 
+  void constructShaderGles(ExMaterial* mat)
+  {
+  }
+
 	std::string& ExShader::getName()
 	{
 		return m_name;
 	}
 
+  ExShader::ShaderType ExShader::getType()
+  {
+    return m_type;
+  }
+
 	std::string& ExShader::getContent()
 	{
 		return m_content;
 	}
+
+  std::string& ExShader::getContentGles()
+  {
+    return m_contentGles;
+  }
 
   std::string& ExShader::getUniformParams(ExMaterial* mat)
   {
@@ -570,6 +584,149 @@ namespace EasyOgreExporter
     m_content = out.str();
 	}
 
+  void ExVsLightShader::constructShaderGles(ExMaterial* mat)
+  {
+    // get the material config
+    bFresnel = (mat->m_type == MT_METAL) ? false : true;
+    bRef = mat->m_hasReflectionMap;
+    bNormal = mat->m_hasBumpMap;
+    bDiffuse = mat->m_hasDiffuseMap;
+    bSpecular = mat->m_hasSpecularMap;
+
+    std::vector<int> texUnits;
+    for (int i = 0; i < mat->m_textures.size(); i++)
+    {
+      if (mat->m_textures[i].bCreateTextureUnit == true)
+        texUnits.push_back(mat->m_textures[i].uvsetIndex);
+    }
+
+    std::sort(texUnits.begin(), texUnits.end());
+    texUnits.erase(std::unique(texUnits.begin(), texUnits.end()), texUnits.end());
+    std::stringstream out;
+
+    // generate the shader
+    out << "#version 100\n";
+    out << "precision mediump int;\n";
+    out << "precision highp float;\n";
+
+    // attributes
+    out << "attribute vec4 position;\n";
+    out << "attribute vec3 normal;\n";
+    if (bNormal)
+    {
+      out << "attribute vec4 tangent;\n";
+    }
+
+    for (int i = 0; i < texUnits.size(); i++)
+    {
+      out << "attribute vec uv" << texUnits[i] << ";\n";
+    }
+
+    //uniform
+    out << "uniform mat4 wMat;\n";
+
+    if (!bNormal)
+      out << "uniform mat4 witMat;\n";
+
+    out << "uniform mat4 wvpMat;\n";
+    out << "uniform vec4 spotlightDir0;\n";
+    out << "uniform vec4 spotlightDir1;\n";
+    out << "uniform vec4 spotlightDir2;";
+
+    // varying
+    int texCoord = 0;
+    out << "\tvarying vec3 oNorm;\n";
+
+    if (bNormal)
+    {
+      out << "\tvarying vec3 oTang;\n";
+      out << "\tvarying vec3 oBinormal;\n";
+    }
+
+    out << "\tvarying vec3 oSpDir0;\n";
+    out << "\tvarying vec3 oSpDir1;\n";
+    out << "\tvarying vec3 oSpDir2;\n";
+    out << "\tvarying vec4 oWp;\n";
+
+    int lastAvailableTexCoord = texCoord;
+    int lastUvIndex = -1;
+
+    for (int i = 0; i < texUnits.size() && (texCoord < 16); i++)
+    {
+      if (!(texUnits[i] % 2))
+      {
+        out << "\tvarying vec4 oUv" << texUnits[i] << ";\n";
+        lastUvIndex = texUnits[i];
+        texCoord++;
+      }
+      else
+      {
+        if (lastUvIndex != texUnits[i] - 1)
+        {
+          out << "\tvarying vec4 oUv" << texUnits[i] - 1 << ";\n";
+          texCoord++;
+        }
+        lastUvIndex = texUnits[i] - 1;
+      }
+    }
+
+    if (texCoord > 8)
+      bNeedHighProfile = true;
+
+    // main start
+    out << "void main()\n";
+    out << "{\n";
+
+    out << "\toWp = wMat * position;\n";
+    out << "\tgl_Position = wvpMat * position;\n";
+
+    texCoord = lastAvailableTexCoord;
+    lastUvIndex = -1;
+    for (int i = 0; i < texUnits.size() && (texCoord < 16); i++)
+    {
+      if (!(texUnits[i] % 2))
+      {
+        out << "\toUv" << texUnits[i] << ".xy = uv" << texUnits[i] << ";\n";
+        lastUvIndex = texUnits[i];
+        texCoord++;
+      }
+      else
+      {
+        if ((texUnits[i] - 1) == lastUvIndex)
+        {
+          out << "\toUv" << texUnits[i] - 1 << ".zw = uv" << texUnits[i] << ";\n";
+        }
+        else
+        {
+          out << "\toUv" << texUnits[i] - 1 << " = vec4(0.0, 0.0, uv" << texUnits[i] << ");\n";
+          texCoord++;
+        }
+
+        lastUvIndex = texUnits[i] - 1;
+      }
+    }
+
+    if (texCoord > 8)
+      bNeedHighProfile = true;
+
+    if (bNormal)
+    {
+      out << "\toTang = tangent.xyz;\n";
+      out << "\toBinormal = cross(normal, tangent.xyz) * tangent.www;\n";
+      out << "\toNorm = normal;\n";
+    }
+    else
+    {
+      out << "\toNorm = normalize(mat3(witMat) * normal);\n";
+    }
+
+    out << "\toSpDir0 = (wMat * spotlightDir0).xyz;\n";
+    out << "\toSpDir1 = (wMat * spotlightDir1).xyz;\n";
+    out << "\toSpDir2 = (wMat * spotlightDir2).xyz;\n";
+    out << "}\n";
+    m_contentGles = out.str();
+  }
+
   std::string& ExVsLightShader::getUniformParams(ExMaterial* mat)
   {
     std::stringstream out;
@@ -583,7 +740,9 @@ namespace EasyOgreExporter
   std::string& ExVsLightShader::getProgram(std::string baseName)
   {
     std::stringstream out;
-    out << "vertex_program " << m_name << " cg\n";
+
+    //CG
+    out << "vertex_program " << m_name << "_CG cg\n";
     out << "{\n";
     
     out << "\tsource " << baseName << ".cg\n";
@@ -606,6 +765,37 @@ namespace EasyOgreExporter
     out << "\t\tparam_named_auto spotlightDir2 light_direction_object_space 2\n";
 
     out << "\t}\n";
+    out << "}\n";
+
+    //GLSLES
+    out << "vertex_program " << m_name << "_GLSLES glsles\n";
+    out << "{\n";
+
+    out << "\tsource " << optimizeFileName(m_name) << "VP.glsles\n";
+    out << "\tprofiles glsles\n";
+
+    out << "\tdefault_params\n";
+    out << "\t{\n";
+    out << "\t\tparam_named_auto wMat world_matrix\n";
+
+    if (!bNormal)
+      out << "\t\tparam_named_auto witMat inverse_transpose_world_matrix\n";
+
+    out << "\t\tparam_named_auto wvpMat worldviewproj_matrix\n";
+    out << "\t\tparam_named_auto spotlightDir0 light_direction_object_space 0\n";
+    out << "\t\tparam_named_auto spotlightDir1 light_direction_object_space 1\n";
+    out << "\t\tparam_named_auto spotlightDir2 light_direction_object_space 2\n";
+
+    out << "\t}\n";
+    out << "}\n";
+
+    //DELEGATE
+    out << "vertex_program " << m_name << " unified\n";
+    out << "{\n";
+
+    out << "\tdelegate " << m_name << "_CG\n";
+    out << "\tdelegate " << m_name << "_GLSLES\n";
+
     out << "}\n";
 
     m_program = out.str();
@@ -938,6 +1128,362 @@ namespace EasyOgreExporter
     m_content = out.str();
 	}
 
+  void ExFpLightShader::constructShaderGles(ExMaterial* mat)
+  {
+    // get the material config
+    bFresnel = (mat->m_type == MT_METAL) ? false : true;
+    bRef = mat->m_hasReflectionMap;
+    bNormal = mat->m_hasBumpMap;
+    bDiffuse = mat->m_hasDiffuseMap;
+    bSpecular = mat->m_hasSpecularMap;
+    bAmbient = mat->m_hasAmbientMap;
+    bool bIllum = false;
+
+    std::vector<int> texUnits;
+    for (int i = 0; i < mat->m_textures.size(); i++)
+    {
+      if (mat->m_textures[i].bCreateTextureUnit == true)
+      {
+        texUnits.push_back(mat->m_textures[i].uvsetIndex);
+      }
+    }
+
+    std::sort(texUnits.begin(), texUnits.end());
+    texUnits.erase(std::unique(texUnits.begin(), texUnits.end()), texUnits.end());
+    std::stringstream out;
+
+    /////////////
+    // generate the shader
+    out << "#version 100\n";
+    out << "precision mediump int;\n";
+    out << "precision highp float;\n";
+
+    //uniform
+    out << "uniform vec3 ambient;\n";
+    out << "uniform vec3 lightDif0;\n";
+    out << "uniform vec4 lightPos0;\n";
+    out << "uniform vec4 lightAtt0;\n";
+    out << "uniform vec3 lightSpec0;\n";
+    out << "uniform vec3 lightDif1;\n";
+    out << "uniform vec4 lightPos1;\n";
+    out << "uniform vec4 lightAtt1;\n";
+    out << "uniform vec3 lightSpec1;\n";
+    out << "uniform vec3 lightDif2;\n";
+    out << "uniform vec4 lightPos2;\n";
+    out << "uniform vec4 lightAtt2;\n";
+    out << "uniform vec3 lightSpec2;\n";
+    out << "uniform vec3 camPos;\n";
+    out << "uniform vec4 matAmb;\n";
+    out << "uniform vec4 matEmissive;\n";
+    out << "uniform vec4 matDif;\n";
+    out << "uniform vec4 matSpec;\n";
+    out << "uniform float matShininess;\n";
+    out << "uniform vec4 invSMSize;\n";
+    out << "uniform vec4 spotlightParams0;\n";
+    out << "uniform vec4 spotlightParams1;\n";
+    out << "uniform vec4 spotlightParams2;\n";
+    if (bNormal)
+    {
+      out << "uniform mat4 iTWMat;\n";
+      out << "uniform float normalMul;\n";
+    }
+
+    if (bRef)
+    {
+      out << "uniform float reflectivity;";
+
+      if (bFresnel)
+      {
+        out << "uniform float fresnelMul;";
+        out << "uniform float fresnelPow;";
+      }
+    }
+
+    int samplerId = 0;
+    int ambUv = 0;
+    int diffUv = 0;
+    int specUv = 0;
+    int normUv = 0;
+    int illUv = 0;
+
+    for (int i = 0; i < mat->m_textures.size(); i++)
+    {
+      if (mat->m_textures[i].bCreateTextureUnit == true)
+      {
+        switch (mat->m_textures[i].type)
+        {
+          //could be a light map
+        case ID_AM:
+          out << "uniform sampler2D ambMap;\n";
+          ambUv = mat->m_textures[i].uvsetIndex;
+          samplerId++;
+          break;
+
+        case ID_DI:
+          out << "uniform sampler2D diffuseMap;\n";
+          diffUv = mat->m_textures[i].uvsetIndex;
+          samplerId++;
+          break;
+
+        case ID_SP:
+          out << "uniform sampler2D specMap;\n";
+          specUv = mat->m_textures[i].uvsetIndex;
+          samplerId++;
+          break;
+
+        case ID_BU:
+          out << "uniform sampler2D normalMap;\n";
+          normUv = mat->m_textures[i].uvsetIndex;
+          samplerId++;
+          break;
+
+        case ID_SI:
+          out << "uniform sampler2D illMap;\n";
+          illUv = mat->m_textures[i].uvsetIndex;
+          bIllum = true;
+          samplerId++;
+          break;
+
+        case ID_RL:
+          out << "uniform samplerCUBE reflectMap;\n";
+          samplerId++;
+          break;
+        }
+      }
+    }
+
+    // varying
+    int texCoord = 0;
+    out << "\tvarying vec3 oNorm;\n";
+
+    if (bNormal)
+    {
+      out << "\tvarying vec3 oTang;\n";
+      out << "\tvarying vec3 oBinormal;\n";
+    }
+
+    out << "\tvarying vec3 oSpDir0;\n";
+    out << "\tvarying vec3 oSpDir1;\n";
+    out << "\tvarying vec3 oSpDir2;\n";
+    out << "\tvarying vec4 oWp;\n";
+
+    int lastAvailableTexCoord = texCoord;
+    int lastUvIndex = -1;
+
+    for (int i = 0; i < texUnits.size() && (texCoord < 16); i++)
+    {
+      if (!(texUnits[i] % 2))
+      {
+        out << "\tvarying vec4 oUv" << texUnits[i] << ";\n";
+        lastUvIndex = texUnits[i];
+        texCoord++;
+      }
+      else
+      {
+        if (lastUvIndex != texUnits[i] - 1)
+        {
+          out << "\tvarying vec4 oUv" << texUnits[i] - 1 << ";\n";
+          texCoord++;
+        }
+        lastUvIndex = texUnits[i] - 1;
+      }
+    }
+
+    if (bNormal)
+    {
+      out << "highp mat3 transposeMat3(in highp mat3 inMatrix) {\n";
+      out << "highp vec3 i0 = inMatrix[0];\n";
+      out << "highp vec3 i1 = inMatrix[1];\n";
+      out << "highp vec3 i2 = inMatrix[2];\n";
+
+      out << "highp mat3 outMatrix = mat3(\n";
+      out << "vec4(i0.x, i1.x, i2.x),\n";
+      out << "vec4(i0.y, i1.y, i2.y),\n";
+      out << "vec4(i0.z, i1.z, i2.z)\n";
+      out << ");\n";
+      out << "return outMatrix;}\n";
+    }
+
+    // generate the shader
+    // main start
+    out << "void main()\n";
+    out << "{\n";
+    /*
+    out << "\tfloat3 normal : TEXCOORD" << texCoord++ << ",\n";
+
+    if (bNormal)
+    {
+      out << "\tfloat3 tangent : TEXCOORD" << texCoord++ << ",\n";
+      out << "\tfloat3 binormal : TEXCOORD" << texCoord++ << ",\n";
+    }
+
+    out << "\tfloat3 spDir0 : TEXCOORD" << texCoord++ << ",\n";
+    out << "\tfloat3 spDir1 : TEXCOORD" << texCoord++ << ",\n";
+    out << "\tfloat3 spDir2 : TEXCOORD" << texCoord++ << ",\n";
+    out << "\tfloat4 wp : TEXCOORD" << texCoord++ << ",\n";
+
+    out << "): COLOR0\n";
+    out << "{\n";
+    */
+    if (bNormal)
+    {
+      out << "\tfloat3 normalTex = texture2D(normalMap, uv";
+      if (!(normUv % 2))
+        out << normUv << ".xy" << ").xyz;\n";
+      else
+        out << normUv - 1 << ".zw" << ").xyz;\n";
+
+      out << "\ttangent *= normalMul;\n";
+      out << "\tbinormal *= normalMul;\n";
+      out << "\tmat3 tbn = mat3(oTang, oBinormal, oNorm);\n";
+      out << "\tvec3 normal = transposeMat3(tbn) * ((normalTex.xyz - vec3(0.5)) * 2); // to object space\n";
+      out << "\tnormal = normalize(mat3(iTWMat) * normal);\n";
+    }
+    else
+    {
+      out << "\tvec3 normal = normalize(oNorm);\n";
+    }
+
+    // direction
+    out << "\tvec3 ld0 = normalize(lightPos0.xyz - (vec3(lightPos0.w) * oWp.xyz));\n";
+    out << "\tvec3 ld1 = normalize(lightPos1.xyz - (vec3(lightPos1.w) * oWp.xyz));\n";
+    out << "\tvec3 ld2 = normalize(lightPos2.xyz - (vec3(lightPos2.w) * oWp.xyz));\n";
+
+    out << "\t// attenuation\n";
+    out << "\tfloat lightDist = length(lightPos0.xyz - oWp.xyz) / (lightAtt0.x / lightAtt0.x);\n";
+    out << "\tfloat la0 = 1.0;\n";
+    out << "\tfloat ila = 0.0;\n";
+    out << "\tif(lightAtt0.a > 0.0)\n";
+    out << "\t{\n";
+    out << "\t\tila = lightDist * lightDist; // quadratic falloff\n";
+    out << "\t\tla0 = 1.0 / (lightAtt0.g + lightAtt0.b * lightDist + lightAtt0.a * ila);\n";
+    out << "\t}\n";
+
+    out << "\t// attenuation\n";
+    out << "\tlightDist = length(lightPos1.xyz - oWp.xyz) / (lightAtt1.x / lightAtt1.x);\n";
+    out << "\tfloat la1 = 1.0;\n";
+    out << "\tif(lightAtt1.a > 0.0)\n";
+    out << "\t{\n";
+    out << "\t\tila = lightDist * lightDist; // quadratic falloff\n";
+    out << "\t\tla1 = 1.0 / (lightAtt1.g + lightAtt1.b * lightDist + lightAtt1.a * ila);\n";
+    out << "\t}\n";
+
+    out << "\t// attenuation\n";
+    out << "\tlightDist = length(lightPos2.xyz - oWp.xyz) / (lightAtt2.x / lightAtt2.x);\n";
+    out << "\tfloat la2 = 1.0;\n";
+    out << "\tif(lightAtt2.a > 0.0)\n";
+    out << "\t{\n";
+    out << "\t\tila = lightDist * lightDist; // quadratic falloff\n";
+    out << "\t\tla2 = 1.0 / (lightAtt2.g + lightAtt2.b * lightDist + lightAtt2.a * ila);\n";
+    out << "\t}\n";
+
+    out << "\tvec3 diffuse0 = vec3(max(dot(normal, ld0), 0.0)) * lightDif0;\n";
+    out << "\tvec3 diffuse1 = vec3(max(dot(normal, ld1), 0.0)) * lightDif1;\n";
+    out << "\tvec3 diffuse2 = vec3(max(dot(normal, ld2), 0.0)) * lightDif2;\n";
+
+    ////saturate = clamp(val, 0, 1)
+    out << "\t// calculate the spotlight effect\n";
+    out << "\tfloat spot0 = (spotlightParams0.x == 1.0 && spotlightParams0.y == 0.0 && spotlightParams0.z == 0 && spotlightParams0.w == 1.0 ? 1.0 : // if so, then it's not a spot light\n";
+    out << "\t   clamp(((dot(normalize(-oSpDir0), ld0) - spotlightParams0.y) / (spotlightParams0.x - spotlightParams0.y))), 0.0, 1.0);\n";
+    out << "\tfloat spot1 = (spotlightParams1.x == 1.0 && spotlightParams1.y == 0.0 && spotlightParams1.z == 0.0 && spotlightParams1.w == 1.0 ? 1.0 : // if so, then it's not a spot light\n";
+    out << "\t   clamp(((dot(normalize(-oSpDir1), ld1) - spotlightParams1.y) / (spotlightParams1.x - spotlightParams1.y))), 0.0, 1.0);\n";
+    out << "\tfloat spot2 = (spotlightParams2.x == 1.0 && spotlightParams2.y == 0.0 && spotlightParams2.z == 0.0 && spotlightParams2.w == 1.0 ? 1.0 : // if so, then it's not a spot light\n";
+    out << "\t   clamp(((dot(normalize(-oSpDir2), ld2) - spotlightParams2.y) / (spotlightParams2.x - spotlightParams2.y))), 0.0, 1.0);\n";
+
+    out << "\tvec3 camDir = normalize(camPos - oWp.xyz);\n";
+    out << "\tvec3 halfVec = normalize(ld0 + camDir);\n";
+    out << "\tvec3 specularLight = pow(max(dot(normal, halfVec), 0), vec3(matShininess)) * lightSpec0;\n";
+    out << "\thalfVec = normalize(ld1 + camDir);\n";
+    out << "\tspecularLight += pow(max(dot(normal, halfVec), 0), vec3(matShininess)) * lightSpec1;\n";
+    out << "\thalfVec = normalize(ld2 + camDir);\n";
+    out << "\tspecularLight += pow(max(dot(normal, halfVec), 0), vec3(matShininess)) * lightSpec2;\n";
+
+    out << "\tvec3 diffuseLight = (diffuse0 * vec3(spot0 * la0)) + (diffuse1 * vec3(spot1 * la1)) + (diffuse2 * vec3(spot2 * la2));\n";
+    out << "\tvec3 ambientColor = max(matEmissive.xyz, ambient * matAmb.xyz);\n";
+
+    out << "\tvec3 diffuseContrib = matDif.xyz;\n";
+
+    if (bDiffuse)
+    {
+      out << "\tvec4 diffuseTex = texture2D(diffuseMap, uv";
+      if (!(diffUv % 2))
+        out << diffUv << ".xy" << ");\n";
+      else
+        out << diffUv - 1 << ".zw" << ");\n";
+
+      out << "\tambientColor *= diffuseTex.xyz;\n";
+      out << "\tdiffuseContrib *= diffuseTex.xyz;\n";
+    }
+
+    if (bAmbient)
+    {
+      out << "\tvec3 ambTex = texture2D(ambMap, uv";
+      if (!(ambUv % 2))
+        out << ambUv << ".xy" << ").xyz;\n";
+      else
+        out << ambUv - 1 << ".zw" << ").xyz;\n";
+      out << "\tambientColor *= ambTex;\n";
+    }
+
+    if (bIllum)
+    {
+      out << "\tvec4 illTex = texture2D(illMap, uv";
+      if (!(illUv % 2))
+        out << illUv << ".xy" << ").xyz;\n";
+      else
+        out << illUv - 1 << ".zw" << ").xyz;\n";
+      out << "\tambientColor = max(ambientColor, illTex.xyz);\n";
+    }
+
+    out << "\tvec3 specularContrib = specularLight * matSpec.xyz;\n";
+
+    if (bSpecular)
+    {
+      out << "\tvec4 specTex = texture2D(specMap, uv";
+      if (!(specUv % 2))
+        out << specUv << ".xy" << ");\n";
+      else
+        out << specUv - 1 << ".zw" << ");\n";
+      out << "\tspecularContrib *= specTex.xyz;\n";
+    }
+
+    //if(bAmbient)
+    //out << "\tspecularContrib *= ambTex.xyz;\n";
+
+    out << "\tvec3 light0C = ambientColor + (diffuseLight * diffuseContrib) + specularContrib;\n";
+
+    out << "\tfloat alpha = matDif.a;\n";
+    if (bDiffuse)
+      out << "\talpha *= diffuseTex.a;\n";
+    else if (bAmbient)
+      out << "\talpha *= ambTex.a;\n";
+
+    if (bRef)
+    {
+      out << "\tvec3 refVec = -reflect(camDir, normal);\n";
+      out << "\trefVec.z = -refVec.z;\n";
+      out << "\tvec4 reflecTex = texCUBE(reflectMap, refVec);\n";
+
+      if (bFresnel)
+      {
+        out << "\tfloat fresnel = fresnelMul * reflectivity * pow(1.0 + dot(-camDir, normal), fresnelPow - (reflectivity * fresnelMul));\n";
+        out << "\tvec4 reflecVal = reflecTex * fresnel;\n";
+        out << "\tvec3 reflectColor = reflecVal.xyz * (1.0 - light0C);\n";
+      }
+      else //metal style
+      {
+        out << "\tvec3 reflectColor = reflecTex.xyz * reflectivity;\n";
+      }
+
+      out << "\treturn vec4(light0C + reflectColor, alpha);\n";
+    }
+    else
+      out << "\treturn vec4(light0C, alpha);\n";
+
+    out << "}\n";
+    m_contentGles = out.str();
+  }
+
   std::string& ExFpLightShader::getUniformParams(ExMaterial* mat)
   {
     std::stringstream out;
@@ -967,7 +1513,9 @@ namespace EasyOgreExporter
   std::string& ExFpLightShader::getProgram(std::string baseName)
   {
     std::stringstream out;
-    out << "fragment_program " << m_name << " cg\n";
+
+    //CG
+    out << "fragment_program " << m_name << "_CG cg\n";
     out << "{\n";
     
     out << "\tsource " << baseName << ".cg\n";
@@ -1021,6 +1569,68 @@ namespace EasyOgreExporter
     }
 
     out << "\t}\n";
+    out << "}\n";
+
+    //GLSLES
+    out << "fragment_program " << m_name << "_GLSLES glsles\n";
+    out << "{\n";
+
+    out << "\tsource " << optimizeFileName(m_name) << "FP.glsles\n";
+    out << "\tprofiles glsles\n";
+
+    out << "\tdefault_params\n";
+    out << "\t{\n";
+
+    out << "\t\tparam_named_auto ambient ambient_light_colour\n";
+    out << "\t\tparam_named_auto lightDif0 light_diffuse_colour 0\n";
+    out << "\t\tparam_named_auto lightPos0 light_position 0\n";
+    out << "\t\tparam_named_auto lightAtt0 light_attenuation 0\n";
+    out << "\t\tparam_named_auto lightSpec0 light_specular_colour 0\n";
+    out << "\t\tparam_named_auto lightDif1 light_diffuse_colour 1\n";
+    out << "\t\tparam_named_auto lightPos1 light_position 1\n";
+    out << "\t\tparam_named_auto lightAtt1 light_attenuation 1\n";
+    out << "\t\tparam_named_auto lightSpec1 light_specular_colour 1\n";
+    out << "\t\tparam_named_auto lightDif2 light_diffuse_colour 2\n";
+    out << "\t\tparam_named_auto lightPos2 light_position 2\n";
+    out << "\t\tparam_named_auto lightAtt2 light_attenuation 2\n";
+    out << "\t\tparam_named_auto lightSpec2 light_specular_colour 2\n";
+    out << "\t\tparam_named_auto camPos camera_position\n";
+    out << "\t\tparam_named_auto matAmb surface_ambient_colour\n";
+    out << "\t\tparam_named_auto matEmissive surface_emissive_colour\n";
+    out << "\t\tparam_named_auto matDif surface_diffuse_colour\n";
+    out << "\t\tparam_named_auto matSpec surface_specular_colour\n";
+    out << "\t\tparam_named_auto matShininess surface_shininess\n";
+    out << "\t\tparam_named_auto spotlightParams0 spotlight_params 0\n";
+    out << "\t\tparam_named_auto spotlightParams1 spotlight_params 1\n";
+    out << "\t\tparam_named_auto spotlightParams2 spotlight_params 2\n";
+
+    if (bNormal)
+    {
+      out << "\t\tparam_named_auto iTWMat inverse_transpose_world_matrix\n";
+      out << "\t\tparam_named normalMul float 1\n";
+    }
+
+    if (bRef)
+    {
+      out << "\t\tparam_named reflectivity float 1.0\n";
+
+      if (bFresnel)
+      {
+        out << "\t\tparam_named fresnelMul float 1.0\n";
+        out << "\t\tparam_named fresnelPow float 1.0\n";
+      }
+    }
+
+    out << "\t}\n";
+    out << "}\n";
+
+    //DELEGATE
+    out << "fragment_program " << m_name << " unified\n";
+    out << "{\n";
+
+    out << "\tdelegate " << m_name << "_CG\n";
+    out << "\tdelegate " << m_name << "_GLSLES\n";
+
     out << "}\n";
 
     m_program = out.str();

@@ -162,6 +162,7 @@ namespace EasyOgreExporter
     if(shader)
     {
       shader->constructShader(mat);
+      shader->constructShaderGles(mat);
       addShader(shader);
     }
     return shader;
@@ -283,6 +284,24 @@ namespace EasyOgreExporter
 
       for (int i = 0; i < m_Shaders.size(); i++)
       {
+        std::string glesContent = m_Shaders[i]->getContentGles();
+
+        if (!glesContent.empty())
+        {
+          std::ofstream outShaderGles;
+          std::string glesFilePath = makeOutputPath(params.outputDir, params.programOutputDir, optimizeFileName(m_Shaders[i]->getName()) + ((m_Shaders[i]->getType() == ExShader::ShaderType::ST_VSLIGHT) ? "VP" : "FP"), "glsles");
+          outShaderCG.open(glesFilePath.c_str());
+          if (!outShaderCG)
+          {
+            EasyOgreExporterLog("Error opening file: %s\n", glesFilePath.c_str());
+          }
+          else
+          {
+            outShaderGles << glesContent;
+            outShaderGles.close();
+          }
+        }
+
         outShaderCG << m_Shaders[i]->getContent();
         outShaderCG << "\n";
 
