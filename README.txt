@@ -13,7 +13,7 @@
 Ogre wiki page : http://www.ogre3d.org/tikiwiki/Easy+Ogre+Exporter
 Ogre forum thread : http://www.ogre3d.org/forums/viewtopic.php?f=8&t=68688
 
-#Version 2.3.3 : November 11 2015
+#Version 2.3.4 : November 12 2015
 
  - Ogre Scene file
  - meshs

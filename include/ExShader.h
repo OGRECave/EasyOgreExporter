@@ -21,6 +21,7 @@
 namespace EasyOgreExporter
 {
   class ExMaterial;
+  class Texture;
 
   class ExShader
 	{
@@ -71,6 +72,7 @@ namespace EasyOgreExporter
       std::string m_contentGles;
       std::string m_program;
       std::string m_params;
+      std::vector<Texture> m_textures;
     private:
     
     public:

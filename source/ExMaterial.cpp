@@ -1625,18 +1625,18 @@ namespace EasyOgreExporter
 					case ID_DI:
 						outMaterial << "Diffuse";
 						break;
+          case ID_SP:
+            outMaterial << "Specular";
+            break;
 					case ID_BU:
 						outMaterial << "Normal";
-						break;
-					case ID_SP:
-						outMaterial << "Specular";
-						break;
-					case ID_RL:
-						outMaterial << "Reflect";
 						break;
 					case ID_SI:
 						outMaterial << "Self-Illumination";
 						break;
+          case ID_RL:
+            outMaterial << "Reflect";
+            break;
 					default:
 						outMaterial << "Unknown";
 					}

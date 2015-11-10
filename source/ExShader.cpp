@@ -607,7 +607,7 @@ namespace EasyOgreExporter
     // generate the shader
     out << "#version 100\n";
     out << "precision mediump int;\n";
-    out << "precision highp float;\n";
+    out << "precision highp float;\n\n";
 
     // attributes
     out << "attribute vec4 position;\n";
@@ -619,8 +619,10 @@ namespace EasyOgreExporter
 
     for (int i = 0; i < texUnits.size(); i++)
     {
-      out << "attribute vec uv" << texUnits[i] << ";\n";
+      out << "attribute vec2 uv" << texUnits[i] << ";\n";
     }
+
+    out << "\n";
 
     //uniform
     out << "uniform mat4 wMat;\n";
@@ -633,6 +635,7 @@ namespace EasyOgreExporter
     out << "uniform vec4 spotlightDir1;\n";
     out << "uniform vec4 spotlightDir2;";
 
+    out << "\n";
     // varying
     int texCoord = 0;
     out << "\tvarying vec3 oNorm;\n";
@@ -643,10 +646,11 @@ namespace EasyOgreExporter
       out << "\tvarying vec3 oBinormal;\n";
     }
 
-    out << "\tvarying vec3 oSpDir0;\n";
-    out << "\tvarying vec3 oSpDir1;\n";
-    out << "\tvarying vec3 oSpDir2;\n";
-    out << "\tvarying vec4 oWp;\n";
+    out << "varying vec3 oSpDir0;\n";
+    out << "varying vec3 oSpDir1;\n";
+    out << "varying vec3 oSpDir2;\n";
+    out << "varying vec4 oWp;\n";
+    out << "\n";
 
     int lastAvailableTexCoord = texCoord;
     int lastUvIndex = -1;
@@ -823,6 +827,9 @@ namespace EasyOgreExporter
     bSpecular = mat->m_hasSpecularMap;
     bAmbient = mat->m_hasAmbientMap;
     bool bIllum = false;
+
+    //copy texture list for program generation
+    m_textures = mat->m_textures;
 
     std::vector<int> texUnits;
     for (int i = 0; i < mat->m_textures.size(); i++)
@@ -1027,11 +1034,11 @@ namespace EasyOgreExporter
     out << "\tfloat3 diffuse2 = max(dot(normal, ld2), 0) * lightDif2;\n";
 
     out << "\t// calculate the spotlight effect\n";
-    out << "\tfloat spot0 = (spotlightParams0.x == 1 && spotlightParams0.y == 0 && spotlightParams0.z == 0 && spotlightParams0.w == 1 ? 1 : // if so, then it's not a spot light\n";
+    out << "\tfloat spot0 = (((spotlightParams0.x == 1.0) && (spotlightParams0.y == 0.0) && (spotlightParams0.z == 0.0) && (spotlightParams0.w == 1.0)) ? 1.0 : // if so, then it's not a spot light\n";
     out << "\t   saturate((dot(normalize(-spDir0), ld0) - spotlightParams0.y) / (spotlightParams0.x - spotlightParams0.y)));\n";
-    out << "\tfloat spot1 = (spotlightParams1.x == 1 && spotlightParams1.y == 0 && spotlightParams1.z == 0 && spotlightParams1.w == 1 ? 1 : // if so, then it's not a spot light\n";
+    out << "\tfloat spot1 = (((spotlightParams1.x == 1.0) && (spotlightParams1.y == 0.0) && (spotlightParams1.z == 0.0) && (spotlightParams1.w == 1.0)) ? 1.0 : // if so, then it's not a spot light\n";
     out << "\t   saturate((dot(normalize(-spDir1), ld1) - spotlightParams1.y) / (spotlightParams1.x - spotlightParams1.y)));\n";
-    out << "\tfloat spot2 = (spotlightParams2.x == 1 && spotlightParams2.y == 0 && spotlightParams2.z == 0 && spotlightParams2.w == 1 ? 1 : // if so, then it's not a spot light\n";
+    out << "\tfloat spot2 = (((spotlightParams2.x == 1.0) && (spotlightParams2.y == 0.0) && (spotlightParams2.z == 0.0) && (spotlightParams2.w == 1.0)) ? 1.0 : // if so, then it's not a spot light\n";
     out << "\t   saturate((dot(normalize(-spDir2), ld2) - spotlightParams2.y) / (spotlightParams2.x - spotlightParams2.y)));\n";
 
     out << "\tfloat3 camDir = normalize(camPos - wp.xyz);\n";
@@ -1156,7 +1163,7 @@ namespace EasyOgreExporter
     // generate the shader
     out << "#version 100\n";
     out << "precision mediump int;\n";
-    out << "precision highp float;\n";
+    out << "precision highp float;\n\n";
 
     //uniform
     out << "uniform vec3 ambient;\n";
@@ -1190,14 +1197,16 @@ namespace EasyOgreExporter
 
     if (bRef)
     {
-      out << "uniform float reflectivity;";
+      out << "uniform float reflectivity;\n";
 
       if (bFresnel)
       {
-        out << "uniform float fresnelMul;";
-        out << "uniform float fresnelPow;";
+        out << "uniform float fresnelMul;\n";
+        out << "uniform float fresnelPow;\n";
       }
     }
+
+    out << "\n";
 
     int samplerId = 0;
     int ambUv = 0;
@@ -1245,27 +1254,30 @@ namespace EasyOgreExporter
           break;
 
         case ID_RL:
-          out << "uniform samplerCUBE reflectMap;\n";
+          out << "uniform samplerCube reflectMap;\n";
           samplerId++;
           break;
         }
       }
     }
 
+    out << "\n";
+
     // varying
     int texCoord = 0;
-    out << "\tvarying vec3 oNorm;\n";
+    out << "varying vec3 oNorm;\n";
 
     if (bNormal)
     {
-      out << "\tvarying vec3 oTang;\n";
-      out << "\tvarying vec3 oBinormal;\n";
+      out << "varying vec3 oTang;\n";
+      out << "varying vec3 oBinormal;\n";
     }
 
-    out << "\tvarying vec3 oSpDir0;\n";
-    out << "\tvarying vec3 oSpDir1;\n";
-    out << "\tvarying vec3 oSpDir2;\n";
-    out << "\tvarying vec4 oWp;\n";
+    out << "varying vec3 oSpDir0;\n";
+    out << "varying vec3 oSpDir1;\n";
+    out << "varying vec3 oSpDir2;\n";
+    out << "varying vec4 oWp;\n";
+    out << "\n";
 
     int lastAvailableTexCoord = texCoord;
     int lastUvIndex = -1;
@@ -1291,52 +1303,35 @@ namespace EasyOgreExporter
 
     if (bNormal)
     {
-      out << "highp mat3 transposeMat3(in highp mat3 inMatrix) {\n";
+      out << "\nhighp mat3 transposeMat3(in highp mat3 inMatrix) {\n";
       out << "highp vec3 i0 = inMatrix[0];\n";
       out << "highp vec3 i1 = inMatrix[1];\n";
       out << "highp vec3 i2 = inMatrix[2];\n";
 
       out << "highp mat3 outMatrix = mat3(\n";
-      out << "vec4(i0.x, i1.x, i2.x),\n";
-      out << "vec4(i0.y, i1.y, i2.y),\n";
-      out << "vec4(i0.z, i1.z, i2.z)\n";
+      out << "vec3(i0.x, i1.x, i2.x),\n";
+      out << "vec3(i0.y, i1.y, i2.y),\n";
+      out << "vec3(i0.z, i1.z, i2.z)\n";
       out << ");\n";
-      out << "return outMatrix;}\n";
+      out << "return outMatrix;}\n\n";
     }
 
     // generate the shader
     // main start
     out << "void main()\n";
     out << "{\n";
-    /*
-    out << "\tfloat3 normal : TEXCOORD" << texCoord++ << ",\n";
 
     if (bNormal)
     {
-      out << "\tfloat3 tangent : TEXCOORD" << texCoord++ << ",\n";
-      out << "\tfloat3 binormal : TEXCOORD" << texCoord++ << ",\n";
-    }
-
-    out << "\tfloat3 spDir0 : TEXCOORD" << texCoord++ << ",\n";
-    out << "\tfloat3 spDir1 : TEXCOORD" << texCoord++ << ",\n";
-    out << "\tfloat3 spDir2 : TEXCOORD" << texCoord++ << ",\n";
-    out << "\tfloat4 wp : TEXCOORD" << texCoord++ << ",\n";
-
-    out << "): COLOR0\n";
-    out << "{\n";
-    */
-    if (bNormal)
-    {
-      out << "\tfloat3 normalTex = texture2D(normalMap, uv";
+      out << "\tvec3 normalTex = texture2D(normalMap, oUv";
       if (!(normUv % 2))
         out << normUv << ".xy" << ").xyz;\n";
       else
         out << normUv - 1 << ".zw" << ").xyz;\n";
 
-      out << "\ttangent *= normalMul;\n";
-      out << "\tbinormal *= normalMul;\n";
-      out << "\tmat3 tbn = mat3(oTang, oBinormal, oNorm);\n";
-      out << "\tvec3 normal = transposeMat3(tbn) * ((normalTex.xyz - vec3(0.5)) * 2); // to object space\n";
+      out << "\tvec3 vnormal = vec3(normalMul);\n";
+      out << "\tmat3 tbn = mat3(oTang * vnormal, oBinormal * vnormal, oNorm);\n";
+      out << "\tvec3 normal = transposeMat3(tbn) * ((normalTex.xyz - vec3(0.5)) * vec3(2.0)); // to object space\n";
       out << "\tnormal = normalize(mat3(iTWMat) * normal);\n";
     }
     else
@@ -1383,20 +1378,20 @@ namespace EasyOgreExporter
 
     ////saturate = clamp(val, 0, 1)
     out << "\t// calculate the spotlight effect\n";
-    out << "\tfloat spot0 = (spotlightParams0.x == 1.0 && spotlightParams0.y == 0.0 && spotlightParams0.z == 0 && spotlightParams0.w == 1.0 ? 1.0 : // if so, then it's not a spot light\n";
-    out << "\t   clamp(((dot(normalize(-oSpDir0), ld0) - spotlightParams0.y) / (spotlightParams0.x - spotlightParams0.y))), 0.0, 1.0);\n";
-    out << "\tfloat spot1 = (spotlightParams1.x == 1.0 && spotlightParams1.y == 0.0 && spotlightParams1.z == 0.0 && spotlightParams1.w == 1.0 ? 1.0 : // if so, then it's not a spot light\n";
-    out << "\t   clamp(((dot(normalize(-oSpDir1), ld1) - spotlightParams1.y) / (spotlightParams1.x - spotlightParams1.y))), 0.0, 1.0);\n";
-    out << "\tfloat spot2 = (spotlightParams2.x == 1.0 && spotlightParams2.y == 0.0 && spotlightParams2.z == 0.0 && spotlightParams2.w == 1.0 ? 1.0 : // if so, then it's not a spot light\n";
-    out << "\t   clamp(((dot(normalize(-oSpDir2), ld2) - spotlightParams2.y) / (spotlightParams2.x - spotlightParams2.y))), 0.0, 1.0);\n";
+    out << "\tfloat spot0 = (((spotlightParams0.x == 1.0) && (spotlightParams0.y == 0.0) && (spotlightParams0.z == 0.0) && (spotlightParams0.w == 1.0)) ? 1.0 : // if so, then it's not a spot light\n";
+    out << "\t   clamp(((dot(normalize(-oSpDir0), ld0) - spotlightParams0.y) / (spotlightParams0.x - spotlightParams0.y)), 0.0, 1.0));\n";
+    out << "\tfloat spot1 = (((spotlightParams1.x == 1.0) && (spotlightParams1.y == 0.0) && (spotlightParams1.z == 0.0) && (spotlightParams1.w == 1.0)) ? 1.0 : // if so, then it's not a spot light\n";
+    out << "\t   clamp(((dot(normalize(-oSpDir1), ld1) - spotlightParams1.y) / (spotlightParams1.x - spotlightParams1.y)), 0.0, 1.0));\n";
+    out << "\tfloat spot2 = (((spotlightParams2.x == 1.0) && (spotlightParams2.y == 0.0) && (spotlightParams2.z == 0.0) && (spotlightParams2.w == 1.0)) ? 1.0 : // if so, then it's not a spot light\n";
+    out << "\t   clamp(((dot(normalize(-oSpDir2), ld2) - spotlightParams2.y) / (spotlightParams2.x - spotlightParams2.y)), 0.0, 1.0));\n";
 
     out << "\tvec3 camDir = normalize(camPos - oWp.xyz);\n";
     out << "\tvec3 halfVec = normalize(ld0 + camDir);\n";
-    out << "\tvec3 specularLight = pow(max(dot(normal, halfVec), 0), vec3(matShininess)) * lightSpec0;\n";
+    out << "\tvec3 specularLight = pow(vec3(max(dot(normal, halfVec), 0.0)), vec3(matShininess)) * lightSpec0;\n";
     out << "\thalfVec = normalize(ld1 + camDir);\n";
-    out << "\tspecularLight += pow(max(dot(normal, halfVec), 0), vec3(matShininess)) * lightSpec1;\n";
+    out << "\tspecularLight += pow(vec3(max(dot(normal, halfVec), 0.0)), vec3(matShininess)) * lightSpec1;\n";
     out << "\thalfVec = normalize(ld2 + camDir);\n";
-    out << "\tspecularLight += pow(max(dot(normal, halfVec), 0), vec3(matShininess)) * lightSpec2;\n";
+    out << "\tspecularLight += pow(vec3(max(dot(normal, halfVec), 0.0)), vec3(matShininess)) * lightSpec2;\n";
 
     out << "\tvec3 diffuseLight = (diffuse0 * vec3(spot0 * la0)) + (diffuse1 * vec3(spot1 * la1)) + (diffuse2 * vec3(spot2 * la2));\n";
     out << "\tvec3 ambientColor = max(matEmissive.xyz, ambient * matAmb.xyz);\n";
@@ -1405,7 +1400,7 @@ namespace EasyOgreExporter
 
     if (bDiffuse)
     {
-      out << "\tvec4 diffuseTex = texture2D(diffuseMap, uv";
+      out << "\tvec4 diffuseTex = texture2D(diffuseMap, oUv";
       if (!(diffUv % 2))
         out << diffUv << ".xy" << ");\n";
       else
@@ -1417,7 +1412,7 @@ namespace EasyOgreExporter
 
     if (bAmbient)
     {
-      out << "\tvec3 ambTex = texture2D(ambMap, uv";
+      out << "\tvec3 ambTex = texture2D(ambMap, oUv";
       if (!(ambUv % 2))
         out << ambUv << ".xy" << ").xyz;\n";
       else
@@ -1427,7 +1422,7 @@ namespace EasyOgreExporter
 
     if (bIllum)
     {
-      out << "\tvec3 illTex = texture2D(illMap, uv";
+      out << "\tvec3 illTex = texture2D(illMap, oUv";
       if (!(illUv % 2))
         out << illUv << ".xy" << ").xyz;\n";
       else
@@ -1439,7 +1434,7 @@ namespace EasyOgreExporter
 
     if (bSpecular)
     {
-      out << "\tvec4 specTex = texture2D(specMap, uv";
+      out << "\tvec4 specTex = texture2D(specMap, oUv";
       if (!(specUv % 2))
         out << specUv << ".xy" << ");\n";
       else
@@ -1462,7 +1457,7 @@ namespace EasyOgreExporter
     {
       out << "\tvec3 refVec = -reflect(camDir, normal);\n";
       out << "\trefVec.z = -refVec.z;\n";
-      out << "\tvec4 reflecTex = texCUBE(reflectMap, refVec);\n";
+      out << "\tvec4 reflecTex = textureCube(reflectMap, refVec);\n";
 
       if (bFresnel)
       {
@@ -1475,10 +1470,10 @@ namespace EasyOgreExporter
         out << "\tvec3 reflectColor = reflecTex.xyz * reflectivity;\n";
       }
 
-      out << "\treturn vec4(light0C + reflectColor, alpha);\n";
+      out << "\tgl_FragColor = vec4(light0C + reflectColor, alpha);\n";
     }
     else
-      out << "\treturn vec4(light0C, alpha);\n";
+      out << "\tgl_FragColor = vec4(light0C, alpha);\n";
 
     out << "}\n";
     m_contentGles = out.str();
@@ -1618,6 +1613,47 @@ namespace EasyOgreExporter
       {
         out << "\t\tparam_named fresnelMul float 1.0\n";
         out << "\t\tparam_named fresnelPow float 1.0\n";
+      }
+    }
+
+    //samplers
+    int samplerId = 0;
+    for (int i = 0; i < m_textures.size(); i++)
+    {
+      if (m_textures[i].bCreateTextureUnit == true)
+      {
+        switch (m_textures[i].type)
+        {
+        case ID_AM:
+          out << "\t\tparam_named ambMap int " << samplerId << "\n";
+          samplerId++;
+          break;
+
+        case ID_DI:
+          out << "\t\tparam_named diffuseMap int " << samplerId << "\n";
+          samplerId++;
+          break;
+
+        case ID_SP:
+          out << "\t\tparam_named specMap int " << samplerId << "\n";
+          samplerId++;
+          break;
+
+        case ID_BU:
+          out << "\t\tparam_named normalMap int " << samplerId << "\n";
+          samplerId++;
+          break;
+
+        case ID_SI:
+          out << "\t\tparam_named illMap int " << samplerId << "\n";
+          samplerId++;
+          break;
+
+        case ID_RL:
+          out << "\t\tparam_named reflectMap int " << samplerId << "\n";
+          samplerId++;
+          break;
+        }
       }
     }
 
@@ -1945,7 +1981,7 @@ void ExFpLightShaderMulti::constructShader(ExMaterial* mat)
   out << "\tfloat3 diffuse = max(dot(normal, ld0), 0);\n";
 
   out << "\t// calculate the spotlight effect\n";
-  out << "\tfloat spot = (spotlightParams.x == 1 && spotlightParams.y == 0 && spotlightParams.z == 0 && spotlightParams.w == 1 ? 1 : // if so, then it's not a spot light\n";
+  out << "\tfloat spot = (((spotlightParams.x == 1.0) && (spotlightParams.y == 0.0) && (spotlightParams.z == 0.0) && (spotlightParams.w == 1.0)) ? 1.0 : // if so, then it's not a spot light\n";
   out << "\t   saturate((dot(normalize(-spDir), ld0) - spotlightParams.y) / (spotlightParams.x - spotlightParams.y)));\n";
 
   out << "\tfloat3 camDir = normalize(camPos - wp.xyz);\n";
