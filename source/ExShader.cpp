@@ -1287,7 +1287,7 @@ namespace EasyOgreExporter
     {
       if (!(texUnits[i] % 2))
       {
-        out << "\tvarying vec4 oUv" << texUnits[i] << ";\n";
+        out << "varying vec4 oUv" << texUnits[i] << ";\n";
         lastUvIndex = texUnits[i];
         texCoord++;
       }
@@ -1295,13 +1295,28 @@ namespace EasyOgreExporter
       {
         if (lastUvIndex != texUnits[i] - 1)
         {
-          out << "\tvarying vec4 oUv" << texUnits[i] - 1 << ";\n";
+          out << "varying vec4 oUv" << texUnits[i] - 1 << ";\n";
           texCoord++;
         }
         lastUvIndex = texUnits[i] - 1;
       }
     }
 
+    if (bNormal)
+    {
+      out << "highp mat3 transposeMat3(in highp mat3 inMatrix) {\n";
+      out << "highp vec3 i0 = inMatrix[0];\n";
+      out << "highp vec3 i1 = inMatrix[1];\n";
+      out << "highp vec3 i2 = inMatrix[2];\n";
+
+      out << "highp mat3 outMatrix = mat3(\n";
+      out << "vec3(i0.x, i1.x, i2.x),\n";
+      out << "vec3(i0.y, i1.y, i2.y),\n";
+      out << "vec3(i0.z, i1.z, i2.z)\n";
+      out << ");\n";
+      out << "return outMatrix;}\n";
+    }
+    
     // generate the shader
     // main start
     out << "void main()\n";
@@ -1316,7 +1331,7 @@ namespace EasyOgreExporter
         out << normUv - 1 << ".zw" << ").xyz;\n";
 
       out << "\tmat3 tbn = mat3(oTang.x * normalMul, oBinormal.x * normalMul, oNorm.x, oTang.y * normalMul, oBinormal.y * normalMul, oNorm.y, oTang.z * normalMul, oBinormal.z * normalMul, oNorm.z);\n";
-      out << "\tvec3 normal = transpose(tbn) * ((normalTex.xyz - vec3(0.5)) * vec3(2.0)); // to object space\n";
+      out << "\tvec3 normal = transposeMat3(tbn) * ((normalTex.xyz - vec3(0.5)) * vec3(2.0)); // to object space\n";
       out << "\tnormal = normalize(mat3(iTWMat) * normal);\n";
     }
     else
