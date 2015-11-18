@@ -305,6 +305,7 @@ namespace EasyOgreExporter
 			{
 				out << "fpLightGEN";
 
+        bool isMask = false;
 				for (int i=0; i<m_textures.size(); i++)
 				{
 					if(m_textures[i].bCreateTextureUnit == true)
@@ -312,36 +313,59 @@ namespace EasyOgreExporter
 						switch (m_textures[i].type)
 						{
 						case ID_AM:
-							out << "AMB";
+              if (!isMask)
+							  out << "AMB";
+              else
+                out << "MSK";
 							out << m_textures[i].uvsetIndex;
 							break;
 
 						case ID_DI:
-							out << "DIFF";
+              if (!isMask)
+                out << "DIFF";
+              else
+                out << "MSK";
 							out << m_textures[i].uvsetIndex;
 							break;
 
 						case ID_SP:
-							out << "SPEC";
+              if (!isMask)
+                out << "SPEC";
+              else
+                out << "MSK";
 							out << m_textures[i].uvsetIndex;
 							break;
 
             case ID_SI:
-              out << "EMI";
+              if (!isMask)
+                out << "EMI";
+              else
+                out << "MSK";
               out << m_textures[i].uvsetIndex;
               break;
 
 						case ID_BU:
-							out << "NORM";
+              if (!isMask)
+                out << "NORM";
+              else
+                out << "MSK";
 							out << m_textures[i].uvsetIndex;
 							break;
 
 						case ID_RL:
-              if (m_type != MT_METAL)
-                out << "Fresnel";
-              out << "REF";
-							break;
+              if (!isMask)
+              {
+                if (m_type != MT_METAL)
+                  out << "Fresnel";
+                out << "REF";
+              }
+              else
+                out << "MSK";
+
+              break;
 						}
+
+            isMask = m_textures[i].hasMask;
 					}
 				}
 				break;
@@ -854,6 +878,7 @@ namespace EasyOgreExporter
 		for(int i = 0; i < texCount; ++i)
 		{
       int tmpTexChannel = -1;
+      int tmpMaskTexChannel = -1;
 			IGameTextureMap* pGameTexture = pGameMaterial->GetIGameTextureMap(i);
       int texSlot = pGameTexture->GetStdMapSlot();
 
@@ -875,74 +900,78 @@ namespace EasyOgreExporter
       EasyOgreExporterLog("Exporting %d texture from %s...\n", i, texClass.c_str());
       if(pGameTexture && (pGameTexture->IsEntitySupported() || (texClass == "Composite") || (texClass == "Normal Bump")) || (texClass == "Vertex Color"))
 #endif
-			{
+      {
 #ifdef UNICODE
-				MSTR path;
-				MSTR texName;
+        MSTR path;
+        MSTR texName;
+        MSTR maskPath;
+        MSTR maskTexName;
 #else
         std::string path;
         std::string texName;
+        std::string maskPath;
+        std::string maskTexName;
 #endif
-				if(pGameTexture->IsEntitySupported())
-				{
+        if (pGameTexture->IsEntitySupported())
+        {
           texName = pGameTexture->GetTextureName();
-          
+
           // hack in case of the user cancel the bitmap add, max sdk just crash on null pointer ...
 #ifdef UNICODE
-          if(!texName.isNull())
+          if (!texName.isNull())
 #else
           if(!texName.empty())
 #endif
             path = pGameTexture->GetBitmapFileName();
-				}
-				else
+        }
+        else
 #ifdef UNICODE
         if ((texClass == L"Normal Bump") || (texClass == L"Vertex Color"))
 #else
         if ((texClass == "Normal Bump") || (texClass == "Vertex Color"))
 #endif
-			  //normal map
-				{
-					IGameProperty* pNormalMap = pCont->QueryProperty(_T("normal_map"));
-					if(pNormalMap)
-					{
-						if (pNormalMap->IsParamBlock())
-						{
-							if (pNormalMap->IsPBlock2())
-							{
+          //normal map
+        {
+          IGameProperty* pNormalMap = pCont->QueryProperty(_T("normal_map"));
+          if (pNormalMap)
+          {
+            if (pNormalMap->IsParamBlock())
+            {
+              if (pNormalMap->IsPBlock2())
+              {
 #ifdef PRE_MAX_2012
-								int index = pNormalMap->GetParamBlockIndex();
+                int index = pNormalMap->GetParamBlockIndex();
 #elif PRE_MAX_2011
-								int index = pNormalMap->GetParamBlockIndex();
+                int index = pNormalMap->GetParamBlockIndex();
 #else
-								int index = pNormalMap->GetParamIndex();
+                int index = pNormalMap->GetParamIndex();
 #endif
 
-								IParamBlock2* pBlock = pNormalMap->GetMaxParamBlock2();
-								ParamID id = pBlock->IndextoID(index);
-								Texmap* pTexmap = pBlock->GetTexmap(id);
-								if (pTexmap)
-								{
-									MSTR className;
-									pTexmap->GetClassName(className);
+                IParamBlock2* pBlock = pNormalMap->GetMaxParamBlock2();
+                ParamID id = pBlock->IndextoID(index);
+                Texmap* pTexmap = pBlock->GetTexmap(id);
+                if (pTexmap)
+                {
+                  MSTR className;
+                  pTexmap->GetClassName(className);
 #ifdef UNICODE
-									const wchar_t* pName = className.data();
-									if (!wcscmp(pName, L"Bitmap"))
+                  const wchar_t* pName = className.data();
+                  if (!wcscmp(pName, L"Bitmap"))
 #else
-									const char* pName = className.data();
-									if (!strcmp(pName, "Bitmap"))
+                  const char* pName = className.data();
+                  if (!strcmp(pName, "Bitmap"))
 #endif
-									{
-										BitmapTex* pBitmapTex = static_cast<BitmapTex*>(pTexmap);
-										path = pBitmapTex->GetMapName();
-										texName = pBitmapTex->GetName();
+                  {
+                    BitmapTex* pBitmapTex = static_cast<BitmapTex*>(pTexmap);
+                    path = pBitmapTex->GetMapName();
+                    texName = pBitmapTex->GetName();
                     tmpTexChannel = pBitmapTex->GetMapChannel();
-									}
-								}
-							}
-						}
-					}
-				}
+                  }
+                }
+              }
+            }
+          }
+        }
         else
 #ifdef UNICODE
         if ((texClass == L"Composite"))
@@ -986,6 +1015,74 @@ namespace EasyOgreExporter
                     tmpTexChannel = pBitmapTex->GetMapChannel();
                   }
                 }
+
+                //Get mask
+                IGameProperty* pMaskEnable = pCont->QueryProperty(_T("maskEnabled"));
+                int maskEnable = 0;
+                if (pMaskEnable)
+                {
+                  if (pMaskEnable->IsParamBlock())
+                  {
+                    if (pMaskEnable->IsPBlock2())
+                    {
+#ifdef PRE_MAX_2012
+                      int index = pMaskEnable->GetParamBlockIndex();
+#elif PRE_MAX_2011
+                      int index = pMaskEnable->GetParamBlockIndex();
+#else
+                      int index = pMaskEnable->GetParamIndex();
+#endif
+
+                      IParamBlock2* pBlock = pMaskEnable->GetMaxParamBlock2();
+                      ParamID id = pBlock->IndextoID(index);
+                      maskEnable = pBlock->GetInt(id);
+                    }
+                  }
+                }
+
+                if (maskEnable)
+                {
+                  IGameProperty* pMask = pCont->QueryProperty(_T("mask"));
+                  if (pMask)
+                  {
+                    if (pMask->IsParamBlock())
+                    {
+                      if (pMask->IsPBlock2())
+                      {
+#ifdef PRE_MAX_2012
+                        int index = pMask->GetParamBlockIndex();
+#elif PRE_MAX_2011
+                        int index = pMask->GetParamBlockIndex();
+#else
+                        int index = pMask->GetParamIndex();
+#endif
+
+                        IParamBlock2* pBlock = pMask->GetMaxParamBlock2();
+                        ParamID id = pBlock->IndextoID(index);
+                        Texmap* pTexmap = pBlock->GetTexmap(id);
+                        if (pTexmap)
+                        {
+                          MSTR className;
+                          pTexmap->GetClassName(className);
+#ifdef UNICODE
+                          const wchar_t* pName = className.data();
+                          if (!wcscmp(pName, L"Bitmap"))
+#else
+                          const char* pName = className.data();
+                          if (!strcmp(pName, "Bitmap"))
+#endif
+                          {
+                            BitmapTex* pBitmapTex = static_cast<BitmapTex*>(pTexmap);
+                            maskPath = pBitmapTex->GetMapName();
+                            maskTexName = pBitmapTex->GetName();
+                            tmpMaskTexChannel = pBitmapTex->GetMapChannel();
+                          }
+                        }
+                      }
+                    }
+                  }
+
+                }
               }
             }
           }
@@ -1003,19 +1100,32 @@ namespace EasyOgreExporter
           IPropertyContainer* pCont = pGameTexture->GetIPropertyContainer();
           pCont->EnumerateProperties(*prope);
         }
-        
+
         //absolute texture path
         std::string absPath;
+        std::string absMaskPath;
 
-				EasyOgreExporterLog("Texture Index: %d\n", i);
+        bool bFoundTextureMask = false;
+
+        EasyOgreExporterLog("Texture Index: %d\n", i);
 #ifdef UNICODE
-				EasyOgreExporterLog("Texture Name: %ls\n", texName.data());
+        EasyOgreExporterLog("Texture Name: %ls\n", texName.data());
+        if (maskTexName.data())
+        {
+          bFoundTextureMask = true;
+          EasyOgreExporterLog("Texture Name for Mask: %ls\n", maskTexName.data());
+        }
 #else
-				EasyOgreExporterLog("Texture Name: %s\n", texName.c_str());
+        EasyOgreExporterLog("Texture Name: %s\n", texName.c_str());
+        if (!maskTexName.empty())
+        {
+          bFoundTextureMask = true;
+          EasyOgreExporterLog("Texture Name for Mask: %s\n", maskTexName.c_str());
+        }
 #endif
         bool bFoundTexture = GetMaxFilePath(path, absPath);
-
-				if(bFoundTexture == true)
+				
+        if(bFoundTexture == true)
 				{
           EasyOgreExporterLog("Updated texture location: %s.\n", absPath.c_str());
 				}
@@ -1026,53 +1136,110 @@ namespace EasyOgreExporter
 #else
 					EasyOgreExporterLog("Warning: Couldn't locate texture: %s.\n", texName.c_str());
 #endif
-				}				
+				}
 
 				Texture tex;
-        // set texture paths
-        std::string abslower = absPath;
-        std::transform(abslower.begin(), abslower.end(), abslower.begin(), ::tolower);
-        if (FileExt(abslower) != ".ifl")
         {
-          tex.absFilename.push_back(absPath);
-          tex.filename.push_back(optimizeFileName(m_converter->getMaterialSet()->getUniqueTextureName(absPath)));
-        }
-        else
-        {
-          bFoundTexture = false;
-          int animRate = 1;
-          std::vector<std::string> iflPaths = ReadIFL(absPath, animRate);
-          for (unsigned int k = 0; k < iflPaths.size(); k++)
+          // set texture paths
+          std::string abslower = absPath;
+          std::transform(abslower.begin(), abslower.end(), abslower.begin(), ::tolower);
+          if (FileExt(abslower) != ".ifl")
           {
-            std::string gpath;
-            bFoundTexture = GetMaxFilePath(iflPaths[k], gpath);
-            tex.absFilename.push_back(gpath);
-            tex.filename.push_back(optimizeFileName(m_converter->getMaterialSet()->getUniqueTextureName(gpath)));
+            tex.absFilename.push_back(absPath);
+            tex.filename.push_back(optimizeFileName(m_converter->getMaterialSet()->getUniqueTextureName(absPath)));
           }
-          tex.animRate = animRate;
+          else
+          {
+            bFoundTexture = false;
+            int animRate = 1;
+            std::vector<std::string> iflPaths = ReadIFL(absPath, animRate);
+            for (unsigned int k = 0; k < iflPaths.size(); k++)
+            {
+              std::string gpath;
+              bFoundTexture = GetMaxFilePath(iflPaths[k], gpath);
+              tex.absFilename.push_back(gpath);
+              tex.filename.push_back(optimizeFileName(m_converter->getMaterialSet()->getUniqueTextureName(gpath)));
+            }
+            tex.animRate = animRate;
+          }
         }
 
         //get the texture multiplier
-				tex.fAmount = smat->GetTexmapAmt(texSlot, 0);
+        tex.fAmount = smat->GetTexmapAmt(texSlot, 0);
 
         if (bFoundTexture)
         {
-          BMMRES status; 
-  #ifdef UNICODE
-				  std::string absFilename_s = tex.absFilename[0].c_str();
-				  std::wstring absFilename_w;
-				  absFilename_w.assign(absFilename_s.begin(),absFilename_s.end());
-				  BitmapInfo bi(absFilename_w.c_str());
-  #else
-				  BitmapInfo bi(tex.absFilename[0].c_str());
-  #endif
+          BMMRES status;
+#ifdef UNICODE
+          std::string absFilename_s = tex.absFilename[0].c_str();
+          std::wstring absFilename_w;
+          absFilename_w.assign(absFilename_s.begin(), absFilename_s.end());
+          BitmapInfo bi(absFilename_w.c_str());
+#else
+          BitmapInfo bi(tex.absFilename[0].c_str());
+#endif
 
-				  Bitmap* bitmap = TheManager->Load(&bi, &status); 
-				  if (status == BMMRES_SUCCESS)
+          Bitmap* bitmap = TheManager->Load(&bi, &status);
+          if (status == BMMRES_SUCCESS)
           {
             tex.bHasAlphaChannel = (bitmap->HasAlpha() == 0) ? false : true;
 
-				    TheManager->DelBitmap(bitmap);
+            TheManager->DelBitmap(bitmap);
+            bitmap->DeleteThis();
+          }
+        }
+
+        if (bFoundTextureMask)
+        {
+          bFoundTextureMask = GetMaxFilePath(maskPath, absMaskPath);
+          EasyOgreExporterLog("Updated texture Mask location: %s.\n", absMaskPath.c_str());
+        }
+
+        Texture texMask;
+        if (bFoundTextureMask)
+        {
+          // set texture paths
+          std::string abslower = absMaskPath;
+          std::transform(abslower.begin(), abslower.end(), abslower.begin(), ::tolower);
+          if (FileExt(abslower) != ".ifl")
+          {
+            texMask.absFilename.push_back(absMaskPath);
+            texMask.filename.push_back(optimizeFileName(m_converter->getMaterialSet()->getUniqueTextureName(absMaskPath)));
+          }
+          else
+          {
+            bFoundTextureMask = false;
+            int animRate = 1;
+            std::vector<std::string> iflPaths = ReadIFL(absMaskPath, animRate);
+            for (unsigned int k = 0; k < iflPaths.size(); k++)
+            {
+              std::string gpath;
+              bFoundTextureMask = GetMaxFilePath(iflPaths[k], gpath);
+              texMask.absFilename.push_back(gpath);
+              texMask.filename.push_back(optimizeFileName(m_converter->getMaterialSet()->getUniqueTextureName(gpath)));
+            }
+            texMask.animRate = animRate;
+          }
+        }
+
+        if (bFoundTextureMask)
+        {
+          BMMRES status;
+#ifdef UNICODE
+          std::string absFilename_s = texMask.absFilename[0].c_str();
+          std::wstring absFilename_w;
+          absFilename_w.assign(absFilename_s.begin(), absFilename_s.end());
+          BitmapInfo bi(absFilename_w.c_str());
+#else
+          BitmapInfo bi(texMask.absFilename[0].c_str());
+#endif
+
+          Bitmap* bitmap = TheManager->Load(&bi, &status);
+          if (status == BMMRES_SUCCESS)
+          {
+            texMask.bHasAlphaChannel = (bitmap->HasAlpha() == 0) ? false : true;
+
+            TheManager->DelBitmap(bitmap);
             bitmap->DeleteThis();
           }
         }
@@ -1086,10 +1253,12 @@ namespace EasyOgreExporter
 						{
 							EasyOgreExporterLog("Ambient channel locked, we use the diffuse texture instead.\n");
 							tex.bCreateTextureUnit = false;
+              texMask.bCreateTextureUnit = false;
 						}
 						else
 						{
 							tex.bCreateTextureUnit = bFoundTexture;
+              texMask.bCreateTextureUnit = bFoundTextureMask;
 							if(bFoundTexture)
 							{
                 m_hasAmbientMap = bFoundTexture;
@@ -1105,12 +1274,14 @@ namespace EasyOgreExporter
 						}
 
 						tex.type = ID_AM;
+            texMask.type = ID_AM;
 					}
 					break;
 				case ID_DI:
 					{
 						EasyOgreExporterLog("Diffuse channel texture.\n");
 						tex.bCreateTextureUnit = bFoundTexture;
+            texMask.bCreateTextureUnit = bFoundTextureMask;
 
 						if(bFoundTexture)
 						{
@@ -1146,13 +1317,16 @@ namespace EasyOgreExporter
 
 						tex.fAmount *= m_opacity;
 						tex.type = ID_DI;
+            texMask.type = ID_DI;
 					}
 					break;
 				case ID_SP:
 					EasyOgreExporterLog("Specular channel texture.\n");
 					tex.bCreateTextureUnit = bFoundTexture;
+          texMask.bCreateTextureUnit = bFoundTextureMask;
 					m_hasSpecularMap = true;
 					tex.type = ID_SP;
+          texMask.type = ID_SP;
 					break;
 				case ID_SH:
 					EasyOgreExporterLog("SH channel texture.\n");
@@ -1165,12 +1339,15 @@ namespace EasyOgreExporter
 				case ID_SI:
 					EasyOgreExporterLog("Self-illumination channel texture.\n");
 					tex.bCreateTextureUnit = bFoundTexture;
+          texMask.bCreateTextureUnit = bFoundTextureMask;
 					tex.type = ID_SI;
+          texMask.type = ID_SI;
 					break;
 				case ID_OP:
 					EasyOgreExporterLog("opacity channel texture.\n");
 					tex.bCreateTextureUnit = bFoundTexture;
-					
+          texMask.bCreateTextureUnit = bFoundTextureMask;
+
           //only use the texture opacity properties, the alpha channel should be in the diffuse texture
           if(bFoundTexture)
 					{
@@ -1195,6 +1372,7 @@ namespace EasyOgreExporter
 					}
 
 					tex.type = ID_OP;
+          texMask.type = ID_OP;
 					break;
 				case ID_FI:
 					EasyOgreExporterLog("Filter Color channel texture.\n");
@@ -1203,15 +1381,21 @@ namespace EasyOgreExporter
 				case ID_BU:
 					EasyOgreExporterLog("Bump channel texture.\n");
 					tex.bCreateTextureUnit = bFoundTexture;
+          texMask.bCreateTextureUnit = bFoundTextureMask;
+
 					m_hasBumpMap = bFoundTexture;
 					m_normalMul = smat->GetTexmapAmt(texSlot, 0);
 					tex.type = ID_BU;
+          texMask.type = ID_BU;
 					break;
 				case ID_RL:
 					EasyOgreExporterLog("Reflection channel texture.\n");
-					tex.type = ID_RL;
-					tex.bCreateTextureUnit = bFoundTexture;
+          tex.bCreateTextureUnit = bFoundTexture;
+          tex.type = ID_RL;
 					tex.bReflect = bFoundTexture;
+
+          texMask.bCreateTextureUnit = bFoundTextureMask;
+          texMask.type = ID_RL;
 					m_reflectivity = smat->GetTexmapAmt(texSlot, 0);
 					m_hasReflectionMap = true;
 					break; 
@@ -1225,10 +1409,17 @@ namespace EasyOgreExporter
 					break;
 				}
 
+        tex.hasMask = texMask.bCreateTextureUnit;
         tex.uvsetIndex = (tmpTexChannel >= 1) ? tmpTexChannel -1 : pGameTexture->GetMapChannel() - 1;
-
 				loadTextureUV(pGameTexture, tex);
 				m_textures.push_back(tex);
+
+        texMask.uvsetIndex = (tmpMaskTexChannel >= 1) ? tmpMaskTexChannel - 1 : pGameTexture->GetMapChannel() - 1;
+        if (texMask.bCreateTextureUnit)
+        {
+          loadTextureUV(pGameTexture, texMask);
+          m_textures.push_back(texMask);
+        }
 			}
       else
       {
@@ -1596,6 +1787,7 @@ namespace EasyOgreExporter
 		//TODO manage ambient, diffuse, spec, alpha layer types with colour_op_ex <operation> <source1> <source2> [<manual_factor>] [<manual_colour1>] [<manual_colour2>]
 		if(lod < 2) // no texture for last LOD
 		{
+      bool isMask = false;
 			for (int i=0; i<m_textures.size(); i++)
 			{
 				if(m_textures[i].bCreateTextureUnit == true)
@@ -1609,11 +1801,11 @@ namespace EasyOgreExporter
 						continue;
 
 					// do not use this textures for light pass
-					if((pass == ExShader::SP_LIGHT_MULTI) && (m_textures[i].type == ID_SI))
+          if ((pass == ExShader::SP_LIGHT_MULTI) && ((m_textures[i].type == ID_SI) || isMask))
 						continue;
 
 					// don't export normal and specular maps for non supported technique
-					if((pass == ExShader::SP_NOSUPPORT) && ((m_textures[i].type == ID_BU) || (m_textures[i].type == ID_SP)))
+					if((pass == ExShader::SP_NOSUPPORT) && ((m_textures[i].type == ID_BU) || (m_textures[i].type == ID_SP) || isMask))
 						continue;
 
 					//start texture unit description
@@ -1642,6 +1834,9 @@ namespace EasyOgreExporter
 					default:
 						outMaterial << "Unknown";
 					}
+          if (isMask)
+            outMaterial << "_Mask";
+
 					outMaterial << "#" << (texUnitId++) << "\n";
 					outMaterial << "\t\t\t{\n";
 
@@ -1767,6 +1962,7 @@ namespace EasyOgreExporter
 
 					//end texture unit desription
 					outMaterial << "\t\t\t}\n";
+          isMask = m_textures[i].hasMask;
 				}
 			}
 		}

@@ -108,6 +108,8 @@ namespace EasyOgreExporter
             texUnits.push_back(mat->m_textures[i].uvsetIndex);
           break;
         }
+        if (mat->m_textures[i].hasMask)
+          i++;
       }
     }
 
@@ -255,6 +257,8 @@ namespace EasyOgreExporter
             texUnits.push_back(mat->m_textures[i].uvsetIndex);
           break;
         }
+        if (mat->m_textures[i].hasMask)
+          i++;
       }
     }
 
@@ -330,6 +334,9 @@ namespace EasyOgreExporter
             samplerId++;
           break;
         }
+
+        if (mat->m_textures[i].hasMask)
+          i++;
       }
     }
     
@@ -928,36 +935,53 @@ namespace EasyOgreExporter
     int normUv = 0;
     int illUv = 0;
 
+    bool bAmbMsk = false;
+    bool bDiffMsk = false;
+    bool bSpecMsk = false;
+    bool bNormMsk = false;
+    bool bRefMsk = false;
+    bool bIllMsk = false;
+
+    int ambMskUv = 0;
+    int diffMskUv = 0;
+    int specMskUv = 0;
+    int normMskUv = 0;
+    int illMskUv = 0;
+    int refMskUv = 0;
+
+    bool isMask = false;
     for (int i=0; i < mat->m_textures.size(); i++)
     {
 	    if(mat->m_textures[i].bCreateTextureUnit == true)
 	    {
-        switch (mat->m_textures[i].type)
+        if (!isMask)
         {
-          //could be a light map
+          switch (mat->m_textures[i].type)
+          {
+            //could be a light map
           case ID_AM:
             out << ",\n\tuniform sampler2D ambMap : register(s" << samplerId << ")";
             ambUv = mat->m_textures[i].uvsetIndex;
             samplerId++;
-          break;
+            break;
 
           case ID_DI:
             out << ",\n\tuniform sampler2D diffuseMap : register(s" << samplerId << ")";
             diffUv = mat->m_textures[i].uvsetIndex;
             samplerId++;
-          break;
+            break;
 
           case ID_SP:
             out << ",\n\tuniform sampler2D specMap : register(s" << samplerId << ")";
             specUv = mat->m_textures[i].uvsetIndex;
             samplerId++;
-          break;
+            break;
 
           case ID_BU:
             out << ",\n\tuniform sampler2D normalMap : register(s" << samplerId << ")";
             normUv = mat->m_textures[i].uvsetIndex;
             samplerId++;
-          break;
+            break;
 
           case ID_SI:
             out << ",\n\tuniform sampler2D illMap : register(s" << samplerId << ")";
@@ -969,8 +993,60 @@ namespace EasyOgreExporter
           case ID_RL:
             out << ",\n\tuniform samplerCUBE reflectMap : register(s" << samplerId << ")";
             samplerId++;
-          break;
+            break;
+          }
         }
+        else
+        {
+          switch (mat->m_textures[i].type)
+          {
+            //could be a light map
+          case ID_AM:
+            out << ",\n\tuniform sampler2D ambMskMap : register(s" << samplerId << ")";
+            ambMskUv = mat->m_textures[i].uvsetIndex;
+            bAmbMsk = true;
+            samplerId++;
+            break;
+
+          case ID_DI:
+            out << ",\n\tuniform sampler2D diffuseMskMap : register(s" << samplerId << ")";
+            diffMskUv = mat->m_textures[i].uvsetIndex;
+            bDiffMsk = true;
+            samplerId++;
+            break;
+
+          case ID_SP:
+            out << ",\n\tuniform sampler2D specMskMap : register(s" << samplerId << ")";
+            specMskUv = mat->m_textures[i].uvsetIndex;
+            bSpecMsk = true;
+            samplerId++;
+            break;
+
+          case ID_BU:
+            out << ",\n\tuniform sampler2D normalMskMap : register(s" << samplerId << ")";
+            normMskUv = mat->m_textures[i].uvsetIndex;
+            bNormMsk = true;
+            samplerId++;
+            break;
+
+          case ID_SI:
+            out << ",\n\tuniform sampler2D illMskMap : register(s" << samplerId << ")";
+            illMskUv = mat->m_textures[i].uvsetIndex;
+            bIllMsk = true;
+            samplerId++;
+            break;
+
+          case ID_RL:
+            out << ",\n\tuniform sampler2D reflectMskMap : register(s" << samplerId << ")";
+            refMskUv = mat->m_textures[i].uvsetIndex;
+            bRefMsk = true;
+            samplerId++;
+            break;
+          }
+        }
+
+        //the next texture is the mask
+        isMask = mat->m_textures[i].hasMask;
       }
     }
     
@@ -988,8 +1064,20 @@ namespace EasyOgreExporter
       out << "\ttangent *= normalMul;\n";
       out << "\tbinormal *= normalMul;\n";
       out << "\tfloat3x3 tbn = float3x3(tangent, binormal, norm);\n";
+      
       out << "\tfloat3 normal = mul(transpose(tbn), (normalTex.xyz -0.5) * 2); // to object space\n";
       out << "\tnormal = normalize(mul((float3x3)iTWMat, normal));\n";
+
+      if (bNormMsk)
+      {
+        out << "\tfloat3 normalTexMsk = tex2D(normalMskMap, uv";
+        if (!(normMskUv % 2))
+          out << normMskUv << ".xy" << ").rgb;\n";
+        else
+          out << normMskUv - 1 << ".zw" << ").rgb;\n";
+
+        out << "\tnormal = lerp(normalize(mul((float3x3)iTWMat, norm)), normal, normalTexMsk.xyz);\n";
+      }
     }
     else
     {
@@ -1063,8 +1151,22 @@ namespace EasyOgreExporter
       else
         out << diffUv - 1 << ".zw" << ");\n";
 
-      out << "\tambientColor *= diffuseTex.rgb;\n";
-      out << "\tdiffuseContrib *= diffuseTex.rgb;\n";
+      if (bDiffMsk)
+      {
+        out << "\tfloat3 diffuseTexMsk = tex2D(diffuseMskMap, uv";
+        if (!(diffMskUv % 2))
+          out << diffMskUv << ".xy" << ").rgb;\n";
+        else
+          out << diffMskUv - 1 << ".zw" << ").rgb;\n";
+
+        out << "\tambientColor *= diffuseTex.rgb * diffuseTexMsk.rgb;\n";
+        out << "\tdiffuseContrib *= diffuseTex.rgb * diffuseTexMsk.rgb;\n";
+      }
+      else
+      {
+        out << "\tambientColor *= diffuseTex.rgb;\n";
+        out << "\tdiffuseContrib *= diffuseTex.rgb;\n";
+      }
     }
 
     if (bAmbient)
@@ -1074,7 +1176,21 @@ namespace EasyOgreExporter
         out << ambUv << ".xy" << ").rgb;\n";
       else
         out << ambUv - 1 << ".zw" << ").rgb;\n";
-      out << "\tambientColor *= ambTex;\n";
+
+      if (bAmbMsk)
+      {
+        out << "\tfloat3 ambientTexMsk = tex2D(ambMskMap, uv";
+        if (!(ambMskUv % 2))
+          out << ambMskUv << ".xy" << ").rgb;\n";
+        else
+          out << ambMskUv - 1 << ".zw" << ").rgb;\n";
+
+        out << "\tambientColor *= ambTex.rgb * ambientTexMsk.rgb;\n";
+      }
+      else
+      {
+        out << "\tambientColor *= ambTex.rgb;\n";
+      }
     }
     
     if (bIllum)
@@ -1084,6 +1200,18 @@ namespace EasyOgreExporter
         out << illUv << ".xy" << ").rgb;\n";
       else
         out << illUv - 1 << ".zw" << ").rgb;\n";
+
+      if (bIllMsk)
+      {
+        out << "\tfloat3 illTexMsk = tex2D(illMskMap, uv";
+        if (!(illMskUv % 2))
+          out << illMskUv << ".xy" << ").rgb;\n";
+        else
+          out << illMskUv - 1 << ".zw" << ").rgb;\n";
+
+        out << "\tillTex *= illTexMsk.rgb;\n";
+      }
+
       out << "\tambientColor = max(ambientColor, illTex);\n";
     }
 
@@ -1096,6 +1224,17 @@ namespace EasyOgreExporter
         out << specUv << ".xy" << ");\n";
       else
         out << specUv - 1 << ".zw" << ");\n";
+
+      if (bSpecMsk)
+      {
+        out << "\tfloat3 specTexMsk = tex2D(specMskMap, uv";
+        if (!(specMskUv % 2))
+          out << specMskUv << ".xy" << ").rgb;\n";
+        else
+          out << specMskUv - 1 << ".zw" << ").rgb;\n";
+
+        out << "\tspecTex *= specTexMsk.rgb;\n";
+      }
       out << "\tspecularContrib *= specTex.rgb;\n";
     }      
 
@@ -1127,6 +1266,17 @@ namespace EasyOgreExporter
         out << "\tfloat3 reflectColor = reflecTex.rgb * reflectivity;\n";
       }
       
+      if (bRefMsk)
+      {
+        out << "\tfloat3 refTexMsk = tex2D(reflectMskMap, uv";
+        if (!(refMskUv % 2))
+          out << refMskUv << ".xy" << ").rgb;\n";
+        else
+          out << refMskUv - 1 << ".zw" << ").rgb;\n";
+
+        out << "\treflectColor *= refTexMsk.rgb;\n";
+      }
+
       out << "\treturn float4(light0C + reflectColor, alpha);\n";
     }
     else
@@ -1216,49 +1366,117 @@ namespace EasyOgreExporter
     int normUv = 0;
     int illUv = 0;
 
+    bool bAmbMsk = false;
+    bool bDiffMsk = false;
+    bool bSpecMsk = false;
+    bool bNormMsk = false;
+    bool bRefMsk = false;
+    bool bIllMsk = false;
+
+    int ambMskUv = 0;
+    int diffMskUv = 0;
+    int specMskUv = 0;
+    int normMskUv = 0;
+    int illMskUv = 0;
+    int refMskUv = 0;
+
+    bool isMask = false;
     for (int i = 0; i < mat->m_textures.size(); i++)
     {
       if (mat->m_textures[i].bCreateTextureUnit == true)
       {
-        switch (mat->m_textures[i].type)
+        if (!isMask)
         {
-          //could be a light map
-        case ID_AM:
-          out << "uniform sampler2D ambMap;\n";
-          ambUv = mat->m_textures[i].uvsetIndex;
-          samplerId++;
-          break;
+          switch (mat->m_textures[i].type)
+          {
+            //could be a light map
+          case ID_AM:
+            out << "uniform sampler2D ambMap;\n";
+            ambUv = mat->m_textures[i].uvsetIndex;
+            samplerId++;
+            break;
 
-        case ID_DI:
-          out << "uniform sampler2D diffuseMap;\n";
-          diffUv = mat->m_textures[i].uvsetIndex;
-          samplerId++;
-          break;
+          case ID_DI:
+            out << "uniform sampler2D diffuseMap;\n";
+            diffUv = mat->m_textures[i].uvsetIndex;
+            samplerId++;
+            break;
 
-        case ID_SP:
-          out << "uniform sampler2D specMap;\n";
-          specUv = mat->m_textures[i].uvsetIndex;
-          samplerId++;
-          break;
+          case ID_SP:
+            out << "uniform sampler2D specMap;\n";
+            specUv = mat->m_textures[i].uvsetIndex;
+            samplerId++;
+            break;
 
-        case ID_BU:
-          out << "uniform sampler2D normalMap;\n";
-          normUv = mat->m_textures[i].uvsetIndex;
-          samplerId++;
-          break;
+          case ID_BU:
+            out << "uniform sampler2D normalMap;\n";
+            normUv = mat->m_textures[i].uvsetIndex;
+            samplerId++;
+            break;
 
-        case ID_SI:
-          out << "uniform sampler2D illMap;\n";
-          illUv = mat->m_textures[i].uvsetIndex;
-          bIllum = true;
-          samplerId++;
-          break;
+          case ID_SI:
+            out << "uniform sampler2D illMap;\n";
+            illUv = mat->m_textures[i].uvsetIndex;
+            bIllum = true;
+            samplerId++;
+            break;
 
-        case ID_RL:
-          out << "uniform samplerCube reflectMap;\n";
-          samplerId++;
-          break;
+          case ID_RL:
+            out << "uniform samplerCube reflectMap;\n";
+            samplerId++;
+            break;
+          }
         }
+        else
+        {
+          switch (mat->m_textures[i].type)
+          {
+            //could be a light map
+          case ID_AM:
+            out << "uniform sampler2D ambMskMap;\n";
+            ambMskUv = mat->m_textures[i].uvsetIndex;
+            bAmbMsk = true;
+            samplerId++;
+            break;
+
+          case ID_DI:
+            out << "uniform sampler2D diffuseMskMap;\n";
+            diffMskUv = mat->m_textures[i].uvsetIndex;
+            bDiffMsk = true;
+            samplerId++;
+            break;
+
+          case ID_SP:
+            out << "uniform sampler2D specMskMap;\n";
+            specMskUv = mat->m_textures[i].uvsetIndex;
+            bSpecMsk = true;
+            samplerId++;
+            break;
+
+          case ID_BU:
+            out << "uniform sampler2D normalMskMap;\n";
+            normMskUv = mat->m_textures[i].uvsetIndex;
+            bNormMsk = true;
+            samplerId++;
+            break;
+
+          case ID_SI:
+            out << "uniform sampler2D illMskMap;\n";
+            illMskUv = mat->m_textures[i].uvsetIndex;
+            bIllMsk = true;
+            samplerId++;
+            break;
+
+          case ID_RL:
+            out << "uniform sampler2D reflectMskMap;\n";
+            refMskUv = mat->m_textures[i].uvsetIndex;
+            bRefMsk = true;
+            samplerId++;
+            break;
+          }
+        }
+        //the next texture is the mask
+        isMask = mat->m_textures[i].hasMask;
       }
     }
 
@@ -1333,6 +1551,17 @@ namespace EasyOgreExporter
       out << "\tmat3 tbn = mat3(oTang.x * normalMul, oBinormal.x * normalMul, oNorm.x, oTang.y * normalMul, oBinormal.y * normalMul, oNorm.y, oTang.z * normalMul, oBinormal.z * normalMul, oNorm.z);\n";
       out << "\tvec3 normal = transposeMat3(tbn) * ((normalTex.xyz - vec3(0.5)) * vec3(2.0)); // to object space\n";
       out << "\tnormal = normalize(mat3(iTWMat) * normal);\n";
+
+      if (bNormMsk)
+      {
+        out << "\tvec3 normalTexMsk = texture2D(normalMskMap, oUv";
+        if (!(normMskUv % 2))
+          out << normMskUv << ".xy" << ").xyz;\n";
+        else
+          out << normMskUv - 1 << ".zw" << ").xyz;\n";
+
+        out << "\tnormal = mix(normalize(mat3(iTWMat) * oNorm), normal, normalTexMsk);\n";
+      }
     }
     else
     {
@@ -1406,8 +1635,22 @@ namespace EasyOgreExporter
       else
         out << diffUv - 1 << ".zw" << ");\n";
 
-      out << "\tambientColor *= diffuseTex.xyz;\n";
-      out << "\tdiffuseContrib *= diffuseTex.xyz;\n";
+      if (bDiffMsk)
+      {
+        out << "\tvec3 diffuseTexMsk = texture2D(diffuseMskMap, oUv";
+        if (!(diffMskUv % 2))
+          out << diffMskUv << ".xy" << ").xyz;\n";
+        else
+          out << diffMskUv - 1 << ".zw" << ").xyz;\n";
+
+        out << "\tambientColor *= diffuseTex.xyz * diffuseTexMsk;\n";
+        out << "\tdiffuseContrib *= diffuseTex.xyz * diffuseTexMsk;\n";
+      }
+      else
+      {
+        out << "\tambientColor *= diffuseTex.xyz;\n";
+        out << "\tdiffuseContrib *= diffuseTex.xyz;\n";
+      }
     }
 
     if (bAmbient)
@@ -1417,7 +1660,21 @@ namespace EasyOgreExporter
         out << ambUv << ".xy" << ").xyz;\n";
       else
         out << ambUv - 1 << ".zw" << ").xyz;\n";
-      out << "\tambientColor *= ambTex;\n";
+
+      if (bAmbMsk)
+      {
+        out << "\tvec3 ambientTexMsk = texture2D(ambMskMap, oUv";
+        if (!(ambMskUv % 2))
+          out << ambMskUv << ".xy" << ").xyz;\n";
+        else
+          out << ambMskUv - 1 << ".zw" << ").xyz;\n";
+
+        out << "\tambientColor *= ambTex * ambientTexMsk;\n";
+      }
+      else
+      {
+        out << "\tambientColor *= ambTex;\n";
+      }      
     }
 
     if (bIllum)
@@ -1427,6 +1684,18 @@ namespace EasyOgreExporter
         out << illUv << ".xy" << ").xyz;\n";
       else
         out << illUv - 1 << ".zw" << ").xyz;\n";
+
+      if (bIllMsk)
+      {
+        out << "\tvec3 illTexMsk = texture2D(illMskMap, oUv";
+        if (!(illMskUv % 2))
+          out << illMskUv << ".xy" << ").xyz;\n";
+        else
+          out << illMskUv - 1 << ".zw" << ").xyz;\n";
+
+        out << "\tillTex *= illTexMsk;\n";
+      }
+
       out << "\tambientColor = max(ambientColor, illTex);\n";
     }
 
@@ -1439,6 +1708,18 @@ namespace EasyOgreExporter
         out << specUv << ".xy" << ");\n";
       else
         out << specUv - 1 << ".zw" << ");\n";
+
+      if (bSpecMsk)
+      {
+        out << "\tvec3 specTexMsk = texture2D(specMskMap, oUv";
+        if (!(specMskUv % 2))
+          out << specMskUv << ".xy" << ").xyz;\n";
+        else
+          out << specMskUv - 1 << ".zw" << ").xyz;\n";
+
+        out << "\tspecTex *= vec4(specTexMsk.rgb, 1.0);\n";
+      }
+
       out << "\tspecularContrib *= specTex.xyz;\n";
     }
 
@@ -1468,6 +1749,17 @@ namespace EasyOgreExporter
       else //metal style
       {
         out << "\tvec3 reflectColor = reflecTex.xyz * reflectivity;\n";
+      }
+
+      if (bRefMsk)
+      {
+        out << "\tvec3 refTexMsk = texture2D(reflectMskMap, oUv";
+        if (!(refMskUv % 2))
+          out << refMskUv << ".xy" << ").xyz;\n";
+        else
+          out << refMskUv - 1 << ".zw" << ").xyz;\n";
+
+        out << "\treflectColor *= refTexMsk;\n";
       }
 
       out << "\tgl_FragColor = vec4(light0C + reflectColor, alpha);\n";
@@ -1618,42 +1910,82 @@ namespace EasyOgreExporter
 
     //samplers
     int samplerId = 0;
+    bool isMask = false;
     for (int i = 0; i < m_textures.size(); i++)
     {
       if (m_textures[i].bCreateTextureUnit == true)
       {
-        switch (m_textures[i].type)
+        if (!isMask)
         {
-        case ID_AM:
-          out << "\t\tparam_named ambMap int " << samplerId << "\n";
-          samplerId++;
-          break;
+          switch (m_textures[i].type)
+          {
+          case ID_AM:
+            out << "\t\tparam_named ambMap int " << samplerId << "\n";
+            samplerId++;
+            break;
 
-        case ID_DI:
-          out << "\t\tparam_named diffuseMap int " << samplerId << "\n";
-          samplerId++;
-          break;
+          case ID_DI:
+            out << "\t\tparam_named diffuseMap int " << samplerId << "\n";
+            samplerId++;
+            break;
 
-        case ID_SP:
-          out << "\t\tparam_named specMap int " << samplerId << "\n";
-          samplerId++;
-          break;
+          case ID_SP:
+            out << "\t\tparam_named specMap int " << samplerId << "\n";
+            samplerId++;
+            break;
 
-        case ID_BU:
-          out << "\t\tparam_named normalMap int " << samplerId << "\n";
-          samplerId++;
-          break;
+          case ID_BU:
+            out << "\t\tparam_named normalMap int " << samplerId << "\n";
+            samplerId++;
+            break;
 
-        case ID_SI:
-          out << "\t\tparam_named illMap int " << samplerId << "\n";
-          samplerId++;
-          break;
+          case ID_SI:
+            out << "\t\tparam_named illMap int " << samplerId << "\n";
+            samplerId++;
+            break;
 
-        case ID_RL:
-          out << "\t\tparam_named reflectMap int " << samplerId << "\n";
-          samplerId++;
-          break;
+          case ID_RL:
+            out << "\t\tparam_named reflectMap int " << samplerId << "\n";
+            samplerId++;
+            break;
+          }
         }
+        else
+        {
+          switch (m_textures[i].type)
+          {
+          case ID_AM:
+            out << "\t\tparam_named ambMskMap int " << samplerId << "\n";
+            samplerId++;
+            break;
+
+          case ID_DI:
+            out << "\t\tparam_named diffuseMskMap int " << samplerId << "\n";
+            samplerId++;
+            break;
+
+          case ID_SP:
+            out << "\t\tparam_named specMskMap int " << samplerId << "\n";
+            samplerId++;
+            break;
+
+          case ID_BU:
+            out << "\t\tparam_named normalMskMap int " << samplerId << "\n";
+            samplerId++;
+            break;
+
+          case ID_SI:
+            out << "\t\tparam_named illMskMap int " << samplerId << "\n";
+            samplerId++;
+            break;
+
+          case ID_RL:
+            out << "\t\tparam_named reflectMskMap int " << samplerId << "\n";
+            samplerId++;
+            break;
+          }
+        }
+        isMask = m_textures[i].hasMask;
       }
     }
 
@@ -1696,7 +2028,11 @@ void ExVsLightShaderMulti::constructShader(ExMaterial* mat)
   for (int i = 0; i < mat->m_textures.size(); i++)
   {
     if (mat->m_textures[i].bCreateTextureUnit == true)
+    {
       texUnits.push_back(mat->m_textures[i].uvsetIndex);
+      if (mat->m_textures[i].hasMask)
+        i++;
+    }
   }
 
   std::sort(texUnits.begin(), texUnits.end());
@@ -1845,6 +2181,8 @@ void ExFpLightShaderMulti::constructShader(ExMaterial* mat)
     if (mat->m_textures[i].bCreateTextureUnit == true)
     {
       texUnits.push_back(mat->m_textures[i].uvsetIndex);
+      if (mat->m_textures[i].hasMask)
+        i++;
     }
   }
 
@@ -1946,6 +2284,9 @@ void ExFpLightShaderMulti::constructShader(ExMaterial* mat)
         samplerId++;
         break;
       }
+
+      if (mat->m_textures[i].hasMask)
+        i++;
     }
   }
 

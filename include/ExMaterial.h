@@ -57,6 +57,7 @@ namespace EasyOgreExporter
 			bCreateTextureUnit = false;
       bReflect = false;
       bHasAlphaChannel = false;
+      hasMask = false;
       fAmount = 1.0;
 		}
 		//destructor
@@ -70,6 +71,7 @@ namespace EasyOgreExporter
 		bool bCreateTextureUnit;
     bool bReflect;
     bool bHasAlphaChannel;
+    bool hasMask;
     float fAmount;
 		TexAddressMode am_u, am_v;
 		double scale_u, scale_v;

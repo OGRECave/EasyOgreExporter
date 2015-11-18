@@ -4,4 +4,8 @@
     <LocalDebuggerCommand>$(ADSK_3DSMAX_x64_2015)\3dsmax.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2016|x64'">
+    <LocalDebuggerCommand>$(ADSK_3DSMAX_x64_2016)\3dsmax.exe</LocalDebuggerCommand>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
 </Project>
