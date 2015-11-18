@@ -1040,7 +1040,8 @@ namespace EasyOgreExporter
         else
         {
           bFoundTexture = false;
-          std::vector<std::string> iflPaths = ReadIFL(absPath);
+          int animRate = 1;
+          std::vector<std::string> iflPaths = ReadIFL(absPath, animRate);
           for (unsigned int k = 0; k < iflPaths.size(); k++)
           {
             std::string gpath;
@@ -1048,6 +1049,7 @@ namespace EasyOgreExporter
             tex.absFilename.push_back(gpath);
             tex.filename.push_back(optimizeFileName(m_converter->getMaterialSet()->getUniqueTextureName(gpath)));
           }
+          tex.animRate = animRate;
         }
 
         //get the texture multiplier
@@ -1666,7 +1668,7 @@ namespace EasyOgreExporter
               outMaterial << texName.c_str() << " ";
             }
             //duration
-            float duration = (float)m_textures[i].filename.size() / (float)GetFrameRate();
+            float duration = (float)m_textures[i].animRate / (float)GetFrameRate();
             outMaterial << duration;
 
             outMaterial << "\n";

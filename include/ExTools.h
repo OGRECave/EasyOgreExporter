@@ -1313,22 +1313,104 @@ inline bool GetMaxFilePath(std::string file, std::string &fullPath)
   return bFileExist;
 }
 
-inline std::vector<std::string> ReadIFL(std::string path)
+inline int strCutting(char *comm, char **argv)
 {
+  int i, j, k, argc;
+
+  i = 0;
+  j = -1;
+  argc = 0;
+
+  while (comm[i])
+  {
+    if (comm[i] == 32 || comm[i] == 10 || comm[i] == 13)
+    {
+      if (j >= 0) comm[j] = 0;
+      j = -1;
+      i++;
+    }
+    else
+    {
+      if (j == -1)
+      {
+        j = i;
+        argv[argc++] = &comm[i];
+      }
+      if (comm[i] == '\\')
+      {
+        i++;
+        if ((comm[i] >= '0') && (comm[i] <= '9'))
+        {
+          k = comm[i] - '0';
+          i++;
+          if ((comm[i] >= '0') && (comm[i] <= '9'))
+          {
+            k = k * 10 + comm[i] - '0';
+            i++;
+            if ((comm[i] >= '0') && (comm[i] <= '9'))
+            {
+              k = k * 10 + comm[i] - '0';
+              i++;
+            }
+          }
+          comm[j++] = k;
+        }
+        else if (comm[i] == 'n')
+        {
+          comm[j++] = 10;
+          i++;
+        }
+        else if (comm[i] == 'z')
+        {
+          comm[j++] = 0;
+          i++;
+        }
+        else
+        {
+          comm[j++] = comm[i];
+          if (comm[i]) i++;
+        }
+      }
+      else comm[j++] = comm[i++];
+    }
+  }
+  if (j >= 0) comm[j] = 0;
+  return argc;
+}
+
+inline std::vector<std::string> ReadIFL(std::string path, int &rate)
+{
+  char buff[MAX_PATH];
   std::string basePath = FilePath(path);
   std::vector<std::string> out;
   std::ifstream input(path);
-  for(std::string line; getline(input, line);)
+
+  if (input.is_open())
   {
-    std::string ilfpath;
-    input >> ilfpath;
-    if (!ilfpath.empty())
+    std::string currentLine = "";
+    // Loop through lines
+    int n = 0;
+
+    while (input.getline(buff, MAX_PATH))
     {
-      ilfpath = basePath + ilfpath;
-      out.push_back(ilfpath);
+      char* argv[128];
+      std::vector<std::string> tokens;
+
+      n = strCutting(buff, argv);
+      for (int i = 0; (int)tokens.size() < n; i++)
+      {
+        tokens.push_back(argv[i]);
+      }
+
+      if (tokens.size() > 0)
+      {
+        out.push_back(basePath + tokens[0]);
+      }
+
+      if (tokens.size() > 1)
+        rate = atoi(tokens[1].c_str());
     }
   }
-
   return out;
 }
 

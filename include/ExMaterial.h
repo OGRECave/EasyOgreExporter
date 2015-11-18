@@ -50,6 +50,7 @@ namespace EasyOgreExporter
 			am_u = am_v = TAM_CLAMP;
       type = 0;
       uvsetIndex = 0;
+      animRate = 1;
 
 			// Most textures like normal, specular, bump, etc. can't just
 			// be summed into the diffuse channel and need
@@ -74,6 +75,7 @@ namespace EasyOgreExporter
 		double scale_u, scale_v;
 		double scroll_u, scroll_v;
 		double rot;
+    int animRate;
     int type;
 	};
 
