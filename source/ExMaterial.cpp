@@ -1808,6 +1808,13 @@ namespace EasyOgreExporter
 					if((pass == ExShader::SP_NOSUPPORT) && ((m_textures[i].type == ID_BU) || (m_textures[i].type == ID_SP) || isMask))
 						continue;
 
+          //ignore masked texture for basic mat
+          if (pass == ExShader::SP_NOSUPPORT && (m_textures[i].hasMask || isMask))
+          {
+            isMask = m_textures[i].hasMask;
+            continue;
+          }            
+
 					//start texture unit description
 					outMaterial << "\n\t\t\ttexture_unit ";
 					outMaterial << m_name << "_";
@@ -1962,6 +1969,7 @@ namespace EasyOgreExporter
 
 					//end texture unit desription
 					outMaterial << "\t\t\t}\n";
+
           isMask = m_textures[i].hasMask;
 				}
 			}
