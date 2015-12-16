@@ -504,6 +504,13 @@ namespace EasyOgreExporter
 				tex.rot = tex.rot * 180.0f/3.1415926535f;
 				if (fabs(rot) < PRECISION)
 					tex.rot = 0;
+
+        if (prop->IsPropAnimated())
+        {
+          float aRot = 0.0f;
+          prop->GetPropertyValue(aRot, GetCOREInterface()->GetAnimRange().End());
+          tex.rot_s = (aRot - rot) / static_cast<float>((GetCOREInterface()->GetAnimRange().End() - GetCOREInterface()->GetAnimRange().Start()) / static_cast<float>(GetTicksPerFrame()) / GetFrameRate());
+        }
 			}
 
 			float rotU, rotV;
@@ -524,11 +531,18 @@ namespace EasyOgreExporter
 			float transU,transV;
 			prop = pUVGen->GetUOffsetData();
 			if(prop)
-			{	
+			{
 				prop->GetPropertyValue(transU);
 				tex.scroll_u = -0.5 * (covU-1.0)/covU - transU/covU;
 				if (fabs(tex.scroll_u) < PRECISION)
 					tex.scroll_u = 0;
+
+        if (prop->IsPropAnimated())
+        {
+          float aTransU = 0.0f;
+          prop->GetPropertyValue(aTransU, GetCOREInterface()->GetAnimRange().End());
+          tex.scroll_s_u = (aTransU - transU) / static_cast<float>((GetCOREInterface()->GetAnimRange().End() - GetCOREInterface()->GetAnimRange().Start()) / static_cast<float>(GetTicksPerFrame()) / GetFrameRate());
+        }
 			}
 			prop = pUVGen->GetVOffsetData();
 			if(prop)
@@ -537,6 +551,13 @@ namespace EasyOgreExporter
 				tex.scroll_v = 0.5 * (covV-1.0)/covV + transV/covV;
 				if (fabs(tex.scroll_v) < PRECISION)
 					tex.scroll_v = 0;
+
+        if (prop->IsPropAnimated())
+        {
+          float aTransV = 0.0f;
+          prop->GetPropertyValue(aTransV, GetCOREInterface()->GetAnimRange().End());
+          tex.scroll_s_v = (aTransV - transV) / static_cast<float>((GetCOREInterface()->GetAnimRange().End() - GetCOREInterface()->GetAnimRange().Start()) / static_cast<float>(GetTicksPerFrame()) / GetFrameRate());
+        }
 			}
 		}
 	}
@@ -1870,7 +1891,7 @@ namespace EasyOgreExporter
               outMaterial << texName.c_str() << " ";
             }
             //duration
-            float duration = (float)m_textures[i].animRate / (float)GetFrameRate();
+            float duration = (float)(m_textures[i].animRate * m_textures[i].filename.size()) / (float)GetFrameRate();
             outMaterial << duration;
 
             outMaterial << "\n";
@@ -1914,42 +1935,27 @@ namespace EasyOgreExporter
 					//use anisotropic as default for better textures quality
 					//outMaterial << "\t\t\t\tfiltering anisotropic\n";
 
-					if((m_textures[i].fAmount >= 1.0f) || (m_textures[i].type == ID_BU))
+          if ((m_textures[i].fAmount >= 1.0f) || (m_textures[i].type == ID_BU) || (m_textures[i].type == ID_SI) || (m_textures[i].type == ID_AM))
 					{
-						outMaterial << "\t\t\t\tcolour_op modulate\n";
+            switch (m_textures[i].type)
+            {
+            case ID_AM:
+            case ID_SI:
+              outMaterial << "\t\t\t\tcolour_op add\n";
+              break;
+            default:
+              outMaterial << "\t\t\t\tcolour_op modulate\n";
+            }
 					}
 					else
 					{
-						outMaterial << "\t\t\t\tcolour_op_ex blend_manual src_texture src_current " << (((pass == ExShader::SP_NOSUPPORT) && (m_textures[i].type == ID_RL)) ? m_textures[i].fAmount / 3.0f : m_textures[i].fAmount) << "\n";
+            outMaterial << "\t\t\t\tcolour_op_ex blend_manual src_texture src_current " << (((pass == ExShader::SP_NOSUPPORT) && (m_textures[i].type == ID_RL)) ? m_textures[i].fAmount / 3.0f : m_textures[i].fAmount) << "\n";
 						outMaterial << "\t\t\t\tcolour_op_multipass_fallback one zero\n";
 					}
 
 					//remove alpha from ambient (common ligth map)
 					if((m_textures[i].type == ID_AM) && (m_textures[i].bHasAlphaChannel))
 						outMaterial << "\t\t\t\talpha_op_ex source2 src_manual src_current " << (m_textures[i].fAmount * m_opacity) << "\n";
-          
-					//write colour operation
-					/*
-					switch (m_textures[i].opType)
-					{
-					case TOT_REPLACE:
-					outMaterial << "\t\t\t\tcolour_op replace\n";
-					break;
-					case TOT_ADD:
-					outMaterial << "\t\t\t\tcolour_op add\n";
-					break;
-					case TOT_MODULATE:
-					outMaterial << "\t\t\t\tcolour_op modulate\n";
-					break;
-					case TOT_ALPHABLEND:
-					outMaterial << "\t\t\t\tcolour_op alpha_blend\n";
-					break;
-					case TOT_MANUALBLEND:
-					outMaterial << "\t\t\t\tcolour_op_ex blend_manual src_texture src_current " << m_textures[i].fAmount << "\n";
-					outMaterial << "\t\t\t\tcolour_op_multipass_fallback one zero\n";
-					break;
-					}
-					*/
 
 					//write texture transforms
           if ((m_textures[i].scale_u != 1.0) || (m_textures[i].scale_v != 1.0))
@@ -1958,6 +1964,12 @@ namespace EasyOgreExporter
             outMaterial << "\t\t\t\tscroll " << m_textures[i].scroll_u << " " << m_textures[i].scroll_v << "\n";
 					if (m_textures[i].rot != 0.0)
             outMaterial << "\t\t\t\trotate " << m_textures[i].rot << "\n";
+
+          if (m_textures[i].scroll_s_u != 0.0 || m_textures[i].scroll_s_v != 0.0)
+            outMaterial << "\t\t\t\tscroll_anim " << m_textures[i].scroll_s_u << " " << m_textures[i].scroll_s_v << "\n";
+
+          if (m_textures[i].rot_s != 0.0)
+            outMaterial << "\t\t\t\trotate_anim " << m_textures[i].rot_s << "\n";
 
 					if(m_textures[i].bReflect)
 					{

@@ -85,9 +85,11 @@ namespace EasyOgreExporter
       ShaderType getType();
       std::string& getContent();
       std::string& getContentGles();
+
       virtual std::string& getUniformParams(ExMaterial* mat);
       virtual std::string& getProgram(std::string baseName);
     protected:
+      bool isUvAnimated(ExMaterial* mat, int uvindex);
     private:
 	};
 

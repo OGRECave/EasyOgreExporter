@@ -46,7 +46,9 @@ namespace EasyOgreExporter
     {
 			scale_u = scale_v = 1;
 			scroll_u = scroll_v = 0;
-			rot = 0;
+      scroll_s_u = scroll_s_v = 0;
+      rot = rot_s = 0;
+
 			am_u = am_v = TAM_CLAMP;
       type = 0;
       uvsetIndex = 0;
@@ -76,7 +78,9 @@ namespace EasyOgreExporter
 		TexAddressMode am_u, am_v;
 		double scale_u, scale_v;
 		double scroll_u, scroll_v;
+    double scroll_s_u, scroll_s_v;
 		double rot;
+    double rot_s;
     int animRate;
     int type;
 	};

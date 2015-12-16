@@ -69,6 +69,18 @@ namespace EasyOgreExporter
     return m_program;
   }
 
+  bool ExShader::isUvAnimated(ExMaterial* mat, int uvindex)
+  {
+    for (int i = 0; i < mat->m_textures.size(); i++)
+    {
+      if ((mat->m_textures[i].bCreateTextureUnit == true) && (mat->m_textures[i].uvsetIndex == uvindex) && ((mat->m_textures[i].scroll_s_u != 0.0) || (mat->m_textures[i].scroll_s_v != 0.0) || (mat->m_textures[i].rot_s != 0.0)))
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
 // ExVsAmbShader
   ExVsAmbShader::ExVsAmbShader(std::string name) : ExShader(name)
@@ -471,12 +483,15 @@ namespace EasyOgreExporter
     std::vector<int> texUnits;
     for (int i = 0; i < mat->m_textures.size(); i++)
     {
-	    if(mat->m_textures[i].bCreateTextureUnit == true)
+      if (mat->m_textures[i].bCreateTextureUnit == true)
+      {
         texUnits.push_back(mat->m_textures[i].uvsetIndex);
+      }
     }
 
     std::sort(texUnits.begin(), texUnits.end());
     texUnits.erase(std::unique(texUnits.begin(), texUnits.end()), texUnits.end());
+
     std::stringstream out;
 
     // generate the shader
@@ -532,8 +547,15 @@ namespace EasyOgreExporter
 
     if(!bNormal)
       out << "\tuniform float4x4 witMat,\n";
-    
+
     out << "\tuniform float4x4 wvpMat,\n";
+
+    for (int i = 0; i < texUnits.size(); i++)
+    {
+      if (isUvAnimated(mat, texUnits[i]))
+        out << "\tuniform float4x4 texMat" << texUnits[i] << ",\n";
+    }
+
     out << "\tuniform float4 spotlightDir0,\n";
     out << "\tuniform float4 spotlightDir1,\n";
     out << "\tuniform float4 spotlightDir2";
@@ -548,9 +570,14 @@ namespace EasyOgreExporter
     lastUvIndex = -1;
     for (int i=0; i < texUnits.size() && (texCoord < 16); i++)
     {
+      bool aUV = isUvAnimated(mat, texUnits[i]);
       if (!(texUnits[i] % 2))
       {
-        out << "\toUv" << texUnits[i] << ".xy = uv" << texUnits[i] << ";\n";
+        if (!aUV)
+          out << "\toUv" << texUnits[i] << ".xy = uv" << texUnits[i] << ";\n";
+        else
+          out << "\toUv" << texUnits[i] << ".xy = mul(texMat" << texUnits[i] << ", float4(" << "uv" << texUnits[i] << ", 0, 1)).xy;\n";
+
         lastUvIndex = texUnits[i];
         texCoord++;
       }
@@ -558,11 +585,17 @@ namespace EasyOgreExporter
       {
         if ((texUnits[i] - 1) == lastUvIndex)
         {
-          out << "\toUv" << texUnits[i] - 1 << ".zw = uv" << texUnits[i] << ";\n";
+          if (!aUV)
+            out << "\toUv" << texUnits[i] - 1 << ".zw = uv" << texUnits[i] << ";\n";
+          else
+            out << "\toUv" << texUnits[i] - 1  << ".zw = mul(texMat" << texUnits[i] << ", float4(" << "uv" << texUnits[i] << ", 0, 1)).xy;\n";
         }
         else
         {
-          out << "\toUv" << texUnits[i] - 1 << " = float4(0.0, 0.0, uv" << texUnits[i] << ");\n";
+          if (!aUV)
+            out << "\toUv" << texUnits[i] - 1 << " = float4(0.0, 0.0, uv" << texUnits[i] << ");\n";
+          else
+            out << "\toUv" << texUnits[i] - 1 << " = float4(0.0, 0.0, mul(texMat" << texUnits[i] << ", float4(" << "uv" << texUnits[i] << ", 0, 1)).xy);\n";
           texCoord++;
         }
 
@@ -638,6 +671,13 @@ namespace EasyOgreExporter
       out << "uniform mat4 witMat;\n";
 
     out << "uniform mat4 wvpMat;\n";
+
+    for (int i = 0; i < texUnits.size(); i++)
+    {
+      if (isUvAnimated(mat, texUnits[i]))
+        out << "uniform mat4 texMat" << texUnits[i] << ";\n";
+    }
+
     out << "uniform vec4 spotlightDir0;\n";
     out << "uniform vec4 spotlightDir1;\n";
     out << "uniform vec4 spotlightDir2;";
@@ -657,7 +697,6 @@ namespace EasyOgreExporter
     out << "varying vec3 oSpDir1;\n";
     out << "varying vec3 oSpDir2;\n";
     out << "varying vec4 oWp;\n";
-    out << "\n";
 
     int lastAvailableTexCoord = texCoord;
     int lastUvIndex = -1;
@@ -666,7 +705,7 @@ namespace EasyOgreExporter
     {
       if (!(texUnits[i] % 2))
       {
-        out << "\tvarying vec4 oUv" << texUnits[i] << ";\n";
+        out << "varying vec4 oUv" << texUnits[i] << ";\n";
         lastUvIndex = texUnits[i];
         texCoord++;
       }
@@ -680,6 +719,8 @@ namespace EasyOgreExporter
         lastUvIndex = texUnits[i] - 1;
       }
     }
+
+    out << "\n";
 
     if (texCoord > 8)
       bNeedHighProfile = true;
@@ -695,9 +736,14 @@ namespace EasyOgreExporter
     lastUvIndex = -1;
     for (int i = 0; i < texUnits.size() && (texCoord < 16); i++)
     {
+      bool aUV = isUvAnimated(mat, texUnits[i]);
+
       if (!(texUnits[i] % 2))
       {
-        out << "\toUv" << texUnits[i] << ".xy = uv" << texUnits[i] << ";\n";
+        if (!aUV)
+          out << "\toUv" << texUnits[i] << ".xy = uv" << texUnits[i] << ";\n";
+        else
+          out << "\toUv" << texUnits[i] << ".xy = (texMat" << texUnits[i] << " * vec4(" << "uv" << texUnits[i] << ", 0.0, 1.0)).xy;\n";
         lastUvIndex = texUnits[i];
         texCoord++;
       }
@@ -705,11 +751,17 @@ namespace EasyOgreExporter
       {
         if ((texUnits[i] - 1) == lastUvIndex)
         {
-          out << "\toUv" << texUnits[i] - 1 << ".zw = uv" << texUnits[i] << ";\n";
+          if (!aUV)
+            out << "\toUv" << texUnits[i] - 1 << ".zw = uv" << texUnits[i] << ";\n";
+          else
+            out << "\toUv" << texUnits[i] - 1 << ".zw = (texMat" << texUnits[i] << " * vec4(" << "uv" << texUnits[i] << ", 0.0, 1.0)).xy;\n";
         }
         else
         {
-          out << "\toUv" << texUnits[i] - 1 << " = vec4(0.0, 0.0, uv" << texUnits[i] << ");\n";
+          if (!aUV)
+            out << "\toUv" << texUnits[i] - 1 << " = vec4(0.0, 0.0, uv" << texUnits[i] << ");\n";
+          else
+            out << "\toUv" << texUnits[i] - 1 << " = vec4(0.0, 0.0, (texMat" << texUnits[i] << " * vec4(" << "uv" << texUnits[i] << ", 0.0, 1.0)).xy);\n";
           texCoord++;
         }
 
@@ -743,6 +795,22 @@ namespace EasyOgreExporter
     std::stringstream out;
     out << "\t\t\tvertex_program_ref " << m_name << "\n";
 		out << "\t\t\t{\n";
+
+    std::vector<int> texUnits;
+    for (int i = 0; i < mat->m_textures.size(); i++)
+    {
+      if (mat->m_textures[i].bCreateTextureUnit == true && ((mat->m_textures[i].scroll_s_u != 0.0) || (mat->m_textures[i].scroll_s_v != 0.0) || (mat->m_textures[i].rot_s != 0.0)))
+        texUnits.push_back(mat->m_textures[i].uvsetIndex);
+    }
+
+    std::sort(texUnits.begin(), texUnits.end());
+    texUnits.erase(std::unique(texUnits.begin(), texUnits.end()), texUnits.end());
+
+    for (int i = 0; i < texUnits.size(); i++)
+    {
+      out << "\t\t\t\tparam_named_auto " << "texMat" << texUnits[i] << " texture_matrix " << texUnits[i] + 1 << "\n";
+    }
+
 		out << "\t\t\t}\n";
     m_params = out.str();
     return m_params;
@@ -1185,11 +1253,11 @@ namespace EasyOgreExporter
         else
           out << ambMskUv - 1 << ".zw" << ").rgb;\n";
 
-        out << "\tambientColor *= ambTex.rgb * ambientTexMsk.rgb;\n";
+        out << "\tambientColor += ambTex.rgb * ambientTexMsk.rgb;\n";
       }
       else
       {
-        out << "\tambientColor *= ambTex.rgb;\n";
+        out << "\tambientColor += ambTex.rgb;\n";
       }
     }
     
