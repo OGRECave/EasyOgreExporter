@@ -263,6 +263,8 @@ namespace EasyOgreExporter
 				{
 					if(m_textures[i].bCreateTextureUnit == true)
 					{
+            bool isAnimatedUv = ((m_textures[i].scroll_s_u != 0.0) || (m_textures[i].scroll_s_v != 0.0) || (m_textures[i].rot_s != 0.0)) ? true : false;
+
 						switch (m_textures[i].type)
 						{
 						case ID_AM:
@@ -289,6 +291,9 @@ namespace EasyOgreExporter
 						case ID_RL:
 							break;
 						}
+
+            if (isAnimatedUv)
+              out << "A";
 					}
 				}
 				std::sort(texUnits.begin(), texUnits.end());
