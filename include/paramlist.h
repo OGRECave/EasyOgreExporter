@@ -37,8 +37,8 @@ namespace EasyOgreExporter
 	{
 		SHADER_NONE,
 		SHADER_BUMP,
-    SHADER_ALL_MULTI,
-    SHADER_ALL
+    SHADER_ALL,
+    SHADER_ALL_MULTI
 	} ShaderMode;
 
 	typedef enum

@@ -509,7 +509,7 @@ namespace EasyOgreExporter
 
     int texCoord = 0;
     out << "\tout float4 oPos : POSITION,\n";
-    out << "\tout float3 oNorm : TEXCOORD" << texCoord++ << ",\n";
+    out << "\tout float4 oNorm : TEXCOORD" << texCoord++ << ",\n";
 
     if(bNormal)
     {
@@ -556,6 +556,7 @@ namespace EasyOgreExporter
         out << "\tuniform float4x4 texMat" << texUnits[i] << ",\n";
     }
 
+    out << "\tuniform float4 fogParams,\n";
     out << "\tuniform float4 spotlightDir0,\n";
     out << "\tuniform float4 spotlightDir1,\n";
     out << "\tuniform float4 spotlightDir2";
@@ -565,6 +566,16 @@ namespace EasyOgreExporter
 
     out << "\toWp = mul(wMat, position);\n";
     out << "\toPos = mul(wvpMat, position);\n";
+    
+    out << "\tfloat fog = 1.0;\n";
+    out << "\t if (fogParams.x == 0.0)\n";
+    out << "\t{\n";
+    out << "\tif (fogParams.w > 0.0)\n";
+    out << "\t\tfog = smoothstep(fogParams.y, fogParams.z, fogParams.z - oPos.z);\n";
+    out << "\t}\n";
+    out << "\telse\n";
+    out << "\t\tfog = exp2(-fogParams.x * oPos.z);\n";
+    out << "\toNorm.w = fog;\n";
 
     texCoord = lastAvailableTexCoord;
     lastUvIndex = -1;
@@ -610,11 +621,11 @@ namespace EasyOgreExporter
     {
       out << "\toTang = tangent;\n";
       out << "\toBinormal = cross(tangent, normal);\n";
-      out << "\toNorm = normal;\n";
+      out << "\toNorm.xyz = normal;\n";
     }
     else
     {
-      out << "\toNorm = normalize(mul((float3x3)witMat, normal));\n";
+      out << "\toNorm.xyz = normalize(mul((float3x3)witMat, normal));\n";
     }
 
     out << "\toSpDir0 = mul(wMat, spotlightDir0).xyz;\n";
@@ -678,6 +689,7 @@ namespace EasyOgreExporter
         out << "uniform mat4 texMat" << texUnits[i] << ";\n";
     }
 
+    out << "uniform vec4 fogParams;\n";
     out << "uniform vec4 spotlightDir0;\n";
     out << "uniform vec4 spotlightDir1;\n";
     out << "uniform vec4 spotlightDir2;";
@@ -685,6 +697,8 @@ namespace EasyOgreExporter
     out << "\n";
     // varying
     int texCoord = 0;
+
+    out << "varying float fog;\n";
     out << "varying vec3 oNorm;\n";
 
     if (bNormal)
@@ -730,7 +744,17 @@ namespace EasyOgreExporter
     out << "{\n";
 
     out << "\toWp = wMat * position;\n";
-    out << "\tgl_Position = wvpMat * position;\n";
+    out << "\tvec4 vPos = wvpMat * position;\n";
+    out << "\tgl_Position = vPos;\n";
+
+    out << "\tfog = 1.0;\n";
+    out << "\t if (fogParams.x == 0.0)\n";
+    out << "\t{\n";
+    out << "\tif (fogParams.w > 0.0)\n";
+    out << "\t\tfog = smoothstep(fogParams.y, fogParams.z, fogParams.z - vPos.z);\n";
+    out << "\t}\n";
+    out << "\telse\n";
+    out << "\t\tfog = exp2(-fogParams.x * vPos.z);\n";
 
     texCoord = lastAvailableTexCoord;
     lastUvIndex = -1;
@@ -839,6 +863,7 @@ namespace EasyOgreExporter
       out << "\t\tparam_named_auto witMat inverse_transpose_world_matrix\n";
 
     out << "\t\tparam_named_auto wvpMat worldviewproj_matrix\n";
+    out << "\t\tparam_named_auto fogParams fog_params\n";
     out << "\t\tparam_named_auto spotlightDir0 light_direction_object_space 0\n";
     out << "\t\tparam_named_auto spotlightDir1 light_direction_object_space 1\n";
     out << "\t\tparam_named_auto spotlightDir2 light_direction_object_space 2\n";
@@ -861,6 +886,7 @@ namespace EasyOgreExporter
       out << "\t\tparam_named_auto witMat inverse_transpose_world_matrix\n";
 
     out << "\t\tparam_named_auto wvpMat worldviewproj_matrix\n";
+    out << "\t\tparam_named_auto fogParams fog_params\n";
     out << "\t\tparam_named_auto spotlightDir0 light_direction_object_space 0\n";
     out << "\t\tparam_named_auto spotlightDir1 light_direction_object_space 1\n";
     out << "\t\tparam_named_auto spotlightDir2 light_direction_object_space 2\n";
@@ -922,7 +948,7 @@ namespace EasyOgreExporter
     int texCoord = 0;
     // generate the shader
     out << "float4 " << optimizeFileName(m_name).c_str() << "(float4 position	: POSITION,\n";
-    out << "\tfloat3 norm : TEXCOORD" << texCoord++ << ",\n";
+      out << "\tfloat4 norm : TEXCOORD" << texCoord++ << ",\n";
 
     if(bNormal)
     {
@@ -956,6 +982,7 @@ namespace EasyOgreExporter
     if (texCoord > 8)
       bNeedHighProfile = true;
 
+    out << "\tuniform float3 fogColor,\n";
     out << "\tuniform float3 ambient,\n";
     out << "\tuniform float3 lightDif0,\n";
     out << "\tuniform float4 lightPos0,\n";
@@ -1121,6 +1148,11 @@ namespace EasyOgreExporter
     out << "): COLOR0\n";
     out << "{\n";
 
+    out << "\tfloat fog = norm.w;\n";
+
+    if (!bRef)
+      out << "\tif (fog == 0.0) return float4(fogColor, 1.0);\n";
+
     if (bNormal)
     {
       out << "\tfloat3 normalTex = tex2D(normalMap, uv";
@@ -1131,7 +1163,7 @@ namespace EasyOgreExporter
 
       out << "\ttangent *= normalMul;\n";
       out << "\tbinormal *= normalMul;\n";
-      out << "\tfloat3x3 tbn = float3x3(tangent, binormal, norm);\n";
+      out << "\tfloat3x3 tbn = float3x3(tangent, binormal, norm.xyz);\n";
       
       out << "\tfloat3 normal = mul(transpose(tbn), (normalTex.xyz -0.5) * 2); // to object space\n";
       out << "\tnormal = normalize(mul((float3x3)iTWMat, normal));\n";
@@ -1149,7 +1181,7 @@ namespace EasyOgreExporter
     }
     else
     {
-      out << "\tfloat3 normal = normalize(norm);\n";
+      out << "\tfloat3 normal = normalize(norm.xyz);\n";
     }
 
     // direction
@@ -1211,6 +1243,31 @@ namespace EasyOgreExporter
 
     out << "\tfloat3 diffuseContrib = matDif.rgb;\n";
 
+    if (bAmbient)
+    {
+      out << "\tfloat3 ambTex = tex2D(ambMap, uv";
+      if (!(ambUv % 2))
+        out << ambUv << ".xy" << ").rgb;\n";
+      else
+        out << ambUv - 1 << ".zw" << ").rgb;\n";
+
+      if (bAmbMsk)
+      {
+        out << "\tfloat3 ambientTexMsk = tex2D(ambMskMap, uv";
+        if (!(ambMskUv % 2))
+          out << ambMskUv << ".xy" << ").rgb;\n";
+        else
+          out << ambMskUv - 1 << ".zw" << ").rgb;\n";
+
+        out << "\tambientColor += ambTex.rgb * ambientTexMsk.rgb;\n";
+      }
+      else
+      {
+        out << "\tambientColor += ambTex.rgb;\n";
+      }
+    }
+
+
     if (bDiffuse)
     {
       out << "\tfloat4 diffuseTex = tex2D(diffuseMap, uv";
@@ -1234,30 +1291,6 @@ namespace EasyOgreExporter
       {
         out << "\tambientColor *= diffuseTex.rgb;\n";
         out << "\tdiffuseContrib *= diffuseTex.rgb;\n";
-      }
-    }
-
-    if (bAmbient)
-    {
-      out << "\tfloat3 ambTex = tex2D(ambMap, uv";
-      if (!(ambUv % 2))
-        out << ambUv << ".xy" << ").rgb;\n";
-      else
-        out << ambUv - 1 << ".zw" << ").rgb;\n";
-
-      if (bAmbMsk)
-      {
-        out << "\tfloat3 ambientTexMsk = tex2D(ambMskMap, uv";
-        if (!(ambMskUv % 2))
-          out << ambMskUv << ".xy" << ").rgb;\n";
-        else
-          out << ambMskUv - 1 << ".zw" << ").rgb;\n";
-
-        out << "\tambientColor += ambTex.rgb * ambientTexMsk.rgb;\n";
-      }
-      else
-      {
-        out << "\tambientColor += ambTex.rgb;\n";
       }
     }
     
@@ -1309,7 +1342,7 @@ namespace EasyOgreExporter
     //if(bAmbient)
       //out << "\tspecularContrib *= ambTex.rgb;\n";
 
-    out << "\tfloat3 light0C = ambientColor + (diffuseLight * diffuseContrib) + specularContrib;\n";
+    out << "\tfloat3 light0C = clamp(ambientColor + (diffuseLight * diffuseContrib) + specularContrib, 0.0, 1.0);\n";
 
     out << "\tfloat alpha = matDif.a;\n";
     if(bDiffuse)
@@ -1326,7 +1359,7 @@ namespace EasyOgreExporter
       if (bFresnel)
       {
         out << "\tfloat fresnel = fresnelMul * reflectivity * pow(1 + dot(-camDir, normal), fresnelPow - (reflectivity * fresnelMul));\n";
-        out << "\tfloat4 reflecVal = reflecTex * fresnel;\n";
+        out << "\tfloat4 reflecVal = clamp(reflecTex * fresnel, 0.0, 1.0);\n";
         out << "\tfloat3 reflectColor = reflecVal.rgb * (1.0 - light0C);\n";
       }
       else //metal style
@@ -1345,10 +1378,10 @@ namespace EasyOgreExporter
         out << "\treflectColor *= refTexMsk.rgb;\n";
       }
 
-      out << "\treturn float4(light0C + reflectColor, alpha);\n";
+      out << "\treturn float4((fog * (light0C + reflectColor)) + fogColor * (1.0 - fog), alpha);\n";
     }
     else
-      out << "\treturn float4(light0C, alpha);\n";
+      out << "\treturn float4((fog * light0C) + (fogColor * (1.0 - fog)), alpha);\n";
 
     out << "}\n";
     m_content = out.str();
@@ -1385,6 +1418,7 @@ namespace EasyOgreExporter
     out << "precision highp float;\n\n";
 
     //uniform
+    out << "uniform vec3 fogColor;\n";
     out << "uniform vec3 ambient;\n";
     out << "uniform vec3 lightDif0;\n";
     out << "uniform vec4 lightPos0;\n";
@@ -1552,6 +1586,8 @@ namespace EasyOgreExporter
 
     // varying
     int texCoord = 0;
+
+    out << "varying float fog;\n";
     out << "varying vec3 oNorm;\n";
 
     if (bNormal)
@@ -1607,6 +1643,8 @@ namespace EasyOgreExporter
     // main start
     out << "void main()\n";
     out << "{\n";
+
+    out << "\tif (fog == 0.0) {gl_FragColor = vec4(fogColor, 1.0); return;}\n";
 
     if (bNormal)
     {
@@ -1695,6 +1733,30 @@ namespace EasyOgreExporter
 
     out << "\tvec3 diffuseContrib = matDif.xyz;\n";
 
+    if (bAmbient)
+    {
+      out << "\tvec3 ambTex = texture2D(ambMap, oUv";
+      if (!(ambUv % 2))
+        out << ambUv << ".xy" << ").xyz;\n";
+      else
+        out << ambUv - 1 << ".zw" << ").xyz;\n";
+
+      if (bAmbMsk)
+      {
+        out << "\tvec3 ambientTexMsk = texture2D(ambMskMap, oUv";
+        if (!(ambMskUv % 2))
+          out << ambMskUv << ".xy" << ").xyz;\n";
+        else
+          out << ambMskUv - 1 << ".zw" << ").xyz;\n";
+
+        out << "\tambientColor += ambTex * ambientTexMsk;\n";
+      }
+      else
+      {
+        out << "\tambientColor += ambTex;\n";
+      }
+    }
+
     if (bDiffuse)
     {
       out << "\tvec4 diffuseTex = texture2D(diffuseMap, oUv";
@@ -1719,30 +1781,6 @@ namespace EasyOgreExporter
         out << "\tambientColor *= diffuseTex.xyz;\n";
         out << "\tdiffuseContrib *= diffuseTex.xyz;\n";
       }
-    }
-
-    if (bAmbient)
-    {
-      out << "\tvec3 ambTex = texture2D(ambMap, oUv";
-      if (!(ambUv % 2))
-        out << ambUv << ".xy" << ").xyz;\n";
-      else
-        out << ambUv - 1 << ".zw" << ").xyz;\n";
-
-      if (bAmbMsk)
-      {
-        out << "\tvec3 ambientTexMsk = texture2D(ambMskMap, oUv";
-        if (!(ambMskUv % 2))
-          out << ambMskUv << ".xy" << ").xyz;\n";
-        else
-          out << ambMskUv - 1 << ".zw" << ").xyz;\n";
-
-        out << "\tambientColor *= ambTex * ambientTexMsk;\n";
-      }
-      else
-      {
-        out << "\tambientColor *= ambTex;\n";
-      }      
     }
 
     if (bIllum)
@@ -1794,13 +1832,15 @@ namespace EasyOgreExporter
     //if(bAmbient)
     //out << "\tspecularContrib *= ambTex.xyz;\n";
 
-    out << "\tvec3 light0C = ambientColor + (diffuseLight * diffuseContrib) + specularContrib;\n";
+    out << "\tvec3 light0C = clamp(ambientColor + (diffuseLight * diffuseContrib) + specularContrib, vec3(0.0), vec3(1.0));\n";
 
     out << "\tfloat alpha = matDif.a;\n";
     if (bDiffuse)
       out << "\talpha *= diffuseTex.a;\n";
     else if (bAmbient)
       out << "\talpha *= ambTex.a;\n";
+
+    out << "\tif (alpha < 0.01) discard;\n";
 
     if (bRef)
     {
@@ -1811,7 +1851,7 @@ namespace EasyOgreExporter
       if (bFresnel)
       {
         out << "\tfloat fresnel = fresnelMul * reflectivity * pow(1.0 + dot(-camDir, normal), fresnelPow - (reflectivity * fresnelMul));\n";
-        out << "\tvec4 reflecVal = reflecTex * fresnel;\n";
+        out << "\tvec4 reflecVal = clamp(reflecTex * fresnel, vec4(0.0), vec4(1.0));\n";
         out << "\tvec3 reflectColor = reflecVal.xyz * (1.0 - light0C);\n";
       }
       else //metal style
@@ -1829,11 +1869,10 @@ namespace EasyOgreExporter
 
         out << "\treflectColor *= refTexMsk;\n";
       }
-
-      out << "\tgl_FragColor = vec4(light0C + reflectColor, alpha);\n";
+      out << "\tgl_FragColor = vec4((vec3(fog) * (light0C + reflectColor)) + (fogColor * vec3(1.0 - fog)), alpha);\n";
     }
     else
-      out << "\tgl_FragColor = vec4(light0C, alpha);\n";
+      out << "\tgl_FragColor = vec4((vec3(fog) * light0C) + (fogColor * vec3(1.0 - fog)), alpha);\n";
 
     out << "}\n";
     m_contentGles = out.str();
@@ -1883,6 +1922,7 @@ namespace EasyOgreExporter
     out << "\tdefault_params\n";
     out << "\t{\n";
     
+    out << "\t\tparam_named_auto fogColor fog_colour\n";
     out << "\t\tparam_named_auto ambient ambient_light_colour\n";
     out << "\t\tparam_named_auto lightDif0 light_diffuse_colour 0\n";
     out << "\t\tparam_named_auto lightPos0 light_position 0\n";
@@ -1936,6 +1976,7 @@ namespace EasyOgreExporter
     out << "\tdefault_params\n";
     out << "\t{\n";
 
+    out << "\t\tparam_named_auto fogColor fog_colour\n";
     out << "\t\tparam_named_auto ambient ambient_light_colour\n";
     out << "\t\tparam_named_auto lightDif0 light_diffuse_colour 0\n";
     out << "\t\tparam_named_auto lightPos0 light_position 0\n";

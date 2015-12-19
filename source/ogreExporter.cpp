@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 2.5f;
+float EXVERSION = 2.51f;
 
 namespace EasyOgreExporter
 {
@@ -176,8 +176,8 @@ namespace EasyOgreExporter
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_RESETCONTENT, 0, 0);
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)"None");
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)"Only for Normal/Specular");
-        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)"All materials");
-        
+        SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_ADDSTRING, 0, (LPARAM)"All materials (3 lights)");
+
         SendDlgItemMessage(hWnd, IDC_SHADERMODE, CB_SETCURSEL, (int)exp->exportProgram, 0);
 
         //fill Max texture size combo box
@@ -380,7 +380,7 @@ namespace EasyOgreExporter
                     */
 
                   default:
-                    exp->exportProgram = SHADER_BUMP;
+                    exp->exportProgram = SHADER_ALL;
                 }
               }
 
@@ -743,7 +743,7 @@ void OgreSceneExporter::loadExportConf(std::string path, ParamList &param)
             */
 
           default:
-            param.exportProgram = SHADER_BUMP;
+            param.exportProgram = SHADER_ALL;
         }
       }
     }
