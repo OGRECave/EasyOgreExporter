@@ -1415,7 +1415,7 @@ namespace EasyOgreExporter
     // generate the shader
     out << "#version 100\n";
     out << "precision mediump int;\n";
-    out << "precision highp float;\n\n";
+    out << "precision mediump float;\n\n";
 
     //uniform
     out << "uniform vec3 fogColor;\n";
@@ -1644,7 +1644,8 @@ namespace EasyOgreExporter
     out << "void main()\n";
     out << "{\n";
 
-    out << "\tif (fog == 0.0) {gl_FragColor = vec4(fogColor, 1.0); return;}\n";
+    // very slow on some devices !
+    //out << "\tif (fog == 0.0) {gl_FragColor = vec4(fogColor, 1.0); return;}\n";
 
     if (bNormal)
     {
