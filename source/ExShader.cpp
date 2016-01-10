@@ -1415,7 +1415,7 @@ namespace EasyOgreExporter
     // generate the shader
     out << "#version 100\n";
     out << "precision mediump int;\n";
-    out << "precision mediump float;\n\n";
+    out << "precision highp float;\n\n";
 
     //uniform
     out << "uniform vec3 fogColor;\n";
