@@ -1232,11 +1232,11 @@ namespace EasyOgreExporter
 
     out << "\tfloat3 camDir = normalize(camPos - wp.xyz);\n";
     out << "\tfloat3 halfVec = normalize(ld0 + camDir);\n";
-    out << "\tfloat3 specularLight = pow(max(dot(normal, halfVec), 0), matShininess) * lightSpec0;\n";
+    out << "\tfloat3 specularLight = pow(max(dot(normal, halfVec), 0), matShininess) * lightSpec0 * la0;\n";
     out << "\thalfVec = normalize(ld1 + camDir);\n";
-    out << "\tspecularLight += pow(max(dot(normal, halfVec), 0), matShininess) * lightSpec1;\n";
+    out << "\tspecularLight += pow(max(dot(normal, halfVec), 0), matShininess) * lightSpec1 * la1;\n";
     out << "\thalfVec = normalize(ld2 + camDir);\n";
-    out << "\tspecularLight += pow(max(dot(normal, halfVec), 0), matShininess) * lightSpec2;\n";
+    out << "\tspecularLight += pow(max(dot(normal, halfVec), 0), matShininess) * lightSpec2 * la2;\n";
 
     out << "\tfloat3 diffuseLight = (diffuse0 * spot0 * la0) + (diffuse1 * spot1 * la1) + (diffuse2 * spot2 * la2);\n";
     out << "\tfloat3 ambientColor = max(matEmissive.rgb, ambient * matAmb.rgb);\n";
@@ -1723,11 +1723,11 @@ namespace EasyOgreExporter
 
     out << "\tvec3 camDir = normalize(camPos - oWp.xyz);\n";
     out << "\tvec3 halfVec = normalize(ld0 + camDir);\n";
-    out << "\tvec3 specularLight = pow(vec3(max(dot(normal, halfVec), 0.0)), vec3(matShininess)) * lightSpec0;\n";
+    out << "\tvec3 specularLight = pow(vec3(max(dot(normal, halfVec), 0.0)), vec3(matShininess)) * vec3(la0) * lightSpec0;\n";
     out << "\thalfVec = normalize(ld1 + camDir);\n";
-    out << "\tspecularLight += pow(vec3(max(dot(normal, halfVec), 0.0)), vec3(matShininess)) * lightSpec1;\n";
+    out << "\tspecularLight += pow(vec3(max(dot(normal, halfVec), 0.0)), vec3(matShininess)) * vec3(la1) * lightSpec1;\n";
     out << "\thalfVec = normalize(ld2 + camDir);\n";
-    out << "\tspecularLight += pow(vec3(max(dot(normal, halfVec), 0.0)), vec3(matShininess)) * lightSpec2;\n";
+    out << "\tspecularLight += pow(vec3(max(dot(normal, halfVec), 0.0)), vec3(matShininess)) * vec3(la2) * lightSpec2;\n";
 
     out << "\tvec3 diffuseLight = (diffuse0 * vec3(spot0 * la0)) + (diffuse1 * vec3(spot1 * la1)) + (diffuse2 * vec3(spot2 * la2));\n";
     out << "\tvec3 ambientColor = max(matEmissive.xyz, ambient * matAmb.xyz);\n";
