@@ -1341,7 +1341,8 @@ namespace EasyOgreExporter
               m_DiffIsVertColor = true;
             }
 
-						tex.fAmount *= m_opacity;
+            //no..
+						//tex.fAmount *= m_opacity;
 						tex.type = ID_DI;
             texMask.type = ID_DI;
 					}
