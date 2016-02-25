@@ -208,7 +208,7 @@ namespace EasyOgreExporter
     if (bNeedHighProfile)
       out << "\tprofiles vs_4_0 arbvp2\n";
     else
-      out << "\tprofiles vs_1_1 arbvp1\n";
+      out << "\tprofiles vs_4_0 vs_1_1 arbvp1\n";
     out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
     out << "\tdefault_params\n";
@@ -430,9 +430,9 @@ namespace EasyOgreExporter
     
     out << "\tsource " << baseName << ".cg\n";
     if (bNeedHighProfile)
-      out << "\tprofiles ps_3_x arbfp1\n";
+      out << "\tprofiles ps_4_0 ps_3_x arbfp1\n";
     else
-      out << "\tprofiles ps_3_0 arbfp1\n";
+      out << "\tprofiles ps_4_0 ps_3_0 arbfp1\n";
     out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
     out << "\tdefault_params\n";
@@ -852,7 +852,7 @@ namespace EasyOgreExporter
     if (bNeedHighProfile)
       out << "\tprofiles vs_4_0 arbvp2\n";
     else
-      out << "\tprofiles vs_1_1 arbvp1\n";
+      out << "\tprofiles vs_4_0 vs_1_1 arbvp1\n";
     out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
     out << "\tdefault_params\n";
@@ -1915,9 +1915,9 @@ namespace EasyOgreExporter
     
     out << "\tsource " << baseName << ".cg\n";
     if (bNeedHighProfile)
-      out << "\tprofiles ps_3_x arbfp1\n";
+      out << "\tprofiles ps_4_0 ps_3_x arbfp1\n";
     else
-      out << "\tprofiles ps_3_0 arbfp1\n";
+      out << "\tprofiles ps_4_0 ps_3_0 arbfp1\n";
     out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
     out << "\tdefault_params\n";
@@ -2244,7 +2244,7 @@ std::string& ExVsLightShaderMulti::getProgram(std::string baseName)
   if (bNeedHighProfile)
     out << "\tprofiles vs_4_0 arbvp2\n";
   else
-    out << "\tprofiles vs_1_1 arbvp1\n";
+    out << "\tprofiles vs_4_0 vs_1_1 arbvp1\n";
   out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
   out << "\tdefault_params\n";
@@ -2537,9 +2537,9 @@ std::string& ExFpLightShaderMulti::getProgram(std::string baseName)
 
   out << "\tsource " << baseName << ".cg\n";
   if (bNeedHighProfile)
-    out << "\tprofiles ps_3_x arbfp1\n";
+    out << "\tprofiles ps_4_0 ps_3_x arbfp1\n";
   else
-    out << "\tprofiles ps_3_0 arbfp1\n";
+    out << "\tprofiles ps_4_0 ps_3_0 arbfp1\n";
   out << "\tentry_point " << optimizeFileName(m_name) << "\n";
 
   out << "\tdefault_params\n";
