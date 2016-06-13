@@ -137,9 +137,10 @@ namespace EasyOgreExporter
     return false;
   }
 
-  void ExOgreConverter::addSkinModifier(IGameSkin* skinmod)
+  void ExOgreConverter::addSkinModifier(IGameSkin* skinmod, IGameNode* node)
   {
     mSkinList.push_back(skinmod->GetMaxModifier());
+    mSkinNodeList.push_back(node->GetMaxNode());
     IBipMaster* bipMaster = GetBipedMasterInterface(skinmod);
     DWORD prevBipMode = bipMaster ? bipMaster->GetActiveModes() : 0;
     mSkinLastStateList.push_back(prevBipMode);
@@ -151,14 +152,15 @@ namespace EasyOgreExporter
     for (unsigned int i = 0; i < mSkinList.size(); i++)
     {
       Modifier* skinmod = mSkinList[i];
-      IBipMaster* bipMaster = GetBipedMasterInterface(skinmod);
+      INode* node = mSkinNodeList[i];
+      IBipMaster* bipMaster = GetBipedMasterInterface(skinmod, node);
       DWORD prevBipMode = bipMaster ? bipMaster->GetActiveModes() : 0;
 
       if (bipMaster)
       {
         bipMaster->EndModes(prevBipMode, 0);
         bipMaster->BeginModes(BMODE_FIGURE, 0);
-        ReleaseBipedMasterInterface(skinmod, bipMaster);
+        ReleaseBipedMasterInterface(skinmod, node, bipMaster);
       }
     }
   }
@@ -168,14 +170,15 @@ namespace EasyOgreExporter
     for (unsigned int i = 0; i < mSkinList.size(); i++)
     {
       Modifier* skinmod = mSkinList[i];
-      IBipMaster* bipMaster = GetBipedMasterInterface(skinmod);
+      INode* node = mSkinNodeList[i];
+      IBipMaster* bipMaster = GetBipedMasterInterface(skinmod, node);
       DWORD prevBipMode = bipMaster ? bipMaster->GetActiveModes() : 0;
 
       if (bipMaster)
       {
         bipMaster->EndModes(prevBipMode, 0);
         bipMaster->BeginModes(mSkinLastStateList[i], 0);
-        ReleaseBipedMasterInterface(skinmod, bipMaster);
+        ReleaseBipedMasterInterface(skinmod, node, bipMaster);
       }
     }
   }

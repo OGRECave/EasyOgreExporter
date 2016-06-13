@@ -19,6 +19,7 @@
 #include "ExPrerequisites.h"
 #include "decomp.h"
 #include "iskin.h"
+#include "Phyexp.h"
 #include "IMixer8.h"
 #include "iInstanceMgr.h"
 #include "MeshNormalSpec.h"
@@ -393,40 +394,170 @@ inline Matrix3 GetLocalNodeMatrix(INode *node, Matrix3 offsetTM, bool yUp = fals
 
 
 //Biped interface
-inline IBipMaster* GetBipedMasterInterface(Modifier* skinmod)
+inline IBipMaster* GetBipedMasterInterface(Modifier* skinmod, INode* node)
 {
   if(!skinmod)
     return 0;
 
   IBipMaster* bipMaster = 0;
   ISkin* skin = (ISkin*)skinmod->GetInterface(I_SKIN);
-  for (int i = 0; (i < skin->GetNumBones()) && (bipMaster == 0); i++)
+  if (skin)
   {
-    INode* bone = skin->GetBone(i);
-    Control* boneControl = bone->GetTMController();
-    
-    if (boneControl)
+    for (int i = 0; (i < skin->GetNumBones()) && (bipMaster == 0); i++)
     {
-      //Get the Biped master Interface from the controller
-      bipMaster = (IBipMaster*) boneControl->GetInterface(I_BIPMASTER);
+      INode* bone = skin->GetBone(i);
+      if (bone == NULL)
+        continue;
+
+      Control* boneControl = bone->GetTMController();
+
+      if (boneControl)
+      {
+        //Get the Biped master Interface from the controller
+        bipMaster = (IBipMaster*)boneControl->GetInterface(I_BIPMASTER);
+      }
     }
   }
+  else
+  {
+    //physic modifier
+    IPhysiqueExport *phyExport = (IPhysiqueExport*)skinmod->GetInterface(I_PHYINTERFACE);
+    if (phyExport)
+    {
+      // create a ModContext Export Interface for the specific node of the Physique Modifier
+      IPhyContextExport *mcExport = (IPhyContextExport *)phyExport->GetContextInterface(node);
+      if (mcExport)
+      {
+        mcExport->ConvertToRigid(TRUE);
+        mcExport->AllowBlending(TRUE);
+
+        int nbVert = mcExport->GetNumberVertices();
+        for (int i = 0; i < nbVert && (bipMaster == 0); i++)
+        {
+          IPhyVertexExport *vtxExport = mcExport->GetVertexInterface(i);
+          if (vtxExport)
+          {
+            if (vtxExport->GetVertexType() & BLENDED_TYPE)
+            {
+              IPhyBlendedRigidVertex *vtxBlend = (IPhyBlendedRigidVertex*)vtxExport;
+              for (int n = 0; n < vtxBlend->GetNumberNodes() && (bipMaster == 0); n++)
+              {
+                INode* bone = vtxBlend->GetNode(n);
+                if (bone)
+                {
+                  Control* boneControl = bone->GetTMController();
+
+                  if (boneControl)
+                  {
+                    //Get the Biped master Interface from the controller
+                    bipMaster = (IBipMaster*)boneControl->GetInterface(I_BIPMASTER);
+                  }
+                }
+              }
+            }
+            else
+            {
+              IPhyRigidVertex *vtxNoBlend = (IPhyRigidVertex*)vtxExport;
+              INode* bone = vtxNoBlend->GetNode();
+              if (bone)
+              {
+                Control* boneControl = bone->GetTMController();
+
+                if (boneControl)
+                {
+                  //Get the Biped master Interface from the controller
+                  bipMaster = (IBipMaster*)boneControl->GetInterface(I_BIPMASTER);
+                }
+              }
+            }
+            mcExport->ReleaseVertexInterface(vtxExport);
+            mcExport = NULL;
+          }
+        }
+
+        phyExport->ReleaseContextInterface(mcExport);
+      }
+      skinmod->ReleaseInterface(I_PHYINTERFACE, phyExport);
+    }
+  }
+
   return bipMaster;
 }
 
-inline void ReleaseBipedMasterInterface(Modifier* skinmod, IBipMaster* bipMaster)
+inline void ReleaseBipedMasterInterface(Modifier* skinmod, INode* node, IBipMaster* bipMaster)
 {
   if(!skinmod || !bipMaster)
     return;
 
   Control* bipedControl = 0;
   ISkin* skin = (ISkin*)skinmod->GetInterface(I_SKIN);
-  for (int i = 0; (i < skin->GetNumBones()) && (bipedControl == 0) ; i++)
+  if (skin)
   {
-    INode* bone = skin->GetBone(i);
-    Control* boneControl = bone->GetTMController();
-    if (boneControl->ClassID() == BIPBODY_CONTROL_CLASS_ID)
-      bipedControl = boneControl;
+    for (int i = 0; (i < skin->GetNumBones()) && (bipedControl == 0); i++)
+    {
+      INode* bone = skin->GetBone(i);
+      if (bone == NULL)
+        continue;
+
+      Control* boneControl = bone->GetTMController();
+      if (boneControl->ClassID() == BIPBODY_CONTROL_CLASS_ID)
+        bipedControl = boneControl;
+    }
+  }
+  else
+  {
+    //physic modifier
+    IPhysiqueExport *phyExport = (IPhysiqueExport*)skinmod->GetInterface(I_PHYINTERFACE);
+    if (phyExport)
+    {
+      // create a ModContext Export Interface for the specific node of the Physique Modifier
+      IPhyContextExport *mcExport = (IPhyContextExport *)phyExport->GetContextInterface(node);
+      if (mcExport)
+      {
+        mcExport->ConvertToRigid(TRUE);
+        mcExport->AllowBlending(TRUE);
+
+        int nbVert = mcExport->GetNumberVertices();
+        for (int i = 0; i < nbVert && (bipMaster == 0); i++)
+        {
+          IPhyVertexExport *vtxExport = mcExport->GetVertexInterface(i);
+          if (vtxExport)
+          {
+            if (vtxExport->GetVertexType() & BLENDED_TYPE)
+            {
+              IPhyBlendedRigidVertex *vtxBlend = (IPhyBlendedRigidVertex*)vtxExport;
+              for (int n = 0; n < vtxBlend->GetNumberNodes() && (bipMaster == 0); n++)
+              {
+                INode* bone = vtxBlend->GetNode(n);
+                if (bone)
+                {
+                  Control* boneControl = bone->GetTMController();
+
+                  if (boneControl->ClassID() == BIPBODY_CONTROL_CLASS_ID)
+                    bipedControl = boneControl;
+                }
+              }
+            }
+            else
+            {
+              IPhyRigidVertex *vtxNoBlend = (IPhyRigidVertex*)vtxExport;
+              INode* bone = vtxNoBlend->GetNode();
+              if (bone)
+              {
+                Control* boneControl = bone->GetTMController();
+                if (boneControl->ClassID() == BIPBODY_CONTROL_CLASS_ID)
+                  bipedControl = boneControl;
+              }
+            }
+            mcExport->ReleaseVertexInterface(vtxExport);
+            mcExport = NULL;
+          }
+        }
+
+        phyExport->ReleaseContextInterface(mcExport);
+      }
+      skinmod->ReleaseInterface(I_PHYINTERFACE, phyExport);
+    }
   }
 
   if (bipedControl)
@@ -444,6 +575,9 @@ inline IBipMaster* GetBipedMasterInterface(IGameSkin* skin)
   for (int i = 0; (i < skin->GetTotalBoneCount()) && (bipMaster == 0); i++)
   {
     INode* bone = skin->GetBone(i, true);
+    if (bone == NULL)
+      continue;
+
     Control* boneControl = bone->GetTMController();
     
     if (boneControl)
@@ -475,6 +609,9 @@ inline void ReleaseBipedMasterInterface(IGameSkin* skin, IBipMaster* bipMaster)
   for (int i = 0; (i < skin->GetTotalBoneCount()) && (bipedControl == 0) ; i++)
   {
     INode* bone = skin->GetBone(i, true);
+    if (bone == NULL)
+      continue;
+
     Control* boneControl = bone->GetTMController();
     if (boneControl && boneControl->ClassID() == BIPBODY_CONTROL_CLASS_ID)
       bipedControl = boneControl;

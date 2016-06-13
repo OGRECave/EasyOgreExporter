@@ -35,7 +35,7 @@ namespace EasyOgreExporter
       // for skeleton unicity
       void addExportedRootBone(ExBone bone);
       bool isExportedRootBone(ExBone bone);
-      void addSkinModifier(IGameSkin* skinmod);
+      void addSkinModifier(IGameSkin* skinmod, IGameNode* node);
       void setAllSkinToBindPos();
       void restoreAllSkin();
       void setHasError(bool state);
@@ -51,6 +51,7 @@ namespace EasyOgreExporter
       ExMaterialSet* mMaterialSet;
       std::vector<ExBone> mExportedRootBones;
       std::vector<Modifier*> mSkinList;
+      std::vector<INode*> mSkinNodeList;
       std::vector<DWORD> mSkinLastStateList;
       bool mHasError;
 	};

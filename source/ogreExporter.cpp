@@ -36,7 +36,7 @@
 
 
 //Exporter version
-float EXVERSION = 2.55f;
+float EXVERSION = 2.56f;
 
 namespace EasyOgreExporter
 {
@@ -1183,7 +1183,7 @@ void OgreExporter::LoadSkinBones(IGameNode* pGameNode)
                 lFoundBones.push_back(bone);
               }
 
-              ogreConverter->addSkinModifier(pGameSkin);
+              ogreConverter->addSkinModifier(pGameSkin, pGameNode);
             }
           }
         }
