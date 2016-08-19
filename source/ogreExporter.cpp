@@ -1275,6 +1275,15 @@ bool OgreExporter::exportNode(IGameNode* pGameNode, TiXmlElement* parent)
         
       switch(gameType)
       {
+        case IGameObject::IGAME_UNKNOWN:
+          {
+#ifdef UNICODE
+          MSTR nodeName = pGameNode->GetName();
+          EasyOgreExporterLog("Warning, Object type unknown : %ls try for mesh\n", nodeName.data());
+#else
+          EasyOgreExporterLog("Warning, Object type unknown: %s try for mesh\n", pGameNode->GetName());
+#endif
+          }
         case IGameObject::IGAME_MESH:
           {
             bool delTri = false;
