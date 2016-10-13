@@ -16,7 +16,7 @@
 #include "ExMaterial.h"
 #include "EasyOgreExporterLog.h"
 #include "ExTools.h"
-#include "OgreProgressiveMeshGenerator.h"
+#include "MeshLodGenerator/OgreMeshLodGenerator.h"
 #include "OgreDistanceLodStrategy.h"
 #include "OgrePixelCountLodStrategy.h"
 #include "IFrameTagManager.h"
@@ -535,6 +535,7 @@ namespace EasyOgreExporter
       EasyOgreExporterLog("Info: Generate mesh LOD\n");
       try
       {
+        /*
         Ogre::LodConfig lodConfig;
         lodConfig.levels.clear();
         lodConfig.mesh = pMesh;
@@ -581,9 +582,13 @@ namespace EasyOgreExporter
         
         Ogre::ProgressiveMeshGenerator pm;
         pm.generateLodLevels(lodConfig);
-
+        
         //Ogre::ProgressiveMeshGenerator pm;
         //pm.generateAutoconfiguredLodLevels(pMesh);
+        */
+
+        //OGRE 2.0
+        Ogre::MeshLodGenerator::getSingleton().generateAutoconfiguredLodLevels(pMesh);
       }
       catch(Ogre::Exception &e)
       {

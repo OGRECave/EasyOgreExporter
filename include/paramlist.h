@@ -44,6 +44,7 @@ namespace EasyOgreExporter
 	typedef enum
 	{
     TOGRE_LASTEST,
+    TOGRE_1_10,
 		TOGRE_1_8,
 		TOGRE_1_7,
     TOGRE_1_4,
@@ -187,6 +188,9 @@ namespace EasyOgreExporter
         case TOGRE_LASTEST:
           return "Latest version";
 
+        case TOGRE_1_10:
+          return "1.10";
+
 		    case TOGRE_1_8:
           return "1.8";
 
@@ -211,6 +215,9 @@ namespace EasyOgreExporter
         case TOGRE_LASTEST:
           return Ogre::MESH_VERSION_LATEST;
 
+        case TOGRE_1_10:
+          return Ogre::MESH_VERSION_1_10;
+
 		    case TOGRE_1_8:
           return Ogre::MESH_VERSION_1_8;
 
@@ -234,6 +241,9 @@ namespace EasyOgreExporter
       {
         case TOGRE_LASTEST:
           return Ogre::SKELETON_VERSION_LATEST;
+
+        case TOGRE_1_10:
+          return Ogre::SKELETON_VERSION_1_8;
 
 		    case TOGRE_1_8:
           return Ogre::SKELETON_VERSION_1_8;

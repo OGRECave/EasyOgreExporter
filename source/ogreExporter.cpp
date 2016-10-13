@@ -62,6 +62,7 @@ namespace EasyOgreExporter
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETMINVISIBLE, 30, 0);
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_RESETCONTENT, 0, 0);
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)L"Ogre Latest");
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)L"Ogre 1.10");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)L"Ogre 1.8");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)L"Ogre 1.7");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)L"Ogre 1.4");
@@ -96,6 +97,7 @@ namespace EasyOgreExporter
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_SETMINVISIBLE, 30, 0);
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_RESETCONTENT, 0, 0);
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre Latest");
+        SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.10");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.8");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.7");
         SendDlgItemMessage(hWnd, IDC_OGREVERSION, CB_ADDSTRING, 0, (LPARAM)"Ogre 1.4");
@@ -269,20 +271,23 @@ namespace EasyOgreExporter
                     exp->meshVersion = TOGRE_LASTEST;
                     break;
                   case 1:
-                    exp->meshVersion = TOGRE_1_8;
+                    exp->meshVersion = TOGRE_1_10;
                     break;
                   case 2:
-                    exp->meshVersion = TOGRE_1_7;
+                    exp->meshVersion = TOGRE_1_8;
                     break;
                   case 3:
-                    exp->meshVersion = TOGRE_1_4;
+                    exp->meshVersion = TOGRE_1_7;
                     break;
                   case 4:
+                    exp->meshVersion = TOGRE_1_4;
+                    break;
+                  case 5:
                     exp->meshVersion = TOGRE_1_0;
                     break;
 
                   default:
-                    exp->meshVersion = TOGRE_1_8;
+                    exp->meshVersion = TOGRE_1_10;
                 }
               }
 
@@ -636,15 +641,18 @@ void OgreSceneExporter::loadExportConf(std::string path, ParamList &param)
             param.meshVersion = TOGRE_LASTEST;
             break;
           case 1:
-            param.meshVersion = TOGRE_1_8;
+            param.meshVersion = TOGRE_1_10;
             break;
           case 2:
-            param.meshVersion = TOGRE_1_7;
+            param.meshVersion = TOGRE_1_8;
             break;
           case 3:
-            param.meshVersion = TOGRE_1_4;
+            param.meshVersion = TOGRE_1_7;
             break;
           case 4:
+            param.meshVersion = TOGRE_1_4;
+            break;
+          case 5:
             param.meshVersion = TOGRE_1_0;
             break;
         }
@@ -1021,10 +1029,10 @@ bool OgreExporter::exportScene()
   Ogre::LogManager::getSingleton().createLog("Ogre.log", true);
   Ogre::ResourceGroupManager rgm;
   Ogre::MeshManager meshMgr;
-  Ogre::SkeletonManager skelMgr;
+  Ogre::OldSkeletonManager skelMgr;
   Ogre::MaterialManager matMgr;
   Ogre::DefaultHardwareBufferManager hardwareBufMgr;
-  Ogre::LodStrategyManager lodstrategymanager;  
+  //Ogre::LodStrategyManager lodstrategymanager;  
 
   m_params.currentRootJoints.clear();
 

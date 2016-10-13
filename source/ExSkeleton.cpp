@@ -761,7 +761,7 @@ namespace EasyOgreExporter
 	bool ExSkeleton::writeOgreBinary()
 	{
 		// Construct skeleton
-		Ogre::SkeletonPtr pSkeleton = Ogre::SkeletonManager::getSingleton().create(m_name.c_str(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+		Ogre::SkeletonPtr pSkeleton = Ogre::OldSkeletonManager::getSingleton().create(m_name.c_str(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 		
     // Create skeleton bones
 		if (!createOgreBones(pSkeleton))
@@ -823,7 +823,7 @@ namespace EasyOgreExporter
        //m_converter->addExportedRootBone(j);
 
 			  // Create a new bone
-			  Ogre::Bone* pBone = pSkeleton->createBone(m_joints[i].name.c_str(), m_joints[i].id);
+			  Ogre::OldBone* pBone = pSkeleton->createBone(m_joints[i].name.c_str(), m_joints[i].id);
 
 			  // Set bone position (relative to it's parent)
         pBone->setPosition(j.trans.x, j.trans.y, j.trans.z);
@@ -844,8 +844,8 @@ namespace EasyOgreExporter
 			if (parentIdx >= 0)
 			{
 				// Get current joint from skeleton
-        Ogre::Bone* pParent = 0;
-        Ogre::Bone* pBone = 0;
+        Ogre::OldBone* pParent = 0;
+        Ogre::OldBone* pBone = 0;
         try
         {
           pParent = pSkeleton->getBone(m_joints[parentIdx].id);
@@ -880,11 +880,11 @@ namespace EasyOgreExporter
 				ExTrack* t = &m_animations[i].m_tracks[j];
 				
         // Create a new track
-        Ogre::Bone* oBone = pSkeleton->getBone(t->m_bone.c_str());
+        Ogre::OldBone* oBone = pSkeleton->getBone(t->m_bone.c_str());
         if (!oBone)
           continue;
 
-				Ogre::NodeAnimationTrack* pTrack = pAnimation->createNodeTrack(j,	oBone);
+				Ogre::OldNodeAnimationTrack* pTrack = pAnimation->createOldNodeTrack(j,	oBone);
 
 				// Create keyframes for current track
 				for (size_t k = 0; k < t->m_skeletonKeyframes.size(); k++)
