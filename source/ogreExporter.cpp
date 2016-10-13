@@ -27,6 +27,9 @@
 #include "../resources/resource.h"
 #include "3dsmaxport.h"
 
+#include "OgreLodStrategyManager.h"
+#include "OgrePixelCountLodStrategy.h"
+
 #if defined(WIN32)
 // For SHGetFolderPath.  Requires Windows XP or greater.
 #include <stdarg.h>
@@ -36,7 +39,7 @@
 
 
 //Exporter version
-float EXVERSION = 2.56f;
+float EXVERSION = 3.0f;
 
 namespace EasyOgreExporter
 {
@@ -1032,7 +1035,7 @@ bool OgreExporter::exportScene()
   Ogre::OldSkeletonManager skelMgr;
   Ogre::MaterialManager matMgr;
   Ogre::DefaultHardwareBufferManager hardwareBufMgr;
-  //Ogre::LodStrategyManager lodstrategymanager;  
+  Ogre::LodStrategyManager lodstrategymanager;  
 
   m_params.currentRootJoints.clear();
 
