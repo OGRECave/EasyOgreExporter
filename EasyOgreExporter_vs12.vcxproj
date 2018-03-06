@@ -69,6 +69,14 @@
       <Configuration>Hybrid Max 2016</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 2017|x64">
+      <Configuration>Hybrid Max 2017</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid Max 2018|x64">
+      <Configuration>Hybrid Max 2018</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Hybrid Max 9|Win32">
       <Configuration>Hybrid Max 9</Configuration>
       <Platform>Win32</Platform>
