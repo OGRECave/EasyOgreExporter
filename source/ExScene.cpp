@@ -188,6 +188,7 @@ namespace EasyOgreExporter
 
         // Notice that in Max we flip the w-component of the quaternion;
         rot.w = -rot.w;
+        rot.Normalize();
 
         TiXmlElement* pKeyElement = new TiXmlElement("keyframe");
         pKeyElement->SetDoubleAttribute("time", ogreTime);
@@ -255,6 +256,7 @@ namespace EasyOgreExporter
 
     // Notice that in Max we flip the w-component of the quaternion;
     rot.w = -rot.w;
+    rot.Normalize();
 
 		TiXmlElement* pNodeElement = new TiXmlElement("node");
 #ifdef UNICODE
