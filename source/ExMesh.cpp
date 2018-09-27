@@ -210,8 +210,9 @@ namespace EasyOgreExporter
 
           float alpha = 1.0;
           if (haveVertexAlpha && vAlpha)
-            alpha = vAlpha[vIndex].x;
-
+          {
+            alpha = vAlpha[VertexColorIndex].x;
+          }
           color = mMesh->vertCol[VertexColorIndex];
 
           if ((color.x == -1) && (color.x == -1) && (color.x == -1))

@@ -306,7 +306,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v140</PlatformToolset>
-  </PropertyGroup>  
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2019|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
@@ -687,6 +687,12 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2019|x64'">./output/$(Platform)/vs12/$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Max 2019|x64'">./intermediate/$(Platform)/vs12/$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Max 2019|x64'">true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2018|x64'">
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2017|x64'">
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 9|Win32'">
     <ClCompile>
@@ -1487,9 +1493,7 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(3DSMAX_2011x64_PATH)Plugins"
-copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
-</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2011|Win32'">
@@ -1583,7 +1587,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(3DSMAX_2011x64_PATH)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|Win32'">
@@ -1628,7 +1632,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x32_2012)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|x64'">
@@ -1676,7 +1680,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2012)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|Win32'">
@@ -1723,7 +1727,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x32_2012)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|x64'">
@@ -1773,7 +1777,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2012)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2013|Win32'">
@@ -1863,7 +1867,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2013)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2013|Win32'">
@@ -1959,7 +1963,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2013)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2014|Win32'">
@@ -2049,7 +2053,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2014)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2014|Win32'">
@@ -2145,7 +2149,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2014)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2015|Win32'">
@@ -2235,7 +2239,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2015)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2015|Win32'">
@@ -2331,7 +2335,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2015)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2016|x64'">
@@ -2379,7 +2383,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2016)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2016|x64'">
@@ -2430,7 +2434,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2016)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2017|x64'">
@@ -2478,7 +2482,8 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2017)Plugins"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2017|x64'">
@@ -2529,7 +2534,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2017)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2018|x64'">
@@ -2577,7 +2582,8 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2018)Plugins"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2018|x64'">
@@ -2628,9 +2634,9 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2018)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
-  </ItemDefinitionGroup>  
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2019|x64'">
     <Midl>
       <TargetEnvironment>X64</TargetEnvironment>
@@ -2676,7 +2682,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2019)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2019|x64'">
@@ -2727,7 +2733,7 @@ copy "$(OutDir)EasyOgreExporter.pdb" "$(3DSMAX_2011x64_PATH)Plugins"
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)EasyOgreExporter.dle" "$(ADSK_3DSMAX_x64_2019)Plugins"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
