@@ -709,12 +709,18 @@ namespace EasyOgreExporter
 	{
     INode* bone = j.pNode;
     Matrix3 boneTM;
+    Matrix3 boneScaleTM;
 
     // get the root bone matrix relative to the mesh
     if (j.parentIndex == -1)
       boneTM = GetLocalUniformMatrix(bone, m_pGameNode->GetMaxNode(), offsetTM, m_params.yUpAxis, time);
     else
       boneTM = GetLocalUniformMatrix(bone, offsetTM, m_params.yUpAxis, time);
+
+    if (j.parentIndex == -1)
+      boneScaleTM = GetLocalMatrix(bone, m_pGameNode->GetMaxNode(), offsetTM, m_params.yUpAxis, time);
+    else
+      boneScaleTM = GetLocalMatrix(bone, offsetTM, m_params.yUpAxis, time);
 
     Matrix3 relMat = GetRelativeMatrix(boneTM, j.bindMatrix);
 
@@ -724,10 +730,14 @@ namespace EasyOgreExporter
 
     AffineParts ap;
 		decomp_affine(relMat, &ap);
-    Point3 scale = ap.k;
     Quat rot = ap.q;
     // Notice that in Max we flip the w-component of the quaternion;
     rot.w = -rot.w;
+
+    //scale
+    AffineParts sap;
+    decomp_affine(boneScaleTM, &sap);
+    Point3 scale = sap.k;
 
 		//create keyframe
 		skeletonKeyframe key;

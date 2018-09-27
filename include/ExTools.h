@@ -348,6 +348,47 @@ inline Matrix3 GetLocalUniformMatrix(INode *node, INode *parent, Matrix3 offsetM
   return cur_mat * Inverse(par_mat);
 }
 
+
+inline Matrix3 GetLocalMatrix(INode *node, Matrix3 offsetMat, bool yUp, int t)
+{
+  //Decompose each matrix
+  Matrix3 cur_mat = TransformMatrix(node->GetNodeTM(t), yUp) * Inverse(offsetMat);
+
+  if (node->GetParentNode()->IsRootNode())
+    return cur_mat;
+
+  Matrix3 par_mat = TransformMatrix(node->GetParentNode()->GetNodeTM(t), yUp) * Inverse(offsetMat);
+
+  //then return relative matrix in coordinate space of parent
+  return cur_mat * Inverse(par_mat);
+}
+
+inline Matrix3 GetLocalMatrix(INode *node, bool yUp, int t)
+{
+  //Decompose each matrix
+  Matrix3 cur_mat = TransformMatrix(node->GetNodeTM(t), yUp);
+
+  if (node->GetParentNode()->IsRootNode())
+    return cur_mat;
+
+  Matrix3 par_mat = TransformMatrix(node->GetParentNode()->GetNodeTM(t), yUp);
+
+  //then return relative matrix in coordinate space of parent
+  return cur_mat * Inverse(par_mat);
+}
+
+inline Matrix3 GetLocalMatrix(INode *node, INode *parent, Matrix3 offsetMat, bool yUp, int t)
+{
+  //Decompose each matrix
+  Matrix3 cur_mat = TransformMatrix(node->GetNodeTM(t), yUp) * Inverse(offsetMat);
+
+  Matrix3 par_mat = TransformMatrix(parent->GetNodeTM(t), yUp) * Inverse(offsetMat);
+
+  //then return relative matrix in coordinate space of parent
+  return cur_mat * Inverse(par_mat);
+}
+
+
 inline Matrix3 GetRelativeMatrix(Matrix3 mat1, Matrix3 mat2)
 {
   return mat1 * Inverse(mat2);
