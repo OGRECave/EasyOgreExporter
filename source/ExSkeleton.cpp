@@ -723,7 +723,7 @@ namespace EasyOgreExporter
     key.trans = trans;
 		key.rot = rot;
 		key.scale = scale;
-    key.bbpos = trans;
+    key.bbpos = sap.t * m_params.lum;
 
 		return key;
 	}
