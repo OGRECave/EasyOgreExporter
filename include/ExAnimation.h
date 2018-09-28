@@ -35,6 +35,7 @@ namespace EasyOgreExporter
 		Point3 trans;						//translation
 		Quat rot;		            //rotation
 		Point3 scale;					  //scale
+    Point3 bbpos;					  //pos for bb
 	} skeletonKeyframe;
 
 	// A class for storing an animation track

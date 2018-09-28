@@ -433,6 +433,27 @@ namespace EasyOgreExporter
       return false;
     }
 
+    // Update bounding with bone AABB
+    if (getSkeleton())
+    {
+      std::vector<ExAnimation> lanims = getSkeleton()->getAnimations();
+      for (size_t i = 0; i < lanims.size(); i++)
+      {
+        // Create tracks for current animation
+        for (size_t j = 0; j < lanims[i].m_tracks.size(); j++)
+        {
+          ExTrack* t = &lanims[i].m_tracks[j];
+
+          // Create keyframes for current track
+          for (size_t k = 0; k < t->m_skeletonKeyframes.size(); k++)
+          {
+            skeletonKeyframe* keyframe = &t->m_skeletonKeyframes[k];
+            updateBounds(keyframe->bbpos);
+          }
+        }
+      }
+    }
+
     BOOL ignoreLOD = FALSE;
     IPropertyContainer* pc = m_GameMesh->GetIPropertyContainer();
     IGameProperty* pIgnoreLod = pc->QueryProperty(_T("noLOD"));

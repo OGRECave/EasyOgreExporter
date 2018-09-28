@@ -665,28 +665,6 @@ namespace EasyOgreExporter
 				//add keyframe to joint track
 				animTracks[j].addSkeletonKeyframe(key);
 			}
-
-      //TODO
-			/*if (params.skelBB)
-			{
-				// Update bounding boxes of loaded submeshes
-				for (j=0; j<params.loadedSubmeshes.size(); j++)
-				{
-					IGameNode *pGameNode = params.loadedSubmeshes[j]->m_pGameNode;
-					if(pGameNode)
-					{
-						IGameObject* pGameObject = pGameNode->GetIGameObject();
-						if(pGameObject)
-						{
-              //TODO calc with vertices
-							Box3 bbox;
-							pGameObject->GetBoundingBox(bbox);
-							params.loadedSubmeshes[j]->m_boundingBox += bbox;
-						}
-						pGameNode->ReleaseIGameObject();
-					}
-				}
-			}*/
 		}
 		// add created tracks to current clip
 		for (size_t i = 0; i < animTracks.size(); i++)
@@ -745,6 +723,7 @@ namespace EasyOgreExporter
     key.trans = trans;
 		key.rot = rot;
 		key.scale = scale;
+    key.bbpos = trans;
 
 		return key;
 	}

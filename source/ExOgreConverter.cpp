@@ -74,6 +74,19 @@ namespace EasyOgreExporter
     {
       if (mParams.exportMesh)
       {
+        // Write skeleton binary
+        if (mParams.exportSkeleton && mesh->getSkeleton())
+        {
+          // Load skeleton animations
+          mesh->getSkeleton()->loadAnims(pGameNode);
+
+          EasyOgreExporterLog("Writing skeleton binary...\n");
+          if (!mesh->getSkeleton()->writeOgreBinary())
+          {
+            EasyOgreExporterLog("Error writing skeleton binary file\n");
+          }
+        }
+
         #ifdef UNICODE
           MSTR nodeName = pGameNode->GetName();
           EasyOgreExporterLog("Writing %ls mesh binary...\n", nodeName.data());
@@ -85,19 +98,6 @@ namespace EasyOgreExporter
         {
           EasyOgreExporterLog("Warning : Mesh skipped, see previous log to know why.\n");
         }
-      }
-    }
-
-    // Write skeleton binary
-    if (mParams.exportSkeleton && mesh->getSkeleton() && isFirstInstance(pGameNode))
-    {
-      // Load skeleton animations
-      mesh->getSkeleton()->loadAnims(pGameNode);
-      
-      EasyOgreExporterLog("Writing skeleton binary...\n");
-      if(!mesh->getSkeleton()->writeOgreBinary())
-      {
-        EasyOgreExporterLog("Error writing skeleton binary file\n");
       }
     }
 
