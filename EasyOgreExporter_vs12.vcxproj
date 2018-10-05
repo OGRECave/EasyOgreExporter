@@ -1493,7 +1493,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2011|Win32'">
@@ -1587,7 +1588,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|Win32'">
@@ -1632,7 +1634,8 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2012|x64'">
@@ -1680,7 +1683,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|Win32'">
@@ -1727,7 +1731,8 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2012|x64'">
@@ -1777,7 +1782,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2013|Win32'">
@@ -1867,7 +1873,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2013|Win32'">
@@ -1963,7 +1970,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2014|Win32'">
@@ -2053,7 +2061,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2014|Win32'">
@@ -2149,7 +2158,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2015|Win32'">
@@ -2239,7 +2249,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2015|Win32'">
@@ -2316,10 +2327,10 @@
       <AdditionalIncludeDirectories>..\..\Tools\External\Max\v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>OgreMainStatic.lib;OgreMeshLodGeneratorStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMainStatic.lib;OgreMeshLodGeneratorStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;comctl32.lib;msxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>.\ext\2015\libx64;ext\ogre3d_secure_scl\vs11\x64\lib\Release;ext\ogre3d_secure_scl\vs11\x64\lib\Release\opt;ext\nvdtx\sdkx64vs11\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\ext\2015\libx64;ext\ogre3d_secure_scl\vs11\x64\lib\Release;ext\ogre3d_secure_scl\vs11\x64\lib\Release\opt;ext\nvdtx\sdkx64vs11\lib\static;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -2335,7 +2346,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2016|x64'">
@@ -2367,7 +2379,7 @@
       <AdditionalDependencies>OgreMainStatic.lib;OgreMeshLodGeneratorStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>.\ext\2016\libx64;ext\ogre3d_secure_scl\vs11\x64\lib\Release;ext\ogre3d_secure_scl\vs11\x64\lib\Release\opt;ext\nvdtx\sdkx64vs11\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\ext\2016\libx64;ext\ogre3d_secure_scl\vs11\x64\lib\Release;ext\ogre3d_secure_scl\vs11\x64\lib\Release\opt;ext\nvdtx\sdkx64vs11\lib\static;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -2383,7 +2395,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2016|x64'">
@@ -2418,7 +2431,7 @@
       <AdditionalDependencies>OgreMainStatic.lib;OgreMeshLodGeneratorStatic.lib;FreeImage.lib;cg.lib;freetype.lib;zlib.lib;zziplib.lib;comctl32.lib;core.lib;geom.lib;gfx.lib;bmm.lib;mesh.lib;maxutil.lib;maxscrpt.lib;paramblk2.lib;msxml2.lib;igame.lib;biped.lib;Morpher.lib;assetmanagement.lib;nvtt.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;squish.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)EasyOgreExporter.dle</OutputFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>.\ext\2016\libx64;ext\ogre3d_secure_scl\vs11\x64\lib\Release;ext\ogre3d_secure_scl\vs11\x64\lib\Release\opt;ext\nvdtx\sdkx64vs11\lib\static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\ext\2016\libx64;ext\ogre3d_secure_scl\vs11\x64\lib\Release;ext\ogre3d_secure_scl\vs11\x64\lib\Release\opt;ext\nvdtx\sdkx64vs11\lib\static;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\Include\EasyOgreExporter.def</ModuleDefinitionFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -2434,7 +2447,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2017|x64'">
@@ -2534,7 +2548,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2018|x64'">
@@ -2634,7 +2649,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid Max 2019|x64'">
@@ -2682,7 +2698,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Max 2019|x64'">
@@ -2733,7 +2750,8 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
