@@ -2883,7 +2883,7 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(OutDir)EasyOgreExporter.lib</ImportLibrary>
       <TargetMachine>MachineX64</TargetMachine>
-      <ShowProgress>LinkVerbose</ShowProgress>
+      <ShowProgress>NotSet</ShowProgress>
       <LinkStatus>
       </LinkStatus>
       <LinkTimeCodeGeneration>
