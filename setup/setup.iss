@@ -44,6 +44,8 @@ Name: french; MessagesFile: compiler:Languages\French.isl
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "redist\vc2010\*"; DestDir: "{tmp}\vc2010"; Flags: ignoreversion
 Source: "redist\vc2012\*"; DestDir: "{tmp}\vc2012"; Flags: ignoreversion
+Source: "redist\vc2015\*"; DestDir: "{tmp}\vc2015"; Flags: ignoreversion
+Source: "redist\vc2017\*"; DestDir: "{tmp}\vc2017"; Flags: ignoreversion
 Source: "..\output\Win32\vs12\Release Max 2011\EasyOgreExporter.dle"; DestDir: "{%3DSMAX_2011_PATH}\plugins"; Flags: ignoreversion replacesameversion; Components: Max2011x32
 Source: "..\output\Win32\vs12\Release Max 2012\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x32_2012}\plugins"; Flags: ignoreversion replacesameversion; Components: Max2012x32
 Source: "..\output\Win32\vs12\Release Max 2013\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x32_2013}\plugins"; Flags: ignoreversion replacesameversion; Components: Max2013x32
