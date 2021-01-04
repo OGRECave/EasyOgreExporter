@@ -32,7 +32,7 @@ DisableDirPage=yes
 AppVerName=Easy Ogre Exporter 3.2.2
 FlatComponentsList=False
 SignTool=i-maginer
-;sign setup i-maginer "C:\Program Files (x86)\Windows Kits\8.1\bin\x86\signtool" sign /a /t http://timestamp.verisign.com/scripts/timstamp.dll $f
+;sign setup i-maginer "C:\Program Files (x86)\Windows Kits\8.1\bin\x86\signtool" sign /a /t http://timestamp.globalsign.com/scripts/timestamp.dll $f
 
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl
