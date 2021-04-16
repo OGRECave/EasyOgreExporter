@@ -194,7 +194,7 @@ namespace EasyOgreExporter
         pKeyElement->SetDoubleAttribute("time", ogreTime);
         pAnimElement->LinkEndChild(pKeyElement);
 
-        TiXmlElement* pKeyTransElement = new TiXmlElement("translation");
+        TiXmlElement* pKeyTransElement = new TiXmlElement("position");
         pKeyTransElement->SetDoubleAttribute("x", trans.x);
         pKeyTransElement->SetDoubleAttribute("y", trans.y);
         pKeyTransElement->SetDoubleAttribute("z", trans.z);

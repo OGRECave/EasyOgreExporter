@@ -39,7 +39,7 @@
 
 
 //Exporter version
-float EXVERSION = 3.21f;
+float EXVERSION = 3.23f;
 
 namespace EasyOgreExporter
 {
@@ -512,7 +512,7 @@ const TCHAR* OgreSceneExporter::AuthorName(void)
 
 const TCHAR* OgreSceneExporter::CopyrightMessage(void) 
 {	
-  return _T("Copyright (c) 2011 OpenSpace3D");
+  return _T("Copyright (c) 2021 OpenSpace3D");
 }
 
 const TCHAR* OgreSceneExporter::OtherMessage1(void) 

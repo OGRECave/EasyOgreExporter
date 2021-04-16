@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{7EA7B4BC-CE4C-4DC8-95AB-AAACC58FB34C}
 AppName=Easy Ogre Exporter
-AppVersion=Easy Ogre Exporter 3.2.2
+AppVersion=Easy Ogre Exporter 3.2.3
 AppPublisher=Bastien Bourineau
 AppPublisherURL=http://www.openspace3d.com
 AppSupportURL=http://www.openspace3d.com
@@ -20,19 +20,19 @@ Compression=lzma
 SolidCompression=true
 UninstallDisplayIcon=
 InternalCompressLevel=max
-VersionInfoVersion=3.2.2
+VersionInfoVersion=3.2.3
 VersionInfoCompany=Bastien Bourineau
 VersionInfoDescription=Easy Ogre Exporter
 VersionInfoCopyright=Bastien Bourineau 2019
 MinVersion=0,5.01.2600sp2
-AppCopyright=Bastien Bourineau 2019
+AppCopyright=Bastien Bourineau 2021
 DisableProgramGroupPage=yes
 UsePreviousAppDir=false
 DisableDirPage=yes
-AppVerName=Easy Ogre Exporter 3.2.2
+AppVerName=Easy Ogre Exporter 3.2.3
 FlatComponentsList=False
 SignTool=i-maginer
-;sign setup i-maginer "C:\Program Files (x86)\Windows Kits\8.1\bin\x86\signtool" sign /a /t http://timestamp.globalsign.com/scripts/timestamp.dll $f
+;sign setup i-maginer "C:\Program Files (x86)\Windows Kits\8.1\bin\x86\signtool" sign /a /t http://timestamp.digicert.com $f
 
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl
@@ -58,7 +58,8 @@ Source: "..\output\x64\vs12\Release Max 2016\EasyOgreExporter.dle"; DestDir: "{%
 Source: "..\output\x64\vs12\Release Max 2017\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x64_2017}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: Max2017x64
 Source: "..\output\x64\vs12\Release Max 2018\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x64_2018}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: Max2018x64
 Source: "..\output\x64\vs12\Release Max 2019\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x64_2019}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: Max2019x64  
-Source: "..\output\x64\vs12\Release Max 2020\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x64_2020}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: Max2020x64
+Source: "..\output\x64\vs12\Release Max 2020\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x64_2020}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: Max2020x64 
+Source: "..\output\x64\vs12\Release Max 2020\EasyOgreExporter.dle"; DestDir: "{%ADSK_3DSMAX_x64_2021}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: Max2021x64
 
 Source: "..\output\Win32\vs12\Release Max 2012\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x32_2012}\plugins"; Flags: ignoreversion replacesameversion; Components: MaxDes2012x32
 Source: "..\output\Win32\vs12\Release Max 2013\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x32_2013}\plugins"; Flags: ignoreversion replacesameversion; Components: MaxDes2013x32
@@ -71,6 +72,7 @@ Source: "..\output\x64\vs12\Release Max 2017\EasyOgreExporter.dle"; DestDir: "{%
 Source: "..\output\x64\vs12\Release Max 2018\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x64_2018}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: MaxDes2018x64
 Source: "..\output\x64\vs12\Release Max 2019\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x64_2019}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: MaxDes2019x64
 Source: "..\output\x64\vs12\Release Max 2020\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x64_2020}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: MaxDes2020x64
+Source: "..\output\x64\vs12\Release Max 2020\EasyOgreExporter.dle"; DestDir: "{%ADSK_MAXDES_x64_2021}\plugins"; Flags: ignoreversion 64bit replacesameversion; Components: MaxDes2021x64
 
 [Icons]
 
@@ -97,7 +99,8 @@ Name: "Max2016x64"; Description: "Install for 3dsMax 2016 64bit"; Types: custom 
 Name: "Max2017x64"; Description: "Install for 3dsMax 2017 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_3DSMAX_x64_2017}'), True);
 Name: "Max2018x64"; Description: "Install for 3dsMax 2018 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_3DSMAX_x64_2018}'), True);
 Name: "Max2019x64"; Description: "Install for 3dsMax 2019 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_3DSMAX_x64_2019}'), True);
-Name: "Max2020x64"; Description: "Install for 3dsMax 2020 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_3DSMAX_x64_2020}'), True);
+Name: "Max2020x64"; Description: "Install for 3dsMax 2020 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_3DSMAX_x64_2020}'), True); 
+Name: "Max2021x64"; Description: "Install for 3dsMax 2021 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_3DSMAX_x64_2021}'), True);
 
 Name: "MaxDes2012x32"; Description: "Install for 3dsMax Design 2012 32bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_MAXDES_x32_2012}'), False);
 Name: "MaxDes2012x64"; Description: "Install for 3dsMax Design 2012 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_MAXDES_x64_2012}'), True);
@@ -109,7 +112,8 @@ Name: "MaxDes2016x64"; Description: "Install for 3dsMax Design 2016 64bit"; Type
 Name: "MaxDes2017x64"; Description: "Install for 3dsMax Design 2017 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_MAXDES_x64_2017}'), True);
 Name: "MaxDes2018x64"; Description: "Install for 3dsMax Design 2018 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_MAXDES_x64_2018}'), True);   
 Name: "MaxDes2019x64"; Description: "Install for 3dsMax Design 2019 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_MAXDES_x64_2019}'), True);
-Name: "MaxDes2020x64"; Description: "Install for 3dsMax Design 2020 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_MAXDES_x64_2020}'), True);
+Name: "MaxDes2020x64"; Description: "Install for 3dsMax Design 2020 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_MAXDES_x64_2020}'), True);  
+Name: "MaxDes2021x64"; Description: "Install for 3dsMax Design 2021 64bit"; Types: custom full compact; Check: dirCheck(ExpandConstant('{%ADSK_MAXDES_x64_2021}'), True);
 [Code]
 
 function dirCheck(DirName: String; w64 : Boolean): Boolean;
