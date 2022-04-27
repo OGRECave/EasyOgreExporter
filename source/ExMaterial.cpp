@@ -1722,7 +1722,6 @@ namespace EasyOgreExporter
 		if(m_isTwoSided)
 		{
 			outMaterial << "\t\t\tcull_hardware none\n";
-			outMaterial << "\t\t\tcull_software none\n";
 		}
 
 		if(m_isWire)
